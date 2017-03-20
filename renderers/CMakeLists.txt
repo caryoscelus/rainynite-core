@@ -5,7 +5,13 @@ target_sources(renderers
         svg_renderer.cpp
 )
 
-target_link_libraries(renderers document geom_helpers)
+find_package(time REQUIRED)
+
+target_link_libraries(renderers
+    document
+    time
+    geom_helpers
+)
 
 install(
     TARGETS renderers
