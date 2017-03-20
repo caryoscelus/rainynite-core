@@ -9,17 +9,20 @@ pkg_check_modules(LIB2GEOM REQUIRED 2geom)
 
 find_package(FMT REQUIRED)
 
-# set(CATCH_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/catch/" CACHE STRING "Path to Catch header library")
+set(CATCH_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/catch/" CACHE STRING "Path to Catch header library")
 
-# enable_testing()
+enable_testing()
 
 find_package(geom_helpers REQUIRED)
 find_package(morphing REQUIRED)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
+add_subdirectory(tests)
+
 add_subdirectory(document)
 add_subdirectory(filters)
+add_subdirectory(time)
 
 install(
     DIRECTORY include/
