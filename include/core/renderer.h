@@ -1,5 +1,5 @@
 /*
- *  svg_path_reader.cpp - primitive document reader for testing
+ *  renderer.h - Renderer interface
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,19 +16,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/filters/svg_writer.h>
-#include <core/document.h>
+#ifndef __CORE__RENDERER_H__67308EB8
+#define __CORE__RENDERER_H__67308EB8
 
-#include <geom_helpers/knots.h>
+#include <memory>
 
 namespace core {
 
-namespace filters {
+class Context;
 
-void SvgWriter::write_document(std::ostream& output, Document const& document) {
-    
-}
-
-} // namespace filters
+class Renderer {
+public:
+    virtual void render(Context context) = 0;
+    virtual bool is_finished() = 0;
+};
 
 } // namespace core
+
+#endif

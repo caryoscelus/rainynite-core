@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__FILTERS__SVG_WRITER_H__68C72326
-#define __CORE__FILTERS__SVG_WRITER_H__68C72326
+#ifndef __CORE__FILTERS__SVG_PATH_WRITER_H__68C72326
+#define __CORE__FILTERS__SVG_PATH_WRITER_H__68C72326
 
 #include "../writer.h"
 

@@ -1,5 +1,5 @@
 /*
- *  context.h - Context
+ *  svg_renderer.h - primitive .svg renderer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,43 +16,37 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__CONTEXT_H__50E71540
-#define __CORE__CONTEXT_H__50E71540
+#ifndef __CORE__RENDERERS__SVG_RENDERER_H__F493F66A
+#define __CORE__RENDERERS__SVG_RENDERER_H__F493F66A
 
 #include <memory>
 
-#include <boost/any.hpp>
-
-#include "time.h"
+#include "../context.h"
+#include "../document.h"
+#include "../renderer.h"
 
 namespace core {
 
-class Document;
+namespace renderers {
 
-class Context {
+class SvgRenderer : public Renderer {
 public:
-    explicit Context() = default;
-    explicit Context(std::weak_ptr<Document> document_);
-    virtual ~Context();
-public:
-    inline std::shared_ptr<Document> get_document() {
-        return document.lock();
-    }
-    inline Time get_time() {
-        return time;
-    }
-    inline TimePeriod get_period() {
-        return time_period;
-    }
-    inline boost::any get_render_settings() {
-        return render_settings;
-    }
+    virtual void render(Context context) override;
+    virtual bool is_finished() override;
 private:
-    std::weak_ptr<Document> document;
-    Time time;
-    TimePeriod time_period;
-    boost::any render_settings;
+    void prepare_render();
+    void render_frame(Time time);
+    Geom::BezierKnots morph_path(Time time);
+private:
+    bool finished = false;
+    Context context;
+    std::shared_ptr<Document> document;
+private:
+    Geom::BezierKnots from;
+    Geom::BezierKnots to;
 };
+
+} // namespace renderers
 
 } // namespace core
 

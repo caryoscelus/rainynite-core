@@ -1,5 +1,5 @@
 /*
- *  document.h - document
+ *  svg_path_writer.cpp - primitive document writer for testing
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,36 +16,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__DOCUMENT_H__62AC426A
-#define __CORE__DOCUMENT_H__62AC426A
-
-#include <memory>
+#include <core/filters/svg_path_writer.h>
+#include <core/document.h>
 
 #include <geom_helpers/knots.h>
 
 namespace core {
 
-class Context;
+namespace filters {
 
-class Document : public std::enable_shared_from_this<Document> {
-public:
-    explicit Document(std::vector<Geom::BezierKnots> keyframes_=std::vector<Geom::BezierKnots>());
-    virtual ~Document();
-    std::shared_ptr<Context> get_default_context();
-
-public:
-    inline std::vector<Geom::BezierKnots> const& get_keyframes() const {
-        return keyframes;
-    }
-    inline unsigned keyframe_amount() const {
-        return keyframes.size();
-    }
-
-private:
-    std::vector<Geom::BezierKnots> keyframes;
-    std::shared_ptr<Context> default_context;
-};
-
+void SvgWriter::write_document(std::ostream& output, Document const& document) {
+    throw "Not implemented";
 }
 
-#endif
+} // namespace filters
+
+} // namespace core

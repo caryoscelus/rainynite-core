@@ -3,7 +3,7 @@ add_library(filters SHARED)
 target_sources(filters
     PRIVATE
         svg_path_reader.cpp
-        svg_writer.cpp
+        svg_path_writer.cpp
 )
 
 target_link_libraries(filters document geom_helpers)

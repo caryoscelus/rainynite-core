@@ -22,6 +22,7 @@ add_subdirectory(tests)
 
 add_subdirectory(document)
 add_subdirectory(filters)
+add_subdirectory(renderers)
 add_subdirectory(time)
 
 install(
