@@ -28,7 +28,7 @@ class Document;
 
 class DocumentReader {
 public:
-    virtual std::unique_ptr<Document> read_document(std::istream& input) = 0;
+    virtual std::shared_ptr<Document> read_document(std::istream& input) = 0;
 };
 
 } // namespace core

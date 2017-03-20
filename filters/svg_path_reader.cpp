@@ -42,7 +42,7 @@ Geom::BezierKnots parse_string(std::string const& line) {
     return path;
 }
 
-std::unique_ptr<Document> SvgPathReader::read_document(std::istream& input) {
+std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
     std::vector<Geom::BezierKnots> paths;
     while (input.good()) {
         std::string path;
@@ -52,7 +52,7 @@ std::unique_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         } catch (...) {
         }
     }
-    return std::make_unique<Document>(paths);
+    return std::make_shared<Document>(paths);
 }
 
 } // namespace filters

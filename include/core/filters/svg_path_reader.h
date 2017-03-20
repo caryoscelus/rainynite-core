@@ -27,7 +27,7 @@ namespace filters {
 
 class SvgPathReader : public DocumentReader {
 public:
-    virtual std::unique_ptr<Document> read_document(std::istream& input) override;
+    virtual std::shared_ptr<Document> read_document(std::istream& input) override;
 };
 
 } // namespace filters
