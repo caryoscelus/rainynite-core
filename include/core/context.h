@@ -35,16 +35,19 @@ public:
     explicit Context(std::weak_ptr<Document> document_);
     virtual ~Context();
 public:
-    inline std::shared_ptr<Document> get_document() {
+    inline std::shared_ptr<Document> get_document() const {
         return document.lock();
     }
-    inline Time get_time() {
+    inline Time get_time() const {
         return time;
     }
-    inline TimePeriod get_period() {
+    inline TimePeriod get_period() const {
         return time_period;
     }
-    inline boost::any get_render_settings() {
+    inline boost::any get_render_settings() const {
+        return render_settings;
+    }
+    inline boost::any& mod_render_settings() {
         return render_settings;
     }
 private:
