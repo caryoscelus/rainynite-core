@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cstdlib>
+
 #include <fstream>
 
 #include <fmt/ostream.h>
@@ -53,6 +55,10 @@ void SvgRenderer::render(Context context_) {
     if (!document) {
         throw "can't renderer - no document";
     }
+    boost::any maybe_settings = context.get_render_settings();
+    if (!maybe_settings.empty()) {
+        settings = boost::any_cast<SvgRendererSettings>(maybe_settings);
+    }
     prepare_render();
     for (auto time : context.get_period()) {
         render_frame(time);
@@ -82,10 +88,15 @@ void SvgRenderer::prepare_render() {
 
 void SvgRenderer::render_frame(Time time) {
     auto path = morph_path(time);
-    auto fname = "renders/{:.3f}.svg"_format(time.get_seconds());
-    std::cout << fname << std::endl;
-    std::ofstream f(fname);
+    auto base_name = "renders/{:.3f}"_format(time.get_seconds());
+    auto svg_name = base_name+".svg";
+    std::cout << svg_name << std::endl;
+    std::ofstream f(svg_name);
     fmt::print(f, svg_template, Geom::knots_to_svg(path));
+    if (settings.render_pngs) {
+        auto png_name = base_name+".png";
+        system("{} {} {} {}"_format("inkscape -z", svg_name, "-e", png_name).c_str());
+    }
 }
 
 Geom::BezierKnots SvgRenderer::morph_path(Time time) {

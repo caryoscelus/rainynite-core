@@ -29,6 +29,10 @@ namespace core {
 
 namespace renderers {
 
+struct SvgRendererSettings {
+    bool render_pngs = false;
+};
+
 class SvgRenderer : public Renderer {
 public:
     virtual void render(Context context) override;
@@ -44,6 +48,7 @@ private:
 private:
     Geom::BezierKnots from;
     Geom::BezierKnots to;
+    SvgRendererSettings settings;
 };
 
 } // namespace renderers
