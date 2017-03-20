@@ -23,6 +23,8 @@
 
 #include <geom_helpers/knots.h>
 
+#include <core/time.h>
+
 namespace core {
 
 class Context;
@@ -40,10 +42,14 @@ public:
     inline unsigned keyframe_amount() const {
         return keyframes.size();
     }
+    inline TimePeriod get_main_time_period() const {
+        return main_time_period;
+    }
 
 private:
     std::vector<Geom::BezierKnots> keyframes;
     std::shared_ptr<Context> default_context;
+    TimePeriod main_time_period;
 };
 
 }

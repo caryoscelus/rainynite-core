@@ -23,7 +23,8 @@ namespace core {
 
 Document::Document(std::vector<Geom::BezierKnots> keyframes_) :
     keyframes(keyframes_),
-    default_context(nullptr)
+    default_context(nullptr),
+    main_time_period(Time(0), Time(5), Time(1.0/8))
 {
 }
 

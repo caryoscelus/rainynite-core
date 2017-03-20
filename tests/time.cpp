@@ -33,4 +33,5 @@ void test_period(TimePeriod const& period, unsigned amount) {
 TEST_CASE("Time period iterator", "[time]") {
     test_period(TimePeriod(Time(0), Time(4)), 4);
     test_period(TimePeriod(Time(0), Time(4.5)), 5);
+    test_period(TimePeriod(Time(0), Time(5), Time(1.0/8)), 40);
 }

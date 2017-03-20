@@ -17,13 +17,17 @@
  */
 
 #include <core/context.h>
-// #include <core/document.h>
+#include <core/document.h>
 
 namespace core {
 
 Context::Context(std::weak_ptr<Document> document_) :
     document(document_)
 {
+    auto doc = get_document();
+    if (!doc)
+        return;
+    time_period = doc->get_main_time_period();
 }
 
 Context::~Context() {

@@ -107,13 +107,16 @@ private:
 class TimePeriod : boost::operators<TimePeriod> {
 public:
     TimePeriod() :
-        first(0), last(0)
+        first(0), last(0), spf(Time(1.0))
     {}
-    TimePeriod(Time first_, Time last_) :
-        first(first_), last(last_)
-    {}
+    TimePeriod(Time first_, Time last_, Time spf_=Time(1.0)) :
+        first(first_), last(last_), spf(spf_)
+    {
+        if (spf <= Time(0))
+            throw "incorrect spf";
+    }
     TimePeriod(TimePeriod const& other) :
-        first(other.first), last(other.last)
+        first(other.first), last(other.last), spf(other.spf)
     {}
 public:
     bool operator==(TimePeriod const& other) const {
@@ -141,7 +144,7 @@ public:
 private:
     Time first;
     Time last;
-    Time spf = Time(1.0);
+    Time spf;
 };
 
 } // namespace core
