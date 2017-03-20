@@ -40,7 +40,11 @@ public:
 private:
     void prepare_render();
     void render_frame(Time time);
+    void finish_render();
     Geom::BezierKnots morph_path(Time time);
+    void start_png();
+    void render_png(std::string const& svg, std::string const& png);
+    void quit_png();
 private:
     bool finished = false;
     Context context;
@@ -49,6 +53,7 @@ private:
     Geom::BezierKnots from;
     Geom::BezierKnots to;
     SvgRendererSettings settings;
+    FILE* png_renderer_pipe;
 };
 
 } // namespace renderers

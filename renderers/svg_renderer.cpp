@@ -64,6 +64,7 @@ void SvgRenderer::render(Context context_) {
     for (auto time : context.get_period()) {
         render_frame(time);
     }
+    finish_render();
     std::cout << "SvgRenderer done" << std::endl;
     finished = true;
     document.reset();
@@ -86,6 +87,8 @@ void SvgRenderer::prepare_render() {
     } else {
         throw "not implemented";
     }
+    if (settings.render_pngs)
+        start_png();
 }
 
 void SvgRenderer::render_frame(Time time) {
@@ -96,10 +99,26 @@ void SvgRenderer::render_frame(Time time) {
     std::ofstream f(svg_name);
     fmt::print(f, svg_template, Geom::knots_to_svg(path));
     f.close();
-    if (settings.render_pngs) {
-        auto png_name = base_name+".png";
-        system("{} {} {} {}"_format("inkscape -z", svg_name, "-e", png_name).c_str());
-    }
+    if (settings.render_pngs)
+        render_png(svg_name, base_name+".png");
+}
+
+void SvgRenderer::finish_render() {
+    if (settings.render_pngs)
+        quit_png();
+}
+
+void SvgRenderer::start_png() {
+    png_renderer_pipe = popen("inkscape --shell", "w");
+}
+
+void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
+    fputs("{} {} {}\n"_format(svg, "-e", png).c_str(), png_renderer_pipe);
+}
+
+void SvgRenderer::quit_png() {
+    fputs("quit\n", png_renderer_pipe);
+    pclose(png_renderer_pipe);
 }
 
 Geom::BezierKnots SvgRenderer::morph_path(Time time) {
