@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <fstream>
+
 #include <fmt/ostream.h>
 #include <fmt/format.h>
 
@@ -82,7 +84,8 @@ void SvgRenderer::render_frame(Time time) {
     auto path = morph_path(time);
     auto fname = "renders/{:.3f}.svg"_format(time.get_seconds());
     std::cout << fname << std::endl;
-//     fmt::print(, svg_template, Geom::knots_to_svg(path));
+    std::ofstream f(fname);
+    fmt::print(f, svg_template, Geom::knots_to_svg(path));
 }
 
 Geom::BezierKnots SvgRenderer::morph_path(Time time) {
