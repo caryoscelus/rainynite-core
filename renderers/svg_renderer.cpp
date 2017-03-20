@@ -50,6 +50,7 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 void SvgRenderer::render(Context context_) {
     finished = false;
+    std::cout << "SvgRenderer start" << std::endl;
     context = context_;
     document = context.get_document();
     if (!document) {
@@ -63,6 +64,7 @@ void SvgRenderer::render(Context context_) {
     for (auto time : context.get_period()) {
         render_frame(time);
     }
+    std::cout << "SvgRenderer done" << std::endl;
     finished = true;
     document.reset();
 }
@@ -93,6 +95,7 @@ void SvgRenderer::render_frame(Time time) {
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
     fmt::print(f, svg_template, Geom::knots_to_svg(path));
+    f.close();
     if (settings.render_pngs) {
         auto png_name = base_name+".png";
         system("{} {} {} {}"_format("inkscape -z", svg_name, "-e", png_name).c_str());
