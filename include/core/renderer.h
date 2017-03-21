@@ -21,6 +21,10 @@
 
 #include <memory>
 
+#include <boost/signals2/signal.hpp>
+
+#include <core/time.h>
+
 namespace core {
 
 class Context;
@@ -29,6 +33,12 @@ class Renderer {
 public:
     virtual void render(Context context) = 0;
     virtual bool is_finished() = 0;
+public:
+    inline boost::signals2::signal<void(Time)>& finished_frame() {
+        return finished_frame_signal;
+    }
+private:
+    boost::signals2::signal<void(Time)> finished_frame_signal;
 };
 
 } // namespace core

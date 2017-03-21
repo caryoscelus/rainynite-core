@@ -101,6 +101,7 @@ void SvgRenderer::render_frame(Time time) {
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, base_name+".png");
+    finished_frame()(time);
 }
 
 void SvgRenderer::finish_render() {
