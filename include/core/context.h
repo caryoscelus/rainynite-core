@@ -22,6 +22,7 @@
 #include <memory>
 
 #include <boost/any.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include "time.h"
 
@@ -33,6 +34,10 @@ class Context {
 public:
     explicit Context() = default;
     explicit Context(std::weak_ptr<Document> document_);
+    Context(Context const& context_);
+    Context(Context&& context_) = default;
+    Context& operator=(Context const& context_) = default;
+    Context& operator=(Context&& context_) = default;
     virtual ~Context();
 public:
     inline std::shared_ptr<Document> get_document() const {
@@ -43,7 +48,7 @@ public:
     }
     inline void set_time(Time time_) {
         time = time_;
-        // emit signal
+        changed_time(time);
     }
     inline TimePeriod get_period() const {
         return time_period;
@@ -54,6 +59,8 @@ public:
     inline boost::any& mod_render_settings() {
         return render_settings;
     }
+public:
+    boost::signals2::signal<void(Time)> changed_time;
 private:
     std::weak_ptr<Document> document;
 //     TimeMode time_mode;

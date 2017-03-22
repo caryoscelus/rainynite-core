@@ -30,6 +30,10 @@ Context::Context(std::weak_ptr<Document> document_) :
     time_period = doc->get_main_time_period();
 }
 
+Context::Context(Context const& context_) :
+    Context(context_.document)
+{}
+
 Context::~Context() {
 }
 

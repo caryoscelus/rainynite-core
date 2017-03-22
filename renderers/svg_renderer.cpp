@@ -51,7 +51,7 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 void SvgRenderer::render(Context context_) {
     finished = false;
     std::cout << "SvgRenderer start" << std::endl;
-    context = context_;
+    context = std::move(context_);
     document = context.get_document();
     if (!document) {
         throw "can't renderer - no document";
