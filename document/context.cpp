@@ -32,7 +32,9 @@ Context::Context(std::weak_ptr<Document> document_) :
 
 Context::Context(Context const& context_) :
     Context(context_.document)
-{}
+{
+    render_settings = context_.render_settings;
+}
 
 Context::~Context() {
 }
