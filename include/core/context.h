@@ -41,6 +41,10 @@ public:
     inline Time get_time() const {
         return time;
     }
+    inline void set_time(Time time_) {
+        time = time_;
+        // emit signal
+    }
     inline TimePeriod get_period() const {
         return time_period;
     }
@@ -52,6 +56,7 @@ public:
     }
 private:
     std::weak_ptr<Document> document;
+//     TimeMode time_mode;
     Time time;
     TimePeriod time_period;
     boost::any render_settings;
