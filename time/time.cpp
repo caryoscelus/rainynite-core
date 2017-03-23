@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/time.h>
+#include <core/time/time_period.h>
 
 namespace core {
 

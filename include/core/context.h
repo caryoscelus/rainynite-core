@@ -24,7 +24,7 @@
 #include <boost/any.hpp>
 #include <boost/signals2/signal.hpp>
 
-#include "time.h"
+#include <core/time/time_period.h>
 
 namespace core {
 
@@ -63,7 +63,6 @@ public:
     boost::signals2::signal<void(Time)> changed_time;
 private:
     std::weak_ptr<Document> document;
-//     TimeMode time_mode;
     Time time;
     TimePeriod time_period;
     boost::any render_settings;

@@ -1,5 +1,5 @@
 /*
- *  time.h - Time, TimePeriod
+ *  time_period.h - TimePeriod
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,56 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__TIME_H__B4FED896
-#define __CORE__TIME_H__B4FED896
+#ifndef __CORE__TIME__TIME_PERIOD_H__4CC9C668
+#define __CORE__TIME__TIME_PERIOD_H__4CC9C668
 
 #include <boost/iterator/iterator_facade.hpp>
-#include <boost/operators.hpp>
+
+#include "time.h"
 
 namespace core {
-
-class Time :
-    boost::totally_ordered<Time>,
-    boost::additive<Time>,
-    boost::multiplicative<Time,double>
-{
-public:
-    explicit Time(double seconds_=0.0) :
-        seconds(seconds_)
-    {}
-    Time(Time const& other) :
-        seconds(other.seconds)
-    {}
-public:
-    bool operator==(Time const& other) const {
-        return seconds == other.seconds;
-    }
-    bool operator<(Time const& other) const {
-        return seconds < other.seconds;
-    }
-    Time& operator+=(Time const& other) {
-        seconds += other.seconds;
-        return *this;
-    }
-    Time& operator-=(Time const& other) {
-        seconds -= other.seconds;
-        return *this;
-    }
-    Time& operator*=(double other) {
-        seconds *= other;
-        return *this;
-    }
-    Time& operator/=(double other) {
-        seconds /= other;
-        return *this;
-    }
-public:
-    inline double get_seconds() {
-        return seconds;
-    }
-private:
-    double seconds;
-};
 
 class TimePeriod;
 

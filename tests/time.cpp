@@ -18,9 +18,28 @@
 
 #include <catch.hpp>
 
-#include <core/time.h>
+#include <core/time/time_period.h>
 
 using namespace core;
+
+TEST_CASE("Time FPS conversion", "[time]") {
+    auto t = Time(10.0);
+    t.set_fps(12);
+    t.change_fps(24);
+    REQUIRE(t.get_seconds() == 5.0);
+}
+
+TEST_CASE("Time arithmetics", "[time]") {
+    CHECK(Time(1)+Time(3) == Time(4));
+    CHECK(Time()+Time(1) == Time(1));
+    CHECK(Time(4)-Time(5) < Time());
+
+    CHECK(Time(4)*5 == Time(20));
+}
+
+TEST_CASE("Time FPS mismatch", "[time]") {
+    REQUIRE_THROWS(Time(1, 12, 10)+Time(1, 24, 5));
+}
 
 void test_period(TimePeriod const& period, unsigned amount) {
     unsigned i = 0;

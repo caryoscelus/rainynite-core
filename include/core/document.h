@@ -23,7 +23,7 @@
 
 #include <geom_helpers/knots.h>
 
-#include <core/time.h>
+#include <core/time/time_period.h>
 
 namespace core {
 

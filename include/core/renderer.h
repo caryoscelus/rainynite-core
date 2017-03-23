@@ -23,7 +23,7 @@
 
 #include <boost/signals2/signal.hpp>
 
-#include <core/time.h>
+#include <core/time/time.h>
 
 namespace core {
 
