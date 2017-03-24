@@ -5,7 +5,9 @@ target_sources(renderers
         svg_renderer.cpp
 )
 
-find_package(time REQUIRED)
+if (NOT TARGET time)
+    find_package(time REQUIRED)
+endif()
 
 target_link_libraries(renderers
     document
