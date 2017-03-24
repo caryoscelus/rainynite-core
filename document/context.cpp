@@ -36,6 +36,9 @@ Context::Context(Context const& context_) :
     Context(context_.document)
 {
     render_settings = context_.render_settings;
+    fps = context_.fps;
+    time_period = context_.time_period;
+    time = context_.time;
 }
 
 Context::~Context() {
