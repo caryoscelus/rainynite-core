@@ -22,6 +22,14 @@
 
 using namespace core;
 
+TEST_CASE("Time sanity", "[time]") {
+    Time a(3, 8, 4);
+    Time b(a);
+    CHECK(b == a);
+    CHECK(a+b == Time(7, 8, 0));
+    CHECK(Time(0, 12, 24) == Time(2, 12, 0));
+}
+
 TEST_CASE("Time FPS conversion", "[time]") {
     auto t = Time(10.0);
     t.set_fps(12);

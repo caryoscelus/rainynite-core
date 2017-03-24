@@ -34,13 +34,9 @@ public:
     using fps_type = unsigned;
 public:
     explicit Time(int seconds_, fps_type fps_, double frames_=0.0) :
-        seconds(seconds_),
-        frames(frames_),
         fps(fps_)
     {
-        if ((seconds_ < 0) != (frames_ < 0)) {
-            throw "seconds and frames are of different signs";
-        }
+        set_frames(seconds_*fps_+frames_);
     }
     explicit Time(double seconds_=0.0) :
         fps(1)
