@@ -65,22 +65,21 @@ private:
 class TimePeriod : boost::operators<TimePeriod> {
 public:
     TimePeriod() :
-        first(0), last(0), spf(Time(1.0))
+        first(0, 1), last(0, 1), fps(1)
     {}
-    TimePeriod(Time first_, Time last_, Time spf_=Time(1.0)) :
-        first(first_), last(last_), spf(spf_)
+    TimePeriod(Time first_, Time last_) :
+        first(first_), last(last_), fps(first_.get_fps())
     {
-        if (spf <= Time(0))
-            throw "incorrect spf";
+        first_.require_same_fps(last_);
     }
     TimePeriod(TimePeriod const& other) :
-        first(other.first), last(other.last), spf(other.spf)
+        first(other.first), last(other.last), fps(other.fps)
     {}
 public:
     bool operator==(TimePeriod const& other) const {
         return first == other.first
             && last == other.last
-            && spf == other.spf;
+            && fps == other.fps;
     }
 public:
     TimePeriodIter begin() const {
@@ -90,19 +89,21 @@ public:
         return TimePeriodIter(*this, last);
     }
 public:
-    inline Time get_spf() const {
-        return spf;
-    }
     inline Time get_first() const {
         return first;
     }
     inline Time get_last() const {
         return last;
     }
+    inline void set_fps(Time::fps_type fps_) {
+        fps = fps_;
+        first.set_fps(fps);
+        last.set_fps(fps);
+    }
 private:
     Time first;
     Time last;
-    Time spf;
+    Time::fps_type fps;
 };
 
 } // namespace core

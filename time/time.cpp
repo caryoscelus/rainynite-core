@@ -28,7 +28,7 @@ bool TimePeriodIter::equal(iter const& other) const {
 }
 
 void TimePeriodIter::advance(int diff) {
-    now += diff*period.get_spf();
+    now.add_frames(diff);
 }
 
 bool TimePeriodIter::before_begin() const {

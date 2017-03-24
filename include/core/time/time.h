@@ -33,7 +33,7 @@ class Time :
 public:
     using fps_type = unsigned;
 public:
-    explicit Time(int seconds_, fps_type fps_, double frames_) :
+    explicit Time(int seconds_, fps_type fps_, double frames_=0.0) :
         seconds(seconds_),
         frames(frames_),
         fps(fps_)
@@ -97,12 +97,19 @@ public:
     double get_frames() const {
         return seconds*fps+frames;
     }
+    fps_type get_fps() const {
+        return fps;
+    }
+
     void set_frames(double frames_) {
         auto neg = std::copysign(1, frames_);
         frames_ = std::abs(frames_);
         int whole_frames = frames_;
         seconds = neg * whole_frames / fps;
         frames = neg * (whole_frames % fps + frames_ - whole_frames);
+    }
+    void add_frames(double df) {
+        set_frames(get_frames()+df);
     }
 
     /**
