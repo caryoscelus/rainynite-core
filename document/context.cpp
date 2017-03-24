@@ -28,6 +28,8 @@ Context::Context(std::weak_ptr<Document> document_) :
     if (!doc)
         return;
     time_period = doc->get_main_time_period();
+    fps = time_period.get_fps();
+    time = Time(0, fps);
 }
 
 Context::Context(Context const& context_) :

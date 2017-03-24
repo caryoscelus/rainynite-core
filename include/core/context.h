@@ -59,6 +59,9 @@ public:
     inline boost::any& mod_render_settings() {
         return render_settings;
     }
+    inline Time::fps_type get_fps() {
+        return fps;
+    }
     inline void set_fps(Time::fps_type fps_) {
         fps = fps_;
         time.set_fps(fps);
@@ -68,7 +71,7 @@ public:
     boost::signals2::signal<void(Time)> changed_time;
 private:
     std::weak_ptr<Document> document;
-    Time::fps_type fps;
+    Time::fps_type fps = 1;
     Time time;
     TimePeriod time_period;
     boost::any render_settings;

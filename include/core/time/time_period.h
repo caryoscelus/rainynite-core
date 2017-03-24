@@ -95,6 +95,9 @@ public:
     inline Time get_last() const {
         return last;
     }
+    inline Time::fps_type get_fps() const {
+        return first.get_fps();
+    }
     inline void set_fps(Time::fps_type fps_) {
         fps = fps_;
         first.set_fps(fps);
