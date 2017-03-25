@@ -113,20 +113,29 @@ public:
     virtual ~Property()
     {}
 public:
-    void init(AbstractNode* parent, T const& value_) {
-        value = value_;
-        parent->init_property(name, reinterpret_cast<AbstractReference*>(&value));
-    }
-    T get() const {
+    inline T get() const {
         return value;
     }
-    void set(T value_) {
+    inline void set(T value_) {
         value = value_;
     }
-private:
+protected:
     std::string name;
     std::string type_name;
     T value;
+};
+
+class NodeProperty : public Property<AbstractReference> {
+public:
+    template <typename... Ts>
+    NodeProperty(Ts... args) :
+        Property(std::forward<Ts>(args)...)
+    {}
+public:
+    void init(AbstractNode* parent, AbstractReference value_) {
+        set(value_);
+        parent->init_property(name, &value);
+    }
 };
 
 /**
@@ -139,13 +148,13 @@ class Node : public BaseValue<T>, public AbstractNode {
 #define NODE_PROPERTY(name, type) \
 public: \
     inline BaseReference<type> get_##name() const { \
-        return name.get(); \
+        return std::static_pointer_cast<BaseValue<type>>(name.get()); \
     } \
     inline void set_##name(BaseReference<type> value) { \
-        name.set(value); \
+        name.set(std::static_pointer_cast<AbstractValue>(value)); \
     } \
 private: \
-    Property<BaseReference<type>> name { #name, #type }
+    NodeProperty name { #name, #type }
 
 using Real = double;
 
