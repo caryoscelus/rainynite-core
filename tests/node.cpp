@@ -84,3 +84,35 @@ TEST_CASE("Sum Node", "[node]") {
     list->mod().push_back(4.0);
     CHECK(sum->get(Time()) == 5.0);
 }
+
+class SumNode : public Node<Real> {
+public:
+    SumNode() {
+        init<List<BaseReference<Real>>>(list, {});
+    }
+public:
+    virtual Real get(Time t) const override {
+        auto list = get_list()->get(t);
+        Real result = 0;
+        for (auto x : list)
+            result += x->get(t);
+        return result;
+    }
+
+    NODE_PROPERTY(list, List<BaseReference<Real>>);
+};
+
+TEST_CASE("Real node sum", "[node]") {
+    auto list = std::make_shared<Value<List<BaseReference<Real>>>>();
+    auto sum = std::make_shared<SumNode>();
+    CHECK(sum->get(Time()) == 0.0);
+    sum->set_property("list", list);
+    CHECK(sum->get(Time()) == 0.0);
+    auto one = std::make_shared<Value<Real>>(1.0);
+    list->mod().push_back(one);
+    CHECK(sum->get(Time()) == 1.0);
+    list->mod().push_back(one);
+    CHECK(sum->get(Time()) == 2.0);
+    one->set(3.0);
+    CHECK(sum->get(Time()) == 6.0);
+}
