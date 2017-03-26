@@ -146,13 +146,21 @@ public:
     }
 };
 
+/*
+ * NOTE: static_pointer_cast might be unsafe (silently ignoring when node is
+ * being used incorrectly), so using dynamic_pointer_cast (which would lead
+ * to instant segfault instead) for now. However, it might inflict too much
+ * performance hit since getter can be used very frequently.
+ * Because of this, we might revert to static or even reinterpret cast in
+ * the future...
+ */
 #define NODE_PROPERTY(name, type) \
 public: \
     inline BaseReference<type> get_##name() const { \
-        return std::static_pointer_cast<BaseValue<type>>(name.get()); \
+        return std::dynamic_pointer_cast<BaseValue<type>>(name.get()); \
     } \
     inline void set_##name(BaseReference<type> value) { \
-        name.set(std::static_pointer_cast<AbstractValue>(value)); \
+        name.set(std::dynamic_pointer_cast<AbstractValue>(value)); \
     } \
 private: \
     NodeProperty name { #name, #type }
