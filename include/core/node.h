@@ -46,6 +46,9 @@ public:
     virtual void set(T value_) {
         throw "Cannot set";
     }
+    virtual T& mod() {
+        throw "Cannot set";
+    }
     virtual bool can_set() const {
         return false;
     }
@@ -53,7 +56,7 @@ public:
     virtual boost::any get_any(Time t) const override {
         return get(t);
     }
-    virtual void set(boost::any value_) {
+    virtual void set_any(boost::any value_) {
         set(boost::any_cast<T>(value_));
     }
     virtual bool can_set_any(boost::any value_) const override {
@@ -71,12 +74,19 @@ public:
     explicit Value(T value_) :
         value(value_)
     {}
+    template <typename... Ts>
+    explicit Value(Ts... args) :
+        value(std::forward<Ts>(args)...)
+    {}
 public:
     virtual T get(Time t) const override {
         return value;
     }
     virtual void set(T value_) override {
         value = value_;
+    }
+    virtual T& mod() override {
+        return value;
     }
     virtual bool can_set() const override {
         return true;
@@ -142,7 +152,7 @@ public:
     template <typename U>
     void init(NodeProperty& prop, U value) {
         prop.set(std::make_shared<Value<U>>(value));
-        init_property(prop.get_name(),  &(prop.mod()));
+        init_property(prop.get_name(), &(prop.mod()));
     }
 };
 
@@ -164,8 +174,6 @@ public: \
     } \
 private: \
     NodeProperty name { #name, #type }
-
-using Real = double;
 
 } // namespace core
 

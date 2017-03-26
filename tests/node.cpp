@@ -22,6 +22,10 @@
 
 using namespace core;
 
+using Real = double;
+template <typename T>
+using List = std::vector<T>;
+
 class Add : public Node<Real> {
 public:
     Add() {
@@ -48,4 +52,35 @@ TEST_CASE("Test Add node", "[node]") {
     CHECK(add->get(Time()) == 1.0);
     add->set_property("b", two);
     CHECK(add->get(Time()) == 3.0);
+    one->set(4.0);
+    CHECK(add->get(Time()) == 6.0);
+}
+
+class Sum : public Node<Real> {
+public:
+    Sum() {
+        init<List<Real>>(list, {});
+    }
+public:
+    virtual Real get(Time t) const override {
+        auto list = get_list()->get(t);
+        Real result = 0;
+        for (auto const& x : list)
+            result += x;
+        return result;
+    }
+
+    NODE_PROPERTY(list, List<Real>);
+};
+
+TEST_CASE("Sum Node", "[node]") {
+    auto list = std::make_shared<Value<List<Real>>>();
+    auto sum = std::make_shared<Sum>();
+    CHECK(sum->get(Time()) == 0.0);
+    sum->set_property("list", list);
+    CHECK(sum->get(Time()) == 0.0);
+    list->mod().push_back(1.0);
+    CHECK(sum->get(Time()) == 1.0);
+    list->mod().push_back(4.0);
+    CHECK(sum->get(Time()) == 5.0);
 }
