@@ -116,8 +116,14 @@ public:
     inline T get() const {
         return value;
     }
+    inline T& mod() {
+        return value;
+    }
     inline void set(T value_) {
         value = value_;
+    }
+    inline std::string get_name() const {
+        return name;
     }
 protected:
     std::string name;
@@ -125,24 +131,19 @@ protected:
     T value;
 };
 
-class NodeProperty : public Property<AbstractReference> {
-public:
-    template <typename... Ts>
-    NodeProperty(Ts... args) :
-        Property(std::forward<Ts>(args)...)
-    {}
-public:
-    void init(AbstractNode* parent, AbstractReference value_) {
-        set(value_);
-        parent->init_property(name, &value);
-    }
-};
+using NodeProperty = Property<AbstractReference>;
 
 /**
  * Basic representation of any time-changeable Node
  */
 template <typename T>
 class Node : public BaseValue<T>, public AbstractNode {
+public:
+    template <typename U>
+    void init(NodeProperty& prop, U value) {
+        prop.set(std::make_shared<Value<U>>(value));
+        init_property(prop.get_name(),  &(prop.mod()));
+    }
 };
 
 #define NODE_PROPERTY(name, type) \

@@ -25,12 +25,14 @@ using namespace core;
 class Add : public Node<Real> {
 public:
     Add() {
-        a.init(this, std::make_shared<Value<Real>>(0));
-        b.init(this, std::make_shared<Value<Real>>(0));
+        init<Real>(a, 0);
+        init<Real>(b, 0);
     }
 public:
     virtual Real get(Time t) const override {
-        return get_a()->get(t) + get_b()->get(t);
+        auto a = get_a()->get(t);
+        auto b = get_b()->get(t);
+        return a+b;
     }
 
     NODE_PROPERTY(a, Real);
