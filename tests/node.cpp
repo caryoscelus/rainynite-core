@@ -45,8 +45,8 @@ public:
 
 TEST_CASE("Test Add node", "[node]") {
     auto add = std::make_shared<Add>();
-    auto one = std::make_shared<Value<Real>>(1.0);
-    auto two = std::make_shared<Value<Real>>(2.0);
+    auto one = make_value<Real>(1.0);
+    auto two = make_value<Real>(2.0);
     CHECK(add->get(Time()) == 0.0);
     add->set_a(one);
     CHECK(add->get(Time()) == 1.0);
@@ -74,7 +74,7 @@ public:
 };
 
 TEST_CASE("Sum Node", "[node]") {
-    auto list = std::make_shared<Value<List<Real>>>();
+    auto list = make_value<List<Real>>();
     auto sum = std::make_shared<Sum>();
     CHECK(sum->get(Time()) == 0.0);
     sum->set_property("list", list);
@@ -103,12 +103,12 @@ public:
 };
 
 TEST_CASE("Real node sum", "[node]") {
-    auto list = std::make_shared<Value<List<BaseReference<Real>>>>();
+    auto list = make_value<List<BaseReference<Real>>>();
     auto sum = std::make_shared<SumNode>();
     CHECK(sum->get(Time()) == 0.0);
     sum->set_property("list", list);
     CHECK(sum->get(Time()) == 0.0);
-    auto one = std::make_shared<Value<Real>>(1.0);
+    auto one = make_value<Real>(1.0);
     list->mod().push_back(one);
     CHECK(sum->get(Time()) == 1.0);
     list->mod().push_back(one);

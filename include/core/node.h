@@ -23,10 +23,14 @@
 #include <memory>
 
 #include <boost/any.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 
 #include <core/time/time.h>
 
 namespace core {
+
+using Id = boost::uuids::uuid;
 
 class AbstractValue {
 public:
@@ -37,6 +41,17 @@ public:
     virtual bool can_set_any(boost::any value_) const {
         return false;
     }
+    Id get_id() {
+        return id;
+    }
+    void set_id(Id id_) {
+        id = id_;
+    }
+    void new_id() {
+        id = boost::uuids::random_generator()();
+    }
+private:
+    Id id;
 };
 
 template <typename T>
@@ -71,14 +86,6 @@ using BaseReference = std::shared_ptr<BaseValue<T>>;
 template <typename T>
 class Value : public BaseValue<T> {
 public:
-    explicit Value(T value_) :
-        value(value_)
-    {}
-    template <typename... Ts>
-    explicit Value(Ts... args) :
-        value(std::forward<Ts>(args)...)
-    {}
-public:
     virtual T get(Time t) const override {
         return value;
     }
@@ -91,9 +98,23 @@ public:
     virtual bool can_set() const override {
         return true;
     }
+
+    template <typename... Args>
+    void emplace(Args&&... args) {
+        value = T(std::forward<Args>(args)...);
+    }
+
 private:
     T value;
 };
+
+template <typename T, typename... Args>
+std::shared_ptr<Value<T>> make_value(Args&&... args) {
+    auto r = std::make_shared<Value<T>>();
+    r->new_id();
+    r->emplace(std::forward<Args>(args)...);
+    return r;
+}
 
 class AbstractNode {
 public:
@@ -151,7 +172,7 @@ class Node : public BaseValue<T>, public AbstractNode {
 public:
     template <typename U>
     void init(NodeProperty& prop, U value) {
-        prop.set(std::make_shared<Value<U>>(value));
+        prop.set(make_value<U>(value));
         init_property(prop.get_name(), &(prop.mod()));
     }
 };
