@@ -21,6 +21,7 @@
 
 #include <map>
 #include <memory>
+#include <typeindex>
 
 #include <boost/any.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -31,9 +32,14 @@
 namespace core {
 
 using Id = boost::uuids::uuid;
+using Type = std::type_index;
 
 class AbstractValue {
 public:
+    virtual bool is_const() const {
+        return false;
+    }
+    virtual Type get_type() const = 0;
     virtual boost::any get_any(Time t) const = 0;
     virtual void set_any(boost::any value_) {
         throw "Cannot set";
@@ -68,6 +74,9 @@ public:
         return false;
     }
 public:
+    virtual Type get_type() const override {
+        return typeid(T);
+    }
     virtual boost::any get_any(Time t) const override {
         return get(t);
     }
@@ -86,6 +95,9 @@ using BaseReference = std::shared_ptr<BaseValue<T>>;
 template <typename T>
 class Value : public BaseValue<T> {
 public:
+    virtual bool is_const() const override {
+        return true;
+    }
     virtual T get(Time t) const override {
         return value;
     }
@@ -127,8 +139,23 @@ public:
         }
         *(named_storage[name]) = ref;
     }
-    void init_property(std::string const& name, AbstractReference* ref) {
-        named_storage[name] = ref;
+    void init_property(std::string const& name, AbstractReference* ref_p) {
+        named_storage[name] = ref_p;
+    }
+    std::map<std::string, Id> get_link_map() {
+        std::map<std::string, Id> result;
+        // TODO: use generic conversion function
+        for (auto const& e : named_storage) {
+            result.emplace(e.first, (*e.second)->get_id());
+        }
+        return result;
+    }
+    std::vector<AbstractReference> get_links() {
+        std::vector<AbstractReference> result;
+        for (auto const& e : named_storage) {
+            result.push_back(*e.second);
+        }
+        return result;
     }
 private:
     std::map<std::string, AbstractReference*> named_storage;
@@ -176,6 +203,31 @@ public:
         init_property(prop.get_name(), &(prop.mod()));
     }
 };
+
+void traverse_once(AbstractReference root, auto f) {
+    std::set<AbstractReference> traversed;
+    std::set<AbstractReference> to_traverse;
+    to_traverse.insert(root);
+    while (!to_traverse.empty()) {
+        auto i = to_traverse.begin();
+        auto node = *i;
+        to_traverse.erase(i);
+        f(node);
+        auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node);
+        if (linked_node) {
+            auto links = linked_node->get_links();
+            std::copy_if(
+                links.begin(),
+                links.end(),
+                std::inserter(to_traverse, to_traverse.end()),
+                [&traversed](AbstractReference ref) {
+                    return traversed.count(ref) == 0;
+                }
+            );
+        }
+        traversed.insert(node);
+    }
+}
 
 /*
  * NOTE: static_pointer_cast might be unsafe (silently ignoring when node is

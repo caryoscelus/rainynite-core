@@ -18,6 +18,10 @@
 
 #include <catch.hpp>
 
+#include <iostream>
+
+#include <boost/uuid/uuid_io.hpp>
+
 #include <core/node.h>
 
 using namespace core;
@@ -115,4 +119,65 @@ TEST_CASE("Real node sum", "[node]") {
     CHECK(sum->get(Time()) == 2.0);
     one->set(3.0);
     CHECK(sum->get(Time()) == 6.0);
+}
+
+std::string value_to_string(AbstractReference node) {
+    if (node->get_type() == typeid(Real)) {
+        auto t = std::static_pointer_cast<Value<Real>>(node);
+        return std::to_string(t->mod());
+    }
+    return "";
+}
+
+void serialize_map(std::ostream& stream, std::map<std::string, Id> const& map) {
+    stream << "{\n";
+    for (auto const& e : map) {
+        stream << "\"" << e.first << "\": \"" << e.second << "\"\n";
+    }
+    stream << "}\n";
+}
+
+std::string dump_node_tree(AbstractReference root) {
+    std::ostringstream stream;
+    traverse_once(root, [&stream](AbstractReference node) {
+        stream << "\"" << node->get_id() << "\": ";
+        if (node->is_const()) {
+            stream << value_to_string(node) << "\n";
+        } else if (auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node)) {
+            serialize_map(stream, linked_node->get_link_map());
+        }
+    });
+    stream << "\n";
+    return stream.str();
+}
+
+TEST_CASE("Dump node tree", "[node]") {
+    std::cerr << dump_node_tree(make_value<Real>(5.4));
+    auto one = make_value<Real>(1.0);
+    std::cerr << dump_node_tree(one);
+    auto add = std::make_shared<Add>();
+    std::cerr << dump_node_tree(add);
+    add->set_a(one);
+    std::cerr << dump_node_tree(add);
+    add->set_property("b", one);
+    std::cerr << dump_node_tree(add);
+}
+
+unsigned count_nodes(AbstractReference root) {
+    unsigned result = 0;
+    traverse_once(root, [&result](AbstractReference node) {
+        ++result;
+    });
+    return result;
+}
+
+TEST_CASE("Traverse node tree", "[node]") {
+    auto one = make_value<Real>(1.0);
+    CHECK(count_nodes(one) == 1);
+    auto add = std::make_shared<Add>();
+    CHECK(count_nodes(add) == 3);
+    add->set_a(one);
+    CHECK(count_nodes(add) == 3);
+    add->set_property("b", one);
+    CHECK(count_nodes(add) == 2);
 }
