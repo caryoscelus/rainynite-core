@@ -33,23 +33,31 @@ public:
     }
 public:
     virtual T get(Time time) const override {
-        auto child = std::dynamic_pointer_cast<BaseValue<T>>(find_appropriate(time));
-        return child->get(time);
+        AbstractReference r;
+        Time t;
+        std::tie(r, t) = find_appropriate(time);
+        auto child = std::dynamic_pointer_cast<BaseValue<T>>(r);
+        return child->get(t);
     }
 public:
     void add_child(TimePeriod period, BaseReference<T> ref) {
         children.emplace_back(period, ref);
     }
 private:
-    AbstractReference find_appropriate(Time time) const {
+    std::pair<AbstractReference, Time> find_appropriate(Time time) const {
         for (auto const& child : children) {
             auto period = child.first;
             period.set_fps(time.get_fps());
             if (period.contains(time)) {
-                return child.second;
+                return { child.second, calculate_time(period, time) };
             }
         }
-        return get_default_value();
+        return { get_default_value(), time };
+    }
+    Time calculate_time(TimePeriod const& period, Time time) const {
+        auto a = period.get_first();
+        auto b = period.get_last();
+        return (time-a)/(b-a).get_seconds();
     }
 private:
     std::vector<std::pair<TimePeriod,AbstractReference>> children;
