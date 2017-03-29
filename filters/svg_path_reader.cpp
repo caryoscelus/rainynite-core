@@ -54,17 +54,16 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         } catch (...) {
         }
     }
-    if (paths.size() != 2)
-        return nullptr;
-    auto first = make_value<Geom::BezierKnots>(paths[0]);
-    auto second = make_value<Geom::BezierKnots>(paths[1]);
-    auto morph = std::make_shared<nodes::BezierMorph>();
-    morph->set_a(first);
-    morph->set_b(second);
     auto animated = std::make_shared<nodes::Animated<Geom::BezierKnots>>();
-    animated->add_child({Time(0), Time(2)}, morph);
-    animated->add_child({Time(2), Time(3)}, first);
-    animated->set_default_value(second);
+    for (int i = 0; i < paths.size()-1; ++i) {
+        auto first = make_value<Geom::BezierKnots>(paths[i]);
+        auto second = make_value<Geom::BezierKnots>(paths[i+1]);
+        auto morph = std::make_shared<nodes::BezierMorph>();
+        morph->set_a(first);
+        morph->set_b(second);
+        animated->add_child({Time(i), Time(i+1)}, morph);
+    }
+
     return std::make_shared<Document>(animated);
 }
 
