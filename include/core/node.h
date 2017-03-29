@@ -47,6 +47,9 @@ public:
     virtual bool can_set_any(boost::any value_) const {
         return false;
     }
+    virtual boost::any any() const {
+        throw "No static value";
+    }
     Id get_id() {
         return id;
     }
@@ -109,6 +112,9 @@ public:
     }
     virtual bool can_set() const override {
         return true;
+    }
+    virtual boost::any any() const {
+        return value;
     }
 
     template <typename... Args>
