@@ -50,6 +50,12 @@ public:
         time = time_;
         changed_time(time);
     }
+    inline void to_start() {
+        set_time(time_period.get_first());
+    }
+    inline void to_end() {
+        set_time(time_period.get_last());
+    }
     inline TimePeriod get_period() const {
         return time_period;
     }
