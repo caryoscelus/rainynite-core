@@ -12,4 +12,6 @@ target_link_libraries(test_time time)
 
 add_catch_test(node)
 
+add_catch_test(serialize)
+
 add_catch_test(class_init)
