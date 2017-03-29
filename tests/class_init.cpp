@@ -55,6 +55,7 @@ public:
 
 TEST_CASE("Automatic class registration", "") {
     CHECK((type_info<ClassName, std::string>(typeid(Bar)) == "Bar"));
+    CHECK_THROWS_AS((type_info<ClassName, std::string>(typeid(Foo))), UnknownTypeError);
 }
 
 class FooBar {
@@ -90,4 +91,5 @@ TEST_CASE("Polymorphic class name", "") {
     delete obj;
     obj = new FooBaz();
     CHECK((any_info<PolyClassName, std::string>(obj) == "FooBaz"));
+    CHECK_THROWS_AS((any_info<PolyClassName, std::string>(new FooBaz()) == "FooBaz"), UnknownTypeError);
 }

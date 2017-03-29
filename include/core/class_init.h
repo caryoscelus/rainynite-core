@@ -80,15 +80,49 @@ public:
     }
 };
 
+class RuntimeTypeError : public std::runtime_error {
+public:
+    RuntimeTypeError(std::type_index type, std::string msg = "unknown error") :
+        std::runtime_error("Runtime type ("+std::string(type.name())+") "+msg)
+    {}
+};
+
+class UnknownTypeError : public RuntimeTypeError {
+public:
+    UnknownTypeError(std::type_index type) :
+        RuntimeTypeError(type, "not registered")
+    {}
+};
+
+template <class T>
+T& type_meta(std::type_index type) {
+    auto const& map = class_registry<T>();
+    auto iter = map.find(type);
+    if (iter == map.end()) {
+        throw UnknownTypeError(type);
+    }
+    return *iter->second;
+}
+
 template <class T, class R>
 R type_info(std::type_index type) {
-    return (*class_registry<T>().at(type))();
+    auto const& t = type_meta<T>(type);
+    try {
+        return t();
+    } catch (...) {
+        throw RuntimeTypeError(type);
+    }
 }
 
 template <class T, class R>
 R any_info(boost::any const& object) {
     std::type_index type = object.type();
-    return (*class_registry<T>().at(type))(object);
+    auto const& t = type_meta<T>(type);
+    try {
+        return t(object);
+    } catch (...) {
+        throw RuntimeTypeError(type);
+    }
 }
 
 }
