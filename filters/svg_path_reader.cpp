@@ -18,6 +18,7 @@
 
 #include <core/document.h>
 #include <core/nodes/morph.h>
+#include <core/nodes/animated.h>
 #include <core/filters/svg_path_reader.h>
 
 #include <geom_helpers/knots.h>
@@ -55,10 +56,16 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
     }
     if (paths.size() != 2)
         return nullptr;
+    auto first = make_value<Geom::BezierKnots>(paths[0]);
+    auto second = make_value<Geom::BezierKnots>(paths[1]);
     auto morph = std::make_shared<nodes::BezierMorph>();
-    morph->set_a(make_value<Geom::BezierKnots>(paths[0]));
-    morph->set_b(make_value<Geom::BezierKnots>(paths[1]));
-    return std::make_shared<Document>(morph);
+    morph->set_a(first);
+    morph->set_b(second);
+    auto animated = std::make_shared<nodes::Animated<Geom::BezierKnots>>();
+    animated->add_child({Time(0), Time(2)}, morph);
+    animated->add_child({Time(2), Time(3)}, first);
+    animated->set_default_value(second);
+    return std::make_shared<Document>(animated);
 }
 
 } // namespace filters

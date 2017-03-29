@@ -36,10 +36,15 @@ public:
         auto child = std::dynamic_pointer_cast<BaseValue<T>>(find_appropriate(time));
         return child->get(time);
     }
+public:
+    void add_child(TimePeriod period, BaseReference<T> ref) {
+        children.emplace_back(period, ref);
+    }
 private:
     AbstractReference find_appropriate(Time time) const {
         for (auto const& child : children) {
-            auto const& period = child.first;
+            auto period = child.first;
+            period.set_fps(time.get_fps());
             if (period.contains(time)) {
                 return child.second;
             }
