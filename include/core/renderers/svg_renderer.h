@@ -50,8 +50,6 @@ private:
     Context context;
     std::shared_ptr<Document> document;
 private:
-    Geom::BezierKnots from;
-    Geom::BezierKnots to;
     SvgRendererSettings settings;
     FILE* png_renderer_pipe;
 };

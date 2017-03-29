@@ -21,8 +21,8 @@
 
 namespace core {
 
-Document::Document(std::vector<Geom::BezierKnots> keyframes_) :
-    keyframes(keyframes_),
+Document::Document(std::shared_ptr<AbstractValue> root_) :
+    root(root_),
     default_context(nullptr),
     main_time_period(Time(0, 8), Time(5, 8))
 {

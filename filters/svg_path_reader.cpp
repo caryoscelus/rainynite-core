@@ -16,8 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/filters/svg_path_reader.h>
 #include <core/document.h>
+#include <core/nodes/morph.h>
+#include <core/filters/svg_path_reader.h>
 
 #include <geom_helpers/knots.h>
 
@@ -52,7 +53,12 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         } catch (...) {
         }
     }
-    return std::make_shared<Document>(paths);
+    if (paths.size() != 2)
+        return nullptr;
+    auto morph = std::make_shared<nodes::BezierMorph>();
+    morph->set_a(make_value<Geom::BezierKnots>(paths[0]));
+    morph->set_b(make_value<Geom::BezierKnots>(paths[1]));
+    return std::make_shared<Document>(morph);
 }
 
 } // namespace filters

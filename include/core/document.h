@@ -24,6 +24,7 @@
 #include <geom_helpers/knots.h>
 
 #include <core/time/time_period.h>
+#include <core/node.h>
 
 namespace core {
 
@@ -31,23 +32,20 @@ class Context;
 
 class Document : public std::enable_shared_from_this<Document> {
 public:
-    explicit Document(std::vector<Geom::BezierKnots> keyframes_=std::vector<Geom::BezierKnots>());
+    explicit Document(std::shared_ptr<AbstractValue>);
     virtual ~Document();
     std::shared_ptr<Context> get_default_context();
 
 public:
-    inline std::vector<Geom::BezierKnots> const& get_keyframes() const {
-        return keyframes;
-    }
-    inline unsigned keyframe_amount() const {
-        return keyframes.size();
+    inline std::shared_ptr<AbstractValue> get_root() {
+        return root;
     }
     inline TimePeriod get_main_time_period() const {
         return main_time_period;
     }
 
 private:
-    std::vector<Geom::BezierKnots> keyframes;
+    std::shared_ptr<AbstractValue> root;
     std::shared_ptr<Context> default_context;
     TimePeriod main_time_period;
 };

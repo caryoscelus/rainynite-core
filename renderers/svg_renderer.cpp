@@ -75,18 +75,6 @@ bool SvgRenderer::is_finished() {
 }
 
 void SvgRenderer::prepare_render() {
-    auto count = document->keyframe_amount();
-    if (count == 0)
-        throw "invalid document";
-    auto keyframes = document->get_keyframes();
-    if (count == 1) {
-        from = keyframes[0];
-        to = keyframes[0];
-    } else if (count == 2) {
-        morphing::prepare_average(keyframes[0], keyframes[1], from, to);
-    } else {
-        throw "not implemented";
-    }
     if (settings.render_pngs)
         start_png();
 }
@@ -123,12 +111,8 @@ void SvgRenderer::quit_png() {
 }
 
 Geom::BezierKnots SvgRenderer::morph_path(Time time) {
-    auto t = time.get_seconds();
-    if (t <= 0)
-        return from;
-    if (t >= 1)
-        return to;
-    return morphing::simple_average(from, to, t);
+    auto root = std::dynamic_pointer_cast<BaseValue<Geom::BezierKnots>>(document->get_root());
+    return root->get(time);
 }
 
 } // namespace filters
