@@ -20,6 +20,7 @@
 #define __CORE__NODE_H__CC4B44C6
 
 #include <map>
+#include <set>
 #include <memory>
 #include <typeindex>
 
