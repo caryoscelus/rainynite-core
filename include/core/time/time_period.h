@@ -89,6 +89,10 @@ public:
         return TimePeriodIter(*this, last);
     }
 public:
+    inline bool contains(Time t) const {
+        return t >= first
+            && t < last;
+    }
     inline Time get_first() const {
         return first;
     }
