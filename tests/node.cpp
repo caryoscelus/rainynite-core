@@ -129,10 +129,10 @@ std::string value_to_string(AbstractReference node) {
     return "";
 }
 
-void serialize_map(std::ostream& stream, std::map<std::string, Id> const& map) {
+void serialize_map(std::ostream& stream, std::map<std::string, AbstractReference> const& map) {
     stream << "{\n";
     for (auto const& e : map) {
-        stream << "\"" << e.first << "\": \"" << e.second << "\"\n";
+        stream << "\"" << e.first << "\": \"" << e.second->get_id() << "\"\n";
     }
     stream << "}\n";
 }

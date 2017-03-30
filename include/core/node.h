@@ -149,11 +149,11 @@ public:
     void init_property(std::string const& name, AbstractReference* ref_p) {
         named_storage[name] = ref_p;
     }
-    std::map<std::string, Id> get_link_map() {
-        std::map<std::string, Id> result;
+    std::map<std::string, AbstractReference> get_link_map() {
+        std::map<std::string, AbstractReference> result;
         // TODO: use generic conversion function
         for (auto const& e : named_storage) {
-            result.emplace(e.first, (*e.second)->get_id());
+            result.emplace(e.first, *e.second);
         }
         return result;
     }

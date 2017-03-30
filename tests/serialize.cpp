@@ -115,7 +115,12 @@ void put_list(Writer<Id>& writer, std::shared_ptr<AbstractValue> const& object) 
 
 template <>
 void put_map(Writer<Id>& writer, std::shared_ptr<AbstractValue> const& object) {
-    //
+    if (auto node = std::dynamic_pointer_cast<AbstractNode>(object)) {
+        for (auto const& e : node->get_link_map()) {
+            writer.key(e.first);
+            writer.object(e.second);
+        }
+    }
 }
 
 template <>
