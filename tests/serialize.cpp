@@ -149,10 +149,13 @@ RecordType classify(std::shared_ptr<AbstractValue> const& object) {
 }
 
 TEST_CASE("Dumb json serialize", "[serialize,node]") {
-    CHECK(true);
-    auto writer = serialize::DumbJsonWriter<Id>(std::cout);
+    std::ostringstream stream;
+    auto writer = serialize::DumbJsonWriter<Id>(stream);
     std::shared_ptr<AbstractValue> three = make_value<double>(3);
-    writer.object(three);
-    std::shared_ptr<AbstractValue> add = std::make_shared<Add>();
-    writer.object(add);
+    auto add = make_node<Add>();
+    add->set_property("a", three);
+    add->set_property("b", three);
+    std::shared_ptr<AbstractValue> add_a = add;
+    writer.object(add_a);
+    std::cout << stream.str() << std::endl;
 }

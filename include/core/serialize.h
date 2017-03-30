@@ -65,7 +65,7 @@ public:
             reference(ref);
         } else {
             store_object(ref);
-            object_start();
+            object_start(ref);
             type(get_type(object));
             switch (classify(object)) {
                 case RecordType::Value:
@@ -85,7 +85,7 @@ public:
             object_end();
         }
     }
-    virtual void object_start() = 0;
+    virtual void object_start(U id) = 0;
     virtual void object_end() = 0;
     virtual void object_value_start() = 0;
     virtual void object_value_end() = 0;
@@ -113,10 +113,12 @@ public:
         stream(stream_)
     {}
 public:
-    virtual void object_start() override {
+    virtual void object_start(U id) override {
         element();
         write("{");
         prev_element = false;
+        key("UID");
+        string(to_string(id));
     }
     virtual void object_end() override {
         write("}");
