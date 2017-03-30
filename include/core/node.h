@@ -135,6 +135,13 @@ std::shared_ptr<Value<T>> make_value(Args&&... args) {
     return r;
 }
 
+template <class T>
+std::shared_ptr<T> make_node() {
+    auto r = std::make_shared<T>();
+    r->new_id();
+    return r;
+}
+
 class AbstractNode {
 public:
     AbstractReference get_property(std::string const& name) const {
