@@ -24,6 +24,7 @@
 
 #include <core/serialize.h>
 #include <core/node.h>
+#include <core/node_info.h>
 #include <core/class_init.h>
 
 using namespace core;
@@ -71,6 +72,35 @@ public:
     }
 };
 
+class Add : public Node<double> {
+public:
+    Add() {
+        init<double>(a, 0);
+        init<double>(b, 0);
+    }
+public:
+    virtual double get(Time t) const override {
+        auto a = get_a()->get(t);
+        auto b = get_b()->get(t);
+        return a+b;
+    }
+
+    NODE_PROPERTY(a, double);
+    NODE_PROPERTY(b, double);
+};
+
+REGISTER_NODE(Add);
+
+template <typename T>
+class ValueNodeInfo : public NodeInfo, class_init::Registered<ValueNodeInfo<T>, Value<T>, NodeInfo> {
+public:
+    virtual std::string operator()() const override {
+        return "Value<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
+    }
+};
+
+template class ValueNodeInfo<double>;
+
 namespace serialize {
 
 template <>
@@ -100,11 +130,7 @@ std::string id_to_string(Id id) {
 
 template <>
 std::string get_type(std::shared_ptr<AbstractValue> const& object) {
-    try {
-        return class_init::any_info<ValueTypeNameBase,std::string>(object);
-    } catch (class_init::RuntimeTypeError const& ex) {
-        return "unknown";
-    }
+    return node_name(object);
 }
 
 template <>
@@ -116,23 +142,6 @@ RecordType classify(std::shared_ptr<AbstractValue> const& object) {
 
 }
 }
-
-class Add : public Node<double> {
-public:
-    Add() {
-        init<double>(a, 0);
-        init<double>(b, 0);
-    }
-public:
-    virtual double get(Time t) const override {
-        auto a = get_a()->get(t);
-        auto b = get_b()->get(t);
-        return a+b;
-    }
-
-    NODE_PROPERTY(a, double);
-    NODE_PROPERTY(b, double);
-};
 
 TEST_CASE("Dumb json serialize", "[serialize,node]") {
     CHECK(true);
