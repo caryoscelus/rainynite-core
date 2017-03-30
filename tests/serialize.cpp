@@ -64,10 +64,10 @@ public:
     virtual std::string operator()(boost::any const& object) const = 0;
 };
 
-class ValueTypeName : public ValueTypeNameBase, class_init::Registered<ValueTypeName, std::shared_ptr<AbstractValue>, ValueTypeNameBase> {
+class ValueTypeName : public ValueTypeNameBase, class_init::Registered<ValueTypeName, AbstractReference, ValueTypeNameBase> {
 public:
     virtual std::string operator()(boost::any const& object) const {
-        auto value = boost::any_cast<std::shared_ptr<AbstractValue>>(object);
+        auto value = boost::any_cast<AbstractReference>(object);
         return class_init::type_info<TypeName, std::string>(value->get_type());
     }
 };
@@ -104,17 +104,17 @@ template class ValueNodeInfo<double>;
 namespace serialize {
 
 template <>
-void put_value(Writer<Id>& writer, std::shared_ptr<AbstractValue> const& object) {
+void put_value(Writer<AbstractReference>& writer, AbstractReference const& object) {
     writer.string(class_init::any_info<ValueToString, std::string>(object->any()));
 }
 
 template <>
-void put_list(Writer<Id>& writer, std::shared_ptr<AbstractValue> const& object) {
+void put_list(Writer<AbstractReference>& writer, AbstractReference const& object) {
     //
 }
 
 template <>
-void put_map(Writer<Id>& writer, std::shared_ptr<AbstractValue> const& object) {
+void put_map(Writer<AbstractReference>& writer, AbstractReference const& object) {
     if (auto node = std::dynamic_pointer_cast<AbstractNode>(object)) {
         for (auto const& e : node->get_link_map()) {
             writer.key(e.first);
@@ -124,22 +124,22 @@ void put_map(Writer<Id>& writer, std::shared_ptr<AbstractValue> const& object) {
 }
 
 template <>
-Id get_reference(std::shared_ptr<AbstractValue> const& object) {
-    return object->get_id();
+AbstractReference get_reference(AbstractReference const& object) {
+    return object;
 }
 
 template <>
-std::string id_to_string(Id id) {
-    return to_string(id);
+std::string id_to_string(AbstractReference id) {
+    return to_string(id->get_id());
 }
 
 template <>
-std::string get_type(std::shared_ptr<AbstractValue> const& object) {
+std::string get_type(AbstractReference const& object) {
     return node_name(object);
 }
 
 template <>
-RecordType classify(std::shared_ptr<AbstractValue> const& object) {
+RecordType classify(AbstractReference const& object) {
     if (object->is_const())
         return RecordType::Value;
     return RecordType::Map;
@@ -150,12 +150,12 @@ RecordType classify(std::shared_ptr<AbstractValue> const& object) {
 
 TEST_CASE("Dumb json serialize", "[serialize,node]") {
     std::ostringstream stream;
-    auto writer = serialize::DumbJsonWriter<Id>(stream);
-    std::shared_ptr<AbstractValue> three = make_value<double>(3);
+    auto writer = serialize::DumbJsonWriter<AbstractReference>(stream);
+    AbstractReference three = make_value<double>(3);
     auto add = make_node<Add>();
     add->set_property("a", three);
     add->set_property("b", three);
-    std::shared_ptr<AbstractValue> add_a = add;
+    AbstractReference add_a = add;
     writer.object(add_a);
     std::cout << stream.str() << std::endl;
 }

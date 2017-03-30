@@ -118,7 +118,7 @@ public:
         write("{");
         prev_element = false;
         key("UID");
-        string(to_string(id));
+        string(id_to_string(id));
     }
     virtual void object_end() override {
         write("}");
