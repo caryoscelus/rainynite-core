@@ -91,7 +91,7 @@ public:
         return seconds;
     }
     double get_frames() const {
-        return seconds*fps+frames;
+        return 1.0*seconds*fps+frames;
     }
     fps_type get_fps() const {
         return fps;
