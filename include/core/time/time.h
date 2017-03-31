@@ -107,6 +107,9 @@ public:
     void add_frames(double df) {
         set_frames(get_frames()+df);
     }
+    void set_seconds(double seconds_) {
+        set_frames(seconds_*fps);
+    }
 
     /**
      * Change fps, preserving time in seconds

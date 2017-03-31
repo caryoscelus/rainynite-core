@@ -50,6 +50,14 @@ public:
         time = time_;
         changed_time(time);
     }
+    inline void set_frames(double frames) {
+        time.set_frames(frames);
+        changed_time(time);
+    }
+    inline void set_seconds(double seconds) {
+        time.set_seconds(seconds);
+        changed_time(time);
+    }
     inline void to_start() {
         set_time(time_period.get_first());
     }
