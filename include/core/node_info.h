@@ -38,6 +38,7 @@ std::string node_name(AbstractReference node) {
 }
 
 #define REGISTER_NODE_NAMED(Node, name) \
+class Node; \
 class Node##NodeInfo : public NodeInfo, class_init::Registered<Node##NodeInfo, Node, NodeInfo> { \
 public: \
     virtual std::string operator()() const override { \
