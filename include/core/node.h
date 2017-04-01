@@ -155,8 +155,9 @@ public:
     }
     void init_property(std::string const& name, AbstractReference* ref_p) {
         named_storage[name] = ref_p;
+        numbered_storage.push_back(ref_p);
     }
-    std::map<std::string, AbstractReference> get_link_map() {
+    std::map<std::string, AbstractReference> get_link_map() const {
         std::map<std::string, AbstractReference> result;
         // TODO: use generic conversion function
         for (auto const& e : named_storage) {
@@ -164,15 +165,19 @@ public:
         }
         return result;
     }
-    std::vector<AbstractReference> get_links() {
+    std::vector<AbstractReference> get_links() const {
         std::vector<AbstractReference> result;
-        for (auto const& e : named_storage) {
-            result.push_back(*e.second);
+        for (auto e : numbered_storage) {
+            result.push_back(*e);
         }
         return result;
     }
+    size_t link_count() const {
+        return numbered_storage.size();
+    }
 private:
     std::map<std::string, AbstractReference*> named_storage;
+    std::vector<AbstractReference*> numbered_storage;
 };
 
 template <typename T>
