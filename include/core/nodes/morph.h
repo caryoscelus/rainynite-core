@@ -20,6 +20,7 @@
 #define __CORE__NODES__MORPH_H__699DF89C
 
 #include <core/node.h>
+#include <core/node_info.h>
 
 #include <geom_helpers/knots.h>
 
@@ -27,6 +28,8 @@
 
 namespace core {
 namespace nodes {
+
+REGISTER_NODE(BezierMorph);
 
 class BezierMorph : public Node<Geom::BezierKnots> {
 public:

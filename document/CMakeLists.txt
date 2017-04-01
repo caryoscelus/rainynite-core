@@ -4,6 +4,7 @@ target_sources(document
     PRIVATE
         context.cpp
         document.cpp
+        instance.cpp
 )
 
 target_link_libraries(document morphing)
