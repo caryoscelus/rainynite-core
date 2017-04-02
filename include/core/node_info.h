@@ -29,6 +29,11 @@ public:
     virtual std::string operator()() const = 0;
 };
 
+class TypeName {
+public:
+    virtual std::string operator()() const = 0;
+};
+
 std::string node_name(AbstractReference node) {
     try {
         return class_init::type_info<NodeInfo,std::string>(typeid(*node));

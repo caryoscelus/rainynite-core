@@ -34,5 +34,42 @@ public:
 
 template class AnimatedNodeInfo<Geom::BezierKnots>;
 
+class DoubleTypeName : public TypeName, class_init::Registered<DoubleTypeName, double, TypeName> {
+public:
+    virtual std::string operator()() const override {
+        return "double";
+    }
+};
+
+class BezierKnotsTypeName : public TypeName, class_init::Registered<BezierKnotsTypeName, Geom::BezierKnots, TypeName> {
+public:
+    virtual std::string operator()() const override {
+        return "Knots";
+    }
+};
+
+class ValueTypeNameBase {
+public:
+    virtual std::string operator()(boost::any const& object) const = 0;
+};
+
+class ValueTypeName : public ValueTypeNameBase, class_init::Registered<ValueTypeName, AbstractReference, ValueTypeNameBase> {
+public:
+    virtual std::string operator()(boost::any const& object) const {
+        auto value = boost::any_cast<AbstractReference>(object);
+        return class_init::type_info<TypeName, std::string>(value->get_type());
+    }
+};
+
+template <typename T>
+class ValueNodeInfo : public NodeInfo, class_init::Registered<ValueNodeInfo<T>, Value<T>, NodeInfo> {
+public:
+    virtual std::string operator()() const override {
+        return "Value<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
+    }
+};
+
+template class ValueNodeInfo<Geom::BezierKnots>;
+
 } // namespace nodes
 } // namespace core

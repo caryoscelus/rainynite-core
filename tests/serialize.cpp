@@ -47,11 +47,6 @@ public:
 
 template class AutoValueToString<double>;
 
-class TypeName {
-public:
-    virtual std::string operator()() const = 0;
-};
-
 class DoubleTypeName : public TypeName, class_init::Registered<DoubleTypeName, double, TypeName> {
 public:
     virtual std::string operator()() const override {
