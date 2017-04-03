@@ -18,6 +18,7 @@
 
 #include <core/node_info.h>
 #include <core/nodes/animated.h>
+#include <core/nodes/morph.h>
 
 #include <geom_helpers/knots.h>
 

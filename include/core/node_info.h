@@ -55,11 +55,12 @@ NodeInfo const& get_node_type(std::string const& name) {
     return class_init::type_meta<NodeInfo>(type);
 }
 
-AbstractReference make_node_with_name(std::string const& name, boost::any const& value = boost::any()) {
+template <typename T>
+std::shared_ptr<T> make_node_with_name(std::string const& name, boost::any const& value = boost::any()) {
     auto node = get_node_type(name).new_empty();
     if (!value.empty() && node->can_set_any(value))
         node->set_any(value);
-    return node;
+    return std::dynamic_pointer_cast<T>(node);
 }
 
 #define REGISTER_NODE_NAMED(Node, name) \

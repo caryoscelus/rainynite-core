@@ -17,7 +17,7 @@
  */
 
 #include <core/document.h>
-#include <core/nodes/morph.h>
+#include <core/node_info.h>
 #include <core/nodes/animated.h>
 #include <core/filters/svg_path_reader.h>
 
@@ -58,9 +58,9 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
     for (int i = 0; i < paths.size()-1; ++i) {
         auto first = make_value<Geom::BezierKnots>(paths[i]);
         auto second = make_value<Geom::BezierKnots>(paths[i+1]);
-        auto morph = std::make_shared<nodes::BezierMorph>();
-        morph->set_a(first);
-        morph->set_b(second);
+        auto morph = make_node_with_name<AbstractNode>("BezierMorph");
+        morph->set_property("a", first);
+        morph->set_property("b", second);
         animated->add_child({Time(i), Time(i+1)}, morph);
     }
 

@@ -42,6 +42,10 @@ public:
         return child->get(t);
     }
 public:
+    template <typename R>
+    void add_child(TimePeriod period, R ref) {
+        add_child(period, std::dynamic_pointer_cast<BaseValue<T>>(ref));
+    }
     void add_child(TimePeriod period, BaseReference<T> ref) {
         list_periods()->push_value(period);
         list_children()->push_back(ref);
