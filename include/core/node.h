@@ -84,7 +84,7 @@ public:
     virtual boost::any get_any(Time t) const override {
         return get(t);
     }
-    virtual void set_any(boost::any value_) {
+    virtual void set_any(boost::any value_) override {
         set(boost::any_cast<T>(value_));
     }
     virtual bool can_set_any(boost::any value_) const override {
@@ -114,7 +114,7 @@ public:
     virtual bool can_set() const override {
         return true;
     }
-    virtual boost::any any() const {
+    virtual boost::any any() const override {
         return value;
     }
 
@@ -125,6 +125,72 @@ public:
 
 private:
     T value;
+};
+
+template <typename T, typename... Args>
+std::shared_ptr<Value<T>> make_value(Args&&... args);
+
+class AbstractListLinked {
+public:
+    virtual std::vector<AbstractReference> get_links() const = 0;
+    virtual AbstractReference get_link(size_t i) const = 0;
+    virtual size_t link_count() const = 0;
+    virtual void push_back(AbstractReference value) {
+        throw "cannot push back";
+    }
+    template <typename T>
+    void push_value(T const& value) {
+        push_back(make_value<T>(value));
+    }
+};
+
+using AbstractListReference = std::shared_ptr<AbstractListLinked>;
+
+template <typename T>
+class ListValue : public BaseValue<std::vector<T>>, public AbstractListLinked {
+public:
+    ListValue() = default;
+public:
+    virtual std::vector<T> get(Time t) const override {
+        // TODO: caching
+        std::vector<T> result;
+        std::transform(
+            values.begin(),
+            values.end(),
+            std::back_inserter(result),
+            [t](auto e) {
+                return e->get(t);
+            }
+        );
+        return result;
+    }
+    virtual std::vector<AbstractReference> get_links() const override {
+        std::vector<AbstractReference> result;
+        std::transform(
+            values.begin(),
+            values.end(),
+            std::back_inserter(result),
+            [](auto e) {
+                return e;
+            }
+        );
+        return result;
+    }
+    virtual AbstractReference get_link(size_t i) const override {
+        return values.at(i);
+    }
+    virtual size_t link_count() const override {
+        return values.size();
+    }
+    virtual void push_back(AbstractReference value) override {
+        if (auto e = std::dynamic_pointer_cast<BaseValue<T>>(value)) {
+            values.push_back(e);
+        } else {
+            //throw
+        }
+    }
+private:
+    std::vector<BaseReference<T>> values;
 };
 
 template <typename T, typename... Args>
@@ -142,7 +208,7 @@ std::shared_ptr<T> make_node() {
     return r;
 }
 
-class AbstractNode {
+class AbstractNode : public AbstractListLinked {
 public:
     AbstractReference get_property(std::string const& name) const {
         return *(named_storage.at(name));
@@ -165,14 +231,18 @@ public:
         }
         return result;
     }
-    std::vector<AbstractReference> get_links() const {
+public:
+    virtual std::vector<AbstractReference> get_links() const override {
         std::vector<AbstractReference> result;
         for (auto e : numbered_storage) {
             result.push_back(*e);
         }
         return result;
     }
-    size_t link_count() const {
+    virtual AbstractReference get_link(size_t i) const override {
+        return *numbered_storage[i];
+    }
+    virtual size_t link_count() const override {
         return numbered_storage.size();
     }
 private:
@@ -221,6 +291,11 @@ public:
         prop.set(make_value<U>(value));
         init_property(prop.get_name(), &(prop.mod()));
     }
+    template <typename U>
+    void init_list(NodeProperty& prop) {
+        prop.set(std::make_shared<ListValue<U>>());
+        init_property(prop.get_name(), &(prop.mod()));
+    }
 };
 
 void traverse_once(AbstractReference root, auto f) {
@@ -266,6 +341,13 @@ public: \
     } \
 private: \
     NodeProperty name { #name, #type }
+
+#define NODE_LIST_PROPERTY(name, type) \
+public: \
+    inline AbstractListReference list_##name() const { \
+        return std::dynamic_pointer_cast<AbstractListLinked>(name.get()); \
+    } \
+NODE_PROPERTY(name, std::vector<type>)
 
 } // namespace core
 
