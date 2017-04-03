@@ -29,6 +29,8 @@ template <class T>
 class Animated : public Node<T> {
 public:
     Animated() {
+        this->template init_list<T>(children);
+        this->template init_list<TimePeriod>(periods);
         this->init(default_value, T());
     }
 public:
@@ -41,16 +43,18 @@ public:
     }
 public:
     void add_child(TimePeriod period, BaseReference<T> ref) {
-        children.emplace_back(period, ref);
+        list_periods()->push_value(period);
+        list_children()->push_back(ref);
     }
 private:
     std::pair<AbstractReference, Time> find_appropriate(Time time) const {
-        for (auto const& child : children) {
-            auto period = child.first;
+        size_t i = 0;
+        for (auto period : get_periods()->get(time)) {
             period.set_fps(time.get_fps());
             if (period.contains(time)) {
-                return { child.second, calculate_time(period, time) };
+                return { list_children()->get_link(i), calculate_time(period, time) };
             }
+            ++i;
         }
         return { get_default_value(), time };
     }
@@ -59,9 +63,9 @@ private:
         auto b = period.get_last();
         return (time-a)/(b-a).get_seconds();
     }
-private:
-    std::vector<std::pair<TimePeriod,AbstractReference>> children;
 
+    NODE_LIST_PROPERTY(children, T);
+    NODE_LIST_PROPERTY(periods, TimePeriod);
     NODE_PROPERTY(default_value, T);
 };
 
