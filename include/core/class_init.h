@@ -57,6 +57,12 @@ std::map<std::type_index, T*>& class_registry() {
     return instance;
 }
 
+template <class T>
+std::map<T, std::type_index>& reverse_class_registry() {
+    static std::map<T, std::type_index> instance;
+    return instance;
+}
+
 /**
  * Automatic class registration helper.
  *
@@ -78,6 +84,21 @@ public:
     static void init() {
         class_registry<R>()[typeid(T)] = new S();
     }
+};
+
+template <class S, class T, class R>
+class ReverseRegistered : public Initialized<ReverseRegistered<S, T, R>> {
+public:
+    static void init() {
+        reverse_class_registry<R>().emplace(S()(), typeid(T));
+    }
+};
+
+class TypeLookupError : public std::runtime_error {
+public:
+    TypeLookupError(std::string msg="") :
+        std::runtime_error("Type lookup error "+msg)
+    {}
 };
 
 class RuntimeTypeError : public std::runtime_error {
@@ -123,6 +144,15 @@ R any_info(boost::any const& object) {
     } catch (...) {
         throw RuntimeTypeError(type);
     }
+}
+
+template <class K>
+std::type_index find_type(K const& key) {
+    auto const& map = reverse_class_registry<K>();
+    auto iter = map.find(key);
+    if (iter != map.end())
+        return iter->second;
+    throw TypeLookupError();
 }
 
 }

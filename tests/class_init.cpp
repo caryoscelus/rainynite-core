@@ -46,7 +46,7 @@ public:
     virtual std::string operator()() const = 0;
 };
 
-class BarName : public ClassName, Registered<BarName, Bar, ClassName> {
+class BarName : public ClassName, Registered<BarName, Bar, ClassName>, ReverseRegistered<BarName, Bar, std::string> {
 public:
     virtual std::string operator()() const override {
         return "Bar";
@@ -56,6 +56,11 @@ public:
 TEST_CASE("Automatic class registration", "") {
     CHECK((type_info<ClassName, std::string>(typeid(Bar)) == "Bar"));
     CHECK_THROWS_AS((type_info<ClassName, std::string>(typeid(Foo))), UnknownTypeError);
+}
+
+TEST_CASE("Reverse class registration", "") {
+    CHECK(find_type<std::string>("Bar") == typeid(Bar));
+    CHECK_THROWS_AS(find_type<std::string>("Foo"), TypeLookupError);
 }
 
 class FooBar {
