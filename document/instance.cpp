@@ -30,6 +30,9 @@ public:
     virtual std::string operator()() const override {
         return "Animated";
     }
+    virtual AbstractReference new_empty() const override {
+        return std::make_shared<Animated<T>>();
+    }
 };
 
 template class AnimatedNodeInfo<Geom::BezierKnots>;
@@ -66,6 +69,9 @@ class ValueNodeInfo : public NodeInfo, class_init::Registered<ValueNodeInfo<T>, 
 public:
     virtual std::string operator()() const override {
         return "Value<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
+    }
+    virtual AbstractReference new_empty() const override {
+        return std::make_shared<Value<T>>();
     }
 };
 

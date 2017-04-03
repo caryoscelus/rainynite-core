@@ -92,6 +92,9 @@ public:
     virtual std::string operator()() const override {
         return "Value<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
     }
+    virtual AbstractReference new_empty() const override {
+        return make_node<Value<T>>();
+    }
 };
 
 template class ValueNodeInfo<double>;

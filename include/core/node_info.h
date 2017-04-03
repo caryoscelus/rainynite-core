@@ -24,9 +24,13 @@
 
 namespace core {
 
+/**
+ * Runtime node information interface.
+ */
 class NodeInfo {
 public:
     virtual std::string operator()() const = 0;
+    virtual AbstractReference new_empty() const = 0;
 };
 
 class TypeName {
@@ -34,20 +38,39 @@ public:
     virtual std::string operator()() const = 0;
 };
 
-std::string node_name(AbstractReference node) {
+std::string node_type_name(std::type_index type) {
     try {
-        return class_init::type_info<NodeInfo,std::string>(typeid(*node));
+        return class_init::type_info<NodeInfo,std::string>(type);
     } catch (class_init::RuntimeTypeError const& ex) {
         return "unknown";
     }
 }
 
+std::string node_name(AbstractReference node) {
+    return node_type_name(typeid(*node));
+}
+
+NodeInfo const& get_node_type(std::string const& name) {
+    auto type = class_init::find_type(name);
+    return class_init::type_meta<NodeInfo>(type);
+}
+
+AbstractReference make_node_with_name(std::string const& name, boost::any const& value = boost::any()) {
+    auto node = get_node_type(name).new_empty();
+    if (!value.empty() && node->can_set_any(value))
+        node->set_any(value);
+    return node;
+}
+
 #define REGISTER_NODE_NAMED(Node, name) \
 class Node; \
-class Node##NodeInfo : public NodeInfo, class_init::Registered<Node##NodeInfo, Node, NodeInfo> { \
+class Node##NodeInfo : public NodeInfo, class_init::Registered<Node##NodeInfo, Node, NodeInfo>, class_init::ReverseRegistered<Node##NodeInfo, Node, std::string> { \
 public: \
     virtual std::string operator()() const override { \
         return name; \
+    } \
+    virtual AbstractReference new_empty() const override { \
+        return std::static_pointer_cast<AbstractValue>(std::make_shared<Node>()); \
     } \
 }
 
