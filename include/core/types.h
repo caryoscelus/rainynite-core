@@ -34,10 +34,14 @@ inline TypeInfo const& get_primitive_type(std::string const& name) {
     return class_init::type_meta<TypeInfo>(type);
 }
 
-template <typename T>
-T parse_primitive_type(std::string const& type, std::string const& str) {
+inline boost::any parse_primitive_type(std::string const& type, std::string const& str) {
+    return get_primitive_type(type).parse_string(str);
+}
+
+template <typename T, typename... Args>
+T parse_primitive_type_to(Args&&... args) {
     return boost::any_cast<T>(
-        get_primitive_type(type).parse_string(str)
+        parse_primitive_type(std::forward<Args>(args)...)
     );
 }
 

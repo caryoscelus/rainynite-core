@@ -69,7 +69,7 @@ TEST_CASE("Dumb json serialize", "[serialize,node]") {
 }
 
 TEST_CASE("Read double", "[serialize]") {
-    auto x = parse_primitive_type<double>("Real", "3.5");
+    auto x = parse_primitive_type_to<double>("Real", "3.5");
     CHECK(x == 3.5);
 }
 
