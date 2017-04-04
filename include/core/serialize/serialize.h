@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__SERIALIZE_H__821FEF22
-#define __CORE__SERIALIZE_H__821FEF22
+#ifndef __CORE__SERIALIZE__SERIALIZE_H__821FEF22
+#define __CORE__SERIALIZE__SERIALIZE_H__821FEF22
 
 #include <set>
 #include <ostream>
@@ -107,78 +107,6 @@ private:
     void store_object(U id) {
         storage.insert(id);
     }
-};
-
-template <class V, typename U>
-class DumbJsonWriter : public Writer<V, U> {
-public:
-    DumbJsonWriter(std::ostream& stream_) :
-        stream(stream_)
-    {}
-public:
-    virtual void object_start(U id) override {
-        element();
-        write("{");
-        prev_element = false;
-        key("UID");
-        string(V::id_to_string(id));
-    }
-    virtual void object_end() override {
-        write("}");
-        prev_element = true;
-    }
-    virtual void object_value_start() override {
-        key("VALUE");
-    }
-    virtual void object_value_end() override {
-    }
-    virtual void list_start() override {
-        write("[");
-        prev_element = false;
-    }
-    virtual void list_end() override {
-        write("]");
-        prev_element = true;
-    }
-    virtual void type(std::string const& s) override {
-        key("TYPE");
-        write_string(s);
-        element();
-    }
-    virtual void string(std::string const& s) override {
-        element();
-        write_string(s);
-    }
-    virtual void key(std::string const& s) override {
-        element();
-        write_string(s);
-        write(":");
-        prev_element = false;
-    }
-    virtual void number(double x) override {
-        element();
-        write(std::to_string(x));
-    }
-    virtual void reference(U id) override {
-        string(V::id_to_string(id));
-    }
-private:
-    void element() {
-        if (prev_element)
-            write(",");
-        prev_element = true;
-    }
-    void write(std::string const& s) {
-        stream << s;
-    }
-    void write_string(std::string const& s) {
-        write("\"");
-        write(s);
-        write("\"");
-    }
-private:
-    std::ostream& stream;
-    bool prev_element = false;
 };
 
 } // namespace serialize

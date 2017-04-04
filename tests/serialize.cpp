@@ -22,7 +22,7 @@
 
 #include <boost/uuid/uuid_io.hpp>
 
-#include <core/serialize.h>
+#include <core/serialize/json.h>
 #include <core/node.h>
 #include <core/node_info.h>
 #include <core/class_init.h>
