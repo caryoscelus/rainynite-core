@@ -29,6 +29,18 @@ public:
     virtual boost::any parse_string(std::string const& s) const = 0;
 };
 
+inline TypeInfo const& get_primitive_type(std::string const& name) {
+    auto type = class_init::find_type(name);
+    return class_init::type_meta<TypeInfo>(type);
+}
+
+template <typename T>
+T parse_primitive_type(std::string const& type, std::string const& str) {
+    return boost::any_cast<T>(
+        get_primitive_type(type).parse_string(str)
+    );
+}
+
 } // namespace core
 
 #endif

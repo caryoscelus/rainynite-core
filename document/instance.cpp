@@ -24,7 +24,11 @@
 namespace core {
 namespace nodes {
 
-class DoubleTypeInfo : public TypeInfo, class_init::Registered<DoubleTypeInfo, double, TypeInfo> {
+class DoubleTypeInfo :
+    public TypeInfo,
+    class_init::Registered<DoubleTypeInfo, double, TypeInfo>,
+    class_init::ReverseRegistered<DoubleTypeInfo, double, std::string>
+{
 public:
     virtual std::string operator()() const override {
         return "Real";
@@ -35,7 +39,11 @@ public:
     }
 };
 
-class BezierKnotsTypeInfo : public TypeInfo, class_init::Registered<BezierKnotsTypeInfo, Geom::BezierKnots, TypeInfo> {
+class BezierKnotsTypeInfo :
+    public TypeInfo,
+    class_init::Registered<BezierKnotsTypeInfo, Geom::BezierKnots, TypeInfo>,
+    class_init::ReverseRegistered<BezierKnotsTypeInfo, Geom::BezierKnots, std::string>
+{
 public:
     virtual std::string operator()() const override {
         return "Knots";
