@@ -25,8 +25,14 @@
 namespace core {
 namespace nodes {
 
+class AbstractAnimated {
+public:
+    virtual void add_child(TimePeriod period, AbstractReference ref) = 0;
+    virtual size_t child_count() const = 0;
+};
+
 template <class T>
-class Animated : public Node<T> {
+class Animated : public AbstractAnimated, public Node<T> {
 public:
     Animated() {
         this->template init_list<T>(children);
@@ -42,13 +48,12 @@ public:
         return child->get(t);
     }
 public:
-    template <typename R>
-    void add_child(TimePeriod period, R ref) {
-        add_child(period, std::dynamic_pointer_cast<BaseValue<T>>(ref));
-    }
-    void add_child(TimePeriod period, BaseReference<T> ref) {
+    virtual void add_child(TimePeriod period, AbstractReference ref) override {
         list_periods()->push_value(period);
-        list_children()->push_back(ref);
+        list_children()->push_back(std::dynamic_pointer_cast<BaseValue<T>>(ref));
+    }
+    virtual size_t child_count() const override {
+        return list_children()->link_count();
     }
 private:
     std::pair<AbstractReference, Time> find_appropriate(Time time) const {
