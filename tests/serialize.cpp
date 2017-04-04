@@ -99,56 +99,52 @@ public:
 
 template class ValueNodeInfo<double>;
 
-namespace serialize {
+class ValueWriter {
+public:
+    template <class W>
+    static void put_value(W& writer, AbstractReference const& object) {
+        writer.string(class_init::any_info<ValueToString, std::string>(object->any()));
+    }
 
-template <>
-void put_value(Writer<AbstractReference>& writer, AbstractReference const& object) {
-    writer.string(class_init::any_info<ValueToString, std::string>(object->any()));
-}
+    template <class W>
+    static void put_list(W& writer, AbstractReference const& object) {
+        //
+    }
 
-template <>
-void put_list(Writer<AbstractReference>& writer, AbstractReference const& object) {
-    //
-}
-
-template <>
-void put_map(Writer<AbstractReference>& writer, AbstractReference const& object) {
-    if (auto node = std::dynamic_pointer_cast<AbstractNode>(object)) {
-        for (auto const& e : node->get_link_map()) {
-            writer.key(e.first);
-            writer.object(e.second);
+    template <class W>
+    static void put_map(W& writer, AbstractReference const& object) {
+        if (auto node = std::dynamic_pointer_cast<AbstractNode>(object)) {
+            for (auto const& e : node->get_link_map()) {
+                writer.key(e.first);
+                writer.object(e.second);
+            }
         }
     }
-}
 
-template <>
-AbstractReference get_reference(AbstractReference const& object) {
-    return object;
-}
+    static AbstractReference get_reference(AbstractReference object) {
+        return object;
+    }
 
-template <>
-std::string id_to_string(AbstractReference id) {
-    return to_string(id->get_id());
-}
+    static std::string id_to_string(AbstractReference id) {
+        return to_string(id->get_id());
+    }
 
-template <>
-std::string get_type(AbstractReference const& object) {
-    return node_name(object);
-}
+    static std::string get_type(AbstractReference object) {
+        return node_name(object);
+    }
 
-template <>
-RecordType classify(AbstractReference const& object) {
-    if (object->is_const())
-        return RecordType::Value;
-    return RecordType::Map;
-}
+    static serialize::RecordType classify(AbstractReference object) {
+        if (object->is_const())
+            return serialize::RecordType::Value;
+        return serialize::RecordType::Map;
+    }
+};
 
-}
 }
 
 TEST_CASE("Dumb json serialize", "[serialize,node]") {
     std::ostringstream stream;
-    auto writer = serialize::DumbJsonWriter<AbstractReference>(stream);
+    auto writer = serialize::DumbJsonWriter<ValueWriter, AbstractReference>(stream);
     AbstractReference three = make_value<double>(3);
     auto add = make_node<Add>();
     add->set_property("a", three);

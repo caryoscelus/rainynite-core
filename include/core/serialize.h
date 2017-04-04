@@ -31,55 +31,58 @@ enum class RecordType {
     Map
 };
 
-template <typename U>
-class Writer;
+class ValueWriterTemplate {
+public:
+    template <class W, class T>
+    static void put_value(W& serializer, T const& object);
 
-template <typename U, class T>
-void put_value(Writer<U>& serializer, T const& object);
+    template <class W, class T>
+    static void put_list(W& serializer, T const& object);
 
-template <typename U, class T>
-void put_list(Writer<U>& serializer, T const& object);
+    template <class W, class T>
+    static void put_map(W& serializer, T const& object);
 
-template <typename U, class T>
-void put_map(Writer<U>& serializer, T const& object);
+    template <typename U, class T>
+    static U get_reference(T const& object);
 
-template <typename U, class T>
-U get_reference(T const& object);
+    template <typename U>
+    static std::string id_to_string(U id);
 
-template <typename U>
-std::string id_to_string(U id);
+    template <class T>
+    static std::string get_type(T const& object);
 
-template <class T>
-std::string get_type(T const& object);
+    template <class T>
+    static RecordType classify(T const& object);
+};
 
-template <class T>
-RecordType classify(T const& object);
-
-template <typename U>
+template <class V, typename U>
 class Writer {
+public:
+    using ValueReader = V;
+    using ReferenceType = U;
 public:
     template <class T>
     void object(T const& object) {
-        auto ref = get_reference<U>(object);
+        auto ref = V::get_reference(object);
         if (is_stored(ref)) {
             reference(ref);
         } else {
             store_object(ref);
             object_start(ref);
-            type(get_type(object));
-            switch (classify(object)) {
+            type(V::get_type(object));
+            switch (V::classify(object)) {
                 case RecordType::Value:
                     object_value_start();
-                    put_value(*this, object);
+                    V::put_value(*this, object);
                     object_value_end();
                     break;
                 case RecordType::List:
                     object_value_start();
-                    put_list(*this, object);
+                    V::put_list(*this, object);
                     object_value_end();
                     break;
                 case RecordType::Map:
-                    put_map(*this, object);
+                    V::put_map(*this, object);
                     break;
             }
             object_end();
@@ -106,8 +109,8 @@ private:
     }
 };
 
-template <typename U>
-class DumbJsonWriter : public Writer<U> {
+template <class V, typename U>
+class DumbJsonWriter : public Writer<V, U> {
 public:
     DumbJsonWriter(std::ostream& stream_) :
         stream(stream_)
@@ -118,7 +121,7 @@ public:
         write("{");
         prev_element = false;
         key("UID");
-        string(id_to_string(id));
+        string(V::id_to_string(id));
     }
     virtual void object_end() override {
         write("}");
@@ -157,7 +160,7 @@ public:
         write(std::to_string(x));
     }
     virtual void reference(U id) override {
-        string(id_to_string(id));
+        string(V::id_to_string(id));
     }
 private:
     void element() {
