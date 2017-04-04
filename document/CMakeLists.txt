@@ -5,6 +5,7 @@ target_sources(document
         context.cpp
         document.cpp
         instance.cpp
+        nodes/animated.cpp
         nodes/morph.cpp
 )
 

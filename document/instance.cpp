@@ -17,25 +17,11 @@
  */
 
 #include <core/node_info.h>
-#include <core/nodes/animated.h>
 
 #include <geom_helpers/knots.h>
 
 namespace core {
 namespace nodes {
-
-template <class T>
-class AnimatedNodeInfo : public NodeInfo, class_init::Registered<AnimatedNodeInfo<T>, Animated<T>, NodeInfo> {
-public:
-    virtual std::string operator()() const override {
-        return "Animated<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
-    }
-    virtual AbstractReference new_empty() const override {
-        return std::make_shared<Animated<T>>();
-    }
-};
-
-template class AnimatedNodeInfo<Geom::BezierKnots>;
 
 class DoubleTypeName : public TypeName, class_init::Registered<DoubleTypeName, double, TypeName> {
 public:
@@ -65,7 +51,11 @@ public:
 };
 
 template <typename T>
-class ValueNodeInfo : public NodeInfo, class_init::Registered<ValueNodeInfo<T>, Value<T>, NodeInfo> {
+class ValueNodeInfo :
+    public NodeInfo,
+    class_init::Registered<ValueNodeInfo<T>, Value<T>, NodeInfo>,
+    class_init::ReverseRegistered<ValueNodeInfo<T>, Value<T>, std::string>
+{
 public:
     virtual std::string operator()() const override {
         return "Value<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";

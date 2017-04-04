@@ -31,53 +31,6 @@ public:
     virtual size_t child_count() const = 0;
 };
 
-template <class T>
-class Animated : public AbstractAnimated, public Node<T> {
-public:
-    Animated() {
-        this->template init_list<T>(children);
-        this->template init_list<TimePeriod>(periods);
-        this->init(default_value, T());
-    }
-public:
-    virtual T get(Time time) const override {
-        AbstractReference r;
-        Time t;
-        std::tie(r, t) = find_appropriate(time);
-        auto child = std::dynamic_pointer_cast<BaseValue<T>>(r);
-        return child->get(t);
-    }
-public:
-    virtual void add_child(TimePeriod period, AbstractReference ref) override {
-        list_periods()->push_value(period);
-        list_children()->push_back(std::dynamic_pointer_cast<BaseValue<T>>(ref));
-    }
-    virtual size_t child_count() const override {
-        return list_children()->link_count();
-    }
-private:
-    std::pair<AbstractReference, Time> find_appropriate(Time time) const {
-        size_t i = 0;
-        for (auto period : get_periods()->get(time)) {
-            period.set_fps(time.get_fps());
-            if (period.contains(time)) {
-                return { list_children()->get_link(i), calculate_time(period, time) };
-            }
-            ++i;
-        }
-        return { get_default_value(), time };
-    }
-    Time calculate_time(TimePeriod const& period, Time time) const {
-        auto a = period.get_first();
-        auto b = period.get_last();
-        return (time-a)/(b-a).get_seconds();
-    }
-
-    NODE_LIST_PROPERTY(children, T);
-    NODE_LIST_PROPERTY(periods, TimePeriod);
-    NODE_PROPERTY(default_value, T);
-};
-
 } // namespace nodes
 } // namespace core
 
