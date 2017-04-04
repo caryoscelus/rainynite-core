@@ -20,6 +20,7 @@
 
 #include <core/node_info.h>
 #include <core/nodes/animated.h>
+#include <core/types.h>
 
 namespace core {
 namespace nodes {
@@ -79,7 +80,7 @@ class AnimatedNodeInfo :
 {
 public:
     virtual std::string operator()() const override {
-        return "Animated<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
+        return "Animated<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
     }
     virtual AbstractReference new_empty() const override {
         return std::make_shared<Animated<T>>();

@@ -22,8 +22,10 @@
 
 #include <boost/uuid/uuid_io.hpp>
 
+#include <core/types.h>
 #include <core/serialize/json.h>
 #include <core/serialize/node_writer.h>
+// #include <core/serialize/node_reader.h>
 
 using namespace core;
 
@@ -32,13 +34,6 @@ namespace core {
 namespace serialize {
 template class AutoValueToString<double>;
 }
-
-class DoubleTypeName : public TypeName, class_init::Registered<DoubleTypeName, double, TypeName> {
-public:
-    virtual std::string operator()() const override {
-        return "double";
-    }
-};
 
 class Add : public Node<double> {
 public:
@@ -59,19 +54,6 @@ public:
 
 REGISTER_NODE(Add);
 
-template <typename T>
-class ValueNodeInfo : public NodeInfo, class_init::Registered<ValueNodeInfo<T>, Value<T>, NodeInfo> {
-public:
-    virtual std::string operator()() const override {
-        return "Value<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
-    }
-    virtual AbstractReference new_empty() const override {
-        return make_node<Value<T>>();
-    }
-};
-
-template class ValueNodeInfo<double>;
-
 }
 
 TEST_CASE("Dumb json serialize", "[serialize,node]") {
@@ -84,4 +66,12 @@ TEST_CASE("Dumb json serialize", "[serialize,node]") {
     AbstractReference add_a = add;
     writer.object(add_a);
     std::cout << stream.str() << std::endl;
+}
+
+TEST_CASE("Read double", "[serialize]") {
+
+}
+
+TEST_CASE("Deserialize", "[serialize,node]") {
+
 }

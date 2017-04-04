@@ -33,11 +33,6 @@ public:
     virtual AbstractReference new_empty() const = 0;
 };
 
-class TypeName {
-public:
-    virtual std::string operator()() const = 0;
-};
-
 inline std::string node_type_name(std::type_index type) {
     try {
         return class_init::type_info<NodeInfo,std::string>(type);

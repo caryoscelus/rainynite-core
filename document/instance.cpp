@@ -17,36 +17,44 @@
  */
 
 #include <core/node_info.h>
+#include <core/types.h>
 
 #include <geom_helpers/knots.h>
 
 namespace core {
 namespace nodes {
 
-class DoubleTypeName : public TypeName, class_init::Registered<DoubleTypeName, double, TypeName> {
+class DoubleTypeInfo : public TypeInfo, class_init::Registered<DoubleTypeInfo, double, TypeInfo> {
 public:
     virtual std::string operator()() const override {
-        return "double";
+        return "Real";
+    }
+    virtual boost::any parse_string(std::string const& s) const override {
+        // TODO: check correctness & locale issues
+        return std::stod(s);
     }
 };
 
-class BezierKnotsTypeName : public TypeName, class_init::Registered<BezierKnotsTypeName, Geom::BezierKnots, TypeName> {
+class BezierKnotsTypeInfo : public TypeInfo, class_init::Registered<BezierKnotsTypeInfo, Geom::BezierKnots, TypeInfo> {
 public:
     virtual std::string operator()() const override {
         return "Knots";
     }
+    virtual boost::any parse_string(std::string const& s) const override {
+        return Geom::svg_to_knots(s);
+    }
 };
 
-class ValueTypeNameBase {
+class ValueTypeInfoBase {
 public:
     virtual std::string operator()(boost::any const& object) const = 0;
 };
 
-class ValueTypeName : public ValueTypeNameBase, class_init::Registered<ValueTypeName, AbstractReference, ValueTypeNameBase> {
+class ValueTypeInfo : public ValueTypeInfoBase, class_init::Registered<ValueTypeInfo, AbstractReference, ValueTypeInfoBase> {
 public:
     virtual std::string operator()(boost::any const& object) const {
         auto value = boost::any_cast<AbstractReference>(object);
-        return class_init::type_info<TypeName, std::string>(value->get_type());
+        return class_init::type_info<TypeInfo, std::string>(value->get_type());
     }
 };
 
@@ -58,7 +66,7 @@ class ValueNodeInfo :
 {
 public:
     virtual std::string operator()() const override {
-        return "Value<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
+        return "Value<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
     }
     virtual AbstractReference new_empty() const override {
         return std::make_shared<Value<T>>();
@@ -66,6 +74,7 @@ public:
 };
 
 template class ValueNodeInfo<Geom::BezierKnots>;
+template class ValueNodeInfo<double>;
 
 } // namespace nodes
 } // namespace core
