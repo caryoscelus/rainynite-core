@@ -23,47 +23,20 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include <core/serialize/json.h>
-#include <core/node.h>
-#include <core/node_info.h>
-#include <core/class_init.h>
+#include <core/serialize/node_writer.h>
 
 using namespace core;
 
 namespace core {
 
-class ValueToString {
-public:
-    virtual std::string operator()(boost::any const& object) const = 0;
-};
-
-template <class T>
-class AutoValueToString : public ValueToString, class_init::Registered<AutoValueToString<T>, T, ValueToString> {
-public:
-    virtual std::string operator()(boost::any const& object) const override {
-        auto value = boost::any_cast<T>(object);
-        return std::to_string(value);
-    }
-};
-
+namespace serialize {
 template class AutoValueToString<double>;
+}
 
 class DoubleTypeName : public TypeName, class_init::Registered<DoubleTypeName, double, TypeName> {
 public:
     virtual std::string operator()() const override {
         return "double";
-    }
-};
-
-class ValueTypeNameBase {
-public:
-    virtual std::string operator()(boost::any const& object) const = 0;
-};
-
-class ValueTypeName : public ValueTypeNameBase, class_init::Registered<ValueTypeName, AbstractReference, ValueTypeNameBase> {
-public:
-    virtual std::string operator()(boost::any const& object) const {
-        auto value = boost::any_cast<AbstractReference>(object);
-        return class_init::type_info<TypeName, std::string>(value->get_type());
     }
 };
 
@@ -99,52 +72,11 @@ public:
 
 template class ValueNodeInfo<double>;
 
-class ValueWriter {
-public:
-    template <class W>
-    static void put_value(W& writer, AbstractReference const& object) {
-        writer.string(class_init::any_info<ValueToString, std::string>(object->any()));
-    }
-
-    template <class W>
-    static void put_list(W& writer, AbstractReference const& object) {
-        //
-    }
-
-    template <class W>
-    static void put_map(W& writer, AbstractReference const& object) {
-        if (auto node = std::dynamic_pointer_cast<AbstractNode>(object)) {
-            for (auto const& e : node->get_link_map()) {
-                writer.key(e.first);
-                writer.object(e.second);
-            }
-        }
-    }
-
-    static AbstractReference get_reference(AbstractReference object) {
-        return object;
-    }
-
-    static std::string id_to_string(AbstractReference id) {
-        return to_string(id->get_id());
-    }
-
-    static std::string get_type(AbstractReference object) {
-        return node_name(object);
-    }
-
-    static serialize::RecordType classify(AbstractReference object) {
-        if (object->is_const())
-            return serialize::RecordType::Value;
-        return serialize::RecordType::Map;
-    }
-};
-
 }
 
 TEST_CASE("Dumb json serialize", "[serialize,node]") {
     std::ostringstream stream;
-    auto writer = serialize::DumbJsonWriter<ValueWriter, AbstractReference>(stream);
+    auto writer = serialize::DumbJsonWriter<serialize::NodeWriter, AbstractReference>(stream);
     AbstractReference three = make_value<double>(3);
     auto add = make_node<Add>();
     add->set_property("a", three);
