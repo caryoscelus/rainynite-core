@@ -5,6 +5,7 @@ target_sources(document
         context.cpp
         document.cpp
         instance.cpp
+        nodes/morph.cpp
 )
 
 target_link_libraries(document morphing)

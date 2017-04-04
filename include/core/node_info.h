@@ -38,7 +38,7 @@ public:
     virtual std::string operator()() const = 0;
 };
 
-std::string node_type_name(std::type_index type) {
+inline std::string node_type_name(std::type_index type) {
     try {
         return class_init::type_info<NodeInfo,std::string>(type);
     } catch (class_init::RuntimeTypeError const& ex) {
@@ -46,11 +46,11 @@ std::string node_type_name(std::type_index type) {
     }
 }
 
-std::string node_name(AbstractReference node) {
+inline std::string node_name(AbstractReference node) {
     return node_type_name(typeid(*node));
 }
 
-NodeInfo const& get_node_type(std::string const& name) {
+inline NodeInfo const& get_node_type(std::string const& name) {
     auto type = class_init::find_type(name);
     return class_init::type_meta<NodeInfo>(type);
 }
