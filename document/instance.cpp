@@ -28,7 +28,7 @@ template <class T>
 class AnimatedNodeInfo : public NodeInfo, class_init::Registered<AnimatedNodeInfo<T>, Animated<T>, NodeInfo> {
 public:
     virtual std::string operator()() const override {
-        return "Animated";
+        return "Animated<"+class_init::type_info<TypeName,std::string>(typeid(T))+">";
     }
     virtual AbstractReference new_empty() const override {
         return std::make_shared<Animated<T>>();
