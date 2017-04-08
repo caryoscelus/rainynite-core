@@ -68,6 +68,7 @@ public:
     virtual std::string name() const {
         return "FooBar";
     }
+    virtual ~FooBar() {}
 };
 
 class FooBaz : public FooBar {

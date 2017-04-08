@@ -42,10 +42,10 @@ public:
     }
     virtual Type get_type() const = 0;
     virtual boost::any get_any(Time t) const = 0;
-    virtual void set_any(boost::any value_) {
+    virtual void set_any(boost::any) {
         throw "Cannot set";
     }
-    virtual bool can_set_any(boost::any value_) const {
+    virtual bool can_set_any(boost::any) const {
         return false;
     }
     virtual boost::any any() const {
@@ -102,7 +102,7 @@ public:
     virtual bool is_const() const override {
         return true;
     }
-    virtual T get(Time t) const override {
+    virtual T get(Time) const override {
         return value;
     }
     virtual void set(T value_) override {
@@ -135,7 +135,7 @@ public:
     virtual std::vector<AbstractReference> get_links() const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
     virtual size_t link_count() const = 0;
-    virtual void push_back(AbstractReference value) {
+    virtual void push_back(AbstractReference) {
         throw "cannot push back";
     }
     template <typename T>

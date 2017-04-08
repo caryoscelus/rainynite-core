@@ -152,7 +152,7 @@ std::type_index find_type(K const& key) {
     auto iter = map.find(key);
     if (iter != map.end())
         return iter->second;
-    throw TypeLookupError();
+    throw TypeLookupError(key);
 }
 
 }
