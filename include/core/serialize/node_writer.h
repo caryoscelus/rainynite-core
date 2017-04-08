@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__SERIALIZE__NODE_WRITER__50EE0930
-#define __CORE__SERIALIZE__NODE_WRITER__50EE0930
+#ifndef __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
+#define __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
 
 #include <core/node_info.h>
 #include "serialize.h"

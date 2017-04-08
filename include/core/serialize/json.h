@@ -19,6 +19,8 @@
 #ifndef __CORE__SERIALIZE__JSON_H__9386BE58
 #define __CORE__SERIALIZE__JSON_H__9386BE58
 
+#include <ostream>
+
 #include "serialize.h"
 
 namespace core {

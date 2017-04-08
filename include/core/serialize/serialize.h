@@ -20,12 +20,20 @@
 #define __CORE__SERIALIZE__SERIALIZE_H__821FEF22
 
 #include <set>
-#include <ostream>
+#include <stdexcept>
 
 namespace core {
 namespace serialize {
 
+class SerializationError : public std::runtime_error {
+public:
+    SerializationError(std::string const& msg) :
+        std::runtime_error(msg)
+    {}
+};
+
 enum class RecordType {
+    Nothing,
     Value,
     List,
     Map

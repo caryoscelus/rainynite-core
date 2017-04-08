@@ -25,7 +25,7 @@
 #include <core/types.h>
 #include <core/serialize/json.h>
 #include <core/serialize/node_writer.h>
-// #include <core/serialize/node_reader.h>
+#include <core/serialize/node_reader.h>
 
 using namespace core;
 
@@ -73,6 +73,53 @@ TEST_CASE("Read double", "[serialize]") {
     CHECK(x == 3.5);
 }
 
-TEST_CASE("Deserialize", "[serialize,node]") {
+namespace core::serialize {
+class DummyReader {
+public:
+    template <class W, class T>
+    static void put_value(W& serializer, T const& object);
 
+    template <class W, class T>
+    static void put_list(W& serializer, T const& object);
+
+    template <class W, class T>
+    static void put_map(W& serializer, T const& object);
+
+    template <typename U, class T>
+    static U get_reference(T const& object);
+
+    template <typename U>
+    static std::string id_to_string(U id);
+
+    template <class T>
+    static std::string get_type(T const& object);
+
+    template <class T>
+    static RecordType classify(T const& object);
+};
+}
+
+TEST_CASE("Deserialize", "[serialize,node]") {
+    auto uuid_gen = boost::uuids::random_generator();
+    serialize::NodeDeserializer<serialize::DummyReader> s;
+    s.object_start(uuid_gen());
+    s.type("Add");
+    s.key("a");
+    s.object_start(uuid_gen());
+    s.type("Value<Real>");
+    s.object_value_start();
+    s.string("1");
+    s.object_value_end();
+    s.object_end();
+    s.key("b");
+    s.object_start(uuid_gen());
+    s.type("Value<Real>");
+    s.object_value_start();
+    s.string("2");
+    s.object_value_end();
+    s.object_end();
+    s.object_end();
+    auto add = s.get_root();
+    CHECK(add->get_type() == typeid(double));
+    CHECK(boost::any_cast<double>(add->get_any({})) == 3);
 }
