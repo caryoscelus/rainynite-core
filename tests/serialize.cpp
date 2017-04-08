@@ -73,35 +73,11 @@ TEST_CASE("Read double", "[serialize]") {
     CHECK(x == 3.5);
 }
 
-namespace core::serialize {
-class DummyReader {
-public:
-    template <class W, class T>
-    static void put_value(W& serializer, T const& object);
-
-    template <class W, class T>
-    static void put_list(W& serializer, T const& object);
-
-    template <class W, class T>
-    static void put_map(W& serializer, T const& object);
-
-    template <typename U, class T>
-    static U get_reference(T const& object);
-
-    template <typename U>
-    static std::string id_to_string(U id);
-
-    template <class T>
-    static std::string get_type(T const& object);
-
-    template <class T>
-    static RecordType classify(T const& object);
-};
-}
+class DummyReader {};
 
 TEST_CASE("Deserialize", "[serialize,node]") {
     auto uuid_gen = boost::uuids::random_generator();
-    serialize::NodeDeserializer<serialize::DummyReader> s;
+    serialize::NodeDeserializer<DummyReader> s;
     s.object_start(uuid_gen());
     s.type("Add");
     s.key("a");
