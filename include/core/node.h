@@ -68,7 +68,7 @@ template <typename T>
 class BaseValue : public AbstractValue {
 public:
     virtual T get(Time t) const = 0;
-    virtual void set(T value_) {
+    virtual void set(T) {
         throw "Cannot set";
     }
     virtual T& mod() {

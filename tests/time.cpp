@@ -52,6 +52,7 @@ TEST_CASE("Time FPS mismatch", "[time]") {
 void test_period(TimePeriod const& period, unsigned amount) {
     unsigned i = 0;
     for (auto t : period) {
+        (void) t;
         ++i;
     }
     REQUIRE(i == amount);

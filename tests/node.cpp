@@ -165,7 +165,7 @@ TEST_CASE("Dump node tree", "[node]") {
 
 unsigned count_nodes(AbstractReference root) {
     unsigned result = 0;
-    traverse_once(root, [&result](AbstractReference node) {
+    traverse_once(root, [&result](AbstractReference) {
         ++result;
     });
     return result;

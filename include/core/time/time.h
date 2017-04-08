@@ -33,12 +33,15 @@ class Time :
 public:
     using fps_type = unsigned;
 public:
+    Time() :
+        Time(0)
+    {}
     explicit Time(int seconds_, fps_type fps_, double frames_=0.0) :
         fps(fps_)
     {
         set_frames(seconds_*fps_+frames_);
     }
-    explicit Time(double seconds_=0.0) :
+    explicit Time(double seconds_) :
         fps(1)
     {
         set_frames(seconds_);

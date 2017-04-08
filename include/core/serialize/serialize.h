@@ -92,6 +92,8 @@ public:
                 case RecordType::Map:
                     V::put_map(*this, object);
                     break;
+                default:
+                    throw SerializationError("Unexpected object type");
             }
             object_end();
         }
