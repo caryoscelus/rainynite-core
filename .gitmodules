@@ -1,0 +1,3 @@
+[submodule "thirdparty/rapidjson"]
+	path = thirdparty/rapidjson
+	url = https://notabug.org/caryoscelus/rapidjson.git
