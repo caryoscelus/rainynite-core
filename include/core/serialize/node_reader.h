@@ -27,13 +27,6 @@
 namespace core {
 namespace serialize {
 
-class DeserializationError : public SerializationError {
-public:
-    DeserializationError(std::string const& msg) :
-        SerializationError(msg)
-    {}
-};
-
 template <class V>
 class NodeDeserializer : public Writer<V, Id> {
 public:
@@ -41,7 +34,7 @@ public:
         Writer<V, Id>()
     {}
 public:
-    AbstractReference get_root() {
+    AbstractReference get_root() const {
         return root;
     }
 public:

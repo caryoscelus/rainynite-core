@@ -32,6 +32,13 @@ public:
     {}
 };
 
+class DeserializationError : public SerializationError {
+public:
+    DeserializationError(std::string const& msg) :
+        SerializationError(msg)
+    {}
+};
+
 enum class RecordType {
     Nothing,
     Value,

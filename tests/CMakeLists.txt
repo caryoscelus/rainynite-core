@@ -11,8 +11,10 @@ add_catch_test(time)
 target_link_libraries(test_time time)
 
 add_catch_test(node)
+add_catch_test(class_init)
 
 add_catch_test(serialize)
 target_link_libraries(test_serialize document)
 
-add_catch_test(class_init)
+add_catch_test(rapidjson)
+target_link_libraries(test_rapidjson document)
