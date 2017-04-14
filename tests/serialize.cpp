@@ -20,8 +20,6 @@
 
 #include <iostream>
 
-#include <boost/uuid/uuid_io.hpp>
-
 #include <core/types.h>
 #include <core/serialize/json.h>
 #include <core/serialize/node_writer.h>

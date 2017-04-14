@@ -19,6 +19,8 @@
 #ifndef __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
 #define __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
 
+#include <boost/uuid/uuid_io.hpp>
+
 #include <core/node_info.h>
 #include "serialize.h"
 
