@@ -3,6 +3,7 @@ add_library(time SHARED)
 target_sources(time
     PRIVATE
         time.cpp
+        parse.cpp
 )
 
 target_link_libraries(time morphing)

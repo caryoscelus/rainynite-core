@@ -18,3 +18,6 @@ target_link_libraries(test_serialize document)
 
 add_catch_test(rapidjson)
 target_link_libraries(test_rapidjson document)
+
+add_catch_test(parse)
+target_link_libraries(test_parse time)
