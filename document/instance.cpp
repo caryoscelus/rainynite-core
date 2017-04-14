@@ -110,10 +110,29 @@ public:
     }
 };
 
+template <typename T>
+class ListValueNodeInfo :
+    public NodeInfo,
+    class_init::Registered<ListValueNodeInfo<T>, ListValue<T>, NodeInfo>,
+    class_init::ReverseRegistered<ListValueNodeInfo<T>, ListValue<T>, std::string>
+{
+public:
+    virtual std::string operator()() const override {
+        return "List<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
+    }
+    virtual AbstractReference new_empty() const override {
+        return std::make_shared<ListValue<T>>();
+    }
+};
+
 template class ValueNodeInfo<Geom::BezierKnots>;
 template class ValueNodeInfo<double>;
 template class ValueNodeInfo<Time>;
 template class ValueNodeInfo<TimePeriod>;
+template class ListValueNodeInfo<Geom::BezierKnots>;
+template class ListValueNodeInfo<double>;
+template class ListValueNodeInfo<Time>;
+template class ListValueNodeInfo<TimePeriod>;
 
 } // namespace nodes
 } // namespace core
