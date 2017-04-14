@@ -54,7 +54,7 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         } catch (...) {
         }
     }
-    auto animated_node = make_node_with_name<AbstractValue>("Animated<Knots>");
+    auto animated_node = make_node_with_name<AbstractValue>("Animated<BezierPath>");
     auto animated = dynamic_cast<nodes::AbstractAnimated*>(animated_node.get());
     for (int i = 0; i < (int)paths.size()-1; ++i) {
         auto first = make_value<Geom::BezierKnots>(paths[i]);

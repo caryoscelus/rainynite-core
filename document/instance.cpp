@@ -18,6 +18,7 @@
 
 #include <core/node_info.h>
 #include <core/types.h>
+#include <core/time/parse.h>
 
 #include <geom_helpers/knots.h>
 
@@ -46,10 +47,38 @@ class BezierKnotsTypeInfo :
 {
 public:
     virtual std::string operator()() const override {
-        return "Knots";
+        return "BezierPath";
     }
     virtual boost::any parse_string(std::string const& s) const override {
         return Geom::svg_to_knots(s);
+    }
+};
+
+class TimePeriodTypeInfo :
+    public TypeInfo,
+    class_init::Registered<TimePeriodTypeInfo, TimePeriod, TypeInfo>,
+    class_init::ReverseRegistered<TimePeriodTypeInfo, TimePeriod, std::string>
+{
+public:
+    virtual std::string operator()() const override {
+        return "TimePeriod";
+    }
+    virtual boost::any parse_string(std::string const& s) const override {
+        return parse_time_period(s);
+    }
+};
+
+class TimeTypeInfo :
+    public TypeInfo,
+    class_init::Registered<TimeTypeInfo, Time, TypeInfo>,
+    class_init::ReverseRegistered<TimeTypeInfo, Time, std::string>
+{
+public:
+    virtual std::string operator()() const override {
+        return "Time";
+    }
+    virtual boost::any parse_string(std::string const& s) const override {
+        return parse_time(s);
     }
 };
 
@@ -83,6 +112,8 @@ public:
 
 template class ValueNodeInfo<Geom::BezierKnots>;
 template class ValueNodeInfo<double>;
+template class ValueNodeInfo<Time>;
+template class ValueNodeInfo<TimePeriod>;
 
 } // namespace nodes
 } // namespace core
