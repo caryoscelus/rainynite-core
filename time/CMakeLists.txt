@@ -4,6 +4,7 @@ target_sources(time
     PRIVATE
         time.cpp
         parse.cpp
+        format.cpp
 )
 
 target_link_libraries(time morphing)
