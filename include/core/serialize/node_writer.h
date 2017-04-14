@@ -19,6 +19,8 @@
 #ifndef __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
 #define __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
 
+#include <sstream>
+
 #include <boost/uuid/uuid_io.hpp>
 
 #include <core/node_info.h>
@@ -33,7 +35,24 @@ public:
 };
 
 template <class T>
-class AutoValueToString : public ValueToString, class_init::Registered<AutoValueToString<T>, T, ValueToString> {
+class AutoValueToString :
+    public ValueToString,
+    class_init::Registered<AutoValueToString<T>, T, ValueToString>
+{
+public:
+    virtual std::string operator()(boost::any const& object) const override {
+        auto value = boost::any_cast<T>(object);
+        std::ostringstream stream;
+        stream << value;
+        return stream.str();
+    }
+};
+
+template <class T>
+class NumericValueToString :
+    public ValueToString,
+    class_init::Registered<AutoValueToString<T>, T, ValueToString>
+{
 public:
     virtual std::string operator()(boost::any const& object) const override {
         auto value = boost::any_cast<T>(object);

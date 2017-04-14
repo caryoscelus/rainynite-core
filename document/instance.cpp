@@ -18,7 +18,9 @@
 
 #include <core/node_info.h>
 #include <core/types.h>
+#include <core/serialize/node_writer.h>
 #include <core/time/parse.h>
+#include <core/time/format.h>
 
 #include <geom_helpers/knots.h>
 
@@ -129,10 +131,16 @@ template class ValueNodeInfo<Geom::BezierKnots>;
 template class ValueNodeInfo<double>;
 template class ValueNodeInfo<Time>;
 template class ValueNodeInfo<TimePeriod>;
+
 template class ListValueNodeInfo<Geom::BezierKnots>;
 template class ListValueNodeInfo<double>;
 template class ListValueNodeInfo<Time>;
 template class ListValueNodeInfo<TimePeriod>;
 
 } // namespace nodes
+
+template class serialize::AutoValueToString<double>;
+template class serialize::AutoValueToString<Time>;
+template class serialize::AutoValueToString<TimePeriod>;
+
 } // namespace core
