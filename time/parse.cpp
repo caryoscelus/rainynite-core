@@ -24,12 +24,29 @@
 namespace core {
 
 TimePeriod parse_time_period(std::string const& s) {
+    std::istringstream stream(s);
+    return parse_time_period(stream);
+}
 
+TimePeriod parse_time_period(std::istream& stream) {
+    if (stream.get() != '[')
+        throw ParseError("Unsupported time period format: expected '['");
+    auto a = parse_time(stream);
+    if (stream.get() != ',')
+        throw ParseError("Unsupported time period format: expected ','");
+    auto b = parse_time(stream);
+    if (stream.get() != ')')
+        throw ParseError("Unsupported time period format: expected ')'");
+    return TimePeriod(a, b);
 }
 
 Time parse_time(std::string const& s) {
-    Time result;
     std::istringstream stream(s);
+    return parse_time(stream);
+}
+
+Time parse_time(std::istream& stream) {
+    Time result;
     double frames;
     if (stream >> frames) {
         if (stream.get() == 'f' && stream.get() == '@') {

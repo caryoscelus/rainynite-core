@@ -23,14 +23,23 @@
 
 using namespace core;
 
-TEST_CASE("Parse time") {
+TEST_CASE("Parse time", "[time,parse]") {
     CHECK(parse_time("0f@12") == Time(0, 12, 0));
     CHECK(parse_time("12f@12") == Time(1, 12, 0));
     CHECK(parse_time("55f@12") == Time(4, 12, 7));
 }
 
-TEST_CASE("Parse time exceptions") {
+TEST_CASE("Parse time exceptions", "[time,parse]") {
     CHECK_THROWS_AS(parse_time("12:15"), ParseError);
     CHECK_THROWS_AS(parse_time("5f@"), ParseError);
     CHECK_THROWS_AS(parse_time("5.5@12"), ParseError);
+}
+
+
+TEST_CASE("Parse time period", "[time,parse]") {
+    CHECK(parse_time_period("[0f@12, 2f@12)") == TimePeriod(Time(0, 12, 0), Time(0, 12, 2)));
+}
+
+TEST_CASE("Parse time period exceptions", "[time,parse]") {
+    CHECK_THROWS_AS(parse_time_period("[0f@12, 2f@12"), ParseError);
 }
