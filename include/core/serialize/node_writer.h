@@ -39,11 +39,15 @@ public:
     }
 };
 
+inline std::string value_to_string(boost::any const& object) {
+    return class_init::any_info<ValueToString, std::string>(object);
+}
+
 class NodeWriter {
 public:
     template <class W>
     static void put_value(W& writer, AbstractReference const& object) {
-        writer.string(class_init::any_info<ValueToString, std::string>(object->any()));
+        writer.string(value_to_string(object->any()));
     }
 
     template <class W>
