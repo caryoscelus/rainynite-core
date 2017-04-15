@@ -22,7 +22,7 @@
 #include <core/time/parse.h>
 #include <core/time/format.h>
 
-#include <geom_helpers/knots.h>
+#include <geom_helpers/knots_io.h>
 
 namespace core {
 namespace nodes {
@@ -139,6 +139,7 @@ template class ListValueNodeInfo<TimePeriod>;
 
 } // namespace nodes
 
+template class serialize::AutoValueToString<Geom::BezierKnots>;
 template class serialize::AutoValueToString<double>;
 template class serialize::AutoValueToString<Time>;
 template class serialize::AutoValueToString<TimePeriod>;
