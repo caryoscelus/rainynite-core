@@ -23,6 +23,7 @@
 #include <set>
 #include <memory>
 #include <typeindex>
+#include <stdexcept>
 
 #include <boost/any.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -35,6 +36,13 @@ namespace core {
 using Id = boost::uuids::uuid;
 using Type = std::type_index;
 
+class NodeAccessError : public std::runtime_error {
+public:
+    NodeAccessError(std::string const& msg) :
+        std::runtime_error(msg)
+    {}
+};
+
 class AbstractValue {
 public:
     virtual bool is_const() const {
@@ -43,13 +51,13 @@ public:
     virtual Type get_type() const = 0;
     virtual boost::any get_any(Time t) const = 0;
     virtual void set_any(boost::any) {
-        throw "Cannot set";
+        throw NodeAccessError("Cannot set");
     }
     virtual bool can_set_any(boost::any) const {
         return false;
     }
     virtual boost::any any() const {
-        throw "No static value";
+        throw NodeAccessError("No static value");
     }
     Id get_id() {
         return id;
@@ -69,10 +77,10 @@ class BaseValue : public AbstractValue {
 public:
     virtual T get(Time t) const = 0;
     virtual void set(T) {
-        throw "Cannot set";
+        throw NodeAccessError("Cannot set");
     }
     virtual T& mod() {
-        throw "Cannot set";
+        throw NodeAccessError("Cannot set");
     }
     virtual bool can_set() const {
         return false;
@@ -136,7 +144,7 @@ public:
     virtual AbstractReference get_link(size_t i) const = 0;
     virtual size_t link_count() const = 0;
     virtual void push_back(AbstractReference) {
-        throw "cannot push back";
+        throw NodeAccessError("cannot push back");
     }
     template <typename T>
     void push_value(T const& value) {
@@ -215,7 +223,7 @@ public:
     }
     void set_property(std::string const& name, AbstractReference ref) {
         if (named_storage.count(name) == 0) {
-            throw "No such property";
+            throw NodeAccessError("No such property");
         }
         *(named_storage[name]) = ref;
     }
