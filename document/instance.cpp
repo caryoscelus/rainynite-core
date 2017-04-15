@@ -25,79 +25,31 @@
 
 #include <geom_helpers/knots_io.h>
 
+namespace Geom {
+TYPE_INFO(BezierKnots, "BezierPath", [](auto&& s) {
+    return svg_to_knots(s);
+});
+} // namespace Geom
+
 namespace core {
 namespace nodes {
 
-class DoubleTypeInfo :
-    public TypeInfo,
-    class_init::Registered<DoubleTypeInfo, double, TypeInfo>,
-    class_init::ReverseRegistered<DoubleTypeInfo, double, std::string>
-{
-public:
-    virtual std::string operator()() const override {
-        return "Real";
-    }
-    virtual boost::any parse_string(std::string const& s) const override {
-        // TODO: check correctness & locale issues
-        return std::stod(s);
-    }
-};
+TYPE_INFO(double, "Real", [](auto&& s) {
+    // TODO: check correctness & locale issues
+    return std::stod(s);
+});
 
-class BezierKnotsTypeInfo :
-    public TypeInfo,
-    class_init::Registered<BezierKnotsTypeInfo, Geom::BezierKnots, TypeInfo>,
-    class_init::ReverseRegistered<BezierKnotsTypeInfo, Geom::BezierKnots, std::string>
-{
-public:
-    virtual std::string operator()() const override {
-        return "BezierPath";
-    }
-    virtual boost::any parse_string(std::string const& s) const override {
-        return Geom::svg_to_knots(s);
-    }
-};
+TYPE_INFO(TimePeriod, "TimePeriod", [](auto&& s) {
+    return parse_time_period(s);
+});
 
-class TimePeriodTypeInfo :
-    public TypeInfo,
-    class_init::Registered<TimePeriodTypeInfo, TimePeriod, TypeInfo>,
-    class_init::ReverseRegistered<TimePeriodTypeInfo, TimePeriod, std::string>
-{
-public:
-    virtual std::string operator()() const override {
-        return "TimePeriod";
-    }
-    virtual boost::any parse_string(std::string const& s) const override {
-        return parse_time_period(s);
-    }
-};
+TYPE_INFO(Time, "Time", [](auto&& s) {
+    return parse_time(s);
+});
 
-class TimeTypeInfo :
-    public TypeInfo,
-    class_init::Registered<TimeTypeInfo, Time, TypeInfo>,
-    class_init::ReverseRegistered<TimeTypeInfo, Time, std::string>
-{
-public:
-    virtual std::string operator()() const override {
-        return "Time";
-    }
-    virtual boost::any parse_string(std::string const& s) const override {
-        return parse_time(s);
-    }
-};
-
-class RenderableTypeInfo :
-    public TypeInfo,
-    class_init::Registered<RenderableTypeInfo, Renderable, TypeInfo>,
-    class_init::ReverseRegistered<RenderableTypeInfo, Renderable, std::string>
-{
-public:
-    virtual std::string operator()() const override {
-        return "Renderable";
-    }
-    virtual boost::any parse_string(std::string const&) const override {
-        throw serialize::DeserializationError("Renderable type cannot be deserialized");
-    }
-};
+TYPE_INFO(Renderable, "Renderable", [](auto&&) -> boost::any {
+    throw serialize::DeserializationError("Renderable type cannot be deserialized");
+});
 
 class ValueTypeInfoBase {
 public:
