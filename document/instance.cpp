@@ -21,6 +21,7 @@
 #include <core/serialize/node_writer.h>
 #include <core/time/parse.h>
 #include <core/time/format.h>
+#include <core/renderable.h>
 
 #include <geom_helpers/knots_io.h>
 
@@ -84,6 +85,20 @@ public:
     }
 };
 
+class RenderableTypeInfo :
+    public TypeInfo,
+    class_init::Registered<RenderableTypeInfo, Renderable, TypeInfo>,
+    class_init::ReverseRegistered<RenderableTypeInfo, Renderable, std::string>
+{
+public:
+    virtual std::string operator()() const override {
+        return "Renderable";
+    }
+    virtual boost::any parse_string(std::string const&) const override {
+        throw serialize::DeserializationError("Renderable type cannot be deserialized");
+    }
+};
+
 class ValueTypeInfoBase {
 public:
     virtual std::string operator()(boost::any const& object) const = 0;
@@ -136,6 +151,7 @@ template class ListValueNodeInfo<Geom::BezierKnots>;
 template class ListValueNodeInfo<double>;
 template class ListValueNodeInfo<Time>;
 template class ListValueNodeInfo<TimePeriod>;
+template class ListValueNodeInfo<Renderable>;
 
 } // namespace nodes
 
