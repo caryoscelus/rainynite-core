@@ -29,6 +29,21 @@ public:
     virtual boost::any parse_string(std::string const& s) const = 0;
 };
 
+#define TYPE_INFO(Type, name, parse) \
+class Type##TypeInfo : \
+    public core::TypeInfo, \
+    class_init::Registered<Type##TypeInfo, Type, core::TypeInfo>, \
+    class_init::ReverseRegistered<Type##TypeInfo, Type, std::string> \
+{ \
+public: \
+    virtual std::string operator()() const override { \
+        return name; \
+    } \
+    virtual boost::any parse_string(std::string const& s) const override { \
+        return parse(s); \
+    } \
+}
+
 inline TypeInfo const& get_primitive_type(std::type_index type) {
     return class_init::type_meta<TypeInfo>(type);
 }
