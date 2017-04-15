@@ -31,7 +31,7 @@ namespace nodes {
 class PathShape : public Node<Renderable> {
 public:
     PathShape() {
-        init_list<Geom::BezierKnots>(path);
+        init<Geom::BezierKnots>(path, Geom::BezierKnots());
     }
 public:
     virtual Renderable get(Time time) const override {
