@@ -65,8 +65,11 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         morph->set_property("b", second);
         animated->add_child({Time(i), Time(i+1)}, morph_node);
     }
+    auto path_shape_node = make_node_with_name<AbstractValue>("PathShape");
+    auto path_shape = dynamic_cast<AbstractNode*>(path_shape_node.get());
+    path_shape->set_property("path", animated_node);
 
-    return std::make_shared<Document>(animated_node);
+    return std::make_shared<Document>(path_shape_node);
 }
 
 } // namespace filters

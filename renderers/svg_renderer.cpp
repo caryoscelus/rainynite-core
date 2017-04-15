@@ -25,6 +25,8 @@
 
 #include <core/renderers/svg_renderer.h>
 #include <core/document.h>
+#include <core/renderable.h>
+#include <core/nodes/path_shape.h>
 
 #include <geom_helpers/knots.h>
 
@@ -44,9 +46,11 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
      version="1.1"
      width="800"
      height="600">
-  <path id="morph" d="{}" style="fill:black;fill-opacity:1;stroke:none" />
+  {}
 </svg>
 )";
+
+const std::string svg_path = R"(<path id="morph" d="{}" style="fill:black;fill-opacity:1;stroke:none" />)";
 
 void SvgRenderer::render(Context context_) {
     finished = false;
@@ -80,16 +84,34 @@ void SvgRenderer::prepare_render() {
 }
 
 void SvgRenderer::render_frame(Time time) {
-    auto path = morph_path(time);
     auto base_name = "renders/{:.3f}"_format(time.get_seconds());
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
-    fmt::print(f, svg_template, Geom::knots_to_svg(path));
+    fmt::print(f, svg_template, frame_to_svg(time));
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, base_name+".png");
     finished_frame()(time);
+}
+
+std::string SvgRenderer::frame_to_svg(Time time) {
+    auto root_ptr = document->get_root();
+    auto root = root_ptr.get();
+    if (root->get_type() != typeid(Renderable)) {
+        std::cerr << "ERROR: Root node isn't renderable" << std::endl;
+        // throw
+        return "";
+    }
+    // TODO: modularize
+    if (auto path_shape = dynamic_cast<nodes::PathShape*>(root)) {
+        auto path = path_shape->get_path()->get(time);
+        return fmt::format(svg_path, Geom::knots_to_svg(path));
+    } else {
+        std::cerr << "ERROR: Root node type isn't supported" << std::endl;
+        // throw
+        return "";
+    }
 }
 
 void SvgRenderer::finish_render() {
@@ -108,11 +130,6 @@ void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
 void SvgRenderer::quit_png() {
     fputs("quit\n", png_renderer_pipe);
     pclose(png_renderer_pipe);
-}
-
-Geom::BezierKnots SvgRenderer::morph_path(Time time) {
-    auto root = std::dynamic_pointer_cast<BaseValue<Geom::BezierKnots>>(document->get_root());
-    return root->get(time);
 }
 
 } // namespace filters
