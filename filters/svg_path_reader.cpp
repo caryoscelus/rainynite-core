@@ -54,6 +54,7 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         } catch (...) {
         }
     }
+
     auto animated_node = make_node_with_name<AbstractValue>("Animated<BezierPath>");
     auto animated = dynamic_cast<nodes::AbstractAnimated*>(animated_node.get());
     for (int i = 0; i < (int)paths.size()-1; ++i) {
@@ -65,11 +66,17 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         morph->set_property("b", second);
         animated->add_child({Time(i), Time(i+1)}, morph_node);
     }
+
     auto path_shape_node = make_node_with_name<AbstractValue>("PathShape");
     auto path_shape = dynamic_cast<AbstractNode*>(path_shape_node.get());
     path_shape->set_property("path", animated_node);
 
-    return std::make_shared<Document>(path_shape_node);
+    auto composite_node = make_node_with_name<AbstractValue>("Composite");
+    auto composite = dynamic_cast<AbstractNode*>(composite_node.get());
+    auto layers = dynamic_cast<AbstractListLinked*>(composite->get_property("layers").get());
+    layers->push_back(path_shape_node);
+
+    return std::make_shared<Document>(composite_node);
 }
 
 } // namespace filters

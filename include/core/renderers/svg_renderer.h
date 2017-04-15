@@ -42,6 +42,7 @@ private:
     void render_frame(Time time);
     void finish_render();
     std::string frame_to_svg(Time time);
+    std::string node_to_svg(core::AbstractReference root_ptr, Time time);
     void start_png();
     void render_png(std::string const& svg, std::string const& png);
     void quit_png();

@@ -27,6 +27,7 @@
 #include <core/document.h>
 #include <core/renderable.h>
 #include <core/nodes/path_shape.h>
+#include <core/nodes/composite.h>
 
 #include <geom_helpers/knots.h>
 
@@ -96,7 +97,10 @@ void SvgRenderer::render_frame(Time time) {
 }
 
 std::string SvgRenderer::frame_to_svg(Time time) {
-    auto root_ptr = document->get_root();
+    return node_to_svg(document->get_root(), time);
+}
+
+std::string SvgRenderer::node_to_svg(core::AbstractReference root_ptr, Time time) {
     auto root = root_ptr.get();
     if (root->get_type() != typeid(Renderable)) {
         std::cerr << "ERROR: Root node isn't renderable" << std::endl;
@@ -107,6 +111,13 @@ std::string SvgRenderer::frame_to_svg(Time time) {
     if (auto path_shape = dynamic_cast<nodes::PathShape*>(root)) {
         auto path = path_shape->get_path()->get(time);
         return fmt::format(svg_path, Geom::knots_to_svg(path));
+    } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
+        auto node_list = composite->list_layers()->get_links();
+        std::string s;
+        for (auto const& node : node_list) {
+            s += node_to_svg(node, time);
+        }
+        return s;
     } else {
         std::cerr << "ERROR: Root node type isn't supported" << std::endl;
         // throw
