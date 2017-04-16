@@ -106,11 +106,13 @@ template class ValueNodeInfo<Geom::BezierKnots>;
 template class ValueNodeInfo<double>;
 template class ValueNodeInfo<Time>;
 template class ValueNodeInfo<TimePeriod>;
+template class ValueNodeInfo<colors::Color>;
 
 template class ListValueNodeInfo<Geom::BezierKnots>;
 template class ListValueNodeInfo<double>;
 template class ListValueNodeInfo<Time>;
 template class ListValueNodeInfo<TimePeriod>;
+template class ListValueNodeInfo<colors::Color>;
 template class ListValueNodeInfo<Renderable>;
 
 } // namespace nodes
@@ -119,5 +121,6 @@ template class serialize::AutoValueToString<Geom::BezierKnots>;
 template class serialize::AutoValueToString<double>;
 template class serialize::AutoValueToString<Time>;
 template class serialize::AutoValueToString<TimePeriod>;
+template class serialize::AutoValueToString<colors::Color>;
 
 } // namespace core
