@@ -9,7 +9,7 @@ target_sources(document
         nodes/morph.cpp
 )
 
-target_link_libraries(document morphing)
+target_link_libraries(document morphing fmt)
 
 install(
     TARGETS document

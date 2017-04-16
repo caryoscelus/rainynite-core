@@ -22,6 +22,7 @@
 #include <core/time/parse.h>
 #include <core/time/format.h>
 #include <core/renderable.h>
+#include <core/color.h>
 
 #include <geom_helpers/knots_io.h>
 
@@ -32,6 +33,13 @@ TYPE_INFO(BezierKnots, "BezierPath", [](auto&& s) {
 } // namespace Geom
 
 namespace core {
+
+namespace colors {
+TYPE_INFO(Color, "Color", [](auto&& s) {
+    return parse_hex(s);
+});
+} // namespace color
+
 namespace nodes {
 
 TYPE_INFO(double, "Real", [](auto&& s) {
