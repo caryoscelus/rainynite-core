@@ -19,6 +19,7 @@
 #include <core/document.h>
 #include <core/node_info.h>
 #include <core/nodes/animated.h>
+#include <core/color.h>
 #include <core/filters/svg_path_reader.h>
 
 #include <geom_helpers/knots.h>
@@ -70,6 +71,7 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
     auto path_shape_node = make_node_with_name<AbstractValue>("PathShape");
     auto path_shape = dynamic_cast<AbstractNode*>(path_shape_node.get());
     path_shape->set_property("path", animated_node);
+    path_shape->set_property("fill_color", make_value<colors::Color>(0xff, 0, 0, 0xff));
 
     auto composite_node = make_node_with_name<AbstractValue>("Composite");
     auto composite = dynamic_cast<AbstractNode*>(composite_node.get());

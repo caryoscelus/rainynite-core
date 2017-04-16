@@ -25,6 +25,7 @@
 
 #include <core/renderers/svg_renderer.h>
 #include <core/document.h>
+#include <core/color.h>
 #include <core/renderable.h>
 #include <core/nodes/path_shape.h>
 #include <core/nodes/composite.h>
@@ -51,7 +52,7 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 </svg>
 )";
 
-const std::string svg_path = R"(<path id="morph" d="{}" style="fill:black;fill-opacity:1;stroke:none" />)";
+const std::string svg_path = R"(<path id="morph" d="{}" style="fill:{};fill-opacity:{};stroke:none" />)";
 
 void SvgRenderer::render(Context context_) {
     finished = false;
@@ -110,7 +111,8 @@ std::string SvgRenderer::node_to_svg(core::AbstractReference root_ptr, Time time
     // TODO: modularize
     if (auto path_shape = dynamic_cast<nodes::PathShape*>(root)) {
         auto path = path_shape->get_path()->get(time);
-        return fmt::format(svg_path, Geom::knots_to_svg(path));
+        auto color = path_shape->get_fill_color()->get(time);
+        return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.get_alpha());
     } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
         auto node_list = composite->list_layers()->get_links();
         std::string s;

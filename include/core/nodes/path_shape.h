@@ -21,6 +21,7 @@
 
 #include <core/node.h>
 #include <core/node_info.h>
+#include <core/color.h>
 #include <core/renderable.h>
 
 #include <geom_helpers/knots.h>
@@ -32,6 +33,7 @@ class PathShape : public Node<Renderable> {
 public:
     PathShape() {
         init<Geom::BezierKnots>(path, Geom::BezierKnots());
+        init<colors::Color>(fill_color, colors::Color());
     }
 public:
     virtual Renderable get(Time time) const override {
@@ -39,6 +41,7 @@ public:
     }
 private:
     NODE_PROPERTY(path, Geom::BezierKnots);
+    NODE_PROPERTY(fill_color, colors::Color);
 };
 
 REGISTER_NODE(PathShape);
