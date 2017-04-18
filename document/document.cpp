@@ -32,6 +32,10 @@ Document::Document(std::shared_ptr<AbstractValue> root_) :
 Document::~Document() {
 }
 
+DocumentType Document::get(Time) const {
+    return DocumentType();
+}
+
 std::shared_ptr<Context> Document::get_default_context() {
     if (!default_context) {
         default_context = std::make_shared<Context>(shared_from_this());

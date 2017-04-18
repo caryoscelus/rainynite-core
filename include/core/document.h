@@ -43,9 +43,7 @@ public:
     std::shared_ptr<Context> get_default_context();
 
 public:
-    virtual DocumentType get(Time) const override {
-        throw NodeAccessError("Cannot get Document");
-    }
+    virtual DocumentType get(Time) const override;
 
 public:
     inline std::shared_ptr<AbstractValue> get_root() {
