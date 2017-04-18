@@ -49,10 +49,11 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
      width="800"
      height="600">
   {}
+  {}
 </svg>
 )";
 
-const std::string svg_path = R"(<path id="morph" d="{}" style="fill:{};fill-opacity:{};stroke:none" />)";
+const std::string svg_path = R"(<path id="morph" d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
 
 void SvgRenderer::render(Context context_) {
     finished = false;
@@ -90,18 +91,22 @@ void SvgRenderer::render_frame(Time time) {
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
-    fmt::print(f, svg_template, frame_to_svg(time));
+    fmt::print(f, svg_template, definitions(time), frame_to_svg(time));
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, base_name+".png");
     finished_frame()(time);
 }
 
-std::string SvgRenderer::frame_to_svg(Time time) {
+std::string SvgRenderer::definitions(Time time) const {
+    return document->get_svg_definitions()->get(time);
+}
+
+std::string SvgRenderer::frame_to_svg(Time time) const {
     return node_to_svg(document->get_root(), time);
 }
 
-std::string SvgRenderer::node_to_svg(core::AbstractReference root_ptr, Time time) {
+std::string SvgRenderer::node_to_svg(core::AbstractReference root_ptr, Time time) const {
     auto root = root_ptr.get();
     if (root->get_type() != typeid(Renderable)) {
         std::cerr << "ERROR: Root node isn't renderable" << std::endl;
@@ -112,7 +117,8 @@ std::string SvgRenderer::node_to_svg(core::AbstractReference root_ptr, Time time
     if (auto path_shape = dynamic_cast<nodes::PathShape*>(root)) {
         auto path = path_shape->get_path()->get(time);
         auto color = path_shape->get_fill_color()->get(time);
-        return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.get_alpha());
+        auto extra_style = path_shape->get_extra_style()->get(time);
+        return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.get_alpha(), extra_style);
     } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
         auto node_list = composite->list_layers()->get_links();
         std::string s;

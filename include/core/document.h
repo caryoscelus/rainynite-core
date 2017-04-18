@@ -59,6 +59,8 @@ private:
     std::shared_ptr<AbstractValue> root;
     std::shared_ptr<Context> default_context;
     TimePeriod main_time_period;
+
+    NODE_PROPERTY(svg_definitions, std::string);
 };
 
 }
