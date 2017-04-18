@@ -32,6 +32,12 @@ TYPE_INFO(BezierKnots, "BezierPath", [](auto&& s) {
 });
 } // namespace Geom
 
+namespace std {
+TYPE_INFO(string, "String", [](auto&& s) {
+    return s;
+});
+} // namespace std
+
 namespace core {
 
 namespace colors {
@@ -107,20 +113,27 @@ template class ValueNodeInfo<double>;
 template class ValueNodeInfo<Time>;
 template class ValueNodeInfo<TimePeriod>;
 template class ValueNodeInfo<colors::Color>;
+template class ValueNodeInfo<std::string>;
 
 template class ListValueNodeInfo<Geom::BezierKnots>;
 template class ListValueNodeInfo<double>;
 template class ListValueNodeInfo<Time>;
 template class ListValueNodeInfo<TimePeriod>;
 template class ListValueNodeInfo<colors::Color>;
+template class ListValueNodeInfo<std::string>;
 template class ListValueNodeInfo<Renderable>;
 
 } // namespace nodes
 
-template class serialize::AutoValueToString<Geom::BezierKnots>;
-template class serialize::AutoValueToString<double>;
-template class serialize::AutoValueToString<Time>;
-template class serialize::AutoValueToString<TimePeriod>;
-template class serialize::AutoValueToString<colors::Color>;
+namespace serialize {
+
+template class AutoValueToString<Geom::BezierKnots>;
+template class AutoValueToString<double>;
+template class AutoValueToString<Time>;
+template class AutoValueToString<TimePeriod>;
+template class AutoValueToString<colors::Color>;
+template class AutoValueToString<std::string>; // TODO: remove streams overhead
+
+} // namespace serialize
 
 } // namespace core
