@@ -30,11 +30,22 @@ namespace core {
 
 class Context;
 
-class Document : public std::enable_shared_from_this<Document> {
+class DocumentType {
+};
+
+class Document :
+    public Node<DocumentType>,
+    public std::enable_shared_from_this<Document>
+{
 public:
     explicit Document(std::shared_ptr<AbstractValue>);
     virtual ~Document();
     std::shared_ptr<Context> get_default_context();
+
+public:
+    virtual DocumentType get(Time) const override {
+        throw NodeAccessError("Cannot get Document");
+    }
 
 public:
     inline std::shared_ptr<AbstractValue> get_root() {
