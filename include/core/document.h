@@ -25,6 +25,7 @@
 
 #include <core/time/time_period.h>
 #include <core/node.h>
+#include <core/renderable.h>
 
 namespace core {
 
@@ -38,7 +39,7 @@ class Document :
     public std::enable_shared_from_this<Document>
 {
 public:
-    explicit Document(std::shared_ptr<AbstractValue>);
+    explicit Document(std::shared_ptr<BaseValue<Renderable>> root_);
     virtual ~Document();
     std::shared_ptr<Context> get_default_context();
 
@@ -46,18 +47,15 @@ public:
     virtual DocumentType get(Time) const override;
 
 public:
-    inline std::shared_ptr<AbstractValue> get_root() {
-        return root;
-    }
     inline TimePeriod get_main_time_period() const {
         return main_time_period;
     }
 
 private:
-    std::shared_ptr<AbstractValue> root;
     std::shared_ptr<Context> default_context;
     TimePeriod main_time_period;
 
+    NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(svg_definitions, std::string);
 };
 

@@ -21,11 +21,12 @@
 
 namespace core {
 
-Document::Document(std::shared_ptr<AbstractValue> root_) :
-    root(root_),
+Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
     default_context(nullptr),
     main_time_period(Time(0, 8), Time(5, 8))
 {
+    init<Renderable>(root, {});
+    set_root(root_);
     init<std::string>(svg_definitions, "");
 }
 

@@ -73,7 +73,7 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
     path_shape->set_property("path", animated_node);
     path_shape->set_property("fill_color", make_value<colors::Color>(0xff, 0, 0, 0xff));
 
-    auto composite_node = make_node_with_name<AbstractValue>("Composite");
+    auto composite_node = make_node_with_name<BaseValue<Renderable>>("Composite");
     auto composite = dynamic_cast<AbstractNode*>(composite_node.get());
     auto layers = dynamic_cast<AbstractListLinked*>(composite->get_property("layers").get());
     layers->push_back(path_shape_node);
