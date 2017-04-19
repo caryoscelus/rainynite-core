@@ -29,7 +29,7 @@
 
 namespace Geom {
 TYPE_INFO(BezierKnots, "BezierPath", [](auto&& s) {
-    return svg_to_knots(s);
+    return parse_named_knots(s);
 });
 } // namespace Geom
 

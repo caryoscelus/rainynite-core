@@ -22,28 +22,11 @@
 #include <core/color.h>
 #include <core/filters/svg_path_reader.h>
 
-#include <geom_helpers/knots.h>
+#include <geom_helpers/knots_io.h>
 
 namespace core {
 
 namespace filters {
-
-Geom::BezierKnots parse_string(std::string const& line) {
-    std::istringstream stream(line);
-    std::string svg_path, keys;
-    std::getline(stream, svg_path, '@');
-    std::getline(stream, keys, '@');
-    auto path = Geom::svg_to_knots(svg_path);
-    unsigned index = 0;
-    std::istringstream keystream(keys);
-    while (keystream.good()) {
-        std::string key;
-        std::getline(keystream, key, ',');
-        path.knots[index].uid = key;
-        ++index;
-    }
-    return path;
-}
 
 std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
     std::vector<Geom::BezierKnots> paths;
@@ -51,7 +34,7 @@ std::shared_ptr<Document> SvgPathReader::read_document(std::istream& input) {
         std::string path;
         std::getline(input, path, ';');
         try {
-            paths.push_back(parse_string(path));
+            paths.push_back(Geom::parse_named_knots(path));
         } catch (...) {
         }
     }
