@@ -64,6 +64,12 @@ TEST_CASE("Dumb json serialize", "[serialize,node]") {
     AbstractReference add_a = add;
     writer.object(add_a);
     std::cout << stream.str() << std::endl;
+    stream.str("");
+    auto list = std::make_shared<ListValue<double>>();
+    list->new_id();
+    list->push_value(1.5);
+    writer.object(list);
+    std::cout << stream.str() << std::endl;
 }
 
 TEST_CASE("Read double", "[serialize]") {

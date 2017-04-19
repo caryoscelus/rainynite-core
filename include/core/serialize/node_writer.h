@@ -73,7 +73,13 @@ public:
 
     template <class W>
     static void put_list(W& writer, AbstractReference const& object) {
-        //
+        if (auto node = dynamic_cast<AbstractListLinked*>(object.get())) {
+            writer.list_start();
+            for (auto const& e : node->get_links()) {
+                writer.object(e);
+            }
+            writer.list_end();
+        }
     }
 
     template <class W>
@@ -101,7 +107,11 @@ public:
     static serialize::RecordType classify(AbstractReference object) {
         if (object->is_const())
             return serialize::RecordType::Value;
-        return serialize::RecordType::Map;
+        if (dynamic_cast<AbstractNode*>(object.get()))
+            return serialize::RecordType::Map;
+        if (dynamic_cast<AbstractListLinked*>(object.get()))
+            return serialize::RecordType::List;
+        throw SerializationError("Cannot classify object");
     }
 };
 
