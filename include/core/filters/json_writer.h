@@ -1,5 +1,5 @@
 /*
- *  reader.h - document reader interface
+ *  json_writer.h - simple json serializer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__WRITER_H__9D7C7FEE
-#define __CORE__WRITER_H__9D7C7FEE
+#ifndef __CORE__FILTERS__JSON_WRITER_H__CC8DB984
+#define __CORE__FILTERS__JSON_WRITER_H__CC8DB984
 
-#include <memory>
-#include <ostream>
+#include "../writer.h"
 
 namespace core {
+namespace filters {
 
-class Document;
-
-class DocumentWriter {
+class JsonWriter : public DocumentWriter {
 public:
-    virtual void write_document(std::ostream& output, std::shared_ptr<Document> document) = 0;
+    virtual void write_document(std::ostream& output, std::shared_ptr<Document> document) override;
 };
 
+} // namespace filters
 } // namespace core
 
 #endif

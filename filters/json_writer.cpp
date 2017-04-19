@@ -1,5 +1,5 @@
 /*
- *  reader.h - document reader interface
+ *  json_writer.cpp - simple json serializer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__WRITER_H__9D7C7FEE
-#define __CORE__WRITER_H__9D7C7FEE
-
-#include <memory>
-#include <ostream>
+#include <core/document.h>
+#include <core/serialize/node_writer.h>
+#include <core/serialize/json.h>
+#include <core/filters/json_writer.h>
 
 namespace core {
+namespace filters {
 
-class Document;
+void JsonWriter::write_document(std::ostream& output, std::shared_ptr<Document> document) {
+    auto writer = serialize::DumbJsonWriter<serialize::NodeWriter, AbstractReference>(output);
+    writer.object(std::dynamic_pointer_cast<AbstractValue>(document));
+}
 
-class DocumentWriter {
-public:
-    virtual void write_document(std::ostream& output, std::shared_ptr<Document> document) = 0;
-};
-
+} // namespace filters
 } // namespace core
-
-#endif

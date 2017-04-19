@@ -3,6 +3,7 @@ add_library(filters SHARED)
 target_sources(filters
     PRIVATE
         svg_path_reader.cpp
+        json_writer.cpp
 )
 
 target_link_libraries(filters document geom_helpers)
