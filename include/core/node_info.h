@@ -53,6 +53,7 @@ inline NodeInfo const& get_node_type(std::string const& name) {
 template <typename T>
 std::shared_ptr<T> make_node_with_name(std::string const& name, boost::any const& value = boost::any()) {
     auto node = get_node_type(name).new_empty();
+    node->new_id(); // TODO: don't do that here?
     if (!value.empty() && node->can_set_any(value))
         node->set_any(value);
     return std::dynamic_pointer_cast<T>(node);

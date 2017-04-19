@@ -28,6 +28,7 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
     init<Renderable>(root, {});
     set_root(root_);
     init<std::string>(svg_definitions, "");
+    new_id();
 }
 
 Document::~Document() {

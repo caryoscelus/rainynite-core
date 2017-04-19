@@ -30,6 +30,7 @@ class Composite : public Node<Renderable> {
 public:
     Composite() {
         init_list<Renderable>(layers);
+        get_layers()->new_id();
     }
 public:
     virtual Renderable get(Time time) const override {

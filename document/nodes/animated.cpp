@@ -32,6 +32,10 @@ public:
         this->template init_list<T>(children);
         this->template init_list<TimePeriod>(periods);
         this->init(default_value, T());
+
+        // TODO: don't do this here?
+        get_children()->new_id();
+        get_periods()->new_id();
     }
 public:
     virtual T get(Time time) const override {
