@@ -22,6 +22,7 @@
 #include <core/time/parse.h>
 #include <core/time/format.h>
 #include <core/renderable.h>
+#include <core/document.h>
 #include <core/color.h>
 
 #include <geom_helpers/knots_io.h>
@@ -62,6 +63,10 @@ TYPE_INFO(Time, "Time", [](auto&& s) {
 });
 
 TYPE_INFO(Renderable, "Renderable", [](auto&&) -> boost::any {
+    throw serialize::DeserializationError("Renderable type cannot be deserialized");
+});
+
+TYPE_INFO(DocumentType, "Document", [](auto&&) -> boost::any {
     throw serialize::DeserializationError("Renderable type cannot be deserialized");
 });
 

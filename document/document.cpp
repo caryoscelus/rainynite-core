@@ -16,10 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/node_info.h>
 #include <core/document.h>
 #include <core/context.h>
 
 namespace core {
+
+REGISTER_NODE(Document);
 
 Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
     default_context(nullptr),

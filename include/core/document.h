@@ -39,7 +39,7 @@ class Document :
     public std::enable_shared_from_this<Document>
 {
 public:
-    explicit Document(std::shared_ptr<BaseValue<Renderable>> root_);
+    explicit Document(std::shared_ptr<BaseValue<Renderable>> root_=nullptr);
     virtual ~Document();
     std::shared_ptr<Context> get_default_context();
 
