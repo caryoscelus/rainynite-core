@@ -51,6 +51,12 @@ public:
             root = last.object;
         } else switch (current().awaiting) {
             case RecordType::Nothing: break;
+            case RecordType::List: {
+                if (auto object = dynamic_cast<AbstractListLinked*>(current().object.get()))
+                    object->push_back(last.object);
+                else
+                    throw DeserializationError("Unexpected list element");
+            } break;
             case RecordType::Map: {
                 if (auto object = dynamic_cast<AbstractNode*>(current().object.get()))
                     object->set_property(current().key, last.object);
