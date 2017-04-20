@@ -219,7 +219,10 @@ std::shared_ptr<T> make_node() {
 class AbstractNode : public AbstractListLinked {
 public:
     AbstractReference get_property(std::string const& name) const {
-        return *(named_storage.at(name));
+        auto result = named_storage.find(name);
+        if (result == named_storage.end())
+            throw NodeAccessError("Unknown property "+name);
+        return *result->second;
     }
     template <typename T>
     BaseReference<T> get_property_as(std::string const& name) const {
