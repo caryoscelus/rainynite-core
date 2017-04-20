@@ -23,9 +23,13 @@
 
 #include <boost/uuid/string_generator.hpp>
 
+#include <fmt/format.h>
+
 #include <rapidjson/reader.h>
 
 #include "serialize.h"
+
+using namespace fmt::literals;
 
 namespace core {
 namespace serialize {
@@ -72,28 +76,34 @@ public:
         throw DeserializationError("Unexpected number");
     }
     bool String(char const* str, size_t length, bool copy) { 
-        std::cerr << "String" << std::endl;
         auto s = std::string(str, length);
-        switch (status) {
-            case Status::Type: {
-                writer.type(s);
-                status = Status::Empty;
-            } break;
-            case Status::UID: {
-                auto id = s_to_id(s);
-                writer.object_start(id);
-            } break;
-            case Status::Value: {
-                writer.string(s);
-            } break;
-            case Status::Empty: {
-                auto id = s_to_id(s);
-                writer.reference(id);
-            } break;
-            default:
-                std::cerr << s << std::endl;
-                std::cerr << (int)status << std::endl;
-                throw DeserializationError("Unexpected status");
+        std::cerr << "String: " << str << std::endl;
+        try {
+            switch (status) {
+                case Status::Type: {
+                    writer.type(s);
+                    status = Status::Empty;
+                } break;
+                case Status::UID: {
+                    auto id = s_to_id(s);
+                    writer.object_start(id);
+                } break;
+                case Status::Value: {
+                    writer.string(s);
+                } break;
+                case Status::Empty: {
+                    auto id = s_to_id(s);
+                    writer.reference(id);
+                } break;
+                default:
+                    std::cerr << s << std::endl;
+                    std::cerr << (int)status << std::endl;
+                    throw DeserializationError("Unexpected status when received \"{}\""_format(s));
+            }
+        } catch (DeserializationError const& ex) {
+            throw ex;
+        } catch (std::exception const& ex) {
+            throw DeserializationError("Uncaught exception ({}) when received string \"{}\""_format(ex.what(), s));
         }
         return true;
     }
@@ -103,8 +113,8 @@ public:
         return true;
     }
     bool Key(char const* str, size_t length, bool copy) {
-        std::cerr << "Key" << std::endl;
         auto key = std::string(str, length);
+        std::cerr << "Key: " << key << std::endl;
         if (key == "TYPE") {
             status = Status::Type;
         } else if (key == "VALUE") {
@@ -114,7 +124,6 @@ public:
             // relying on UID being first element in JSON object
             // this should NOT be relied on as JSON does not preserve order
             std::cerr << "UID" << std::endl;
-            std::cerr << (int)status << std::endl;
             if (status != Status::ObjectStart)
                 throw DeserializationError("Unexpected UID");
             status = Status::UID;
