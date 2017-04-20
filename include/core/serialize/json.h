@@ -21,6 +21,8 @@
 
 #include <ostream>
 
+#include <boost/algorithm/string/replace.hpp>
+
 #include "serialize.h"
 
 namespace core {
@@ -88,9 +90,16 @@ private:
     void write(std::string const& s) {
         stream << s;
     }
+    std::string escape(std::string const& s) {
+        std::string r = s;
+        boost::replace_all(r, "\\", "\\\\");
+        boost::replace_all(r, "\"", "\\\"");
+        boost::replace_all(r, "\n", "\\n");
+        return r;
+    }
     void write_string(std::string const& s) {
         write("\"");
-        write(s);
+        write(escape(s));
         write("\"");
     }
 private:
