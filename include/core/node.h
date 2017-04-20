@@ -221,6 +221,10 @@ public:
     AbstractReference get_property(std::string const& name) const {
         return *(named_storage.at(name));
     }
+    template <typename T>
+    BaseReference<T> get_property_as(std::string const& name) const {
+        return std::dynamic_pointer_cast<BaseValue<T>>(get_property(name));
+    }
     void set_property(std::string const& name, AbstractReference ref) {
         if (named_storage.count(name) == 0) {
             throw NodeAccessError("No such property");
