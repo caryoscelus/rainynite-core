@@ -8,6 +8,7 @@ target_sources(document
         color.cpp
         nodes/animated.cpp
         nodes/morph.cpp
+        nodes/path_shape.cpp
 )
 
 target_link_libraries(document morphing fmt)

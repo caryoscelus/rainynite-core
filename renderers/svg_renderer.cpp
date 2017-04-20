@@ -27,7 +27,6 @@
 #include <core/document.h>
 #include <core/color.h>
 #include <core/renderable.h>
-#include <core/nodes/path_shape.h>
 #include <core/nodes/composite.h>
 
 #include <geom_helpers/knots.h>
@@ -106,7 +105,7 @@ std::string SvgRenderer::frame_to_svg(Time time) const {
     return node_to_svg(document->get_root(), time);
 }
 
-std::string SvgRenderer::node_to_svg(core::AbstractReference root_ptr, Time time) const {
+std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) const {
     auto root = root_ptr.get();
     if (root->get_type() != typeid(Renderable)) {
         std::cerr << "ERROR: Root node isn't renderable" << std::endl;
@@ -114,10 +113,11 @@ std::string SvgRenderer::node_to_svg(core::AbstractReference root_ptr, Time time
         return "";
     }
     // TODO: modularize
-    if (auto path_shape = dynamic_cast<nodes::PathShape*>(root)) {
-        auto path = path_shape->get_path()->get(time);
-        auto color = path_shape->get_fill_color()->get(time);
-        auto extra_style = path_shape->get_extra_style()->get(time);
+    if (node_name(*root) == "PathShape") {
+        auto shape = dynamic_cast<AbstractNode*>(root);
+        auto path = shape->get_property_as<Geom::BezierKnots>("path")->get(time);
+        auto color = shape->get_property_as<colors::Color>("fill_color")->get(time);
+        auto extra_style = shape->get_property_as<std::string>("extra_style")->get(time);
         return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.get_alpha(), extra_style);
     } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
         auto node_list = composite->list_layers()->get_links();

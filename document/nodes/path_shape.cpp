@@ -1,5 +1,5 @@
 /*
- *  path_shape.h - Path Shape render node
+ *  path_shape.cpp - Path Shape render node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,9 +15,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifndef __CORE__NODES__PATH_SHAPE_H__D0F028BA
-#define __CORE__NODES__PATH_SHAPE_H__D0F028BA
 
 #include <core/node.h>
 #include <core/node_info.h>
@@ -50,5 +47,3 @@ REGISTER_NODE(PathShape);
 
 } // namespace nodes
 } // namespace core
-
-#endif
