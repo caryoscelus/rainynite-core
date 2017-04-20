@@ -82,7 +82,7 @@ public:
 private:
     void element() {
         if (prev_element)
-            write(",");
+            write(",\n");
         prev_element = true;
     }
     void write(std::string const& s) {
