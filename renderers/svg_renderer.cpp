@@ -44,6 +44,7 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
      version="1.1"
      width="800"
      height="600">
@@ -53,6 +54,8 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 )";
 
 const std::string svg_path = R"(<path id="morph" d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
+
+const std::string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x="0" y="0" preserveAspectRatio="none"/>)";
 
 void SvgRenderer::render(Context context_) {
     finished = false;
@@ -113,12 +116,17 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
         return "";
     }
     // TODO: modularize
+    auto node = dynamic_cast<AbstractNode*>(root);
     if (node_name(*root) == "PathShape") {
-        auto shape = dynamic_cast<AbstractNode*>(root);
-        auto path = shape->get_property_as<Geom::BezierKnots>("path")->get(time);
-        auto color = shape->get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = shape->get_property_as<std::string>("extra_style")->get(time);
+        auto path = node->get_property_as<Geom::BezierKnots>("path")->get(time);
+        auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
+        auto extra_style = node->get_property_as<std::string>("extra_style")->get(time);
         return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.get_alpha(), extra_style);
+    } else if (node_name(*root) == "Image") {
+        auto fname = node->get_property_as<std::string>("file_path")->get(time);
+        auto width = node->get_property_as<double>("width")->get(time);
+        auto height = node->get_property_as<double>("height")->get(time);
+        return fmt::format(svg_image, fname, width, height);
     } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
         auto node_list = composite->list_layers()->get_links();
         std::string s;

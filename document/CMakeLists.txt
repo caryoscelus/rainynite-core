@@ -9,6 +9,7 @@ target_sources(document
         nodes/animated.cpp
         nodes/morph.cpp
         nodes/path_shape.cpp
+        nodes/image.cpp
 )
 
 target_link_libraries(document morphing fmt)
