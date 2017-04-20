@@ -41,8 +41,8 @@ inline std::string node_type_name(std::type_index type) {
     }
 }
 
-inline std::string node_name(AbstractReference node) {
-    return node_type_name(typeid(*node));
+inline std::string node_name(AbstractValue const& node) {
+    return node_type_name(typeid(node));
 }
 
 inline NodeInfo const& get_node_type(std::string const& name) {

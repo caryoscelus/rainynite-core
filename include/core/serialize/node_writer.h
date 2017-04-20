@@ -101,7 +101,7 @@ public:
     }
 
     static std::string get_type(AbstractReference object) {
-        return node_name(object);
+        return node_name(*object);
     }
 
     static serialize::RecordType classify(AbstractReference object) {
