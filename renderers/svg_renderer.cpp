@@ -53,9 +53,11 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 </svg>
 )";
 
-const std::string svg_path = R"(<path id="morph" d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
+const std::string svg_path = R"(<path d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
 
 const std::string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x="0" y="0" preserveAspectRatio="none"/>)";
+
+const std::string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)svg";
 
 void SvgRenderer::render(Context context_) {
     finished = false;
@@ -117,16 +119,21 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
     }
     // TODO: modularize
     auto node = dynamic_cast<AbstractNode*>(root);
-    if (node_name(*root) == "PathShape") {
+    auto name = node_name(*root);
+    if (name == "PathShape") {
         auto path = node->get_property_as<Geom::BezierKnots>("path")->get(time);
         auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
         auto extra_style = node->get_property_as<std::string>("extra_style")->get(time);
         return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.get_alpha(), extra_style);
-    } else if (node_name(*root) == "Image") {
+    } else if (name == "Image") {
         auto fname = node->get_property_as<std::string>("file_path")->get(time);
         auto width = node->get_property_as<double>("width")->get(time);
         auto height = node->get_property_as<double>("height")->get(time);
         return fmt::format(svg_image, fname, width, height);
+    } else if (name == "Translate") {
+        auto source = node->get_property("source");
+        auto offset = node->get_property_as<Geom::Point>("offset")->get(time);
+        return fmt::format(svg_translate, offset.x(), offset.y(), node_to_svg(source, time));
     } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
         auto node_list = composite->list_layers()->get_links();
         std::string s;

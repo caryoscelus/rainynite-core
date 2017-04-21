@@ -10,6 +10,7 @@ target_sources(document
         nodes/morph.cpp
         nodes/path_shape.cpp
         nodes/image.cpp
+        nodes/translate.cpp
 )
 
 target_link_libraries(document morphing fmt)
