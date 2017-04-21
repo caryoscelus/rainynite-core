@@ -56,6 +56,7 @@ private:
     TimePeriod main_time_period;
 
     NODE_PROPERTY(root, Renderable);
+    NODE_PROPERTY(size, Geom::Point);
     NODE_PROPERTY(svg_definitions, std::string);
 };
 

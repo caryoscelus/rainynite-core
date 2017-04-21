@@ -46,8 +46,8 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
      version="1.1"
-     width="800"
-     height="600">
+     width="{}px"
+     height="{}px">
   {}
   {}
 </svg>
@@ -95,15 +95,13 @@ void SvgRenderer::render_frame(Time time) {
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
-    fmt::print(f, svg_template, definitions(time), frame_to_svg(time));
+    auto size = document->get_size()->get(time);
+    auto definitions = document->get_svg_definitions()->get(time);
+    fmt::print(f, svg_template, size.x(), size.y(), definitions, frame_to_svg(time));
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, base_name+".png");
     finished_frame()(time);
-}
-
-std::string SvgRenderer::definitions(Time time) const {
-    return document->get_svg_definitions()->get(time);
 }
 
 std::string SvgRenderer::frame_to_svg(Time time) const {

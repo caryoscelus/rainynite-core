@@ -29,8 +29,9 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
     main_time_period(Time(0, 8), Time(5, 8))
 {
     init<Renderable>(root, {});
-    set_root(root_);
+    init<Geom::Point>(size, {800, 600});
     init<std::string>(svg_definitions, "");
+    set_root(root_);
     new_id();
 }
 
