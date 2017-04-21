@@ -138,7 +138,7 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
         auto text = node->get_property_as<std::string>("text")->get(time);
         auto size = node->get_property_as<double>("size")->get(time);
         auto color = node->get_property_as<colors::Color>("color")->get(time);
-        return fmt::format(svg_text, size, color, text);
+        return fmt::format(svg_text, size, to_hex24(color), text);
     } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
         auto node_list = composite->list_layers()->get_links();
         std::string s;
