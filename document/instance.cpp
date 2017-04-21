@@ -26,11 +26,18 @@
 #include <core/color.h>
 
 #include <geom_helpers/knots_io.h>
+#include <geom_helpers/point_io.h>
 
 namespace Geom {
+
 TYPE_INFO(BezierKnots, "BezierPath", [](auto&& s) {
     return parse_named_knots(s);
 });
+
+TYPE_INFO(Point, "Point", [](auto&& s) {
+    return parse_point(s);
+});
+
 } // namespace Geom
 
 namespace std {
@@ -114,13 +121,16 @@ public:
 };
 
 template class ValueNodeInfo<Geom::BezierKnots>;
+template class ValueNodeInfo<Geom::Point>;
 template class ValueNodeInfo<double>;
 template class ValueNodeInfo<Time>;
 template class ValueNodeInfo<TimePeriod>;
 template class ValueNodeInfo<colors::Color>;
 template class ValueNodeInfo<std::string>;
+// template class ListValueNodeInfo<Renderable>; - no renderable values possible
 
 template class ListValueNodeInfo<Geom::BezierKnots>;
+template class ListValueNodeInfo<Geom::Point>;
 template class ListValueNodeInfo<double>;
 template class ListValueNodeInfo<Time>;
 template class ListValueNodeInfo<TimePeriod>;
@@ -133,6 +143,7 @@ template class ListValueNodeInfo<Renderable>;
 namespace serialize {
 
 template class AutoValueToString<Geom::BezierKnots>;
+template class AutoValueToString<Geom::Point>;
 template class AutoValueToString<double>;
 template class AutoValueToString<Time>;
 template class AutoValueToString<TimePeriod>;
