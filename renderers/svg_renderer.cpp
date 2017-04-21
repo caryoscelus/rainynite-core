@@ -59,6 +59,8 @@ const std::string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x
 
 const std::string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)svg";
 
+const std::string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}</text>)";
+
 void SvgRenderer::render(Context context_) {
     finished = false;
     std::cout << "SvgRenderer start" << std::endl;
@@ -132,6 +134,11 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
         auto source = node->get_property("source");
         auto offset = node->get_property_as<Geom::Point>("offset")->get(time);
         return fmt::format(svg_translate, offset.x(), offset.y(), node_to_svg(source, time));
+    } else if (name == "Text") {
+        auto text = node->get_property_as<std::string>("text")->get(time);
+        auto size = node->get_property_as<double>("size")->get(time);
+        auto color = node->get_property_as<colors::Color>("color")->get(time);
+        return fmt::format(svg_text, size, color, text);
     } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
         auto node_list = composite->list_layers()->get_links();
         std::string s;

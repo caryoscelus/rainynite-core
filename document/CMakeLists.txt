@@ -11,6 +11,7 @@ target_sources(document
         nodes/path_shape.cpp
         nodes/image.cpp
         nodes/translate.cpp
+        nodes/text.cpp
 )
 
 target_link_libraries(document morphing fmt)
