@@ -59,9 +59,8 @@ std::shared_ptr<T> make_node_with_name(std::string const& name, boost::any const
     return std::dynamic_pointer_cast<T>(node);
 }
 
-#define REGISTER_NODE_NAMED(Node, name) \
-class Node; \
-class Node##NodeInfo : public NodeInfo, class_init::Registered<Node##NodeInfo, Node, NodeInfo>, class_init::ReverseRegistered<Node##NodeInfo, Node, std::string> { \
+#define REGISTER_NODE_NAMED(Node, NodeNodeInfo, name) \
+class NodeNodeInfo : public NodeInfo, class_init::Registered<NodeNodeInfo, Node, NodeInfo>, class_init::ReverseRegistered<NodeNodeInfo, Node, std::string> { \
 public: \
     virtual std::string operator()() const override { \
         return name; \
@@ -71,7 +70,9 @@ public: \
     } \
 }
 
-#define REGISTER_NODE(Node) REGISTER_NODE_NAMED(Node, #Node)
+#define REGISTER_NODE(Node) \
+class Node; \
+REGISTER_NODE_NAMED(Node, Node##NodeInfo, #Node)
 
 } // namespace core
 
