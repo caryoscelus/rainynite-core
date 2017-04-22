@@ -114,6 +114,12 @@ std::string SvgRenderer::frame_to_svg(Time time) const {
     return node_to_svg(document->get_root(), time);
 }
 
+std::string get_extra_style(AbstractNode* node, Time time, SvgRendererSettings settings) {
+    if (settings.extra_style)
+        return node->get_property_as<std::string>("extra_style")->get(time);
+    return "";
+}
+
 std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) const {
     auto root = root_ptr.get();
     if (root->get_type() != typeid(Renderable)) {
@@ -127,13 +133,13 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
     if (name == "PathShape") {
         auto path = node->get_property_as<Geom::BezierKnots>("path")->get(time);
         auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = node->get_property_as<std::string>("extra_style")->get(time);
+        auto extra_style = get_extra_style(node, time, settings);
         return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.alpha(), extra_style);
     } else if (name == "RectangleShape") {
         auto pos = node->get_property_as<Geom::Point>("position")->get(time);
         auto size = node->get_property_as<Geom::Point>("size")->get(time);
 //         auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = node->get_property_as<std::string>("extra_style")->get(time);
+        auto extra_style = get_extra_style(node, time, settings);
         return fmt::format(svg_rectangle, pos.x(), pos.y(), size.x(), size.y(), extra_style);
     } else if (name == "Image") {
         auto fname = node->get_property_as<std::string>("file_path")->get(time);

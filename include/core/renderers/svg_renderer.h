@@ -31,6 +31,7 @@ namespace renderers {
 
 struct SvgRendererSettings {
     bool render_pngs = false;
+    bool extra_style = true;
 };
 
 class SvgRenderer : public Renderer {
