@@ -16,6 +16,7 @@ target_sources(document
         nodes/format_string.cpp
         nodes/color_mix.cpp
         nodes/follow_path.cpp
+        nodes/extract_coord.cpp
 )
 
 target_link_libraries(document morphing fmt)
