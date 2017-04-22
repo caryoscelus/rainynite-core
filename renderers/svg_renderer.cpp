@@ -47,7 +47,8 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
      xmlns:xlink="http://www.w3.org/1999/xlink"
      version="1.1"
      width="{}px"
-     height="{}px">
+     height="{}px"
+     viewBox="0 0 {} {}">
   {}
   {}
 </svg>
@@ -100,8 +101,9 @@ void SvgRenderer::render_frame(Time time) {
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
     auto size = document->get_size()->get(time);
+    auto viewport_size = document->get_viewport_size()->get(time);
     auto definitions = document->get_svg_definitions()->get(time);
-    fmt::print(f, svg_template, size.x(), size.y(), definitions, frame_to_svg(time));
+    fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(time));
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, base_name+".png");

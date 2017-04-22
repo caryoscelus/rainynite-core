@@ -57,6 +57,7 @@ private:
 
     NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(size, Geom::Point);
+    NODE_PROPERTY(viewport_size, Geom::Point);
     NODE_PROPERTY(svg_definitions, std::string);
 };
 
