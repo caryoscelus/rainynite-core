@@ -9,6 +9,7 @@ target_sources(document
         nodes/animated.cpp
         nodes/morph.cpp
         nodes/path_shape.cpp
+        nodes/rectangle_shape.cpp
         nodes/image.cpp
         nodes/translate.cpp
         nodes/text.cpp
