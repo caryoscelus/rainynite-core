@@ -124,7 +124,7 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
         auto path = node->get_property_as<Geom::BezierKnots>("path")->get(time);
         auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
         auto extra_style = node->get_property_as<std::string>("extra_style")->get(time);
-        return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.get_alpha(), extra_style);
+        return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.alpha(), extra_style);
     } else if (name == "Image") {
         auto fname = node->get_property_as<std::string>("file_path")->get(time);
         auto width = node->get_property_as<double>("width")->get(time);

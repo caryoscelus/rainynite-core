@@ -13,6 +13,7 @@ target_sources(document
         nodes/translate.cpp
         nodes/text.cpp
         nodes/format_string.cpp
+        nodes/color_mix.cpp
 )
 
 target_link_libraries(document morphing fmt)
