@@ -18,6 +18,7 @@ target_sources(document
         nodes/follow_path.cpp
         nodes/extract_coord.cpp
         nodes/point_xy.cpp
+        nodes/linear.cpp
         nodes/to_string.cpp
         nodes/color_string.cpp
         nodes/file_string.cpp
