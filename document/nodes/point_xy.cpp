@@ -1,5 +1,5 @@
 /*
- *  extract_coord.cpp - extract x or y coord from Point
+ *  point_xy.cpp - combine x&y to Point (see ExtractCoord for reverse)
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -24,32 +24,27 @@
 namespace core {
 namespace nodes {
 
-using Geom::X;
-using Geom::Y;
+REGISTER_NODE(PointXY);
 
-template<Geom::Dim2 dimension>
-class ExtractCoord : public Node<double> {
+class PointXY : public Node<Geom::Point> {
 public:
-    ExtractCoord() {
-        init<Geom::Point>(point, {});
+    PointXY() {
+        init<double>(x, 0);
+        init<double>(y, 0);
     }
 public:
-    virtual double get(Time time) const override {
+    virtual Geom::Point get(Time time) const override {
         try {
-            auto p = get_point()->get(time);
-            return p[dimension];
+            return {get_x()->get(time), get_y()->get(time)};
         } catch (...) {
             return {};
         }
     }
 
 private:
-    NODE_PROPERTY(point, Geom::Point);
+    NODE_PROPERTY(x, double);
+    NODE_PROPERTY(y, double);
 };
-
-REGISTER_NODE_NAMED(ExtractCoord<X>, ExtractCoordXNodeInfo, "ExtractCoord<X>");
-REGISTER_NODE_NAMED(ExtractCoord<Y>, ExtractCoordYNodeInfo, "ExtractCoord<Y>");
-
 
 } // namespace nodes
 } // namespace core
