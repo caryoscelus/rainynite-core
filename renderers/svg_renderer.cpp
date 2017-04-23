@@ -56,7 +56,7 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 const std::string svg_path = R"(<path d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
 
-const std::string svg_rectangle = R"(<rect x="{}" y="{}" width="{}" height="{}" style="{}"/>)";
+const std::string svg_rectangle = R"(<rect x="{}" y="{}" width="{}" height="{}" style="fill:{};fill-opacity:{};stroke:none;{}"/>)";
 
 const std::string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x="0" y="0" preserveAspectRatio="none"/>)";
 
@@ -138,9 +138,9 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
     } else if (name == "RectangleShape") {
         auto pos = node->get_property_as<Geom::Point>("position")->get(time);
         auto size = node->get_property_as<Geom::Point>("size")->get(time);
-//         auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
+        auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
         auto extra_style = get_extra_style(node, time, settings);
-        return fmt::format(svg_rectangle, pos.x(), pos.y(), size.x(), size.y(), extra_style);
+        return fmt::format(svg_rectangle, pos.x(), pos.y(), size.x(), size.y(), colors::to_hex24(color), color.alpha(), extra_style);
     } else if (name == "Image") {
         auto fname = node->get_property_as<std::string>("file_path")->get(time);
         auto width = node->get_property_as<double>("width")->get(time);
