@@ -108,6 +108,10 @@ public:
                 auto object = dynamic_cast<AbstractNode*>(current().object.get());
                 object->set_property(current().key, target);
             } break;
+            case RecordType::List: {
+                auto object = dynamic_cast<AbstractListLinked*>(current().object.get());
+                object->push_back(target);
+            } break;
             default:
                 throw DeserializationError("Unexpected reference");
         }
