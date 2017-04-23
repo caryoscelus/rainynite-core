@@ -19,6 +19,7 @@ target_sources(document
         nodes/extract_coord.cpp
         nodes/point_xy.cpp
         nodes/to_string.cpp
+        nodes/file_string.cpp
 )
 
 target_link_libraries(document morphing fmt)
