@@ -85,6 +85,8 @@ public:
     virtual void string(std::string const& s) override {
         switch (current().awaiting) {
             case RecordType::Value: {
+                if (!current().object)
+                    throw DeserializationError("Value provided before object is created");
                 auto type = current().object->get_type();
                 auto value = parse_primitive_type(type, s);
                 current().object->set_any(value);
