@@ -143,9 +143,8 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
         return fmt::format(svg_rectangle, pos.x(), pos.y(), size.x(), size.y(), colors::to_hex24(color), color.alpha(), extra_style);
     } else if (name == "Image") {
         auto fname = node->get_property_as<std::string>("file_path")->get(time);
-        auto width = node->get_property_as<double>("width")->get(time);
-        auto height = node->get_property_as<double>("height")->get(time);
-        return fmt::format(svg_image, fname, width, height);
+        auto size = node->get_property_as<Geom::Point>("size")->get(time);
+        return fmt::format(svg_image, fname, size.x(), size.y());
     } else if (name == "Translate") {
         auto source = node->get_property("source");
         auto offset = node->get_property_as<Geom::Point>("offset")->get(time);

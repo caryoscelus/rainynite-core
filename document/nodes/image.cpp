@@ -19,6 +19,8 @@
 #include <core/renderable.h>
 #include <core/node_info.h>
 
+#include <2geom/point.h>
+
 namespace core {
 namespace nodes {
 
@@ -26,14 +28,12 @@ class Image : public RenderableNode {
 public:
     Image() {
         init<std::string>(file_path, "");
-        init<double>(width, 0.0);
-        init<double>(height, 0.0);
+        init<Geom::Point>(size, {0, 0});
     }
 
 private:
     NODE_PROPERTY(file_path, std::string);
-    NODE_PROPERTY(width, double);
-    NODE_PROPERTY(height, double);
+    NODE_PROPERTY(size, Geom::Point);
 };
 
 REGISTER_NODE(Image);
