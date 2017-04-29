@@ -150,6 +150,7 @@ public:
     virtual void push_back(AbstractReference) {
         throw NodeAccessError("cannot push back");
     }
+    virtual void set_link(size_t, AbstractReference) = 0;
     template <typename T>
     void push_value(T const& value) {
         push_back(make_value<T>(value));
@@ -190,6 +191,10 @@ public:
     }
     virtual AbstractReference get_link(size_t i) const override {
         return values.at(i);
+    }
+    virtual void set_link(size_t i, AbstractReference value) override {
+        if (auto node = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value)))
+            values.at(i) = node;
     }
     virtual size_t link_count() const override {
         return values.size();
@@ -260,6 +265,9 @@ public:
     }
     virtual AbstractReference get_link(size_t i) const override {
         return *numbered_storage[i];
+    }
+    virtual void set_link(size_t i, AbstractReference value) override {
+        *numbered_storage[i] = value;
     }
     virtual size_t link_count() const override {
         return numbered_storage.size();
