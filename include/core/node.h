@@ -158,6 +158,10 @@ public:
     virtual void remove(size_t index) {
         throw NodeAccessError("cannot remove");
     }
+    virtual bool can_remove() const {
+        return false;
+    }
+public:
     template <typename T>
     void push_value(T const& value) {
         push_back(make_value<T>(value));
@@ -221,6 +225,9 @@ public:
     }
     virtual void remove(size_t index) override {
         values.erase(values.begin()+index);
+    }
+    virtual bool can_remove() const override {
+        return true;
     }
 private:
     std::vector<BaseReference<T>> values;
