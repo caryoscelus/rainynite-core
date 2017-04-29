@@ -29,7 +29,10 @@ namespace core {
  */
 class NodeInfo {
 public:
-    virtual std::string operator()() const = 0;
+    std::string operator()() const {
+        return name();
+    }
+    virtual std::string name() const = 0;
     virtual AbstractReference new_empty() const = 0;
     virtual Type type() const = 0;
 };
@@ -73,7 +76,7 @@ struct RegisterNodeByType : class_init::Initialized<RegisterNodeByType<I>> {
     }
 };
 
-#define REGISTER_NODE_NAMED(Node, NodeNodeInfo, name) \
+#define REGISTER_NODE_NAMED(Node, NodeNodeInfo, _name) \
 class NodeNodeInfo : \
     public NodeInfo, \
     class_init::Registered<NodeNodeInfo, Node, NodeInfo>, \
@@ -81,8 +84,8 @@ class NodeNodeInfo : \
     RegisterNodeByType<NodeNodeInfo> \
 { \
 public: \
-    virtual std::string operator()() const override { \
-        return name; \
+    virtual std::string name() const override { \
+        return _name; \
     } \
     virtual AbstractReference new_empty() const override { \
         return std::static_pointer_cast<AbstractValue>(std::make_shared<Node>()); \

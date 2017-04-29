@@ -97,7 +97,7 @@ class ValueNodeInfo :
     class_init::ReverseRegistered<ValueNodeInfo<T>, Value<T>, std::string>
 {
 public:
-    virtual std::string operator()() const override {
+    virtual std::string name() const override {
         return "Value<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
     }
     virtual AbstractReference new_empty() const override {
@@ -115,7 +115,7 @@ class ListValueNodeInfo :
     class_init::ReverseRegistered<ListValueNodeInfo<T>, ListValue<T>, std::string>
 {
 public:
-    virtual std::string operator()() const override {
+    virtual std::string name() const override {
         return "List<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
     }
     virtual AbstractReference new_empty() const override {

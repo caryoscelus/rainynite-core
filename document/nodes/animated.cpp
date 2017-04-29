@@ -85,7 +85,7 @@ class AnimatedNodeInfo :
     class_init::ReverseRegistered<AnimatedNodeInfo<T>, Animated<T>, std::string>
 {
 public:
-    virtual std::string operator()() const override {
+    virtual std::string name() const override {
         return "Animated<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
     }
     virtual AbstractReference new_empty() const override {
