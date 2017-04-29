@@ -80,6 +80,19 @@ std::map<T, std::type_index>& reverse_class_registry() {
  */
 template <class S, class T, class R>
 class Registered : public Initialized<Registered<S, T, R>> {
+private:
+    /**
+     * Curiously-recurring pattern class argument
+     */
+    using Self = S;
+    /**
+     * Type to register
+     */
+    using Type = T;
+    /**
+     * Base type holding registered info
+     */
+    using RegisteredInfo = R;
 public:
     static void init() {
         class_registry<R>()[typeid(T)] = new S();

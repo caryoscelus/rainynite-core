@@ -155,7 +155,7 @@ public:
     virtual void push_new() {
         throw NodeAccessError("cannot push back");
     }
-    virtual void remove(size_t index) {
+    virtual void remove(size_t) {
         throw NodeAccessError("cannot remove");
     }
     virtual bool can_remove() const {
