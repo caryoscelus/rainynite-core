@@ -19,9 +19,18 @@
 #ifndef __CORE__RENDERABLE_H__38DF5A1E
 #define __CORE__RENDERABLE_H__38DF5A1E
 
+#include <core/node.h>
+
 namespace core {
 
 class Renderable {
+};
+
+class RenderableNode : public Node<Renderable> {
+public:
+    virtual Renderable get(Time) const override {
+        return {};
+    }
 };
 
 } // namespace core

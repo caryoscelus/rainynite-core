@@ -16,25 +16,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node.h>
-#include <core/node_info.h>
 #include <core/renderable.h>
+#include <core/node_info.h>
 
 #include <2geom/point.h>
 
 namespace core {
 namespace nodes {
 
-class Translate : public Node<Renderable> {
+class Translate : public RenderableNode {
 public:
     Translate() {
         init<Renderable>(source, {});
         init<Geom::Point>(offset, {});
     }
-public:
-    virtual Renderable get(Time time) const override {
-        return Renderable();
-    }
+
 private:
     NODE_PROPERTY(source, Renderable);
     NODE_PROPERTY(offset, Geom::Point);

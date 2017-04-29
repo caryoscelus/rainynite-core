@@ -16,25 +16,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node.h>
-#include <core/node_info.h>
 #include <core/renderable.h>
+#include <core/node_info.h>
 #include <core/color.h>
 
 namespace core {
 namespace nodes {
 
-class Text : public Node<Renderable> {
+class Text : public RenderableNode {
 public:
     Text() {
         init<std::string>(text, "");
         init<colors::Color>(color, {});
         init<double>(size, 0);
     }
-public:
-    virtual Renderable get(Time time) const override {
-        return Renderable();
-    }
+
 private:
     NODE_PROPERTY(text, std::string);
     NODE_PROPERTY(color, colors::Color);

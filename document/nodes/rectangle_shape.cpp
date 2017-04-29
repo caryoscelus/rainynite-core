@@ -16,9 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node.h>
-#include <core/node_info.h>
 #include <core/renderable.h>
+#include <core/node_info.h>
 #include <core/color.h>
 
 #include <2geom/point.h>
@@ -26,17 +25,13 @@
 namespace core {
 namespace nodes {
 
-class RectangleShape : public Node<Renderable> {
+class RectangleShape : public RenderableNode {
 public:
     RectangleShape() {
         init<Geom::Point>(position, {});
         init<Geom::Point>(size, {});
         init<colors::Color>(fill_color, colors::Color());
         init<std::string>(extra_style, "");
-    }
-public:
-    virtual Renderable get(Time time) const override {
-        return Renderable();
     }
 private:
     NODE_PROPERTY(position, Geom::Point);

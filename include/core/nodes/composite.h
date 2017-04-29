@@ -19,23 +19,19 @@
 #ifndef __CORE__NODES__COMPOSITE_H__266BAD3C
 #define __CORE__NODES__COMPOSITE_H__266BAD3C
 
-#include <core/node.h>
-#include <core/node_info.h>
 #include <core/renderable.h>
+#include <core/node_info.h>
 
 namespace core {
 namespace nodes {
 
-class Composite : public Node<Renderable> {
+class Composite : public RenderableNode {
 public:
     Composite() {
         init_list<Renderable>(layers);
         get_layers()->new_id();
     }
-public:
-    virtual Renderable get(Time time) const override {
-        return Renderable();
-    }
+
 private:
     NODE_LIST_PROPERTY(layers, Renderable);
 };

@@ -16,24 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node.h>
-#include <core/node_info.h>
 #include <core/renderable.h>
+#include <core/node_info.h>
 
 namespace core {
 namespace nodes {
 
-class Image : public Node<Renderable> {
+class Image : public RenderableNode {
 public:
     Image() {
         init<std::string>(file_path, "");
         init<double>(width, 0.0);
         init<double>(height, 0.0);
     }
-public:
-    virtual Renderable get(Time time) const override {
-        return Renderable();
-    }
+
 private:
     NODE_PROPERTY(file_path, std::string);
     NODE_PROPERTY(width, double);
