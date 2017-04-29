@@ -152,6 +152,9 @@ public:
     virtual void push_back(AbstractReference) {
         throw NodeAccessError("cannot push back");
     }
+    virtual void push_new() {
+        throw NodeAccessError("cannot push back");
+    }
     template <typename T>
     void push_value(T const& value) {
         push_back(make_value<T>(value));
@@ -209,6 +212,9 @@ public:
         } else {
             //throw
         }
+    }
+    virtual void push_new() override {
+        push_value<T>({});
     }
 private:
     std::vector<BaseReference<T>> values;
