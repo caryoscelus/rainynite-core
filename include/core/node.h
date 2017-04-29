@@ -155,6 +155,9 @@ public:
     virtual void push_new() {
         throw NodeAccessError("cannot push back");
     }
+    virtual void remove(size_t index) {
+        throw NodeAccessError("cannot remove");
+    }
     template <typename T>
     void push_value(T const& value) {
         push_back(make_value<T>(value));
@@ -215,6 +218,9 @@ public:
     }
     virtual void push_new() override {
         push_value<T>({});
+    }
+    virtual void remove(size_t index) override {
+        values.erase(values.begin()+index);
     }
 private:
     std::vector<BaseReference<T>> values;
