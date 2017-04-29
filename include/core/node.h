@@ -158,7 +158,7 @@ public:
     virtual void remove(size_t) {
         throw NodeAccessError("cannot remove");
     }
-    virtual bool can_remove() const {
+    virtual bool is_editable_list() const {
         return false;
     }
 public:
@@ -226,7 +226,7 @@ public:
     virtual void remove(size_t index) override {
         values.erase(values.begin()+index);
     }
-    virtual bool can_remove() const override {
+    virtual bool is_editable_list() const override {
         return true;
     }
 private:
