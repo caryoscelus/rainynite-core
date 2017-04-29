@@ -31,7 +31,6 @@ std::string format_vector(std::string format, std::vector<std::string> args, std
     return fmt::format(format, args[i]...);
 }
 
-REGISTER_NODE(FormatString);
 class FormatString : public Node<std::string> {
 public:
     FormatString() {
@@ -59,6 +58,8 @@ private:
     NODE_PROPERTY(format, std::string);
     NODE_LIST_PROPERTY(arguments, std::string);
 };
+
+REGISTER_NODE(FormatString);
 
 } // namespace nodes
 } // namespace core

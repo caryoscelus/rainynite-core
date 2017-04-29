@@ -22,8 +22,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(Linear);
-
 class Linear : public Node<double> {
 public:
     Linear() {
@@ -45,6 +43,8 @@ private:
     NODE_PROPERTY(base, double);
     NODE_PROPERTY(speed, double);
 };
+
+REGISTER_NODE(Linear);
 
 } // namespace nodes
 } // namespace core

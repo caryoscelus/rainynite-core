@@ -23,8 +23,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(ToString);
-
 class ToString : public Node<std::string> {
 public:
     ToString() {
@@ -43,6 +41,8 @@ public:
 private:
     NodeProperty source {"source", ""};
 };
+
+REGISTER_NODE(ToString);
 
 } // namespace nodes
 } // namespace core

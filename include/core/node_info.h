@@ -31,6 +31,7 @@ class NodeInfo {
 public:
     virtual std::string operator()() const = 0;
     virtual AbstractReference new_empty() const = 0;
+    virtual Type type() const = 0;
 };
 
 inline std::string node_type_name(std::type_index type) {
@@ -59,14 +60,35 @@ std::shared_ptr<T> make_node_with_name(std::string const& name, boost::any const
     return std::dynamic_pointer_cast<T>(node);
 }
 
+inline std::map<Type, std::set<NodeInfo const*>>& node_types() {
+    static std::map<Type, std::set<NodeInfo const*>> instance;
+    return instance;
+}
+
+template <class I>
+struct RegisterNodeByType : class_init::Initialized<RegisterNodeByType<I>> {
+    static void init() {
+        auto info = new I();
+        node_types()[info->type()].insert(info);
+    }
+};
+
 #define REGISTER_NODE_NAMED(Node, NodeNodeInfo, name) \
-class NodeNodeInfo : public NodeInfo, class_init::Registered<NodeNodeInfo, Node, NodeInfo>, class_init::ReverseRegistered<NodeNodeInfo, Node, std::string> { \
+class NodeNodeInfo : \
+    public NodeInfo, \
+    class_init::Registered<NodeNodeInfo, Node, NodeInfo>, \
+    class_init::ReverseRegistered<NodeNodeInfo, Node, std::string>, \
+    RegisterNodeByType<NodeNodeInfo> \
+{ \
 public: \
     virtual std::string operator()() const override { \
         return name; \
     } \
     virtual AbstractReference new_empty() const override { \
         return std::static_pointer_cast<AbstractValue>(std::make_shared<Node>()); \
+    } \
+    virtual core::Type type() const override { \
+        return Node::static_type(); \
     } \
 }
 

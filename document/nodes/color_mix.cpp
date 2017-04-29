@@ -23,8 +23,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(ColorMix);
-
 class ColorMix : public Node<colors::Color> {
 public:
     ColorMix() {
@@ -43,6 +41,8 @@ private:
     NODE_PROPERTY(a, colors::Color);
     NODE_PROPERTY(b, colors::Color);
 };
+
+REGISTER_NODE(ColorMix);
 
 } // namespace nodes
 } // namespace core

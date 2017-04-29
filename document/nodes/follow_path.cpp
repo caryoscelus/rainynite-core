@@ -24,8 +24,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(FollowPath);
-
 class FollowPath : public Node<Geom::Point> {
 public:
     FollowPath() {
@@ -45,6 +43,8 @@ public:
 private:
     NODE_PROPERTY(path, Geom::BezierKnots);
 };
+
+REGISTER_NODE(FollowPath);
 
 } // namespace nodes
 } // namespace core

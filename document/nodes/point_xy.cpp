@@ -24,8 +24,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(PointXY);
-
 class PointXY : public Node<Geom::Point> {
 public:
     PointXY() {
@@ -45,6 +43,8 @@ private:
     NODE_PROPERTY(x, double);
     NODE_PROPERTY(y, double);
 };
+
+REGISTER_NODE(PointXY);
 
 } // namespace nodes
 } // namespace core

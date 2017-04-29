@@ -24,8 +24,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(Truncate);
-
 class Truncate : public Node<double> {
 public:
     Truncate() {
@@ -46,6 +44,8 @@ public:
 private:
     NODE_PROPERTY(source, double);
 };
+
+REGISTER_NODE(Truncate);
 
 } // namespace nodes
 } // namespace core

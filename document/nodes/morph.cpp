@@ -26,8 +26,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(BezierMorph);
-
 class BezierMorph : public Node<Geom::BezierKnots> {
 public:
     BezierMorph() {
@@ -62,6 +60,8 @@ private:
     NODE_PROPERTY(a, Geom::BezierKnots);
     NODE_PROPERTY(b, Geom::BezierKnots);
 };
+
+REGISTER_NODE(BezierMorph);
 
 } // namespace nodes
 } // namespace core

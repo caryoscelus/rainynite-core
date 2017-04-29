@@ -103,6 +103,9 @@ public:
     virtual AbstractReference new_empty() const override {
         return std::make_shared<Value<T>>();
     }
+    virtual Type type() const override {
+        return typeid(T);
+    }
 };
 
 template <typename T>
@@ -117,6 +120,9 @@ public:
     }
     virtual AbstractReference new_empty() const override {
         return std::make_shared<ListValue<T>>();
+    }
+    virtual Type type() const override {
+        return typeid(std::vector<T>);
     }
 };
 

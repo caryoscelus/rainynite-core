@@ -91,6 +91,9 @@ public:
     virtual AbstractReference new_empty() const override {
         return std::make_shared<Animated<T>>();
     }
+    virtual Type type() const override {
+        return typeid(T);
+    }
 };
 
 template class AnimatedNodeInfo<Geom::BezierKnots>;

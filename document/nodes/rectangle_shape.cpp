@@ -26,8 +26,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(RectangleShape);
-
 class RectangleShape : public Node<Renderable> {
 public:
     RectangleShape() {
@@ -46,6 +44,8 @@ private:
     NODE_PROPERTY(fill_color, colors::Color);
     NODE_PROPERTY(extra_style, std::string);
 };
+
+REGISTER_NODE(RectangleShape);
 
 } // namespace nodes
 } // namespace core

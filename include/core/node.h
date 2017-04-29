@@ -98,6 +98,10 @@ public:
     virtual bool can_set_any(boost::any value_) const override {
         return can_set() && value_.type() == typeid(T);
     }
+public:
+    static Type static_type() {
+        return typeid(T);
+    }
 };
 
 using AbstractReference = std::shared_ptr<AbstractValue>;

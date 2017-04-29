@@ -23,8 +23,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(ColorString);
-
 class ColorString : public Node<std::string> {
 public:
     ColorString() {
@@ -43,6 +41,8 @@ public:
 private:
     NODE_PROPERTY(color, colors::Color);
 };
+
+REGISTER_NODE(ColorString);
 
 } // namespace nodes
 } // namespace core

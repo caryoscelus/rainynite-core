@@ -25,8 +25,6 @@
 namespace core {
 namespace nodes {
 
-REGISTER_NODE(FileString);
-
 class FileString : public Node<std::string> {
 public:
     FileString() {
@@ -48,6 +46,8 @@ public:
 private:
     NODE_PROPERTY(file_name, std::string);
 };
+
+REGISTER_NODE(FileString);
 
 } // namespace nodes
 } // namespace core
