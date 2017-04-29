@@ -144,13 +144,14 @@ std::shared_ptr<Value<T>> make_value(Args&&... args);
 
 class AbstractListLinked {
 public:
+    virtual size_t link_count() const = 0;
     virtual std::vector<AbstractReference> get_links() const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
-    virtual size_t link_count() const = 0;
+    virtual Type get_link_type(size_t i) const = 0;
+    virtual void set_link(size_t, AbstractReference) = 0;
     virtual void push_back(AbstractReference) {
         throw NodeAccessError("cannot push back");
     }
-    virtual void set_link(size_t, AbstractReference) = 0;
     template <typename T>
     void push_value(T const& value) {
         push_back(make_value<T>(value));
@@ -191,6 +192,9 @@ public:
     }
     virtual AbstractReference get_link(size_t i) const override {
         return values.at(i);
+    }
+    virtual Type get_link_type(size_t) const override {
+        return typeid(T);
     }
     virtual void set_link(size_t i, AbstractReference value) override {
         if (auto node = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value)))
@@ -243,9 +247,10 @@ public:
         }
         *(named_storage[name]) = ref;
     }
-    void init_property(std::string const& name, AbstractReference* ref_p) {
+    void init_property(std::string const& name, AbstractReference* ref_p, Type type) {
         named_storage[name] = ref_p;
         numbered_storage.push_back(ref_p);
+        types.push_back(type);
     }
     std::map<std::string, AbstractReference> get_link_map() const {
         std::map<std::string, AbstractReference> result;
@@ -266,6 +271,9 @@ public:
     virtual AbstractReference get_link(size_t i) const override {
         return *numbered_storage[i];
     }
+    virtual Type get_link_type(size_t i) const override {
+        return types[i];
+    }
     virtual void set_link(size_t i, AbstractReference value) override {
         *numbered_storage[i] = value;
     }
@@ -275,6 +283,7 @@ public:
 private:
     std::map<std::string, AbstractReference*> named_storage;
     std::vector<AbstractReference*> numbered_storage;
+    std::vector<Type> types;
 };
 
 template <typename T>
@@ -316,12 +325,12 @@ public:
     template <typename U>
     void init(NodeProperty& prop, U value) {
         prop.set(make_value<U>(value));
-        init_property(prop.get_name(), &(prop.mod()));
+        init_property(prop.get_name(), &(prop.mod()), typeid(U));
     }
     template <typename U>
     void init_list(NodeProperty& prop) {
         prop.set(std::make_shared<ListValue<U>>());
-        init_property(prop.get_name(), &(prop.mod()));
+        init_property(prop.get_name(), &(prop.mod()), typeid(std::vector<U>));
     }
 };
 
