@@ -22,7 +22,7 @@
 
 #include <boost/uuid/uuid_io.hpp>
 
-#include <core/node.h>
+#include <core/node_info.h>
 
 using namespace core;
 
@@ -193,4 +193,14 @@ TEST_CASE("Traverse list node", "[node]") {
     list->push_back(one);
     CHECK(count_nodes(list) == 2);
     CHECK(count_nodes(list, TraverseDepth::Deeper) == 3);
+}
+
+TEST_CASE("Shallow node copy", "[node]") {
+    auto one = make_value<Real>(1.0);
+    auto two = shallow_copy(*one);
+    auto one_value = dynamic_cast<Value<Real>*>(one.get());
+    auto two_value = dynamic_cast<Value<Real>*>(two.get());
+    two_value->set(2.0);
+    CHECK(one_value->mod() == 1.0);
+    CHECK(two_value->mod() == 2.0);
 }

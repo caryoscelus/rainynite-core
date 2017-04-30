@@ -100,6 +100,9 @@ public:
     virtual AbstractReference new_empty() const override {
         return std::make_shared<Value<T>>();
     }
+    virtual AbstractReference clone(AbstractValue const& source) const override {
+        return std::make_shared<Value<T>>(static_cast<Value<T> const&>(source));
+    }
     virtual Type type() const override {
         return typeid(T);
     }
@@ -114,6 +117,9 @@ public:
     }
     virtual AbstractReference new_empty() const override {
         return std::make_shared<ListValue<T>>();
+    }
+    virtual AbstractReference clone(AbstractValue const& source) const override {
+        return std::make_shared<ListValue<T>>(static_cast<ListValue<T> const&>(source));
     }
     virtual Type type() const override {
         return typeid(std::vector<T>);

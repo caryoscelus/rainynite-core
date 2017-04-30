@@ -34,8 +34,13 @@ public:
     }
     virtual std::string name() const = 0;
     virtual AbstractReference new_empty() const = 0;
+    virtual AbstractReference clone(AbstractValue const& source) const = 0;
     virtual Type type() const = 0;
 };
+
+inline NodeInfo const& get_node_info(std::type_index type) {
+    return class_init::type_meta<NodeInfo>(type);
+}
 
 inline std::string node_type_name(std::type_index type) {
     try {
@@ -50,8 +55,7 @@ inline std::string node_name(AbstractValue const& node) {
 }
 
 inline NodeInfo const& get_node_type(std::string const& name) {
-    auto type = class_init::find_type(name);
-    return class_init::type_meta<NodeInfo>(type);
+    return get_node_info(class_init::find_type(name));
 }
 
 template <typename T>
@@ -61,6 +65,10 @@ std::shared_ptr<T> make_node_with_name(std::string const& name, boost::any const
     if (!value.empty() && node->can_set_any(value))
         node->set_any(value);
     return std::dynamic_pointer_cast<T>(node);
+}
+
+inline AbstractReference shallow_copy(AbstractValue const& source) {
+    return get_node_info(typeid(source)).clone(source);
 }
 
 inline std::map<Type, std::set<NodeInfo const*>>& node_types() {
@@ -91,6 +99,9 @@ public: \
     } \
     virtual AbstractReference new_empty() const override { \
         return std::static_pointer_cast<AbstractValue>(std::make_shared<Node>()); \
+    } \
+    virtual AbstractReference clone(AbstractValue const& source) const override { \
+        return std::make_shared<Node>(static_cast<Node const&>(source)); \
     } \
     virtual core::Type type() const override { \
         return Node::static_type(); \

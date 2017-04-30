@@ -88,6 +88,9 @@ public:
     virtual AbstractReference new_empty() const override {
         return std::make_shared<Animated<T>>();
     }
+    virtual AbstractReference clone(AbstractValue const& source) const override {
+        return std::make_shared<Animated<T>>(static_cast<Animated<T> const&>(source));
+    }
     virtual Type type() const override {
         return typeid(T);
     }
