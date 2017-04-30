@@ -91,10 +91,7 @@ public:
 };
 
 template <typename T>
-class ValueNodeInfo :
-    public NodeInfo,
-    class_init::Registered<ValueNodeInfo<T>, Value<T>, NodeInfo>,
-    class_init::ReverseRegistered<ValueNodeInfo<T>, Value<T>, std::string>
+class ValueNodeInfo : NODE_INFO_PARENTS(ValueNodeInfo<T>, Value<T>)
 {
 public:
     virtual std::string name() const override {
@@ -109,10 +106,7 @@ public:
 };
 
 template <typename T>
-class ListValueNodeInfo :
-    public NodeInfo,
-    class_init::Registered<ListValueNodeInfo<T>, ListValue<T>, NodeInfo>,
-    class_init::ReverseRegistered<ListValueNodeInfo<T>, ListValue<T>, std::string>
+class ListValueNodeInfo : NODE_INFO_PARENTS(ListValueNodeInfo<T>, ListValue<T>)
 {
 public:
     virtual std::string name() const override {

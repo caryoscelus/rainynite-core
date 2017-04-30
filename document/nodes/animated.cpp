@@ -79,10 +79,7 @@ private:
 };
 
 template <class T>
-class AnimatedNodeInfo :
-    public NodeInfo,
-    class_init::Registered<AnimatedNodeInfo<T>, Animated<T>, NodeInfo>,
-    class_init::ReverseRegistered<AnimatedNodeInfo<T>, Animated<T>, std::string>
+class AnimatedNodeInfo : NODE_INFO_PARENTS(AnimatedNodeInfo<T>, Animated<T>)
 {
 public:
     virtual std::string name() const override {

@@ -76,12 +76,14 @@ struct RegisterNodeByType : class_init::Initialized<RegisterNodeByType<I>> {
     }
 };
 
+#define NODE_INFO_PARENTS(Self, Type) \
+public NodeInfo, \
+private class_init::Registered<Self, Type, NodeInfo>, \
+private class_init::ReverseRegistered<Self, Type, std::string>, \
+private RegisterNodeByType<Self>
+
 #define REGISTER_NODE_NAMED(Node, NodeNodeInfo, _name) \
-class NodeNodeInfo : \
-    public NodeInfo, \
-    class_init::Registered<NodeNodeInfo, Node, NodeInfo>, \
-    class_init::ReverseRegistered<NodeNodeInfo, Node, std::string>, \
-    RegisterNodeByType<NodeNodeInfo> \
+class NodeNodeInfo : NODE_INFO_PARENTS(NodeNodeInfo, Node) \
 { \
 public: \
     virtual std::string name() const override { \
