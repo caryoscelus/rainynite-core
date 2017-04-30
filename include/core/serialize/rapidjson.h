@@ -65,17 +65,17 @@ public:
     bool Int64(int64_t) {
         throw DeserializationError("Unexpected int64");
     }
-    bool Uint64(uint64_t u) {
+    bool Uint64(uint64_t) {
         throw DeserializationError("Unexpected uint64");
     }
-    bool Double(double d) {
+    bool Double(double) {
         throw DeserializationError("Unexpected double");
     }
-    bool RawNumber(char const* str, size_t length, bool copy) { 
+    bool RawNumber(char const*, size_t, bool) {
         std::cerr << "RawNumber" << std::endl;
         throw DeserializationError("Unexpected number");
     }
-    bool String(char const* str, size_t length, bool copy) { 
+    bool String(char const* str, size_t length, bool) {
         auto s = std::string(str, length);
         std::cerr << "String: " << str << std::endl;
         try {
@@ -112,7 +112,7 @@ public:
         status = Status::ObjectStart;
         return true;
     }
-    bool Key(char const* str, size_t length, bool copy) {
+    bool Key(char const* str, size_t length, bool) {
         auto key = std::string(str, length);
         std::cerr << "Key: " << key << std::endl;
         if (key == "TYPE") {
