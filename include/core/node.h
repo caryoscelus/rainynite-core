@@ -376,7 +376,7 @@ T traverse_once(AbstractReference root, F f, TraverseDepth depth = TraverseDepth
             return result.get();
 
         if (traversed.count(node) == 0) {
-            if (auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node)) {
+            if (auto linked_node = std::dynamic_pointer_cast<AbstractListLinked>(node)) {
                 auto links = linked_node->get_links();
                 std::copy_if(
                     links.begin(),

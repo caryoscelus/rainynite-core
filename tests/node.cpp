@@ -184,3 +184,13 @@ TEST_CASE("Traverse node tree", "[node]") {
     CHECK(count_nodes(add) == 2);
     CHECK(count_nodes(add, TraverseDepth::Deeper) == 3);
 }
+
+TEST_CASE("Traverse list node", "[node]") {
+    auto list = make_node<ListValue<Real>>();
+    auto one = make_value<Real>(1.0);
+    list->push_back(one);
+    CHECK(count_nodes(list) == 2);
+    list->push_back(one);
+    CHECK(count_nodes(list) == 2);
+    CHECK(count_nodes(list, TraverseDepth::Deeper) == 3);
+}
