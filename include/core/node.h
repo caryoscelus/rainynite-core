@@ -21,11 +21,13 @@
 
 #include <map>
 #include <set>
+#include <list>
 #include <memory>
 #include <typeindex>
 #include <stdexcept>
 
 #include <boost/any.hpp>
+#include <boost/optional.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
@@ -353,29 +355,43 @@ public:
     }
 };
 
-void traverse_once(AbstractReference root, auto f) {
+enum class TraverseDepth {
+    Once,
+    Deeper
+};
+
+template <typename T, typename F>
+T traverse_once(AbstractReference root, F f, TraverseDepth depth = TraverseDepth::Once) {
     std::set<AbstractReference> traversed;
-    std::set<AbstractReference> to_traverse;
-    to_traverse.insert(root);
+    std::list<AbstractReference> to_traverse;
+    to_traverse.push_back(root);
     while (!to_traverse.empty()) {
         auto i = to_traverse.begin();
         auto node = *i;
         to_traverse.erase(i);
-        f(node);
-        auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node);
-        if (linked_node) {
-            auto links = linked_node->get_links();
-            std::copy_if(
-                links.begin(),
-                links.end(),
-                std::inserter(to_traverse, to_traverse.end()),
-                [&traversed](AbstractReference ref) {
-                    return traversed.count(ref) == 0;
-                }
-            );
+        if (traversed.count(node) > 0 && depth == TraverseDepth::Once)
+            continue;
+
+        if (boost::optional<T> result = f(node))
+            return result.get();
+
+        if (traversed.count(node) == 0) {
+            if (auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node)) {
+                auto links = linked_node->get_links();
+                std::copy_if(
+                    links.begin(),
+                    links.end(),
+                    std::back_inserter(to_traverse),
+                    [&traversed, depth](AbstractReference ref) {
+                        return depth == TraverseDepth::Deeper
+                            || traversed.count(ref) == 0;
+                    }
+                );
+            }
         }
         traversed.insert(node);
     }
+    return {};
 }
 
 /*

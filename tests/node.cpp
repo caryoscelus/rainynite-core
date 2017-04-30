@@ -139,13 +139,14 @@ void serialize_map(std::ostream& stream, std::map<std::string, AbstractReference
 
 std::string dump_node_tree(AbstractReference root) {
     std::ostringstream stream;
-    traverse_once(root, [&stream](AbstractReference node) {
+    traverse_once<bool>(root, [&stream](AbstractReference node) {
         stream << "\"" << node->get_id() << "\": ";
         if (node->is_const()) {
             stream << value_to_string(node) << "\n";
         } else if (auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node)) {
             serialize_map(stream, linked_node->get_link_map());
         }
+        return boost::none;
     });
     stream << "\n";
     return stream.str();
@@ -163,11 +164,12 @@ TEST_CASE("Dump node tree", "[node]") {
     std::cerr << dump_node_tree(add);
 }
 
-unsigned count_nodes(AbstractReference root) {
+unsigned count_nodes(AbstractReference root, TraverseDepth depth = TraverseDepth::Once) {
     unsigned result = 0;
-    traverse_once(root, [&result](AbstractReference) {
+    traverse_once<bool>(root, [&result](AbstractReference) {
         ++result;
-    });
+        return boost::none;
+    }, depth);
     return result;
 }
 
@@ -180,4 +182,5 @@ TEST_CASE("Traverse node tree", "[node]") {
     CHECK(count_nodes(add) == 3);
     add->set_property("b", one);
     CHECK(count_nodes(add) == 2);
+    CHECK(count_nodes(add, TraverseDepth::Deeper) == 3);
 }
