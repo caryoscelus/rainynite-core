@@ -68,7 +68,9 @@ std::shared_ptr<T> make_node_with_name(std::string const& name, boost::any const
 }
 
 inline AbstractReference shallow_copy(AbstractValue const& source) {
-    return get_node_info(typeid(source)).clone(source);
+    auto node = get_node_info(typeid(source)).clone(source);
+    node->new_id();
+    return node;
 }
 
 inline std::map<Type, std::set<NodeInfo const*>>& node_types() {
