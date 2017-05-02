@@ -83,6 +83,14 @@ inline std::map<Type, std::set<NodeInfo const*>>& node_types() {
     return instance;
 }
 
+inline std::set<NodeInfo const*> all_node_infos() {
+    std::set<NodeInfo const*> result;
+    for (auto const& e : node_types()) {
+        result.insert(e.second.begin(), e.second.end());
+    }
+    return result;
+}
+
 template <class I>
 struct RegisterNodeByType : class_init::Initialized<RegisterNodeByType<I>> {
     static void init() {
