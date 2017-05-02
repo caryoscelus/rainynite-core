@@ -23,6 +23,7 @@ target_sources(document
         nodes/to_string.cpp
         nodes/color_string.cpp
         nodes/file_string.cpp
+        nodes/add.cpp
 )
 
 target_link_libraries(document morphing fmt)
