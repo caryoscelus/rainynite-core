@@ -196,11 +196,31 @@ TEST_CASE("Traverse list node", "[node]") {
 }
 
 TEST_CASE("Shallow node copy", "[node]") {
-    auto one = make_value<Real>(1.0);
-    auto two = shallow_copy(*one);
-    auto one_value = dynamic_cast<Value<Real>*>(one.get());
-    auto two_value = dynamic_cast<Value<Real>*>(two.get());
-    two_value->set(2.0);
-    CHECK(one_value->mod() == 1.0);
-    CHECK(two_value->mod() == 2.0);
+    SECTION("Simple") {
+        auto one = make_value<Real>(1.0);
+        auto two = shallow_copy(*one);
+        CHECK(one->get_id() != two->get_id());
+        auto one_value = dynamic_cast<Value<Real>*>(one.get());
+        auto two_value = dynamic_cast<Value<Real>*>(two.get());
+        two_value->set(2.0);
+        CHECK(one_value->mod() == 1.0);
+        CHECK(two_value->mod() == 2.0);
+    }
+    SECTION("Complex") {
+        auto one = make_value<Real>(1.0);
+        auto add = make_node_with_name<AbstractNode>("Add");
+        add->set_property("a", one);
+        add->set_property("b", one);
+        auto add_again = shallow_copy_as<AbstractNode>(dynamic_cast<AbstractValue const&>(*add));
+        add->set_property("a", shallow_copy(*one));
+        add->get_property_as<double>("a")->set(2.0);
+        CHECK(add->get_property_as<double>("a")->mod() == 2.0);
+        CHECK(add->get_link_as<double>(0)->mod() == 2.0);
+        CHECK(add->get_property_as<double>("b")->mod() == 1.0);
+        CHECK(add->get_link_as<double>(1)->mod() == 1.0);
+        CHECK(add_again->get_property_as<double>("a")->mod() == 1.0);
+        CHECK(add_again->get_link_as<double>(0)->mod() == 1.0);
+        CHECK(add_again->get_property_as<double>("b")->mod() == 1.0);
+        CHECK(add_again->get_link_as<double>(1)->mod() == 1.0);
+    }
 }

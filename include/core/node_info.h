@@ -73,6 +73,11 @@ inline AbstractReference shallow_copy(AbstractValue const& source) {
     return node;
 }
 
+template <class T>
+std::shared_ptr<T> shallow_copy_as(AbstractValue const& source) {
+    return std::dynamic_pointer_cast<T>(shallow_copy(source));
+}
+
 inline std::map<Type, std::set<NodeInfo const*>>& node_types() {
     static std::map<Type, std::set<NodeInfo const*>> instance;
     return instance;
