@@ -149,8 +149,8 @@ public:
     virtual size_t link_count() const = 0;
     virtual std::vector<AbstractReference> get_links() const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
-    virtual Type get_link_type(size_t i) const = 0;
-    virtual void set_link(size_t, AbstractReference) = 0;
+    virtual boost::optional<Type> get_link_type(size_t i) const = 0;
+    virtual void set_link(size_t i, AbstractReference value) = 0;
     virtual void push_back(AbstractReference) {
         throw NodeAccessError("cannot push back");
     }
@@ -164,6 +164,10 @@ public:
         return false;
     }
 public:
+    template <class T>
+    BaseReference<T> get_link_as(size_t i) const {
+        return std::dynamic_pointer_cast<BaseValue<T>>(get_link(i));
+    }
     template <typename T>
     void push_value(T const& value) {
         push_back(make_value<T>(value));
@@ -205,8 +209,8 @@ public:
     virtual AbstractReference get_link(size_t i) const override {
         return values.at(i);
     }
-    virtual Type get_link_type(size_t) const override {
-        return typeid(T);
+    virtual boost::optional<Type> get_link_type(size_t) const override {
+        return boost::make_optional(Type(typeid(T)));
     }
     virtual void set_link(size_t i, AbstractReference value) override {
         if (auto node = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value)))
@@ -256,7 +260,7 @@ public:
         auto result = named_storage.find(name);
         if (result == named_storage.end())
             throw NodeAccessError("Unknown property "+name);
-        return *result->second;
+        return get_by_id(result->second);
     }
     template <typename T>
     BaseReference<T> get_property_as(std::string const& name) const {
@@ -266,76 +270,55 @@ public:
         if (named_storage.count(name) == 0) {
             throw NodeAccessError("No such property");
         }
-        *(named_storage[name]) = ref;
+        get_by_id(named_storage[name]) = ref;
     }
-    void init_property(std::string const& name, AbstractReference* ref_p, Type type) {
-        named_storage[name] = ref_p;
-        numbered_storage.push_back(ref_p);
+    size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value) {
+        size_t id = link_count();
+        numbered_storage.push_back(std::move(value));
+        named_storage[name] = id;
         types.push_back(type);
+        return id;
     }
     std::map<std::string, AbstractReference> get_link_map() const {
         std::map<std::string, AbstractReference> result;
         // TODO: use generic conversion function
         for (auto const& e : named_storage) {
-            result.emplace(e.first, *e.second);
+            result.emplace(e.first, get_by_id(e.second));
         }
         return result;
     }
 public:
     virtual std::vector<AbstractReference> get_links() const override {
-        std::vector<AbstractReference> result;
-        for (auto e : numbered_storage) {
-            result.push_back(*e);
-        }
-        return result;
+        return numbered_storage;
     }
     virtual AbstractReference get_link(size_t i) const override {
-        return *numbered_storage[i];
+        return get_by_id(i);
     }
-    virtual Type get_link_type(size_t i) const override {
+    virtual boost::optional<Type> get_link_type(size_t i) const override {
         return types[i];
     }
     virtual void set_link(size_t i, AbstractReference value) override {
-        *numbered_storage[i] = value;
+        if (auto type = get_link_type(i)) {
+            if (value->get_type() != type.get())
+                throw NodeAccessError("Node property type mis-match");
+        }
+        get_by_id(i) = value;
     }
     virtual size_t link_count() const override {
         return numbered_storage.size();
     }
 private:
-    std::map<std::string, AbstractReference*> named_storage;
-    std::vector<AbstractReference*> numbered_storage;
-    std::vector<Type> types;
+    AbstractReference const& get_by_id(size_t index) const {
+        return numbered_storage[index];
+    }
+    AbstractReference& get_by_id(size_t index) {
+        return numbered_storage[index];
+    }
+private:
+    std::map<std::string, size_t> named_storage;
+    std::vector<AbstractReference> numbered_storage;
+    std::vector<boost::optional<Type>> types;
 };
-
-template <typename T>
-class Property {
-public:
-    Property(std::string const& name_, std::string const& type_name_):
-        name(name_),
-        type_name(type_name_)
-    {}
-    virtual ~Property()
-    {}
-public:
-    inline T get() const {
-        return value;
-    }
-    inline T& mod() {
-        return value;
-    }
-    inline void set(T value_) {
-        value = value_;
-    }
-    inline std::string get_name() const {
-        return name;
-    }
-protected:
-    std::string name;
-    std::string type_name;
-    T value;
-};
-
-using NodeProperty = Property<AbstractReference>;
 
 /**
  * Basic representation of any time-changeable Node
@@ -344,14 +327,12 @@ template <typename T>
 class Node : public BaseValue<T>, public AbstractNode {
 public:
     template <typename U>
-    void init(NodeProperty& prop, U value) {
-        prop.set(make_value<U>(value));
-        init_property(prop.get_name(), &(prop.mod()), typeid(U));
+    void init(std::string const& name, U value) {
+        init_property(name, boost::make_optional(Type(typeid(U))), make_value<U>(value));
     }
     template <typename U>
-    void init_list(NodeProperty& prop) {
-        prop.set(std::make_shared<ListValue<U>>());
-        init_property(prop.get_name(), &(prop.mod()), typeid(std::vector<U>));
+    void init_list(std::string const& name) {
+        init_property(name, boost::make_optional(Type(typeid(std::vector<U>))), std::make_shared<ListValue<U>>());
     }
 };
 
@@ -405,18 +386,18 @@ T traverse_once(AbstractReference root, F f, TraverseDepth depth = TraverseDepth
 #define NODE_PROPERTY(name, type) \
 public: \
     inline BaseReference<type> get_##name() const { \
-        return std::dynamic_pointer_cast<BaseValue<type>>(name.get()); \
+        return this->template get_property_as<type>(#name); \
     } \
     inline void set_##name(BaseReference<type> value) { \
-        name.set(std::dynamic_pointer_cast<AbstractValue>(value)); \
+        this->set_property(#name, std::dynamic_pointer_cast<AbstractValue>(value)); \
     } \
 private: \
-    NodeProperty name { #name, #type }
+    std::string name { #name }
 
 #define NODE_LIST_PROPERTY(name, type) \
 public: \
     inline AbstractListReference list_##name() const { \
-        return std::dynamic_pointer_cast<AbstractListLinked>(name.get()); \
+        return std::dynamic_pointer_cast<AbstractListLinked>(this->get_property(#name)); \
     } \
 NODE_PROPERTY(name, std::vector<type>)
 

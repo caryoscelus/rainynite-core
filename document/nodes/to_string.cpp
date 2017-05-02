@@ -26,20 +26,17 @@ namespace nodes {
 class ToString : public Node<std::string> {
 public:
     ToString() {
-        init<std::string>(source, "");
+        init_property("source", boost::none, make_value<std::string>(""));
     }
 public:
     virtual std::string get(Time time) const override {
         try {
-            auto v = source.get()->get_any(time);
+            auto v = get_property("source")->get_any(time);
             return serialize::value_to_string(v);
         } catch (...) {
             return {};
         }
     }
-
-private:
-    NodeProperty source {"source", ""};
 };
 
 REGISTER_NODE(ToString);
