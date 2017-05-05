@@ -93,6 +93,8 @@ public:
     }
 
     static AbstractReference get_reference(AbstractReference object) {
+        if (!object)
+            throw SerializationError("Received null pointer.");
         return object;
     }
 
