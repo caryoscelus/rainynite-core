@@ -121,6 +121,8 @@ std::string get_extra_style(AbstractNode* node, Time time, SvgRendererSettings s
 }
 
 std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) const {
+    if (!root_ptr)
+        return "";
     auto root = root_ptr.get();
     if (root->get_type() != typeid(Renderable)) {
         std::cerr << "ERROR: Root node isn't renderable" << std::endl;
