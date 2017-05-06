@@ -102,7 +102,7 @@ void SvgRenderer::render_frame(Time time) {
     std::ofstream f(svg_name);
     auto size = document->get_size()->get(time);
     auto viewport_size = document->get_viewport_size()->get(time);
-    auto definitions = document->get_svg_definitions()->get(time);
+    auto definitions = document->get_property_as<std::string>("_svg_definitions")->get(time);
     fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(time));
     f.close();
     if (settings.render_pngs)
@@ -116,7 +116,7 @@ std::string SvgRenderer::frame_to_svg(Time time) const {
 
 std::string get_extra_style(AbstractNode* node, Time time, SvgRendererSettings settings) {
     if (settings.extra_style)
-        return node->get_property_as<std::string>("extra_style")->get(time);
+        return node->get_property_as<std::string>("_svg_style")->get(time);
     return "";
 }
 

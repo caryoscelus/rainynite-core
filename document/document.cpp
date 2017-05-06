@@ -31,7 +31,6 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
     init<Renderable>(root, {});
     init<Geom::Point>(size, {800, 600});
     init<Geom::Point>(viewport_size, {800, 600});
-    init<std::string>(svg_definitions, "");
     set_root(root_);
     new_id();
 }

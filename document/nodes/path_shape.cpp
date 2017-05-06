@@ -30,13 +30,11 @@ public:
     PathShape() {
         init<Geom::BezierKnots>(path, Geom::BezierKnots());
         init<colors::Color>(fill_color, colors::Color());
-        init<std::string>(extra_style, "");
     }
 
 private:
     NODE_PROPERTY(path, Geom::BezierKnots);
     NODE_PROPERTY(fill_color, colors::Color);
-    NODE_PROPERTY(extra_style, std::string);
 };
 
 REGISTER_NODE(PathShape);

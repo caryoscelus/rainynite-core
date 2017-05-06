@@ -31,13 +31,11 @@ public:
         init<Geom::Point>(position, {});
         init<Geom::Point>(size, {});
         init<colors::Color>(fill_color, colors::Color());
-        init<std::string>(extra_style, "");
     }
 private:
     NODE_PROPERTY(position, Geom::Point);
     NODE_PROPERTY(size, Geom::Point);
     NODE_PROPERTY(fill_color, colors::Color);
-    NODE_PROPERTY(extra_style, std::string);
 };
 
 REGISTER_NODE(RectangleShape);
