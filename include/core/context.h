@@ -82,18 +82,10 @@ public:
         time.set_fps(fps);
         time_period.set_fps(fps);
     }
-    inline void set_active_node(std::shared_ptr<AbstractValue> node) {
-        if (node == active_node)
-            return;
-        active_node = node;
-        changed_active_node(node);
-    }
 public:
     boost::signals2::signal<void(Time)> changed_time;
-    boost::signals2::signal<void(std::shared_ptr<AbstractValue>)> changed_active_node;
 private:
     std::weak_ptr<Document> document;
-    std::shared_ptr<AbstractValue> active_node;
     Time::fps_type fps = 1;
     Time time;
     TimePeriod time_period;
