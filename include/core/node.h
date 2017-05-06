@@ -268,7 +268,11 @@ public:
     }
     void set_property(std::string const& name, AbstractReference ref) {
         if (named_storage.count(name) == 0) {
-            throw NodeAccessError("No such property");
+            if (name[0] == '_') {
+                // accept as custom attribute
+                init_property(name, boost::none, ref);
+            } else
+                throw NodeAccessError("No such property");
         }
         get_by_id(named_storage[name]) = ref;
     }
