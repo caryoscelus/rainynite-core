@@ -266,6 +266,16 @@ public:
     BaseReference<T> get_property_as(std::string const& name) const {
         return std::dynamic_pointer_cast<BaseValue<T>>(get_property(name));
     }
+    template <typename T>
+    boost::optional<T> get_property_value(std::string const& name, Time time) const {
+        try {
+            return get_property_as<T>(name)->get(time);
+        } catch (NodeAccessError const&) {
+            return boost::none;
+        } catch (...) {
+            return boost::none;
+        }
+    }
     void set_property(std::string const& name, AbstractReference ref) {
         if (named_storage.count(name) == 0) {
             if (name[0] == '_') {
