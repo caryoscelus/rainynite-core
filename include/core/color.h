@@ -67,6 +67,17 @@ public:
         return a * 1.0 / Lim::max();
     }
 public:
+    bool operator==(RGBA<T> const& other) {
+        // different colors considered different even when alpha is zero
+        return a == other.a
+            && r == other.r
+            && g == other.g
+            && b == other.b;
+    }
+    bool operator!=(RGBA<T> const& other) {
+        return !(*this == other);
+    }
+public:
     T r;
     T g;
     T b;
