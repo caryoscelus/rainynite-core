@@ -46,18 +46,13 @@ public:
 public:
     virtual DocumentType get(Time) const override;
 
-public:
-    inline TimePeriod get_main_time_period() const {
-        return main_time_period;
-    }
-
 private:
     std::shared_ptr<Context> default_context;
-    TimePeriod main_time_period;
 
     NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(size, Geom::Point);
     NODE_PROPERTY(viewport_size, Geom::Point);
+    NODE_STATIC_PROPERTY(main_time_period, TimePeriod);
 };
 
 }

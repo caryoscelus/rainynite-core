@@ -29,7 +29,8 @@
 namespace core {
 
 class Document;
-class AbstractValue;
+template <typename>
+class Value;
 
 class Context {
 public:
@@ -60,14 +61,12 @@ public:
         changed_time(time);
     }
     inline void to_start() {
-        set_time(time_period.get_first());
+        set_time(get_period().get_first());
     }
     inline void to_end() {
-        set_time(time_period.get_last());
+        set_time(get_period().get_last());
     }
-    inline TimePeriod get_period() const {
-        return time_period;
-    }
+    TimePeriod get_period() const;
     inline boost::any get_render_settings() const {
         return render_settings;
     }
@@ -77,18 +76,14 @@ public:
     inline Time::fps_type get_fps() {
         return fps;
     }
-    inline void set_fps(Time::fps_type fps_) {
-        fps = fps_;
-        time.set_fps(fps);
-        time_period.set_fps(fps);
-    }
+    void set_fps(Time::fps_type fps_);
 public:
     boost::signals2::signal<void(Time)> changed_time;
 private:
     std::weak_ptr<Document> document;
     Time::fps_type fps = 1;
     Time time;
-    TimePeriod time_period;
+    std::shared_ptr<Value<TimePeriod>> time_period;
     boost::any render_settings;
 };
 

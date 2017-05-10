@@ -408,6 +408,17 @@ public: \
 private: \
     std::string name { #name }
 
+#define NODE_STATIC_PROPERTY(name, type) \
+public: \
+    inline std::shared_ptr<Value<type>> get_##name() const { \
+        return std::dynamic_pointer_cast<Value<type>>(this->get_property(#name)); \
+    } \
+    inline void set_##name(std::shared_ptr<Value<type>> value) { \
+        this->set_property(#name, std::dynamic_pointer_cast<AbstractValue>(value)); \
+    } \
+private: \
+    std::string name { #name }
+
 #define NODE_LIST_PROPERTY(name, type) \
 public: \
     inline AbstractListReference list_##name() const { \

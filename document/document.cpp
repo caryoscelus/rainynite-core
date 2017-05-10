@@ -25,12 +25,12 @@ namespace core {
 REGISTER_NODE(Document);
 
 Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
-    default_context(nullptr),
-    main_time_period(Time(0, 8), Time(5, 8))
+    default_context(nullptr)
 {
     init<Renderable>(root, {});
     init<Geom::Point>(size, {800, 600});
     init<Geom::Point>(viewport_size, {800, 600});
+    init<TimePeriod>(main_time_period, {Time(0, 8), Time(5, 8)});
     set_root(root_);
     new_id();
 }

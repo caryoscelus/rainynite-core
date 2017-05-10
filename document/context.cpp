@@ -28,7 +28,7 @@ Context::Context(std::weak_ptr<Document> document_) :
     if (!doc)
         return;
     time_period = doc->get_main_time_period();
-    fps = time_period.get_fps();
+    fps = get_period().get_fps();
     time = Time(0, fps);
 }
 
@@ -42,6 +42,17 @@ Context::Context(Context const& context_) :
 }
 
 Context::~Context() {
+}
+
+TimePeriod Context::get_period() const {
+    return time_period->mod();
+}
+
+void Context::set_fps(Time::fps_type fps_) {
+    fps = fps_;
+    time.set_fps(fps);
+    // NOTE: this will not notify!
+    time_period->mod().set_fps(fps);
 }
 
 } // namespace core
