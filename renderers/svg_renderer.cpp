@@ -120,18 +120,18 @@ std::string get_extra_style(AbstractNode* node, Time time, SvgRendererSettings s
     return "";
 }
 
-std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) const {
-    if (!root_ptr)
+std::string SvgRenderer::node_to_svg(AbstractReference node_ptr, Time time) const {
+    if (!node_ptr)
         return "";
-    auto root = root_ptr.get();
-    if (root->get_type() != typeid(Renderable)) {
-        std::cerr << "ERROR: Root node isn't renderable" << std::endl;
+    auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
+    if (node_ptr->get_type() != typeid(Renderable)) {
+        std::cerr << "ERROR: node isn't renderable" << std::endl;
         // throw
         return "";
     }
     // TODO: modularize
-    auto node = dynamic_cast<AbstractNode*>(root);
-    auto name = node_name(*root);
+    auto name = node_name(*node_ptr);
+    // TODO: Animated support
     if (name == "PathShape") {
         auto path = node->get_property_as<Geom::BezierKnots>("path")->get(time);
         auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
@@ -156,7 +156,7 @@ std::string SvgRenderer::node_to_svg(AbstractReference root_ptr, Time time) cons
         auto size = node->get_property_as<double>("size")->get(time);
         auto color = node->get_property_as<colors::Color>("color")->get(time);
         return fmt::format(svg_text, size, to_hex24(color), text);
-    } else if (auto composite = dynamic_cast<nodes::Composite*>(root)) {
+    } else if (auto composite = dynamic_cast<nodes::Composite*>(node)) {
         auto node_list = composite->list_layers()->get_links();
         std::string s;
         for (auto const& node : node_list) {
