@@ -31,6 +31,7 @@ namespace renderers {
 
 struct SvgRendererSettings {
     bool render_pngs = false;
+    bool keep_alive = false;
     bool extra_style = true;
 };
 
@@ -58,6 +59,7 @@ private:
     FILE* png_renderer_pipe_output;
     pid_t png_renderer_pid;
     size_t rendered_frames_count;
+    bool subprocess_initialized = false;
 };
 
 } // namespace renderers

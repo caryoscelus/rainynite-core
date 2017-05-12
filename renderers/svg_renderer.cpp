@@ -183,6 +183,10 @@ void SvgRenderer::finish_render() {
 }
 
 void SvgRenderer::start_png() {
+    std::cout << std::boolalpha << subprocess_initialized << ", " << settings.keep_alive << std::endl;
+    if (subprocess_initialized)
+        return;
+
     // TODO: wrap all this C mess and move out of here
     int write_pipe_ds[2];
     pipe(write_pipe_ds);
@@ -210,6 +214,8 @@ void SvgRenderer::start_png() {
     fcntl(read_pipe_ds[0], F_SETFL, O_NONBLOCK);
     png_renderer_pipe_output = fdopen(read_pipe_ds[0], "r");
     close(read_pipe_ds[1]);
+
+    subprocess_initialized = true;
 }
 
 void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
@@ -218,8 +224,13 @@ void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
 }
 
 void SvgRenderer::quit_png() {
-    fputs("quit\n", png_renderer_pipe);
-    fflush(png_renderer_pipe);
+    std::cout << std::boolalpha << subprocess_initialized << ", " << settings.keep_alive << std::endl;
+    if (!settings.keep_alive) {
+        subprocess_initialized = false;
+
+        fputs("quit\n", png_renderer_pipe);
+        fflush(png_renderer_pipe);
+    }
 
     // now wait until inkscape renders all the frames..
     auto buff = std::make_unique<char[]>(256);
@@ -240,8 +251,10 @@ void SvgRenderer::quit_png() {
         std::this_thread::sleep_for(std::chrono::milliseconds(64));
     }
 
-    int status;
-    waitpid(png_renderer_pid, &status, 0);
+    if (!settings.keep_alive) {
+        int status;
+        waitpid(png_renderer_pid, &status, 0);
+    }
 }
 
 } // namespace filters
