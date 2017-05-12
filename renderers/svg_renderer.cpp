@@ -176,7 +176,17 @@ void SvgRenderer::finish_render() {
 }
 
 void SvgRenderer::start_png() {
-    png_renderer_pipe = popen("inkscape --shell", "w");
+    int write_pipe_ds[2];
+    pipe(write_pipe_ds);
+    png_renderer_pid = fork();
+    if (png_renderer_pid == 0) {
+        dup2(write_pipe_ds[0], STDIN_FILENO);
+        close(write_pipe_ds[1]);
+        execl("/usr/bin/env", "env", "inkscape", "--shell", (char*)nullptr);
+        throw std::runtime_error("execl returned");
+    }
+    png_renderer_pipe = fdopen(write_pipe_ds[1], "w");
+    close(write_pipe_ds[0]);
 }
 
 void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
