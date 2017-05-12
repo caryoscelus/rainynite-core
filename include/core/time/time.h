@@ -62,6 +62,14 @@ public:
             || (seconds == other.seconds
             && frames < other.frames);
     }
+    Time& operator++() {
+        set_frames(get_frames()+1);
+        return *this;
+    }
+    Time& operator--() {
+        set_frames(get_frames()-1);
+        return *this;
+    }
     Time& operator+=(Time const& other) {
         require_same_fps(other);
         set_frames(get_frames()+other.get_frames());

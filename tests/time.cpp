@@ -43,6 +43,9 @@ TEST_CASE("Time arithmetics", "[time]") {
     CHECK(Time(4)-Time(5) < Time());
 
     CHECK(Time(4)*5 == Time(20));
+
+    CHECK(++Time(4) == Time(5));
+    CHECK(--Time(0, 20, 5) == Time(0, 20, 4));
 }
 
 TEST_CASE("Time FPS mismatch", "[time]") {
