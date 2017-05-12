@@ -17,6 +17,11 @@
  */
 
 #include <cstdlib>
+#include <chrono>
+#include <thread>
+
+#include <unistd.h>
+#include <fcntl.h>
 
 #include <fstream>
 
@@ -66,6 +71,7 @@ const std::string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}<
 
 void SvgRenderer::render(Context context_) {
     finished = false;
+    rendered_frames_count = 0;
     std::cout << "SvgRenderer start" << std::endl;
     context = std::move(context_);
     document = context.get_document();
@@ -79,11 +85,11 @@ void SvgRenderer::render(Context context_) {
     prepare_render();
     for (auto time : context.get_period()) {
         render_frame(time);
+        ++rendered_frames_count;
     }
     finish_render();
     std::cout << "SvgRenderer done" << std::endl;
     finished = true;
-    document.reset();
 }
 
 bool SvgRenderer::is_finished() {
@@ -171,22 +177,39 @@ std::string SvgRenderer::node_to_svg(AbstractReference node_ptr, Time time) cons
 }
 
 void SvgRenderer::finish_render() {
+    document.reset();
     if (settings.render_pngs)
         quit_png();
 }
 
 void SvgRenderer::start_png() {
+    // TODO: wrap all this C mess and move out of here
     int write_pipe_ds[2];
     pipe(write_pipe_ds);
+    int read_pipe_ds[2];
+    pipe(read_pipe_ds);
+
     png_renderer_pid = fork();
     if (png_renderer_pid == 0) {
         dup2(write_pipe_ds[0], STDIN_FILENO);
+        close(write_pipe_ds[0]);
         close(write_pipe_ds[1]);
+
+        dup2(read_pipe_ds[1], STDOUT_FILENO);
+        dup2(read_pipe_ds[1], STDERR_FILENO);
+        close(read_pipe_ds[0]);
+        close(read_pipe_ds[1]);
+
         execl("/usr/bin/env", "env", "inkscape", "--shell", (char*)nullptr);
         throw std::runtime_error("execl returned");
     }
+
     png_renderer_pipe = fdopen(write_pipe_ds[1], "w");
     close(write_pipe_ds[0]);
+
+    fcntl(read_pipe_ds[0], F_SETFL, O_NONBLOCK);
+    png_renderer_pipe_output = fdopen(read_pipe_ds[0], "r");
+    close(read_pipe_ds[1]);
 }
 
 void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
@@ -196,6 +219,25 @@ void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
 void SvgRenderer::quit_png() {
     fputs("quit\n", png_renderer_pipe);
     pclose(png_renderer_pipe);
+
+    // now wait until inkscape renders all the frames..
+    auto buff = std::make_unique<char[]>(256);
+    std::string sbuff;
+    size_t frames_count = 0;
+    while (frames_count < rendered_frames_count) {
+        size_t read_chars;
+        while ((read_chars = fread((void*)buff.get(), 1, 256, png_renderer_pipe_output)) > 0) {
+            auto s = std::string(buff.get(), read_chars);
+            std::cout << s;
+            sbuff += s;
+            size_t found;
+            while ((found = sbuff.find("Bitmap saved as:")) != std::string::npos) {
+                ++frames_count;
+                sbuff = sbuff.substr(found+1);
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(64));
+    }
 }
 
 } // namespace filters

@@ -55,7 +55,9 @@ private:
 private:
     SvgRendererSettings settings;
     FILE* png_renderer_pipe;
+    FILE* png_renderer_pipe_output;
     pid_t png_renderer_pid;
+    size_t rendered_frames_count;
 };
 
 } // namespace renderers
