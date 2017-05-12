@@ -19,11 +19,11 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
+#include <fstream>
 
 #include <unistd.h>
 #include <fcntl.h>
-
-#include <fstream>
+#include <sys/wait.h>
 
 #include <fmt/ostream.h>
 #include <fmt/format.h>
@@ -214,11 +214,12 @@ void SvgRenderer::start_png() {
 
 void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
     fputs("{} {} {}\n"_format(svg, "-e", png).c_str(), png_renderer_pipe);
+    fflush(png_renderer_pipe);
 }
 
 void SvgRenderer::quit_png() {
     fputs("quit\n", png_renderer_pipe);
-    pclose(png_renderer_pipe);
+    fflush(png_renderer_pipe);
 
     // now wait until inkscape renders all the frames..
     auto buff = std::make_unique<char[]>(256);
@@ -238,6 +239,9 @@ void SvgRenderer::quit_png() {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(64));
     }
+
+    int status;
+    waitpid(png_renderer_pid, &status, 0);
 }
 
 } // namespace filters
