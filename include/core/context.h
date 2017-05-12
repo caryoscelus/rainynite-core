@@ -66,6 +66,7 @@ public:
     inline void to_end() {
         set_time(get_period().get_last());
     }
+    void set_period(TimePeriod const& period);
     TimePeriod get_period() const;
     inline boost::any get_render_settings() const {
         return render_settings;

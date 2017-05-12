@@ -44,6 +44,10 @@ Context::Context(Context const& context_) :
 Context::~Context() {
 }
 
+void Context::set_period(TimePeriod const& period) {
+    time_period = make_value<TimePeriod>(period);
+}
+
 TimePeriod Context::get_period() const {
     return time_period->mod();
 }
