@@ -69,7 +69,53 @@ const std::string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)
 
 const std::string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}</text>)";
 
-void SvgRenderer::render(Context context_) {
+struct SvgRenderer::Impl {
+    Impl(SvgRenderer* parent_) :
+        parent(parent_)
+    {}
+
+    void render(Context context_);
+    void prepare_render();
+    void render_frame(Time time);
+    void finish_render();
+    std::string definitions(Time time) const;
+    std::string frame_to_svg(Time time) const;
+    std::string node_to_svg(core::AbstractReference root_ptr, Time time) const;
+    void start_png();
+    void render_png(std::string const& svg, std::string const& png);
+    void quit_png();
+
+    bool finished = false;
+    Context context;
+    std::shared_ptr<Document> document;
+
+    SvgRendererSettings settings;
+    FILE* png_renderer_pipe;
+    FILE* png_renderer_pipe_output;
+    pid_t png_renderer_pid;
+    size_t rendered_frames_count;
+    bool subprocess_initialized = false;
+
+    SvgRenderer* parent;
+};
+
+SvgRenderer::SvgRenderer() :
+    impl(std::make_unique<Impl>(this))
+{
+}
+
+SvgRenderer::~SvgRenderer() {
+}
+
+void SvgRenderer::render(Context context) {
+    impl->render(context);
+}
+
+bool SvgRenderer::is_finished() {
+    return impl->finished;
+}
+
+void SvgRenderer::Impl::render(Context context_) {
     finished = false;
     rendered_frames_count = 0;
     std::cout << "SvgRenderer start" << std::endl;
@@ -92,16 +138,12 @@ void SvgRenderer::render(Context context_) {
     finished = true;
 }
 
-bool SvgRenderer::is_finished() {
-    return finished;
-}
-
-void SvgRenderer::prepare_render() {
+void SvgRenderer::Impl::prepare_render() {
     if (settings.render_pngs)
         start_png();
 }
 
-void SvgRenderer::render_frame(Time time) {
+void SvgRenderer::Impl::render_frame(Time time) {
     auto base_name = "renders/{:.3f}"_format(time.get_seconds());
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
@@ -113,10 +155,10 @@ void SvgRenderer::render_frame(Time time) {
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, base_name+".png");
-    finished_frame()(time);
+    parent->finished_frame()(time);
 }
 
-std::string SvgRenderer::frame_to_svg(Time time) const {
+std::string SvgRenderer::Impl::frame_to_svg(Time time) const {
     return node_to_svg(document->get_root(), time);
 }
 
@@ -126,7 +168,7 @@ std::string get_extra_style(AbstractNode* node, Time time, SvgRendererSettings s
     return "";
 }
 
-std::string SvgRenderer::node_to_svg(AbstractReference node_ptr, Time time) const {
+std::string SvgRenderer::Impl::node_to_svg(AbstractReference node_ptr, Time time) const {
     if (!node_ptr)
         return "";
     auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
@@ -176,13 +218,13 @@ std::string SvgRenderer::node_to_svg(AbstractReference node_ptr, Time time) cons
     }
 }
 
-void SvgRenderer::finish_render() {
+void SvgRenderer::Impl::finish_render() {
     document.reset();
     if (settings.render_pngs)
         quit_png();
 }
 
-void SvgRenderer::start_png() {
+void SvgRenderer::Impl::start_png() {
     std::cout << std::boolalpha << subprocess_initialized << ", " << settings.keep_alive << std::endl;
     if (subprocess_initialized)
         return;
@@ -218,12 +260,12 @@ void SvgRenderer::start_png() {
     subprocess_initialized = true;
 }
 
-void SvgRenderer::render_png(std::string const& svg, std::string const& png) {
+void SvgRenderer::Impl::render_png(std::string const& svg, std::string const& png) {
     fputs("{} {} {}\n"_format(svg, "-e", png).c_str(), png_renderer_pipe);
     fflush(png_renderer_pipe);
 }
 
-void SvgRenderer::quit_png() {
+void SvgRenderer::Impl::quit_png() {
     std::cout << std::boolalpha << subprocess_initialized << ", " << settings.keep_alive << std::endl;
     if (!settings.keep_alive) {
         subprocess_initialized = false;

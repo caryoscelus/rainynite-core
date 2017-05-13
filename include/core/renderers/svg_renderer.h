@@ -22,7 +22,6 @@
 #include <memory>
 
 #include "../context.h"
-#include "../document.h"
 #include "../renderer.h"
 
 namespace core {
@@ -37,29 +36,14 @@ struct SvgRendererSettings {
 
 class SvgRenderer : public Renderer {
 public:
+    SvgRenderer();
+    virtual ~SvgRenderer();
+public:
     virtual void render(Context context) override;
     virtual bool is_finished() override;
 private:
-    void prepare_render();
-    void render_frame(Time time);
-    void finish_render();
-    std::string definitions(Time time) const;
-    std::string frame_to_svg(Time time) const;
-    std::string node_to_svg(core::AbstractReference root_ptr, Time time) const;
-    void start_png();
-    void render_png(std::string const& svg, std::string const& png);
-    void quit_png();
-private:
-    bool finished = false;
-    Context context;
-    std::shared_ptr<Document> document;
-private:
-    SvgRendererSettings settings;
-    FILE* png_renderer_pipe;
-    FILE* png_renderer_pipe_output;
-    pid_t png_renderer_pid;
-    size_t rendered_frames_count;
-    bool subprocess_initialized = false;
+    struct Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 } // namespace renderers
