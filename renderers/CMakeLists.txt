@@ -1,8 +1,12 @@
 add_library(renderers SHARED)
 
+## TODO: move svg_renderer to proper subdir
+## for some reason it doesn't work to simply link renderers with svg_renderer:
+## when installed, librenderers.so cannot find libsvg_renderer.so...
+
 target_sources(renderers
     PRIVATE
-        svg_renderer.cpp
+        svg_renderer/svg_renderer.cpp
 )
 
 if (NOT TARGET time)
