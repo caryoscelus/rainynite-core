@@ -33,6 +33,8 @@
 #include <core/color.h>
 #include <core/renderable.h>
 #include <core/nodes/composite.h>
+#include <core/class_init.h>
+#include "svg_module.h"
 
 #include <geom_helpers/knots.h>
 
@@ -58,16 +60,6 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
   {}
 </svg>
 )";
-
-const std::string svg_path = R"(<path d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
-
-const std::string svg_rectangle = R"(<rect x="{}" y="{}" width="{}" height="{}" style="fill:{};fill-opacity:{};stroke:none;{}"/>)";
-
-const std::string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x="0" y="0" preserveAspectRatio="none"/>)";
-
-const std::string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)svg";
-
-const std::string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}</text>)";
 
 struct SvgRenderer::Impl {
     Impl(SvgRenderer* parent_) :
@@ -162,13 +154,13 @@ std::string SvgRenderer::Impl::frame_to_svg(Time time) const {
     return node_to_svg(document->get_root(), time);
 }
 
-std::string get_extra_style(AbstractNode* node, Time time, SvgRendererSettings settings) {
+std::string get_extra_style(AbstractNode const& node, Time time, SvgRendererSettings const& settings) {
     if (settings.extra_style)
-        return node->get_property_value<std::string>("_svg_style", time).value_or("");
+        return node.get_property_value<std::string>("_svg_style", time).value_or("");
     return "";
 }
 
-std::string SvgRenderer::Impl::node_to_svg(AbstractReference node_ptr, Time time) const {
+std::string node_to_svg(AbstractReference node_ptr, Time time, SvgRendererSettings const& settings) {
     if (!node_ptr)
         return "";
     auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
@@ -177,45 +169,18 @@ std::string SvgRenderer::Impl::node_to_svg(AbstractReference node_ptr, Time time
         // throw
         return "";
     }
-    // TODO: modularize
     auto name = node_name(*node_ptr);
-    // TODO: Animated support
-    if (name == "PathShape") {
-        auto path = node->get_property_as<Geom::BezierKnots>("path")->get(time);
-        auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = get_extra_style(node, time, settings);
-        return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.alpha(), extra_style);
-    } else if (name == "RectangleShape") {
-        auto pos = node->get_property_as<Geom::Point>("position")->get(time);
-        auto size = node->get_property_as<Geom::Point>("size")->get(time);
-        auto color = node->get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = get_extra_style(node, time, settings);
-        return fmt::format(svg_rectangle, pos.x(), pos.y(), size.x(), size.y(), colors::to_hex24(color), color.alpha(), extra_style);
-    } else if (name == "Image") {
-        auto fname = node->get_property_as<std::string>("file_path")->get(time);
-        auto size = node->get_property_as<Geom::Point>("size")->get(time);
-        return fmt::format(svg_image, fname, size.x(), size.y());
-    } else if (name == "Translate") {
-        auto source = node->get_property("source");
-        auto offset = node->get_property_as<Geom::Point>("offset")->get(time);
-        return fmt::format(svg_translate, offset.x(), offset.y(), node_to_svg(source, time));
-    } else if (name == "Text") {
-        auto text = node->get_property_as<std::string>("text")->get(time);
-        auto size = node->get_property_as<double>("size")->get(time);
-        auto color = node->get_property_as<colors::Color>("color")->get(time);
-        return fmt::format(svg_text, size, to_hex24(color), text);
-    } else if (auto composite = dynamic_cast<nodes::Composite*>(node)) {
-        auto node_list = composite->list_layers()->get_links();
-        std::string s;
-        for (auto const& node : node_list) {
-            s += node_to_svg(node, time);
-        }
-        return s;
-    } else {
-        std::cerr << "ERROR: Root node type isn't supported" << std::endl;
+    try {
+        return class_init::name_info<SvgRendererModule>(name)(*node, time, settings);
+    } catch (class_init::TypeLookupError const&) {
+        std::cerr << "ERROR: node type isn't supported" << std::endl;
         // throw
         return "";
     }
+}
+
+std::string SvgRenderer::Impl::node_to_svg(AbstractReference node_ptr, Time time) const {
+    return renderers::node_to_svg(node_ptr, time, settings);
 }
 
 void SvgRenderer::Impl::finish_render() {
