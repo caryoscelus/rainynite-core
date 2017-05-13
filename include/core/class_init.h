@@ -63,6 +63,12 @@ std::map<T, std::type_index>& reverse_class_registry() {
     return instance;
 }
 
+template <class T>
+std::map<std::string, T*>& string_registry() {
+    static std::map<std::string, T*> instance;
+    return instance;
+}
+
 /**
  * Automatic class registration helper.
  *
@@ -96,6 +102,14 @@ private:
 public:
     static void init() {
         class_registry<R>()[typeid(T)] = new S();
+    }
+};
+
+template <class S, class R>
+class StringRegistered : private Initialized<StringRegistered<S, R>> {
+public:
+    static void init() {
+        string_registry<R>()[S::name()] = new S();
     }
 };
 
@@ -166,6 +180,16 @@ std::type_index find_type(K const& key) {
     if (iter != map.end())
         return iter->second;
     throw TypeLookupError(key);
+}
+
+template <class T>
+T& name_info(std::string const& name) {
+    auto const& map = string_registry<T>();
+    auto iter = map.find(name);
+    if (iter == map.end()) {
+        throw TypeLookupError(name);
+    }
+    return *iter->second;
 }
 
 }
