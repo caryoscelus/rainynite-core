@@ -8,11 +8,6 @@ target_sources(document
         color.cpp
         nodes/animated.cpp
         nodes/morph.cpp
-        nodes/path_shape.cpp
-        nodes/rectangle_shape.cpp
-        nodes/image.cpp
-        nodes/translate.cpp
-        nodes/text.cpp
         nodes/format_string.cpp
         nodes/color_mix.cpp
         nodes/follow_path.cpp
@@ -24,6 +19,11 @@ target_sources(document
         nodes/color_string.cpp
         nodes/file_string.cpp
         nodes/add.cpp
+        nodes/renderable/path_shape.cpp
+        nodes/renderable/rectangle_shape.cpp
+        nodes/renderable/image.cpp
+        nodes/renderable/translate.cpp
+        nodes/renderable/text.cpp
 )
 
 target_link_libraries(document morphing fmt)
