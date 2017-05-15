@@ -22,15 +22,27 @@
 
 #include <core/color.h>
 #include "svg_module.h"
+#include "shape.h"
 
 #include <geom_helpers/knots.h>
+
+using namespace fmt::literals;
 
 namespace core {
 namespace renderers {
 
 const std::string svg_path = R"(<path d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
+const std::string svg_path_x = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
 
 const std::string svg_rectangle = R"(<rect x="{}" y="{}" width="{}" height="{}" style="fill:{};fill-opacity:{};stroke:none;{}"/>)";
+
+class PathShapeSvgSubRenderer : SVG_SHAPE_RENDERER(PathShapeSvgSubRenderer, Geom::BezierKnots) {
+public:
+    virtual std::string operator()(boost::any const& shape) const override {
+        auto path = boost::any_cast<Geom::BezierKnots>(shape);
+        return fmt::format(svg_path_x, "path"_a=Geom::knots_to_svg(path));
+    }
+};
 
 class PathShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(PathShapeSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("PathShape");

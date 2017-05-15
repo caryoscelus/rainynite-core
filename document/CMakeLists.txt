@@ -24,6 +24,7 @@ target_sources(document
         nodes/renderable/image.cpp
         nodes/renderable/translate.cpp
         nodes/renderable/text.cpp
+        nodes/renderable/render_shape.cpp
 )
 
 target_link_libraries(document morphing fmt)

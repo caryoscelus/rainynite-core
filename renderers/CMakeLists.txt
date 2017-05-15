@@ -8,12 +8,14 @@ target_sources(renderers
     PRIVATE
         svg_renderer/svg_renderer.cpp
         svg_renderer/svg_module.h
+        svg_renderer/shape.h
 
         svg_renderer/image.cpp
-        svg_renderer/shapes.cpp
         svg_renderer/text.cpp
         svg_renderer/transform.cpp
         svg_renderer/composite.cpp
+        svg_renderer/render_shape.cpp
+        svg_renderer/shapes.cpp
 )
 
 if (NOT TARGET time)
