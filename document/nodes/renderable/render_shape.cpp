@@ -19,7 +19,8 @@
 #include <core/renderable.h>
 #include <core/node_info.h>
 #include <core/color.h>
-#include <core/null_shape.h>
+
+#include <geom_helpers/null_shape.h>
 
 namespace core {
 namespace nodes {

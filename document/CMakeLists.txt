@@ -19,8 +19,7 @@ target_sources(document
         nodes/color_string.cpp
         nodes/file_string.cpp
         nodes/add.cpp
-        nodes/renderable/path_shape.cpp
-        nodes/renderable/rectangle_shape.cpp
+        nodes/rectangle.cpp
         nodes/renderable/image.cpp
         nodes/renderable/translate.cpp
         nodes/renderable/text.cpp

@@ -16,14 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
-
 #include <fmt/format.h>
 
-#include <core/color.h>
 #include "svg_module.h"
 #include "shape.h"
 
+#include <geom_helpers/null_shape.h>
+#include <geom_helpers/rectangle.h>
 #include <geom_helpers/knots.h>
 
 using namespace fmt::literals;
@@ -31,39 +30,36 @@ using namespace fmt::literals;
 namespace core {
 namespace renderers {
 
-const std::string svg_path = R"(<path d="{}" style="fill:{};fill-opacity:{};stroke:none;{}" />)";
-const std::string svg_path_x = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
+const std::string svg_path = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
 
-const std::string svg_rectangle = R"(<rect x="{}" y="{}" width="{}" height="{}" style="fill:{};fill-opacity:{};stroke:none;{}"/>)";
+const std::string svg_rectangle = R"(<rect x="{x}" y="{y}" width="{width}" height="{height}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
+
+class NullShapeSvgSubRenderer : SVG_SHAPE_RENDERER(NullShapeSvgSubRenderer, Geom::NullShape) {
+public:
+    virtual std::string operator()(boost::any const& /*shape*/) const override {
+        return "";
+    }
+};
 
 class PathShapeSvgSubRenderer : SVG_SHAPE_RENDERER(PathShapeSvgSubRenderer, Geom::BezierKnots) {
 public:
     virtual std::string operator()(boost::any const& shape) const override {
         auto path = boost::any_cast<Geom::BezierKnots>(shape);
-        return fmt::format(svg_path_x, "path"_a=Geom::knots_to_svg(path));
+        return fmt::format(svg_path, "path"_a=Geom::knots_to_svg(path));
     }
 };
 
-class PathShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(PathShapeSvgRenderer) {
-    SVG_RENDERER_MODULE_NAME("PathShape");
+class RectangleShapeSvgSubRenderer : SVG_SHAPE_RENDERER(RectangleShapeSvgSubRenderer, Geom::Rectangle) {
 public:
-    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
-        auto path = node.get_property_as<Geom::BezierKnots>("path")->get(time);
-        auto color = node.get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = get_extra_style(node, time, settings);
-        return fmt::format(svg_path, Geom::knots_to_svg(path), colors::to_hex24(color), color.alpha(), extra_style);
-    }
-};
-
-class RectangleShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(RectangleShapeSvgRenderer) {
-    SVG_RENDERER_MODULE_NAME("RectangleShape");
-public:
-    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
-        auto pos = node.get_property_as<Geom::Point>("position")->get(time);
-        auto size = node.get_property_as<Geom::Point>("size")->get(time);
-        auto color = node.get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = get_extra_style(node, time, settings);
-        return fmt::format(svg_rectangle, pos.x(), pos.y(), size.x(), size.y(), colors::to_hex24(color), color.alpha(), extra_style);
+    virtual std::string operator()(boost::any const& shape) const override {
+        auto rect = boost::any_cast<Geom::Rectangle>(shape);
+        return fmt::format(
+            svg_rectangle,
+            "x"_a=rect.pos.x(),
+            "y"_a=rect.pos.y(),
+            "width"_a=rect.size.x(),
+            "height"_a=rect.size.y()
+        );
     }
 };
 

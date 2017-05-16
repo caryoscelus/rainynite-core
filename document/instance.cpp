@@ -24,10 +24,11 @@
 #include <core/renderable.h>
 #include <core/document.h>
 #include <core/color.h>
-#include <core/null_shape.h>
 
 #include <geom_helpers/knots_io.h>
 #include <geom_helpers/point_io.h>
+#include <geom_helpers/null_shape.h>
+#include <geom_helpers/rectangle.h>
 
 namespace Geom {
 
@@ -41,6 +42,11 @@ TYPE_INFO(Point, "Point", [](auto&& s) {
 
 TYPE_INFO(NullShape, "NullShape", [](auto&&) {
     return NullShape {};
+});
+
+TYPE_INFO(Rectangle, "Rectangle", [](auto&& /*rect*/) {
+    // TODO
+    return Rectangle {};
 });
 
 } // namespace Geom
@@ -134,6 +140,7 @@ public:
 template class ValueNodeInfo<Geom::BezierKnots>;
 template class ValueNodeInfo<Geom::Point>;
 template class ValueNodeInfo<Geom::NullShape>;
+// template class ValueNodeInfo<Geom::Rectangle>; - no point until it has parsing
 template class ValueNodeInfo<double>;
 template class ValueNodeInfo<Time>;
 template class ValueNodeInfo<TimePeriod>;
@@ -144,6 +151,7 @@ template class ValueNodeInfo<std::string>;
 template class ListValueNodeInfo<Geom::BezierKnots>;
 template class ListValueNodeInfo<Geom::Point>;
 template class ListValueNodeInfo<Geom::NullShape>;
+template class ListValueNodeInfo<Geom::Rectangle>;
 template class ListValueNodeInfo<double>;
 template class ListValueNodeInfo<Time>;
 template class ListValueNodeInfo<TimePeriod>;
@@ -158,6 +166,7 @@ namespace serialize {
 template class AutoValueToString<Geom::BezierKnots>;
 template class AutoValueToString<Geom::Point>;
 template class AutoValueToString<Geom::NullShape>;
+template class AutoValueToString<Geom::Rectangle>;
 template class AutoValueToString<double>;
 template class AutoValueToString<Time>;
 template class AutoValueToString<TimePeriod>;

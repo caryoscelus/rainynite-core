@@ -21,11 +21,11 @@
 #include <fmt/format.h>
 
 #include <core/color.h>
-#include <core/null_shape.h>
 #include "svg_module.h"
 #include "shape.h"
 
 #include <geom_helpers/knots.h>
+#include <geom_helpers/null_shape.h>
 
 using namespace fmt::literals;
 
