@@ -22,6 +22,7 @@ target_sources(document
         nodes/rectangle.cpp
         nodes/renderable/image.cpp
         nodes/renderable/translate.cpp
+        nodes/renderable/scale.cpp
         nodes/renderable/text.cpp
         nodes/renderable/render_shape.cpp
 )

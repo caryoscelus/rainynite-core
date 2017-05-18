@@ -22,10 +22,13 @@
 
 #include "svg_module.h"
 
+using namespace fmt::literals;
+
 namespace core {
 namespace renderers {
 
 const std::string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)svg";
+const std::string svg_scale = R"svg(<g transform="scale({x}, {y})">{source}</g>)svg";
 
 class TranslateSvgRenderer : SVG_RENDERER_MODULE_CLASS(TranslateSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Translate");
@@ -34,6 +37,21 @@ public:
         auto source = node.get_property("source");
         auto offset = node.get_property_as<Geom::Point>("offset")->get(time);
         return fmt::format(svg_translate, offset.x(), offset.y(), node_to_svg(source, time, settings));
+    }
+};
+
+class ScaleSvgRenderer : SVG_RENDERER_MODULE_CLASS(ScaleSvgRenderer) {
+    SVG_RENDERER_MODULE_NAME("Scale");
+public:
+    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
+        auto source = node.get_property("source");
+        auto scale = node.get_property_as<Geom::Point>("scale")->get(time);
+        return fmt::format(
+            svg_scale,
+            "x"_a=scale.x(),
+            "y"_a=scale.y(),
+            "source"_a=node_to_svg(source, time, settings)
+        );
     }
 };
 
