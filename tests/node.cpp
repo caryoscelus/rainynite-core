@@ -1,5 +1,5 @@
 /*
- *  time.cpp - time tests
+ *  node.cpp - node tests
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
