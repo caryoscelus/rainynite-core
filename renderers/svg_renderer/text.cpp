@@ -31,7 +31,7 @@ const std::string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}<
 class TextSvgRenderer : SVG_RENDERER_MODULE_CLASS(TextSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Text");
 public:
-    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
+    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& /*settings*/) const override {
         auto text = node.get_property_as<std::string>("text")->get(time);
         auto size = node.get_property_as<double>("size")->get(time);
         auto color = node.get_property_as<colors::Color>("color")->get(time);
