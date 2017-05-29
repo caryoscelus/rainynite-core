@@ -19,6 +19,8 @@
 #ifndef __CORE__NODE_INFO_H__1D5DEEF0
 #define __CORE__NODE_INFO_H__1D5DEEF0
 
+#include <set>
+
 #include <core/class_init.h>
 #include <core/node.h>
 
