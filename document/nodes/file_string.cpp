@@ -19,8 +19,9 @@
 #include <fstream>
 #include <sstream>
 
-#include <core/node.h>
 #include <core/node_info.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 
 namespace core {
 namespace nodes {

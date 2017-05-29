@@ -20,7 +20,7 @@
 #define __CORE__RENDERERS__SVG_RENDERER__SVG_MODULE_H__06E36F72
 
 #include <core/class_init.h>
-#include <core/node.h>
+#include <core/node/abstract_node.h>
 #include <core/time/time.h>
 
 #include <2geom/point.h>

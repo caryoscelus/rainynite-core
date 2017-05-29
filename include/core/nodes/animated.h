@@ -19,7 +19,7 @@
 #ifndef __CORE__NODES__ANIMATED_H__28E7E2B8
 #define __CORE__NODES__ANIMATED_H__28E7E2B8
 
-#include <core/node.h>
+#include <core/node/abstract_value.h>
 #include <core/time/time_period.h>
 
 namespace core {

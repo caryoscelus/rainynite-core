@@ -21,6 +21,7 @@
 
 #include "abstract_node.h"
 #include "abstract_value.h"
+#include "list.h"
 
 namespace core {
 

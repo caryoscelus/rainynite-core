@@ -19,7 +19,8 @@
 #ifndef __CORE__RENDERABLE_H__38DF5A1E
 #define __CORE__RENDERABLE_H__38DF5A1E
 
-#include <core/node.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 
 namespace core {
 

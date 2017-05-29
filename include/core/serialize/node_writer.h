@@ -24,6 +24,8 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include <core/node_info.h>
+#include <core/node/abstract_list.h>
+#include <core/node/abstract_node.h>
 #include "serialize.h"
 
 namespace core {

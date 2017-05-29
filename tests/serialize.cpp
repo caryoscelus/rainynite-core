@@ -21,6 +21,8 @@
 #include <iostream>
 
 #include <core/types.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 #include <core/serialize/json.h>
 #include <core/serialize/node_writer.h>
 #include <core/serialize/node_reader.h>

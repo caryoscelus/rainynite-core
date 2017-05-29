@@ -18,8 +18,9 @@
 
 #include <fmt/format.h>
 
-#include <core/node.h>
 #include <core/node_info.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 
 #define FORMAT_ARGS 16
 

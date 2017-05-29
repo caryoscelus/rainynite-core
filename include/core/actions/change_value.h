@@ -20,7 +20,7 @@
 #define __CORE__ACTIONS__CHANGE_VALUE_H__20F972B6
 
 #include <core/action.h>
-#include <core/node.h>
+#include <core/node/abstract_value.h>
 
 namespace core {
 namespace actions {

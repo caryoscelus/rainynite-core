@@ -19,6 +19,7 @@
 #include <catch.hpp>
 
 #include <core/actions/change_value.h>
+#include <core/node/make.h>
 
 using namespace core;
 

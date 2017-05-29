@@ -16,8 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node.h>
 #include <core/node_info.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 #include <core/serialize/node_writer.h>
 
 namespace core {

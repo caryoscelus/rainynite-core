@@ -23,6 +23,8 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include <core/types.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 #include <core/serialize/rapidjson.h>
 #include <core/serialize/node_writer.h>
 #include <core/serialize/node_reader.h>
