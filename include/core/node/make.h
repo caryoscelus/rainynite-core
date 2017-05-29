@@ -1,5 +1,5 @@
 /*
- *  node.h - Node system
+ *  make.h - Node-making functions
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#warning "United node.h include should be avoided"
+#ifndef __CORE__NODE__MAKE_H__A6087C20
+#define __CORE__NODE__MAKE_H__A6087C20
 
-#ifndef __CORE__NODE_H__CC4B44C6
-#define __CORE__NODE_H__CC4B44C6
+#include <memory>
 
-#include "node/list.h"
-#include "node/value.h"
-#include "node/node.h"
-#include "node/make.h"
-#include "node/property.h"
+#include "value.h"
+
+namespace core {
+
+template <typename T, typename... Args>
+std::shared_ptr<Value<T>> make_value(Args&&... args) {
+    auto r = std::make_shared<Value<T>>();
+    r->new_id();
+    r->emplace(std::forward<Args>(args)...);
+    return r;
+}
+
+template <class T>
+std::shared_ptr<T> make_node() {
+    auto r = std::make_shared<T>();
+    r->new_id();
+    return r;
+}
+
+} // namespace core
 
 #endif

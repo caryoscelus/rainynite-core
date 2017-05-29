@@ -1,5 +1,5 @@
 /*
- *  node.h - Node system
+ *  node.h - Node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#warning "United node.h include should be avoided"
+#ifndef __CORE__NODE__NODE_H__245D750C
+#define __CORE__NODE__NODE_H__245D750C
 
-#ifndef __CORE__NODE_H__CC4B44C6
-#define __CORE__NODE_H__CC4B44C6
+#include "abstract_node.h"
+#include "abstract_value.h"
 
-#include "node/list.h"
-#include "node/value.h"
-#include "node/node.h"
-#include "node/make.h"
-#include "node/property.h"
+namespace core {
+
+/**
+ * Basic representation of any time-changeable Node
+ */
+template <typename T>
+class Node : public BaseValue<T>, public AbstractNode {
+public:
+    template <typename U>
+    void init(std::string const& name, U value) {
+        init_property(name, boost::make_optional(Type(typeid(U))), make_value<U>(value));
+    }
+    template <typename U>
+    void init_list(std::string const& name) {
+        init_property(name, boost::make_optional(Type(typeid(std::vector<U>))), std::make_shared<ListValue<U>>());
+    }
+};
+
+} // namespace core
 
 #endif

@@ -23,6 +23,7 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include <core/node_info.h>
+#include <core/node/traverse.h>
 
 using namespace core;
 
