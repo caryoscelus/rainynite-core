@@ -60,6 +60,7 @@ public:
     size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value) {
         size_t id = link_count();
         numbered_storage.push_back(std::move(value));
+        names_list.push_back(name);
         named_storage[name] = id;
         types.push_back(type);
         return id;
@@ -71,6 +72,9 @@ public:
             result.emplace(e.first, get_by_id(e.second));
         }
         return result;
+    }
+    std::string get_name_at(size_t id) {
+        return names_list[id];
     }
 public:
     virtual std::vector<AbstractReference> get_links() const override {
@@ -101,6 +105,7 @@ private:
     }
 private:
     std::map<std::string, size_t> named_storage;
+    std::vector<std::string> names_list;
     std::vector<AbstractReference> numbered_storage;
     std::vector<boost::optional<Type>> types;
 };
