@@ -27,6 +27,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/renderable.h>
+#include <core/action.h>
 
 namespace core {
 
@@ -43,12 +44,16 @@ public:
     explicit Document(std::shared_ptr<BaseValue<Renderable>> root_=nullptr);
     virtual ~Document();
     std::shared_ptr<Context> get_default_context();
+    inline std::shared_ptr<ActionStack> get_action_stack() {
+        return action_stack;
+    }
 
 public:
     virtual DocumentType get(Time) const override;
 
 private:
     std::shared_ptr<Context> default_context;
+    std::shared_ptr<ActionStack> action_stack;
 
     NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(size, Geom::Point);

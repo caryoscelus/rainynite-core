@@ -25,7 +25,8 @@ namespace core {
 REGISTER_NODE(Document);
 
 Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
-    default_context(nullptr)
+    default_context(nullptr),
+    action_stack(std::make_shared<ActionStack>())
 {
     init<Renderable>(root, {});
     init<Geom::Point>(size, {800, 600});
