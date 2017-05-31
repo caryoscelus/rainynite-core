@@ -190,7 +190,6 @@ void SvgRenderer::Impl::finish_render() {
 }
 
 void SvgRenderer::Impl::start_png() {
-    std::cout << std::boolalpha << subprocess_initialized << ", " << settings.keep_alive << std::endl;
     if (subprocess_initialized)
         return;
 
@@ -231,7 +230,6 @@ void SvgRenderer::Impl::render_png(std::string const& svg, std::string const& pn
 }
 
 void SvgRenderer::Impl::quit_png() {
-    std::cout << std::boolalpha << subprocess_initialized << ", " << settings.keep_alive << std::endl;
     if (!settings.keep_alive) {
         subprocess_initialized = false;
 
