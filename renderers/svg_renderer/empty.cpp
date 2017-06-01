@@ -1,5 +1,5 @@
 /*
- *  render_shape.cpp - Shape renderable node
+ *  empty.cpp - SvgRenderer Empty renderer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
-#include <core/node_info.h>
-#include <core/color.h>
-
-#include <geom_helpers/null_shape.h>
+#include "svg_module.h"
 
 namespace core {
-namespace nodes {
+namespace renderers {
 
-class RenderShape : public RenderableNode {
+class EmptySvgRenderer : SVG_RENDERER_MODULE_CLASS(EmptySvgRenderer) {
+    SVG_RENDERER_MODULE_NAME("Empty");
 public:
-    RenderShape() {
-        init_property("shape", boost::none, make_value<Geom::NullShape>());
-        init<colors::Color>(fill_color, colors::Color());
+    virtual std::string operator()(AbstractNode const& /*node*/, Time /*time*/, SvgRendererSettings const& /*settings*/) const override {
+        return "";
     }
-private:
-    NODE_PROPERTY(fill_color, colors::Color);
 };
 
-REGISTER_NODE(RenderShape);
-
-} // namespace nodes
+} // namespace renderers
 } // namespace core

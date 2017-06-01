@@ -10,6 +10,7 @@ target_sources(renderers
         svg_renderer/svg_module.h
         svg_renderer/shape.h
 
+        svg_renderer/empty.cpp
         svg_renderer/image.cpp
         svg_renderer/text.cpp
         svg_renderer/transform.cpp

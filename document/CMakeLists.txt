@@ -20,6 +20,7 @@ target_sources(document
         nodes/file_string.cpp
         nodes/add.cpp
         nodes/rectangle.cpp
+        nodes/renderable/empty.cpp
         nodes/renderable/image.cpp
         nodes/renderable/translate.cpp
         nodes/renderable/scale.cpp

@@ -1,5 +1,5 @@
 /*
- *  render_shape.cpp - Shape renderable node
+ *  empty.cpp - Empty renderable node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,24 +18,16 @@
 
 #include <core/renderable.h>
 #include <core/node_info.h>
-#include <core/color.h>
-
-#include <geom_helpers/null_shape.h>
 
 namespace core {
 namespace nodes {
 
-class RenderShape : public RenderableNode {
+class Empty : public RenderableNode {
 public:
-    RenderShape() {
-        init_property("shape", boost::none, make_value<Geom::NullShape>());
-        init<colors::Color>(fill_color, colors::Color());
-    }
-private:
-    NODE_PROPERTY(fill_color, colors::Color);
+    Empty() {}
 };
 
-REGISTER_NODE(RenderShape);
+REGISTER_NODE(Empty);
 
 } // namespace nodes
 } // namespace core

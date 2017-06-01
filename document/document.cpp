@@ -32,7 +32,10 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
     init<Geom::Point>(size, {800, 600});
     init<Geom::Point>(viewport_size, {800, 600});
     init<TimePeriod>(main_time_period, {Time(0, 8), Time(5, 8)});
-    set_root(root_);
+    if (root_)
+        set_root(root_);
+    else
+        set_root(make_node_with_name<BaseValue<Renderable>>("Empty"));
     new_id();
 }
 
