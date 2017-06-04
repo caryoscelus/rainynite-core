@@ -48,14 +48,20 @@ public:
     }
     virtual Type get_type() const = 0;
     virtual boost::any get_any(Time t) const = 0;
-    virtual void set_any(boost::any) {
+    virtual void set_any(boost::any /*value*/) {
         throw NodeAccessError("Cannot set");
     }
-    virtual bool can_set_any(boost::any) const {
+    virtual bool can_set_any(boost::any /*value*/) const {
         return false;
     }
     virtual boost::any any() const {
         throw NodeAccessError("No static value");
+    }
+    virtual void set_source(std::shared_ptr<AbstractValue> /*source*/) {
+        throw NodeAccessError("Cannot set source node");
+    }
+    virtual bool can_set_source(std::shared_ptr<AbstractValue> /*source*/) const {
+        return false;
     }
     Id get_id() {
         return id;
