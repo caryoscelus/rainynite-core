@@ -114,7 +114,7 @@ void SvgRenderer::Impl::render(Context context_) {
     context = std::move(context_);
     document = context.get_document();
     if (!document) {
-        throw "can't renderer - no document";
+        throw RenderFailure("No document present");
     }
     boost::any maybe_settings = context.get_render_settings();
     if (!maybe_settings.empty()) {

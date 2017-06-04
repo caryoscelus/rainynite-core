@@ -20,6 +20,7 @@
 #define __CORE__RENDERER_H__67308EB8
 
 #include <memory>
+#include <stdexcept>
 
 #include <boost/signals2/signal.hpp>
 
@@ -28,6 +29,13 @@
 namespace core {
 
 class Context;
+
+class RenderFailure : public std::runtime_error {
+public:
+    RenderFailure(std::string const& msg) :
+        std::runtime_error(msg)
+    {}
+};
 
 class Renderer {
 public:
