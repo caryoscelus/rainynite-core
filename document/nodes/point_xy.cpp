@@ -39,6 +39,14 @@ public:
             return {};
         }
     }
+    virtual bool can_set_any(boost::any const& value) const override {
+        return get_type() == value.type();
+    }
+    virtual void set_any(boost::any const& value) override {
+        auto point = boost::any_cast<Geom::Point>(value);
+        set_property("x", make_value<double>(point.x()));
+        set_property("y", make_value<double>(point.y()));
+    }
 
 private:
     NODE_PROPERTY(x, double);
