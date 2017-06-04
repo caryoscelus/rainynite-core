@@ -48,10 +48,10 @@ public:
     }
     virtual Type get_type() const = 0;
     virtual boost::any get_any(Time t) const = 0;
-    virtual void set_any(boost::any /*value*/) {
+    virtual void set_any(boost::any const& /*value*/) {
         throw NodeAccessError("Cannot set");
     }
-    virtual bool can_set_any(boost::any /*value*/) const {
+    virtual bool can_set_any(boost::any const& /*value*/) const {
         return false;
     }
     virtual boost::any any() const {
@@ -96,10 +96,10 @@ public:
     virtual boost::any get_any(Time t) const override {
         return get(t);
     }
-    virtual void set_any(boost::any value_) override {
+    virtual void set_any(boost::any const& value_) override {
         set(boost::any_cast<T>(value_));
     }
-    virtual bool can_set_any(boost::any value_) const override {
+    virtual bool can_set_any(boost::any const& value_) const override {
         return can_set() && value_.type() == typeid(T);
     }
 public:
