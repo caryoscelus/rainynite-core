@@ -20,6 +20,7 @@
 #define __CORE__TIME__TIME_H__B4FED896
 
 #include <cmath>
+#include <stdexcept>
 
 #include <boost/operators.hpp>
 
@@ -92,7 +93,7 @@ public:
     void require_same_fps(Time const& other) const {
         // consider zero case
         if (fps != other.fps)
-            throw "Time: fps mis-match";
+            throw std::runtime_error("Time: fps mis-match");
     }
 public:
     double get_seconds() const {
