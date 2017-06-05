@@ -30,6 +30,9 @@ public:
         init<Renderable>(source, {});
         init<Geom::Point>(scale, {});
     }
+    virtual std::string get_source_name() const override {
+        return "source";
+    }
 
 private:
     NODE_PROPERTY(source, Renderable);

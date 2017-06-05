@@ -30,11 +30,8 @@ public:
         init<Renderable>(source, {});
         init<Geom::Point>(offset, {});
     }
-    virtual bool can_set_source(std::shared_ptr<AbstractValue> source) const override {
-        return source->get_type() == get_type();
-    }
-    virtual void set_source(std::shared_ptr<AbstractValue> source) override {
-        set_source(std::dynamic_pointer_cast<BaseValue<Renderable>>(source));
+    virtual std::string get_source_name() const override {
+        return "source";
     }
 
 private:
