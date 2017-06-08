@@ -30,9 +30,6 @@ public:
         init<Renderable>(source, {});
         init<double>(angle, {});
     }
-    virtual std::string get_source_name() const override {
-        return "source";
-    }
 
 private:
     NODE_PROPERTY(source, Renderable);

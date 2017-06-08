@@ -41,10 +41,12 @@ public:
     }
 public:
     virtual bool can_set_source(std::shared_ptr<AbstractValue> src) const override {
-        return !get_source_name().empty() && src->get_type() == this->get_type();
+        if (auto type = get_link_type(0))
+            return src->get_type() == *type;
+        return true;
     }
     virtual void set_source(std::shared_ptr<AbstractValue> src) override {
-        set_property(get_source_name(), src);
+        set_link(0, src);
     }
 };
 

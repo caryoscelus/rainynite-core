@@ -96,9 +96,6 @@ public:
     virtual size_t link_count() const override {
         return numbered_storage.size();
     }
-    virtual std::string get_source_name() const {
-        return "";
-    }
 private:
     AbstractReference const& get_by_id(size_t index) const {
         return numbered_storage[index];
