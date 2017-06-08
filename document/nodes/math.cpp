@@ -1,5 +1,5 @@
 /*
- *  add.cpp - add two Real numbers - mostly for testing
+ *  math.cpp - math operation nodes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cmath>
+
+#include <boost/math/constants/constants.hpp>
+
 #include <core/node_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
+
+using boost::math::double_constants::pi;
 
 namespace core {
 namespace nodes {
@@ -42,8 +48,26 @@ private:
     NODE_PROPERTY(a, double);
     NODE_PROPERTY(b, double);
 };
-
 REGISTER_NODE(Add);
+
+class Sin : public Node<double> {
+public:
+    Sin() {
+        init<double>(turns, 0);
+    }
+public:
+    virtual double get(Time time) const override {
+        try {
+            return std::sin(get_turns()->get(time) * pi * 2);
+        } catch (...) {
+            return {};
+        }
+    }
+
+private:
+    NODE_PROPERTY(turns, double);
+};
+REGISTER_NODE(Sin);
 
 } // namespace nodes
 } // namespace core

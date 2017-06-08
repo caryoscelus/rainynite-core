@@ -18,7 +18,7 @@ target_sources(document
         nodes/to_string.cpp
         nodes/color_string.cpp
         nodes/file_string.cpp
-        nodes/add.cpp
+        nodes/math.cpp
         nodes/rectangle.cpp
         nodes/renderable/empty.cpp
         nodes/renderable/image.cpp
