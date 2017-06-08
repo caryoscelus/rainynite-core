@@ -29,9 +29,9 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
     action_stack(std::make_shared<ActionStack>())
 {
     init<Renderable>(root, {});
-    init<Geom::Point>(size, {800, 600});
-    init<Geom::Point>(viewport_size, {800, 600});
-    init<TimePeriod>(main_time_period, {Time(0, 8), Time(5, 8)});
+    init<Geom::Point>(size, {320, 240});
+    init<Geom::Point>(viewport_size, {320, 240});
+    init<TimePeriod>(main_time_period, {Time(0, 12), Time(5, 12)});
     if (root_)
         set_root(root_);
     else
