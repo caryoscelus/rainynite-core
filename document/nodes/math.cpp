@@ -50,6 +50,27 @@ private:
 };
 REGISTER_NODE(Add);
 
+class Multiply : public Node<double> {
+public:
+    Multiply() {
+        init<double>(a, 0);
+        init<double>(b, 0);
+    }
+public:
+    virtual double get(Time time) const override {
+        try {
+            return get_a()->get(time) * get_b()->get(time);
+        } catch (...) {
+            return {};
+        }
+    }
+
+private:
+    NODE_PROPERTY(a, double);
+    NODE_PROPERTY(b, double);
+};
+REGISTER_NODE(Multiply);
+
 class Sin : public Node<double> {
 public:
     Sin() {
