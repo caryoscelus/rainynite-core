@@ -64,7 +64,7 @@ public:
         auto angle = node.get_property_as<double>("angle")->get(time);
         return fmt::format(
             svg_rotate,
-            "angle"_a=angle,
+            "angle"_a=angle*360,
             "source"_a=node_to_svg(source, time, settings)
         );
     }
