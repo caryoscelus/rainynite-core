@@ -32,7 +32,8 @@
 #include <core/document.h>
 #include <core/color.h>
 #include <core/renderable.h>
-#include <core/nodes/composite.h>
+#include <core/node_info.h>
+#include <core/node/proxy_node.h>
 #include <core/class_init.h>
 #include "svg_module.h"
 
@@ -173,6 +174,13 @@ std::string node_to_svg(AbstractReference node_ptr, Time time, SvgRendererSettin
     try {
         return class_init::name_info<SvgRendererModule>(name)(*node, time, settings);
     } catch (class_init::TypeLookupError const&) {
+        if (auto proxy = dynamic_cast<ProxyNode<Renderable>*>(node)) {
+            std::string result;
+            proxy->step_into(time, [&settings, &result](AbstractReference cnode, Time t) {
+                result = node_to_svg(cnode, t, settings);
+            });
+            return result;
+        }
         std::cerr << "ERROR: node type isn't supported" << std::endl;
         // throw
         return "";
