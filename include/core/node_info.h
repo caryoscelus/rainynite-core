@@ -112,6 +112,24 @@ private class_init::Registered<Self, Type, NodeInfo>, \
 private class_init::ReverseRegistered<Self, Type, std::string>, \
 private RegisterNodeByType<Self>
 
+#define NODE_INFO_TEMPLATE(Name, Node, NodeType) \
+template <typename T> \
+class Name##NodeInfo : NODE_INFO_PARENTS(Name##NodeInfo<T>, Node) { \
+public: \
+    virtual std::string name() const override { \
+        return #Name"<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">"; \
+    } \
+    virtual AbstractReference new_empty() const override { \
+        return std::make_shared<Node>(); \
+    } \
+    virtual AbstractReference clone(AbstractValue const& source) const override { \
+        return std::make_shared<Node>(static_cast<Node const&>(source)); \
+    } \
+    virtual Type type() const override { \
+        return typeid(NodeType); \
+    } \
+}
+
 #define REGISTER_NODE_NAMED(Node, NodeNodeInfo, _name) \
 class NodeNodeInfo : NODE_INFO_PARENTS(NodeNodeInfo, Node) \
 { \

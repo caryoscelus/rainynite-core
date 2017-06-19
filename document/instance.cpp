@@ -102,45 +102,11 @@ public:
     }
 };
 
-template <typename T>
-class ValueNodeInfo : NODE_INFO_PARENTS(ValueNodeInfo<T>, Value<T>)
-{
-public:
-    virtual std::string name() const override {
-        return "Value<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
-    }
-    virtual AbstractReference new_empty() const override {
-        return std::make_shared<Value<T>>();
-    }
-    virtual AbstractReference clone(AbstractValue const& source) const override {
-        return std::make_shared<Value<T>>(static_cast<Value<T> const&>(source));
-    }
-    virtual Type type() const override {
-        return typeid(T);
-    }
-};
-
-template <typename T>
-class ListValueNodeInfo : NODE_INFO_PARENTS(ListValueNodeInfo<T>, ListValue<T>)
-{
-public:
-    virtual std::string name() const override {
-        return "List<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
-    }
-    virtual AbstractReference new_empty() const override {
-        return std::make_shared<ListValue<T>>();
-    }
-    virtual AbstractReference clone(AbstractValue const& source) const override {
-        return std::make_shared<ListValue<T>>(static_cast<ListValue<T> const&>(source));
-    }
-    virtual Type type() const override {
-        return typeid(std::vector<T>);
-    }
-};
+NODE_INFO_TEMPLATE(Value, Value<T>, T);
+NODE_INFO_TEMPLATE(List, ListValue<T>, std::vector<T>);
 
 TYPE_INSTANCES_WO_RENDERABLE(ValueNodeInfo)
-
-TYPE_INSTANCES(ListValueNodeInfo)
+TYPE_INSTANCES(ListNodeInfo)
 
 } // namespace nodes
 
