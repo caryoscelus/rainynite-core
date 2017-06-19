@@ -39,12 +39,16 @@ public:
     virtual void step_into(Time time, std::function<void(AbstractReference,Time)> f) const = 0;
 public:
     virtual T get(Time time) const override {
-        T result;
-        step_into(time, [&result](AbstractReference node, Time t) {
-            if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
-                result = vnode->get(t);
-        });
-        return result;
+        try {
+            T result;
+            step_into(time, [&result](AbstractReference node, Time t) {
+                if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
+                    result = vnode->get(t);
+            });
+            return result;
+        } catch (...) {
+            return {};
+        }
     }
 };
 
