@@ -18,6 +18,7 @@
 
 #include <core/node_info.h>
 #include <core/types.h>
+#include <core/all_types.h>
 #include <core/serialize/node_writer.h>
 #include <core/time/parse.h>
 #include <core/time/format.h>
@@ -137,41 +138,15 @@ public:
     }
 };
 
-template class ValueNodeInfo<Geom::BezierKnots>;
-template class ValueNodeInfo<Geom::Point>;
-template class ValueNodeInfo<Geom::NullShape>;
-// template class ValueNodeInfo<Geom::Rectangle>; - no point until it has parsing
-template class ValueNodeInfo<double>;
-template class ValueNodeInfo<Time>;
-template class ValueNodeInfo<TimePeriod>;
-template class ValueNodeInfo<colors::Color>;
-template class ValueNodeInfo<std::string>;
-// template class ListValueNodeInfo<Renderable>; - no renderable values possible
+TYPE_INSTANCES_WO_RENDERABLE(ValueNodeInfo)
 
-template class ListValueNodeInfo<Geom::BezierKnots>;
-template class ListValueNodeInfo<Geom::Point>;
-template class ListValueNodeInfo<Geom::NullShape>;
-template class ListValueNodeInfo<Geom::Rectangle>;
-template class ListValueNodeInfo<double>;
-template class ListValueNodeInfo<Time>;
-template class ListValueNodeInfo<TimePeriod>;
-template class ListValueNodeInfo<colors::Color>;
-template class ListValueNodeInfo<std::string>;
-template class ListValueNodeInfo<Renderable>;
+TYPE_INSTANCES(ListValueNodeInfo)
 
 } // namespace nodes
 
 namespace serialize {
 
-template class AutoValueToString<Geom::BezierKnots>;
-template class AutoValueToString<Geom::Point>;
-template class AutoValueToString<Geom::NullShape>;
-template class AutoValueToString<Geom::Rectangle>;
-template class AutoValueToString<double>;
-template class AutoValueToString<Time>;
-template class AutoValueToString<TimePeriod>;
-template class AutoValueToString<colors::Color>;
-template class AutoValueToString<std::string>; // TODO: remove streams overhead
+TYPE_INSTANCES_WO_RENDERABLE(AutoValueToString)
 
 } // namespace serialize
 

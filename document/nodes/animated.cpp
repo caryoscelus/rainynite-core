@@ -21,8 +21,7 @@
 #include <core/node_info.h>
 #include <core/nodes/animated.h>
 #include <core/types.h>
-#include <core/color.h>
-#include <core/renderable.h>
+#include <core/all_types.h>
 
 namespace core {
 namespace nodes {
@@ -96,12 +95,7 @@ public:
     }
 };
 
-template class AnimatedNodeInfo<Geom::BezierKnots>;
-template class AnimatedNodeInfo<Geom::Point>;
-template class AnimatedNodeInfo<Renderable>;
-template class AnimatedNodeInfo<colors::Color>;
-template class AnimatedNodeInfo<std::string>;
-template class AnimatedNodeInfo<double>;
+TYPE_INSTANCES(AnimatedNodeInfo)
 
 } // namespace nodes
 } // namespace core
