@@ -44,14 +44,16 @@ Time& Time::operator--() {
 }
 
 Time& Time::operator+=(Time const& other) {
-    require_same_fps(other);
-    set_frames(get_frames()+other.get_frames());
+    auto t = other;
+    t.set_fps(get_fps());
+    set_frames(get_frames()+t.get_frames());
     return *this;
 }
 
 Time& Time::operator-=(Time const& other) {
-    require_same_fps(other);
-    set_frames(get_frames()-other.get_frames());
+    auto t = other;
+    t.set_fps(get_fps());
+    set_frames(get_frames()-t.get_frames());
     return *this;
 }
 

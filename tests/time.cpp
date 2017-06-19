@@ -49,7 +49,7 @@ TEST_CASE("Time arithmetics", "[time]") {
 }
 
 TEST_CASE("Time FPS mismatch", "[time]") {
-    REQUIRE_THROWS(Time(1, 12, 10)+Time(1, 24, 5));
+    REQUIRE_THROWS(Time(1, 12, 10) < Time(1, 24, 5));
 }
 
 void test_period(TimePeriod const& period, unsigned amount) {
