@@ -52,49 +52,16 @@ public:
     Time& operator=(Time const& other) = default;
     Time& operator=(Time&& other) = default;
 public:
-    bool operator==(Time const& other) const {
-        require_same_fps(other);
-        return seconds == other.seconds
-            && frames == other.frames;
-    }
-    bool operator<(Time const& other) const {
-        require_same_fps(other);
-        return seconds < other.seconds
-            || (seconds == other.seconds
-            && frames < other.frames);
-    }
-    Time& operator++() {
-        set_frames(get_frames()+1);
-        return *this;
-    }
-    Time& operator--() {
-        set_frames(get_frames()-1);
-        return *this;
-    }
-    Time& operator+=(Time const& other) {
-        require_same_fps(other);
-        set_frames(get_frames()+other.get_frames());
-        return *this;
-    }
-    Time& operator-=(Time const& other) {
-        require_same_fps(other);
-        set_frames(get_frames()-other.get_frames());
-        return *this;
-    }
-    Time& operator*=(double other) {
-        set_frames(get_frames()*other);
-        return *this;
-    }
-    Time& operator/=(double other) {
-        set_frames(get_frames()/other);
-        return *this;
-    }
+    bool operator==(Time const& other) const;
+    bool operator<(Time const& other) const;
+    Time& operator++();
+    Time& operator--();
+    Time& operator+=(Time const& other);
+    Time& operator-=(Time const& other);
+    Time& operator*=(double other);
+    Time& operator/=(double other);
 public:
-    void require_same_fps(Time const& other) const {
-        // consider zero case
-        if (fps != other.fps)
-            throw std::runtime_error("Time: fps mis-match");
-    }
+    void require_same_fps(Time const& other) const;
 public:
     double get_seconds() const {
         return seconds+frames/fps;
@@ -108,37 +75,18 @@ public:
     fps_type get_fps() const {
         return fps;
     }
-
-    void set_frames(double frames_) {
-        auto neg = std::copysign(1, frames_);
-        frames_ = std::abs(frames_);
-        int whole_frames = frames_;
-        seconds = neg * whole_frames / fps;
-        frames = neg * (whole_frames % fps + frames_ - whole_frames);
-    }
-    void add_frames(double df) {
-        set_frames(get_frames()+df);
-    }
-    void set_seconds(double seconds_) {
-        set_frames(seconds_*fps);
-    }
-
+public:
+    void set_frames(double frames_);
+    void add_frames(double df);
+    void set_seconds(double seconds_);
     /**
      * Change fps, preserving time in seconds
      */
-    void set_fps(fps_type fps_) {
-        frames = frames*fps_/fps;
-        fps = fps_;
-    }
-
+    void set_fps(fps_type fps_);
     /**
      * Change fps, preserving frame count
      */
-    void change_fps(fps_type fps_) {
-        auto total = seconds*fps + frames;
-        fps = fps_;
-        set_frames(total);
-    }
+    void change_fps(fps_type fps_);
 private:
     int seconds;
     double frames;
