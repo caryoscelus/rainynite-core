@@ -19,6 +19,7 @@
 #include <geom_helpers/knots.h>
 
 #include <core/node_info.h>
+#include <core/node/proxy_node.h>
 #include <core/nodes/animated.h>
 #include <core/types.h>
 #include <core/all_types.h>
@@ -27,7 +28,7 @@ namespace core {
 namespace nodes {
 
 template <class T>
-class Animated : public AbstractAnimated, public Node<T> {
+class Animated : public AbstractAnimated, public ProxyNode<T> {
 public:
     Animated() {
         this->template init_list<T>(children);
@@ -39,12 +40,11 @@ public:
         get_periods()->new_id();
     }
 public:
-    virtual T get(Time time) const override {
+    virtual void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
         AbstractReference r;
         Time t;
         std::tie(r, t) = find_appropriate(time);
-        auto child = std::dynamic_pointer_cast<BaseValue<T>>(r);
-        return child->get(t);
+        f(r, t);
     }
 public:
     virtual void add_child(TimePeriod period, AbstractReference ref) override {
