@@ -22,6 +22,7 @@ target_sources(document
         nodes/math.cpp
         nodes/rectangle.cpp
         nodes/renderable/empty.cpp
+        nodes/renderable/composite.cpp
         nodes/renderable/image.cpp
         nodes/renderable/translate.cpp
         nodes/renderable/scale.cpp

@@ -1,5 +1,5 @@
 /*
- *  composite.h - Simple composite render node
+ *  composite.cpp - Simple composite render node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,9 +15,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifndef __CORE__NODES__COMPOSITE_H__266BAD3C
-#define __CORE__NODES__COMPOSITE_H__266BAD3C
 
 #include <core/renderable.h>
 #include <core/node_info.h>
@@ -48,5 +45,3 @@ REGISTER_NODE(Composite);
 
 } // namespace nodes
 } // namespace core
-
-#endif
