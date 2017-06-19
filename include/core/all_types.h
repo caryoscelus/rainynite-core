@@ -22,6 +22,7 @@
 #include "time/time_period.h"
 #include <geom_helpers/null_shape.h>
 #include <geom_helpers/rectangle.h>
+#include <geom_helpers/knots.h>
 #include <core/color.h>
 #include <core/renderable.h>
 

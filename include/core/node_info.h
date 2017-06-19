@@ -22,6 +22,7 @@
 #include <set>
 
 #include <core/class_init.h>
+#include <core/types.h>
 #include <core/node/abstract_value.h>
 
 namespace core {
