@@ -141,11 +141,13 @@ public:
     }
     bool StartArray() {
         std::cerr << "StartArray" << std::endl;
+        status = Status::Empty;
         writer.list_start();
         return true;
     }
     bool EndArray(size_t) {
         std::cerr << "EndArray" << std::endl;
+        status = Status::Empty;
         writer.list_end();
         return true;
     }
