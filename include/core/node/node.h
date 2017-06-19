@@ -41,6 +41,8 @@ public:
     }
 public:
     virtual bool can_set_source(std::shared_ptr<AbstractValue> src) const override {
+        if (link_count() == 0)
+            return false;
         if (auto type = get_link_type(0))
             return src->get_type() == *type;
         return true;
