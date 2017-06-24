@@ -63,6 +63,7 @@ public:
     virtual bool can_set_source(std::shared_ptr<AbstractValue> /*source*/) const {
         return false;
     }
+public:
     Id get_id() {
         return id;
     }
@@ -71,6 +72,15 @@ public:
     }
     void new_id() {
         id = boost::uuids::random_generator()();
+    }
+    /**
+     * Function to be called when node has changed.
+     *
+     * It should notify possible listeners, but that's not yet implemented and
+     * currently this function does nothing.
+     */
+    void changed() {
+        // TODO
     }
 private:
     Id id;

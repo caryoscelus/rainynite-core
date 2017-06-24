@@ -34,6 +34,7 @@ public:
     }
     virtual void set(T value_) override {
         value = value_;
+        this->changed();
     }
     virtual T& mod() override {
         return value;
