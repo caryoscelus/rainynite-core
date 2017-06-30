@@ -45,7 +45,7 @@ public:
     virtual std::string operator()(boost::any const& object) const override {
         auto value = boost::any_cast<T>(object);
         std::ostringstream stream;
-        stream << value;
+        stream << std::boolalpha << value;
         return stream.str();
     }
 };

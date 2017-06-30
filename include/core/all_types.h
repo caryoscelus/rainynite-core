@@ -27,6 +27,7 @@
 #include <core/renderable.h>
 
 #define TYPE_INSTANCES_WO_RENDERABLE(Template) \
+    template class Template<bool>; \
     template class Template<double>; \
     template class Template<std::string>; \
     template class Template<Time>; \

@@ -68,6 +68,14 @@ TYPE_INFO(Color, "Color", [](auto&& s) {
 
 namespace nodes {
 
+TYPE_INFO(bool, "Boolean", [](auto&& s) {
+    if (s == "true")
+        return true;
+    else if (s == "false")
+        return false;
+    throw serialize::DeserializationError("Cannot parse bool from \""+s+"\"");
+});
+
 TYPE_INFO(double, "Real", [](auto&& s) {
     // TODO: check correctness & locale issues
     return std::stod(s);
