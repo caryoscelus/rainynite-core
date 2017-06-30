@@ -86,7 +86,7 @@ TYPE_INFO(Renderable, "Renderable", [](auto&&) -> boost::any {
 });
 
 TYPE_INFO(DocumentType, "Document", [](auto&&) -> boost::any {
-    throw serialize::DeserializationError("Renderable type cannot be deserialized");
+    throw serialize::DeserializationError("Document type cannot be deserialized");
 });
 
 class ValueTypeInfoBase {
