@@ -15,6 +15,7 @@ target_sources(document
         nodes/extract_coord.cpp
         nodes/point_xy.cpp
         nodes/knot.cpp
+        nodes/knot_list.cpp
         nodes/linear.cpp
         nodes/truncate.cpp
         nodes/to_string.cpp
