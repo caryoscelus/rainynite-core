@@ -55,7 +55,7 @@ public:
             } else
                 throw NodeAccessError("No such property");
         }
-        get_by_id(named_storage[name]) = ref;
+        set_link(named_storage[name], ref);
     }
     size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value) {
         size_t id = link_count();
