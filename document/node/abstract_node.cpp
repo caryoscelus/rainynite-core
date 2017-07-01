@@ -72,6 +72,7 @@ void AbstractNode::set_link(size_t i, AbstractReference value) {
     signal_connections[i] = value->subscribe([this]() {
         node_changed();
     });
+    node_changed();
 }
 
 } // namespace core

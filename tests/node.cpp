@@ -229,17 +229,19 @@ TEST_CASE("Shallow node copy", "[node]") {
 }
 
 TEST_CASE("Node children change notify", "[node]") {
-    auto one = make_value<double>(1.0);
     auto add = make_node_with_name<Node<double>>("Add");
-    add->set_property("a", one);
-    auto zero = add->get_property_as<double>("b");
     bool changed = false;
     add->subscribe([&changed](){
         changed = true;
     });
+    auto one = make_value<double>(1.0);
+    add->set_property("a", one);
+    CHECK(changed);
+    changed = false;
     one->set(2.0);
     CHECK(changed);
     changed = false;
+    auto zero = add->get_property_as<double>("b");
     zero->set(1.0);
     CHECK(changed);
 }
