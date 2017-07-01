@@ -36,6 +36,7 @@
     template class Template<Geom::NullShape>; \
     template class Template<Geom::BezierKnots>; \
     template class Template<Geom::Rectangle>; \
+    template class Template<Geom::Knot>; \
     template class Template<colors::Color>;
 
 #define TYPE_INSTANCES(Template) \

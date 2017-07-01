@@ -37,6 +37,10 @@ TYPE_INFO(BezierKnots, "BezierPath", [](auto&& s) {
     return parse_named_knots(s);
 });
 
+TYPE_INFO(Knot, "BezierKnot", [](auto&& s) {
+    return parse_knot(s);
+});
+
 TYPE_INFO(Point, "Point", [](auto&& s) {
     return parse_point(s);
 });
