@@ -27,12 +27,7 @@ namespace core {
 
 class AbstractNode : public AbstractListLinked {
 public:
-    AbstractReference get_property(std::string const& name) const {
-        auto result = named_storage.find(name);
-        if (result == named_storage.end())
-            throw NodeAccessError("Unknown property "+name);
-        return get_by_id(result->second);
-    }
+    AbstractReference get_property(std::string const& name) const;
     template <typename T>
     BaseReference<T> get_property_as(std::string const& name) const {
         return std::dynamic_pointer_cast<BaseValue<T>>(get_property(name));
@@ -47,38 +42,9 @@ public:
             return boost::none;
         }
     }
-    void set_property(std::string const& name, AbstractReference ref) {
-        if (named_storage.count(name) == 0) {
-            if (name[0] == '_') {
-                // accept as custom attribute
-                init_property(name, boost::none, ref);
-            } else
-                throw NodeAccessError("No such property");
-        }
-        set_link(named_storage[name], ref);
-    }
-    size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value) {
-        size_t id = link_count();
-        numbered_storage.push_back(value);
-        names_list.push_back(name);
-        named_storage[name] = id;
-        types.push_back(type);
-        boost::signals2::connection connection;
-        if (value)
-            connection = value->subscribe([this]() {
-                node_changed();
-            });
-        signal_connections.push_back(connection);
-        return id;
-    }
-    std::map<std::string, AbstractReference> get_link_map() const {
-        std::map<std::string, AbstractReference> result;
-        // TODO: use generic conversion function
-        for (auto const& e : named_storage) {
-            result.emplace(e.first, get_by_id(e.second));
-        }
-        return result;
-    }
+    void set_property(std::string const& name, AbstractReference ref);
+    size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value);
+    std::map<std::string, AbstractReference> get_link_map() const;
     std::string get_name_at(size_t id) {
         return names_list[id];
     }
@@ -92,17 +58,7 @@ public:
     boost::optional<Type> get_link_type(size_t i) const override {
         return types[i];
     }
-    void set_link(size_t i, AbstractReference value) override {
-        if (auto type = get_link_type(i)) {
-            if (value->get_type() != type.get())
-                throw NodeAccessError("Node property type mis-match");
-        }
-        signal_connections[i].disconnect();
-        get_by_id(i) = value;
-        signal_connections[i] = value->subscribe([this]() {
-            node_changed();
-        });
-    }
+    void set_link(size_t i, AbstractReference value) override;
     size_t link_count() const override {
         return numbered_storage.size();
     }

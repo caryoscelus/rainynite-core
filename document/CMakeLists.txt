@@ -6,6 +6,7 @@ target_sources(document
         document.cpp
         instance.cpp
         color.cpp
+        node/abstract_node.cpp
         nodes/animated.cpp
         nodes/time.cpp
         nodes/morph.cpp
