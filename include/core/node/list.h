@@ -29,7 +29,7 @@ class ListValue : public BaseValue<std::vector<T>>, public AbstractListLinked {
 public:
     ListValue() = default;
 public:
-    virtual std::vector<T> get(Time t) const override {
+    std::vector<T> get(Time t) const override {
         // TODO: caching
         std::vector<T> result;
         std::transform(
@@ -42,7 +42,7 @@ public:
         );
         return result;
     }
-    virtual std::vector<AbstractReference> get_links() const override {
+    std::vector<AbstractReference> get_links() const override {
         std::vector<AbstractReference> result;
         std::transform(
             values.begin(),
@@ -54,37 +54,49 @@ public:
         );
         return result;
     }
-    virtual AbstractReference get_link(size_t i) const override {
+    AbstractReference get_link(size_t i) const override {
         return values.at(i);
     }
-    virtual boost::optional<Type> get_link_type(size_t) const override {
+    boost::optional<Type> get_link_type(size_t) const override {
         return boost::make_optional(Type(typeid(T)));
     }
-    virtual void set_link(size_t i, AbstractReference value) override {
-        if (auto node = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value)))
+    void set_link(size_t i, AbstractReference value) override {
+        if (auto node = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value))) {
             values.at(i) = node;
+            signal_connections[i].disconnect();
+            signal_connections[i] = node->subscribe([this]() {
+                this->changed();
+            });
+            this->changed();
+        }
     }
-    virtual size_t link_count() const override {
+    size_t link_count() const override {
         return values.size();
     }
-    virtual void push_back(AbstractReference value) override {
-        if (auto e = std::dynamic_pointer_cast<BaseValue<T>>(value)) {
+    void push_back(AbstractReference value) override {
+        if (auto e = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value))) {
             values.push_back(e);
+            signal_connections.push_back(e->subscribe([this]() {
+                this->changed();
+            }));
+            this->changed();
         } else {
             //throw
         }
     }
-    virtual void push_new() override {
+    void push_new() override {
         push_value<T>({});
     }
-    virtual void remove(size_t index) override {
+    void remove(size_t index) override {
         values.erase(values.begin()+index);
+        signal_connections.erase(signal_connections.begin()+index);
     }
-    virtual bool is_editable_list() const override {
+    bool is_editable_list() const override {
         return true;
     }
 private:
     std::vector<BaseReference<T>> values;
+    std::vector<boost::signals2::connection> signal_connections;
 };
 
 } // namespace core

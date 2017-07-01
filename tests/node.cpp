@@ -245,3 +245,15 @@ TEST_CASE("Node children change notify", "[node]") {
     zero->set(1.0);
     CHECK(changed);
 }
+
+TEST_CASE("List node children change notify", "[node]") {
+    auto one = make_value<double>(1.0);
+    auto list = make_node<ListValue<double>>();
+    bool changed = false;
+    list->subscribe([&changed](){
+        changed = true;
+    });
+    list->push_back(one);
+    one->set(2.0);
+    CHECK(changed);
+}
