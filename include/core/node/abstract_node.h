@@ -59,10 +59,16 @@ public:
     }
     size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value) {
         size_t id = link_count();
-        numbered_storage.push_back(std::move(value));
+        numbered_storage.push_back(value);
         names_list.push_back(name);
         named_storage[name] = id;
         types.push_back(type);
+        boost::signals2::connection connection;
+        if (value)
+            connection = value->subscribe([this]() {
+                node_changed();
+            });
+        signal_connections.push_back(connection);
         return id;
     }
     std::map<std::string, AbstractReference> get_link_map() const {
@@ -77,25 +83,37 @@ public:
         return names_list[id];
     }
 public:
-    virtual std::vector<AbstractReference> get_links() const override {
+    std::vector<AbstractReference> get_links() const override {
         return numbered_storage;
     }
-    virtual AbstractReference get_link(size_t i) const override {
+    AbstractReference get_link(size_t i) const override {
         return get_by_id(i);
     }
-    virtual boost::optional<Type> get_link_type(size_t i) const override {
+    boost::optional<Type> get_link_type(size_t i) const override {
         return types[i];
     }
-    virtual void set_link(size_t i, AbstractReference value) override {
+    void set_link(size_t i, AbstractReference value) override {
         if (auto type = get_link_type(i)) {
             if (value->get_type() != type.get())
                 throw NodeAccessError("Node property type mis-match");
         }
+        signal_connections[i].disconnect();
         get_by_id(i) = value;
+        signal_connections[i] = value->subscribe([this]() {
+            node_changed();
+        });
     }
-    virtual size_t link_count() const override {
+    size_t link_count() const override {
         return numbered_storage.size();
     }
+protected:
+    /**
+     * This function should be called when node has changed.
+     *
+     * In practice, it exists solely due to class hierarchy and lack of
+     * AbstractValue inheritance in AbstractNode.
+     */
+    virtual void node_changed() = 0;
 private:
     AbstractReference const& get_by_id(size_t index) const {
         return numbered_storage[index];
@@ -107,6 +125,7 @@ private:
     std::map<std::string, size_t> named_storage;
     std::vector<std::string> names_list;
     std::vector<AbstractReference> numbered_storage;
+    std::vector<boost::signals2::connection> signal_connections;
     std::vector<boost::optional<Type>> types;
 };
 

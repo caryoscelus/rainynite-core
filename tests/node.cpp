@@ -227,3 +227,19 @@ TEST_CASE("Shallow node copy", "[node]") {
         CHECK(add_again->get_link_as<double>(1)->mod() == 1.0);
     }
 }
+
+TEST_CASE("Node children change notify", "[node]") {
+    auto one = make_value<double>(1.0);
+    auto add = make_node_with_name<Node<double>>("Add");
+    add->set_property("a", one);
+    auto zero = add->get_property_as<double>("b");
+    bool changed = false;
+    add->subscribe([&changed](){
+        changed = true;
+    });
+    one->set(2.0);
+    CHECK(changed);
+    changed = false;
+    zero->set(1.0);
+    CHECK(changed);
+}

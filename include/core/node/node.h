@@ -40,15 +40,19 @@ public:
         init_property(name, boost::make_optional(Type(typeid(std::vector<U>))), std::make_shared<ListValue<U>>());
     }
 public:
-    virtual bool can_set_source(std::shared_ptr<AbstractValue> src) const override {
+    bool can_set_source(std::shared_ptr<AbstractValue> src) const override {
         if (link_count() == 0)
             return false;
         if (auto type = get_link_type(0))
             return src->get_type() == *type;
         return true;
     }
-    virtual void set_source(std::shared_ptr<AbstractValue> src) override {
+    void set_source(std::shared_ptr<AbstractValue> src) override {
         set_link(0, src);
+    }
+protected:
+    void node_changed() override {
+        this->changed();
     }
 };
 
