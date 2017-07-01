@@ -28,6 +28,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 
 #include <core/time/time.h>
+#include "notify.h"
 
 namespace core {
 
@@ -41,7 +42,7 @@ public:
     {}
 };
 
-class AbstractValue {
+class AbstractValue : public AbstractNotify {
 public:
     virtual bool is_const() const {
         return false;
@@ -72,15 +73,6 @@ public:
     }
     void new_id() {
         id = boost::uuids::random_generator()();
-    }
-    /**
-     * Function to be called when node has changed.
-     *
-     * It should notify possible listeners, but that's not yet implemented and
-     * currently this function does nothing.
-     */
-    void changed() {
-        // TODO
     }
 private:
     Id id;
