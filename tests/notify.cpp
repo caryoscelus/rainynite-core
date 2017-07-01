@@ -43,3 +43,18 @@ TEST_CASE("Notify", "") {
     object.changed();
     CHECK(count == 2);
 }
+
+TEST_CASE("Unsubscribe", "") {
+    AbstractNotify object;
+    unsigned count = 0;
+    object.changed();
+    CHECK(count == 0);
+    auto connection = object.subscribe([&count](){
+        ++count;
+    });
+    object.changed();
+    CHECK(count == 1);
+    connection.disconnect();
+    object.changed();
+    CHECK(count == 1);
+}

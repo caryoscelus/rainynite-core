@@ -47,10 +47,10 @@ public:
      * Subscribe to this object changes
      */
     template <typename F>
-    void subscribe(F f) {
+    boost::signals2::connection subscribe(F f) {
         auto slot = decltype(changed_signal)::slot_type(f);
         slot.track_foreign(destroy_detector);
-        changed_signal.connect(slot);
+        return changed_signal.connect(slot);
     }
 
 public:
