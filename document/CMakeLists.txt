@@ -14,6 +14,7 @@ target_sources(document
         nodes/follow_path.cpp
         nodes/extract_coord.cpp
         nodes/point_xy.cpp
+        nodes/knot.cpp
         nodes/linear.cpp
         nodes/truncate.cpp
         nodes/to_string.cpp
