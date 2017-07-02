@@ -142,7 +142,7 @@ void SvgRenderer::Impl::render_frame(Time time) {
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
     auto size = document->get_size()->get(time);
-    auto viewport_size = document->get_viewport_size()->get(time);
+    auto viewport_size = document->get_property_value<Geom::Point>("_viewport_size", time).value_or(size);
     auto definitions = document->get_property_value<std::string>("_svg_definitions", time).value_or("");
     fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(time));
     f.close();

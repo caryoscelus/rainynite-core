@@ -30,7 +30,6 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
 {
     init<Renderable>(root, {});
     init<Geom::Point>(size, {320, 240});
-    init<Geom::Point>(viewport_size, {320, 240});
     init<TimePeriod>(main_time_period, {Time(0, 12), Time(5, 12)});
     if (root_)
         set_root(root_);
