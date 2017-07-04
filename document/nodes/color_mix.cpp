@@ -27,20 +27,22 @@ namespace nodes {
 class ColorMix : public Node<colors::Color> {
 public:
     ColorMix() {
-        init(a, colors::Color());
-        init(b, colors::Color());
+        init<colors::Color>(a, {});
+        init<colors::Color>(b, {});
+        init<double>(progress, 0);
     }
 public:
     virtual colors::Color get(Time time) const override {
         auto a = get_a()->get(time);
         auto b = get_b()->get(time);
-        auto t = time.get_seconds();
+        auto t = get_progress()->get(time);
         return colors::mix(a, b, t);
     }
 
 private:
     NODE_PROPERTY(a, colors::Color);
     NODE_PROPERTY(b, colors::Color);
+    NODE_PROPERTY(progress, double);
 };
 
 REGISTER_NODE(ColorMix);

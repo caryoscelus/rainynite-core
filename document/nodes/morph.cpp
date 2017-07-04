@@ -30,8 +30,9 @@ namespace nodes {
 class BezierMorph : public Node<Geom::BezierKnots> {
 public:
     BezierMorph() {
-        init(a, Geom::BezierKnots());
-        init(b, Geom::BezierKnots());
+        init<Geom::BezierKnots>(a, {});
+        init<Geom::BezierKnots>(b, {});
+        init<double>(progress, 0);
     }
 public:
     virtual Geom::BezierKnots get(Time time) const override {
@@ -43,8 +44,7 @@ public:
                 cached_b = b;
                 morphing::prepare_average(cached_a, cached_b, avg_a, avg_b);
             }
-            // TODO: configure time?
-            auto t = time.get_seconds();
+            auto t = get_progress()->get(time);
             return morphing::simple_average(avg_a, avg_b, t);
         } catch (...) {
             // TODO: DEBUG
@@ -60,6 +60,7 @@ private:
 
     NODE_PROPERTY(a, Geom::BezierKnots);
     NODE_PROPERTY(b, Geom::BezierKnots);
+    NODE_PROPERTY(progress, double);
 };
 
 REGISTER_NODE(BezierMorph);
