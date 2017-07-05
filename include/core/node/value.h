@@ -26,26 +26,27 @@ namespace core {
 template <typename T>
 class Value : public BaseValue<T> {
 public:
-    virtual bool is_const() const override {
+    bool is_const() const override {
         return true;
     }
-    virtual T get(Time) const override {
+    T get(Time) const override {
         return value;
     }
-    virtual void set(T value_) override {
+    void set(T value_) override {
         value = value_;
         this->changed();
     }
-    virtual T& mod() override {
+    T& mod() override {
         return value;
     }
-    virtual bool can_set() const override {
+    bool can_set() const override {
         return true;
     }
-    virtual boost::any any() const override {
+    boost::any any() const override {
         return value;
     }
 
+public:
     template <typename... Args>
     void emplace(Args&&... args) {
         value = T(std::forward<Args>(args)...);
