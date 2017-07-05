@@ -54,6 +54,11 @@ public:
         );
         return result;
     }
+    void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
+        for (auto child : values) {
+            f(child, time);
+        }
+    }
     AbstractReference get_link(size_t i) const override {
         return values.at(i);
     }

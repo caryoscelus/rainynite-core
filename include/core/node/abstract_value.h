@@ -64,6 +64,14 @@ public:
     virtual bool can_set_source(std::shared_ptr<AbstractValue> /*source*/) const {
         return false;
     }
+    /**
+     * Call arbitrary function with all dynamic list member nodes and correct times.
+     *
+     * If this node is not a list, throws NodeAccessError
+     */
+    virtual void step_into_list(Time /*time*/, std::function<void(std::shared_ptr<AbstractValue>,Time)> /*f*/) const {
+        throw NodeAccessError("This node is not a list");
+    }
 public:
     Id get_id() {
         return id;

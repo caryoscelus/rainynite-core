@@ -52,6 +52,26 @@ public:
     }
 };
 
+/**
+ * Similar to ProxyNode, but for dynamic lists
+ */
+template <typename T>
+class ProxyListNode : public Node<std::vector<T>> {
+public:
+    std::vector<T> get(Time time) const override {
+        try {
+            std::vector<T> result;
+            this->step_into_list(time, [&result](AbstractReference node, Time t) {
+                if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
+                    result.push_back(vnode->get(t));
+            });
+            return result;
+        } catch (...) {
+            return {};
+        }
+    }
+};
+
 } // namespace core
 
 #endif
