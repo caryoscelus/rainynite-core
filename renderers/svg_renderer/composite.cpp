@@ -30,12 +30,13 @@ class CompositeSvgRenderer : SVG_RENDERER_MODULE_CLASS(CompositeSvgRenderer) {
 public:
     virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
         auto list_node = node.get_property("layers");
-        auto list = dynamic_cast<AbstractListLinked*>(list_node.get());
-        auto node_list = list->get_links();
         std::string s;
-        for (auto const& node : node_list) {
-            s += node_to_svg(node, time, settings);
-        }
+        list_node->step_into_list(
+            time,
+            [&s, &settings](AbstractReference child, Time t) {
+                s += node_to_svg(child, t, settings);
+            }
+        );
         return s;
     }
 };
