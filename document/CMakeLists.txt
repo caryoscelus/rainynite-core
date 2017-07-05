@@ -10,6 +10,7 @@ target_sources(document
         nodes/animated.cpp
         nodes/time.cpp
         nodes/time_list.cpp
+        nodes/time_period.cpp
         nodes/morph.cpp
         nodes/format_string.cpp
         nodes/color_mix.cpp
