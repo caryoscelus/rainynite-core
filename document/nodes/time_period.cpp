@@ -42,5 +42,24 @@ private:
 
 REGISTER_NODE(CompositeTimePeriod);
 
+class SizedTimePeriod : public Node<TimePeriod> {
+public:
+    SizedTimePeriod() {
+        init<Time>(first, {});
+        init<Time>(length, {});
+    }
+public:
+    TimePeriod get(Time t) const override {
+        auto first = get_first()->get(t);
+        return {first, first+get_length()->get(t)};
+    }
+
+private:
+    NODE_PROPERTY(first, Time);
+    NODE_PROPERTY(length, Time);
+};
+
+REGISTER_NODE(SizedTimePeriod);
+
 } // namespace nodes
 } // namespace core
