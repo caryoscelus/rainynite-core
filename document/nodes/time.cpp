@@ -47,5 +47,17 @@ private:
 NODE_INFO_TEMPLATE(TimeMap, TimeMap<T>, T);
 TYPE_INSTANCES(TimeMapNodeInfo)
 
+class Now : public Node<Time> {
+public:
+    Now() {
+    }
+public:
+    Time get(Time t) const override {
+        return t;
+    }
+};
+
+REGISTER_NODE(Now);
+
 } // namespace nodes
 } // namespace core
