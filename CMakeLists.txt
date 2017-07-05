@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 14) # 17 is not supported by cmake 3.7
 include(FindPkgConfig)
 pkg_check_modules(LIB2GEOM REQUIRED 2geom)
 
+find_package(Boost REQUIRED COMPONENTS filesystem system)
+
 find_package(FMT REQUIRED)
 
 set(CATCH_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/catch/" CACHE STRING "Path to Catch header library")

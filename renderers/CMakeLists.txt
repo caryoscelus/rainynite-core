@@ -27,6 +27,8 @@ target_link_libraries(renderers
     document
     time
     geom_helpers
+    boost_system
+    boost_filesystem
 )
 
 install(

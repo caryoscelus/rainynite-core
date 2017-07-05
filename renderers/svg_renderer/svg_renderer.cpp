@@ -25,6 +25,8 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
+#include <boost/filesystem.hpp>
+
 #include <fmt/ostream.h>
 #include <fmt/format.h>
 
@@ -83,6 +85,9 @@ struct SvgRenderer::Impl {
     std::shared_ptr<Document> document;
 
     SvgRendererSettings settings;
+
+    boost::filesystem::path render_path { "renders/" };
+
     FILE* png_renderer_pipe;
     FILE* png_renderer_pipe_output;
     pid_t png_renderer_pid;
@@ -132,6 +137,10 @@ void SvgRenderer::Impl::render(Context context_) {
 }
 
 void SvgRenderer::Impl::prepare_render() {
+    if (!boost::filesystem::exists(render_path)) {
+        if (!boost::filesystem::create_directory(render_path))
+            throw RenderFailure("Cannot create render directory");
+    }
     if (settings.render_pngs)
         start_png();
 }
