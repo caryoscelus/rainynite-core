@@ -15,6 +15,7 @@ target_sources(document
         nodes/format_string.cpp
         nodes/color_mix.cpp
         nodes/follow_path.cpp
+        nodes/path_xy.cpp
         nodes/extract_coord.cpp
         nodes/point_xy.cpp
         nodes/knot.cpp
