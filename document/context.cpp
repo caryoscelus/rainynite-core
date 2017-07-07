@@ -55,8 +55,9 @@ TimePeriod Context::get_period() const {
 void Context::set_fps(Time::fps_type fps_) {
     fps = fps_;
     time.set_fps(fps);
-    // NOTE: this will not notify!
     time_period->mod().set_fps(fps);
+    time_period->changed();
+    changed_fps(fps);
 }
 
 } // namespace core

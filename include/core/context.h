@@ -80,6 +80,7 @@ public:
     void set_fps(Time::fps_type fps_);
 public:
     boost::signals2::signal<void(Time)> changed_time;
+    boost::signals2::signal<void(Time::fps_type)> changed_fps;
 private:
     std::weak_ptr<Document> document;
     Time::fps_type fps = 1;
