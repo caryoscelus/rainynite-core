@@ -37,7 +37,7 @@ public:
     Time() :
         Time(0)
     {}
-    explicit Time(int seconds_, fps_type fps_, double frames_=0.0) :
+    explicit Time(double seconds_, fps_type fps_, double frames_=0.0) :
         fps(fps_)
     {
         set_frames(seconds_*fps_+frames_);
