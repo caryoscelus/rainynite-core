@@ -62,6 +62,8 @@ public:
     Time& operator/=(double other);
 public:
     void require_same_fps(Time const& other) const;
+    fps_type common_fps(Time const& other) const;
+    void to_common_fps(Time& other);
 public:
     double get_seconds() const {
         return seconds+frames/fps;

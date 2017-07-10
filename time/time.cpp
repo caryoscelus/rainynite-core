@@ -16,21 +16,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if __cplusplus >= 201703
+#include <numeric>
+#else
+#include <experimental/numeric>
+namespace std {
+using experimental::lcm;
+}
+#endif
+
 #include <core/time/time_period.h>
 
 namespace core {
 
 bool Time::operator==(Time const& other) const {
-    require_same_fps(other);
     return seconds == other.seconds
-        && frames == other.frames;
+        && frames * other.fps == other.frames * fps;
 }
 
 bool Time::operator<(Time const& other) const {
-    require_same_fps(other);
     return seconds < other.seconds
         || (seconds == other.seconds
-        && frames < other.frames);
+        && frames * other.fps < other.frames * fps);
 }
 
 Time& Time::operator++() {
@@ -45,14 +52,14 @@ Time& Time::operator--() {
 
 Time& Time::operator+=(Time const& other) {
     auto t = other;
-    t.set_fps(get_fps());
+    to_common_fps(t);
     set_frames(get_frames()+t.get_frames());
     return *this;
 }
 
 Time& Time::operator-=(Time const& other) {
     auto t = other;
-    t.set_fps(get_fps());
+    to_common_fps(t);
     set_frames(get_frames()-t.get_frames());
     return *this;
 }
@@ -71,6 +78,16 @@ void Time::require_same_fps(Time const& other) const {
     // consider zero case
     if (fps != other.fps)
         throw std::runtime_error("Time: fps mis-match");
+}
+
+Time::fps_type Time::common_fps(Time const& other) const {
+    return std::lcm(get_fps(), other.get_fps());
+}
+
+void Time::to_common_fps(Time& other) {
+    auto cfps = common_fps(other);
+    set_fps(cfps);
+    other.set_fps(cfps);
 }
 
 void Time::set_frames(double frames_) {

@@ -49,7 +49,9 @@ TEST_CASE("Time arithmetics", "[time]") {
 }
 
 TEST_CASE("Time FPS mismatch", "[time]") {
-    REQUIRE_THROWS(Time(1, 12, 10) < Time(1, 24, 5));
+    CHECK(Time(1, 12, 10) > Time(1, 24, 5));
+    auto t = Time(1, 12, 10) + Time(1, 24, 5);
+    CHECK(t == Time(3, 24, 1));
 }
 
 void test_period(TimePeriod const& period, unsigned amount) {
