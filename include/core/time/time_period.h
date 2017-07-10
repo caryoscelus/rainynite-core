@@ -68,9 +68,10 @@ public:
         first(0, 1), last(0, 1), fps(1)
     {}
     TimePeriod(Time first_, Time last_) :
-        first(first_), last(last_), fps(first_.get_fps())
+        first(first_), last(last_)
     {
-        first_.require_same_fps(last_);
+        first.to_common_fps(last);
+        fps = first.get_fps();
     }
     TimePeriod(TimePeriod const& other) :
         first(other.first), last(other.last), fps(other.fps)
