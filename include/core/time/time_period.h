@@ -100,6 +100,12 @@ public:
     inline Time get_last() const {
         return last;
     }
+    inline void set_first(Time t) {
+        first = t;
+    }
+    inline void set_last(Time t) {
+        last = t;
+    }
     inline Time::fps_type get_fps() const {
         return first.get_fps();
     }
