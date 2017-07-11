@@ -77,24 +77,7 @@ private:
     NODE_PROPERTY(default_value, T);
 };
 
-template <class T>
-class AnimatedNodeInfo : NODE_INFO_PARENTS(AnimatedNodeInfo<T>, Animated<T>)
-{
-public:
-    virtual std::string name() const override {
-        return "Animated<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">";
-    }
-    virtual AbstractReference new_empty() const override {
-        return std::make_shared<Animated<T>>();
-    }
-    virtual AbstractReference clone(AbstractValue const& source) const override {
-        return std::make_shared<Animated<T>>(static_cast<Animated<T> const&>(source));
-    }
-    virtual Type type() const override {
-        return typeid(T);
-    }
-};
-
+NODE_INFO_TEMPLATE(Animated, Animated<T>, T);
 TYPE_INSTANCES(AnimatedNodeInfo)
 
 } // namespace nodes
