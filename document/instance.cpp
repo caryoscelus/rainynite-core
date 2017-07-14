@@ -101,6 +101,10 @@ TYPE_INFO(DocumentType, "Document", [](auto&&) -> boost::any {
     throw serialize::DeserializationError("Document type cannot be deserialized");
 });
 
+TYPE_INFO(TimePointType, "Frame", [](auto&&) -> boost::any {
+    throw serialize::DeserializationError("Frame type cannot be deserialized");
+});
+
 class ValueTypeInfoBase {
 public:
     virtual std::string operator()(boost::any const& object) const = 0;

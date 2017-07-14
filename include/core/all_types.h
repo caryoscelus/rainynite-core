@@ -25,6 +25,7 @@
 #include <geom_helpers/knots.h>
 #include <core/color.h>
 #include <core/renderable.h>
+#include <core/time_point.h>
 
 #define TYPE_INSTANCES_WO_RENDERABLE(Template) \
     template class Template<bool>; \
@@ -41,6 +42,7 @@
 
 #define TYPE_INSTANCES(Template) \
     TYPE_INSTANCES_WO_RENDERABLE(Template) \
-    template class Template<Renderable>;
+    template class Template<Renderable>; \
+    template class Template<TimePointType>;
 
 #endif
