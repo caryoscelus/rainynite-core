@@ -21,6 +21,7 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <limits>
 
 #include <boost/operators.hpp>
 
@@ -46,6 +47,9 @@ public:
         fps(1)
     {
         set_frames(seconds_);
+    }
+    static Time infinity() {
+        return Time(std::numeric_limits<double>::infinity());
     }
     Time(Time const& other) = default;
     Time(Time&& other) = default;
