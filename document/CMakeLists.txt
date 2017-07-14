@@ -8,6 +8,7 @@ target_sources(document
         color.cpp
         node/abstract_node.cpp
         nodes/animated.cpp
+        nodes/frame_list.cpp
         nodes/time.cpp
         nodes/time_list.cpp
         nodes/time_period.cpp
