@@ -39,7 +39,7 @@ public:
         try {
             auto a = get_a()->get(time);
             auto b = get_b()->get(time);
-            if (a != cached_a && b != cached_b) {
+            if (a != cached_a || b != cached_b) {
                 cached_a = a;
                 cached_b = b;
                 morphing::prepare_average(cached_a, cached_b, avg_a, avg_b);
