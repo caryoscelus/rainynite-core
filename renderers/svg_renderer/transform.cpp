@@ -29,7 +29,7 @@ namespace renderers {
 
 const std::string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)svg";
 const std::string svg_scale = R"svg(<g transform="scale({x}, {y})">{source}</g>)svg";
-const std::string svg_rotate = R"svg(<g transform="rotate({angle})">{source}</g>)svg";
+const std::string svg_rotate = R"svg(<g transform="rotate({angle}, {x}, {y})">{source}</g>)svg";
 
 class TranslateSvgRenderer : SVG_RENDERER_MODULE_CLASS(TranslateSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Translate");
@@ -62,9 +62,12 @@ public:
     virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
         auto source = node.get_property("source");
         auto angle = node.get_property_as<double>("angle")->get(time);
+        auto origin = node.get_property_as<Geom::Point>("origin")->get(time);
         return fmt::format(
             svg_rotate,
             "angle"_a=angle*360,
+            "x"_a=origin.x(),
+            "y"_a=origin.y(),
             "source"_a=node_to_svg(source, time, settings)
         );
     }

@@ -28,11 +28,13 @@ class Rotate : public RenderableNode {
 public:
     Rotate() {
         init<Renderable>(source, {});
+        init<Geom::Point>(origin, {});
         init<double>(angle, {});
     }
 
 private:
     NODE_PROPERTY(source, Renderable);
+    NODE_PROPERTY(origin, Geom::Point);
     NODE_PROPERTY(angle, double);
 };
 
