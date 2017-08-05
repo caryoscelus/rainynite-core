@@ -43,6 +43,7 @@ RGBA32 parse_hex(std::string const& s) {
         case 4:
             color.a = (c & 0xf) * 1.0 * 0xff / 0xf;
             c >>= 4;
+            __attribute__ ((fallthrough));
         case 3:
             color.b = (c & 0xf) * 1.0 * 0xff / 0xf;
             c >>= 4;
@@ -53,6 +54,7 @@ RGBA32 parse_hex(std::string const& s) {
         case 8:
             color.a = c & 0xff;
             c >>= 8;
+            __attribute__ ((fallthrough));
         case 6:
             color.b = c & 0xff;
             c >>= 8;
