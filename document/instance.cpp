@@ -17,6 +17,7 @@
  */
 
 #include <core/node_info.h>
+#include <core/node/list.h>
 #include <core/types.h>
 #include <core/all_types.h>
 #include <core/serialize/node_writer.h>
@@ -130,6 +131,8 @@ TYPE_INSTANCES_WO_RENDERABLE(ValueNodeInfo)
 TYPE_INSTANCES(ListNodeInfo)
 
 } // namespace nodes
+
+REGISTER_NODE(UntypedListValue);
 
 namespace serialize {
 

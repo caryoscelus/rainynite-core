@@ -22,27 +22,19 @@
 #include "abstract_list.h"
 #include "abstract_value.h"
 
+#include <core/nothing.h>
+
 namespace core {
 
-template <typename T>
-class ListValue : public BaseValue<std::vector<T>>, public AbstractListLinked {
+/**
+ * Base template for typed and mixed lists
+ */
+template <class S, class P>
+class ListValueBase : public AbstractListLinked, public P {
 public:
-    ListValue() = default;
-public:
-    std::vector<T> get(Time t) const override {
-        // TODO: caching
-        std::vector<T> result;
-        std::transform(
-            values.begin(),
-            values.end(),
-            std::back_inserter(result),
-            [t](auto e) {
-                return e->get(t);
-            }
-        );
-        return result;
-    }
     std::vector<AbstractReference> get_links() const override {
+        if constexpr (std::is_same_v<S, AbstractValue>)
+            return values;
         std::vector<AbstractReference> result;
         std::transform(
             values.begin(),
@@ -62,11 +54,11 @@ public:
     AbstractReference get_link(size_t i) const override {
         return values.at(i);
     }
-    boost::optional<Type> get_link_type(size_t) const override {
-        return boost::make_optional(Type(typeid(T)));
+    size_t link_count() const override {
+        return values.size();
     }
     void set_link(size_t i, AbstractReference value) override {
-        if (auto node = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value))) {
+        if (auto node = std::dynamic_pointer_cast<S>(std::move(value))) {
             values.at(i) = node;
             signal_connections[i].disconnect();
             signal_connections[i] = node->subscribe([this]() {
@@ -75,11 +67,8 @@ public:
             this->changed();
         }
     }
-    size_t link_count() const override {
-        return values.size();
-    }
     void push_back(AbstractReference value) override {
-        if (auto e = std::dynamic_pointer_cast<BaseValue<T>>(std::move(value))) {
+        if (auto e = std::dynamic_pointer_cast<S>(std::move(value))) {
             values.push_back(e);
             signal_connections.push_back(e->subscribe([this]() {
                 this->changed();
@@ -90,7 +79,7 @@ public:
         }
     }
     void push_new() override {
-        push_value<T>({});
+        push_value<Nothing>({});
     }
     void remove(size_t index) override {
         values.erase(values.begin()+index);
@@ -99,9 +88,58 @@ public:
     bool is_editable_list() const override {
         return true;
     }
-private:
-    std::vector<BaseReference<T>> values;
+protected:
+    std::vector<std::shared_ptr<S>> values;
     std::vector<boost::signals2::connection> signal_connections;
+};
+
+/**
+ * Typed (homogeneous) list
+ */
+template <typename T>
+class ListValue : public ListValueBase<BaseValue<T>, BaseValue<std::vector<T>>> {
+public:
+    ListValue() = default;
+public:
+    std::vector<T> get(Time t) const override {
+        // TODO: caching
+        std::vector<T> result;
+        std::transform(
+            this->values.begin(),
+            this->values.end(),
+            std::back_inserter(result),
+            [t](auto e) {
+                return e->get(t);
+            }
+        );
+        return result;
+    }
+    boost::optional<Type> get_link_type(size_t) const override {
+        return boost::make_optional(Type(typeid(T)));
+    }
+    void push_new() override {
+        this->template push_value<T>({});
+    }
+};
+
+/**
+ * Untyped (heterogeneous) list value
+ */
+class UntypedListValue : public ListValueBase<AbstractValue, AbstractValue> {
+public:
+    Type get_type() const override {
+        return typeid(Nothing);
+    }
+    boost::any get_any(Time) const {
+        return Nothing();
+    }
+    boost::optional<std::type_index> get_link_type(size_t) const override {
+        return boost::none;
+    }
+public:
+    static Type static_type() {
+        return typeid(Nothing);
+    }
 };
 
 } // namespace core
