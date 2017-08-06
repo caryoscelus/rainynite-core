@@ -53,8 +53,7 @@ public:
         this->get_frame_list()->new_id();
     }
 public:
-    virtual void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
-        AbstractReference r;
+    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
         f(find_appropriate(time), time);
     }
 private:
