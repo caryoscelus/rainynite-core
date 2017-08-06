@@ -30,7 +30,9 @@ class DynamicNode : public ProxyNode<T> {
 public:
     DynamicNode() {
         this->template init<std::string>(node_type, {});
-        this->template init_property(arguments, boost::make_optional(Type(typeid(Nothing))), std::make_shared<UntypedListValue>());
+        auto args = std::make_shared<UntypedListValue>();
+        args->new_id();
+        this->template init_property(arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
     void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
