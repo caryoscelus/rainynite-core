@@ -12,6 +12,7 @@ target_sources(document
         nodes/time.cpp
         nodes/time_list.cpp
         nodes/time_period.cpp
+        nodes/dynamic_node.cpp
         nodes/morph.cpp
         nodes/format_string.cpp
         nodes/color_mix.cpp
