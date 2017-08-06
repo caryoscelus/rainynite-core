@@ -53,7 +53,7 @@ public:
         return changed_signal.connect(slot);
     }
 
-public:
+private:
     /**
      * Signal to subscribe to this object's changes
      */
