@@ -20,6 +20,12 @@
 
 namespace core {
 
+AbstractNode::~AbstractNode() {
+    for (auto const& connection : signal_connections) {
+        connection.disconnect();
+    }
+}
+
 AbstractReference AbstractNode::get_property(std::string const& name) const {
     auto result = named_storage.find(name);
     if (result == named_storage.end())

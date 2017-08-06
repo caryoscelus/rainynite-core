@@ -27,6 +27,8 @@ namespace core {
 
 class AbstractNode : public AbstractListLinked {
 public:
+    virtual ~AbstractNode();
+public:
     AbstractReference get_property(std::string const& name) const;
     template <typename T>
     BaseReference<T> get_property_as(std::string const& name) const {
