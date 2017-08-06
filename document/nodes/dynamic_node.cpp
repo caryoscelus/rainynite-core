@@ -35,16 +35,25 @@ public:
 public:
     void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
         try {
-            auto node = make_node_with_name<AbstractListLinked>(get_node_type()->get(time));
+            auto type = get_node_type()->get(time);
+            if (cached_type != type) {
+                node = make_node_with_name<AbstractValue>(type);
+                cached_type = type;
+            }
             size_t i = 0;
+            auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
             for (auto const& arg : list_arguments()->get_links()) {
-                node->set_link(i, arg);
+                node_list->set_link(i, arg);
                 ++i;
             }
             f(std::dynamic_pointer_cast<AbstractValue>(node), time);
         } catch (...) {
         }
     }
+
+private:
+    mutable AbstractReference node;
+    mutable std::string cached_type;
 
 private:
     NODE_PROPERTY(node_type, std::string);
