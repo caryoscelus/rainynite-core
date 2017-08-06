@@ -65,5 +65,75 @@ private:
 NODE_INFO_TEMPLATE(DynamicNode, DynamicNode<T>, T);
 TYPE_INSTANCES(DynamicNodeNodeInfo)
 
+template <typename T>
+class DynamicListTie : public ProxyListNode<T> {
+public:
+    DynamicListTie() {
+        this->template init<std::string>(node_type, {});
+        auto args = std::make_shared<UntypedListValue>();
+        args->new_id();
+        this->template init_property(arguments_list, boost::make_optional(Type(typeid(Nothing))), std::move(args));
+    }
+public:
+    void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
+        try {
+            using List = std::vector<AbstractReference>;
+            using Iter = List::const_iterator;
+            auto list_of_lists = list_arguments_list()->get_links();
+            if (list_of_lists.size() == 0)
+                return;
+            std::vector<List> links;
+            std::vector<std::pair<Iter, Iter>> iterators;
+            bool fail = false;
+            std::transform(
+                std::begin(list_of_lists),
+                std::end(list_of_lists),
+                std::back_inserter(links),
+                [&fail](auto node) {
+                    if (auto list_node = dynamic_cast<AbstractListLinked*>(node.get()))
+                        return list_node->get_links();
+                    fail = true;
+                    return List();
+                }
+            );
+            if (fail) {
+                return;
+                // throw
+            }
+            std::transform(
+                std::begin(links),
+                std::end(links),
+                std::back_inserter(iterators),
+                [](auto const& list) -> std::pair<Iter, Iter> {
+                    return { std::begin(list), std::end(list) };
+                }
+            );
+            auto type = get_node_type()->get(time);
+            while (true) {
+                auto node = make_node_with_name<AbstractValue>(type);
+                auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
+                if (!list_node)
+                    return;
+                size_t i = 0;
+                for (auto& e : iterators) {
+                    if (e.first == e.second)
+                        return;
+                    list_node->set_link(i, *e.first);
+                    ++e.first;
+                    ++i;
+                }
+                f(node, time);
+            }
+        } catch (...) {
+        }
+    }
+private:
+    NODE_PROPERTY(node_type, std::string);
+    NODE_LIST_PROPERTY(arguments_list, Nothing);
+};
+
+NODE_INFO_TEMPLATE(DynamicListTie, DynamicListTie<T>, std::vector<T>);
+TYPE_INSTANCES(DynamicListTieNodeInfo)
+
 } // namespace nodes
 } // namespace core
