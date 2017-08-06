@@ -25,6 +25,7 @@
 #include <core/renderable.h>
 #include <core/document.h>
 #include <core/color.h>
+#include <core/nothing_io.h>
 
 #include <geom_helpers/knots_io.h>
 #include <geom_helpers/point_io.h>
@@ -71,6 +72,10 @@ TYPE_INFO(Color, "Color", [](auto&& s) {
 } // namespace color
 
 namespace nodes {
+
+TYPE_INFO(Nothing, "Nothing", [](auto&&) {
+    return Nothing();
+});
 
 TYPE_INFO(bool, "Boolean", [](auto&& s) {
     if (s == "true")

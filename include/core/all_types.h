@@ -26,8 +26,10 @@
 #include <core/color.h>
 #include <core/renderable.h>
 #include <core/time_point.h>
+#include <core/nothing.h>
 
 #define TYPE_INSTANCES_WO_RENDERABLE(Template) \
+    template class Template<Nothing>; \
     template class Template<bool>; \
     template class Template<double>; \
     template class Template<std::string>; \
