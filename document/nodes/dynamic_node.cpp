@@ -60,7 +60,7 @@ private:
     NODE_LIST_PROPERTY(arguments, Nothing);
 };
 
-NODE_INFO_TEMPLATE(DynamicNode, DynamicNode<T>, std::vector<T>);
+NODE_INFO_TEMPLATE(DynamicNode, DynamicNode<T>, T);
 TYPE_INSTANCES(DynamicNodeNodeInfo)
 
 } // namespace nodes
