@@ -40,18 +40,18 @@ public:
         get_periods()->new_id();
     }
 public:
-    virtual void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
+    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
         AbstractReference r;
         Time t;
         std::tie(r, t) = find_appropriate(time);
         f(r, t);
     }
 public:
-    virtual void add_child(TimePeriod period, AbstractReference ref) override {
+    void add_child(TimePeriod period, AbstractReference ref) override {
         list_periods()->push_value(period);
         list_children()->push_back(std::dynamic_pointer_cast<BaseValue<T>>(ref));
     }
-    virtual size_t child_count() const override {
+    size_t child_count() const override {
         return list_children()->link_count();
     }
 private:

@@ -100,16 +100,16 @@ public:
         return false;
     }
 public:
-    virtual Type get_type() const override {
+    Type get_type() const override {
         return typeid(T);
     }
-    virtual boost::any get_any(Time t) const override {
+    boost::any get_any(Time t) const override {
         return get(t);
     }
-    virtual void set_any(boost::any const& value_) override {
+    void set_any(boost::any const& value_) override {
         set(boost::any_cast<T>(value_));
     }
-    virtual bool can_set_any(boost::any const& value_) const override {
+    bool can_set_any(boost::any const& value_) const override {
         return can_set() && value_.type() == typeid(T);
     }
 public:
