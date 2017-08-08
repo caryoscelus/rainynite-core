@@ -17,7 +17,7 @@
  */
 
 #include <core/node_info.h>
-#include <core/node/node.h>
+#include <core/node/proxy_node.h>
 #include <core/node/property.h>
 #include <core/all_types.h>
 
@@ -40,5 +40,38 @@ public:
 };
 
 REGISTER_NODE(ToUntypedList);
+
+template <typename T>
+class ListElement : public ProxyNode<T> {
+public:
+    ListElement() {
+        this->init_property("source", boost::none, make_value<Nothing>());
+        this->template init<double>(n, 0);
+    }
+    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
+        size_t n = std::max(get_n()->get(time), 0.0);
+        size_t i = 0;
+        auto list = this->get_property("source");
+        AbstractReference result = nullptr;
+        Time result_time;
+        list->step_into_list(
+            time,
+            [n, &i, &result, &result_time](AbstractReference e, Time t) {
+                if (i == n) {
+                    result = e;
+                    result_time = t;
+                }
+                ++i;
+            }
+        );
+        if (result)
+            f(result, result_time);
+    }
+private:
+    NODE_PROPERTY(n, double);
+};
+
+NODE_INFO_TEMPLATE(ListElement, ListElement<T>, T);
+TYPE_INSTANCES(ListElementNodeInfo)
 
 } // namespace core
