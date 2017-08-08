@@ -48,7 +48,7 @@ public:
     }
 public:
     void add_child(TimePeriod period, AbstractReference ref) override {
-        list_periods()->push_value(period);
+        push_value(list_periods(), period);
         list_children()->push_back(std::dynamic_pointer_cast<BaseValue<T>>(ref));
     }
     size_t child_count() const override {

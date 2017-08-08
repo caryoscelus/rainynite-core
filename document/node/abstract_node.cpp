@@ -17,6 +17,7 @@
  */
 
 #include <core/node/abstract_node.h>
+#include <core/node/abstract_value.h>
 
 namespace core {
 

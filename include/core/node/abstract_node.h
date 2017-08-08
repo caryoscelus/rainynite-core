@@ -21,6 +21,9 @@
 
 #include <map>
 
+#include <boost/signals2/signal.hpp>
+
+#include <core/time/time.h>
 #include "abstract_list.h"
 
 namespace core {

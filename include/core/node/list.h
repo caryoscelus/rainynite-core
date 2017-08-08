@@ -21,10 +21,16 @@
 
 #include "abstract_list.h"
 #include "abstract_value.h"
+#include "make.h"
 
 #include <core/nothing.h>
 
 namespace core {
+
+template <typename T, typename P>
+void push_value(P list, T const& value) {
+    list->push_back(make_value<T>(value));
+}
 
 /**
  * Base template for typed and mixed lists
@@ -79,7 +85,7 @@ public:
         }
     }
     void push_new() override {
-        push_value<Nothing>({});
+        push_value<Nothing>(this, {});
     }
     void remove(size_t index) override {
         values.erase(values.begin()+index);
@@ -118,7 +124,7 @@ public:
         return boost::make_optional(Type(typeid(T)));
     }
     void push_new() override {
-        this->template push_value<T>({});
+        push_value<T>(this, {});
     }
 };
 

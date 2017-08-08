@@ -21,6 +21,7 @@
 
 #include <core/class_init.h>
 #include <core/node/abstract_node.h>
+#include <core/node/abstract_value.h>
 #include <core/time/time.h>
 
 #include <2geom/point.h>

@@ -19,7 +19,7 @@
 #ifndef __CORE__NODE__ABSTRACT_LIST_H__A2D19F78
 #define __CORE__NODE__ABSTRACT_LIST_H__A2D19F78
 
-#include "make.h"
+#include "common.h"
 
 namespace core {
 
@@ -46,10 +46,6 @@ public:
     template <class T>
     BaseReference<T> get_link_as(size_t i) const {
         return std::dynamic_pointer_cast<BaseValue<T>>(get_link(i));
-    }
-    template <typename T>
-    void push_value(T const& value) {
-        push_back(make_value<T>(value));
     }
 };
 

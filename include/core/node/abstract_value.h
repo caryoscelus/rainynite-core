@@ -19,28 +19,17 @@
 #ifndef __CORE__NODE__ABSTRACT_VALUE_H__ACCED1BE
 #define __CORE__NODE__ABSTRACT_VALUE_H__ACCED1BE
 
-#include <typeindex>
-#include <stdexcept>
-
 #include <boost/any.hpp>
-#include <boost/optional.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
 #include <core/time/time.h>
 #include "notify.h"
+#include "abstract_list.h"
 
 namespace core {
 
 using Id = boost::uuids::uuid;
-using Type = std::type_index;
-
-class NodeAccessError : public std::runtime_error {
-public:
-    NodeAccessError(std::string const& msg) :
-        std::runtime_error(msg)
-    {}
-};
 
 class AbstractValue : public AbstractNotify {
 public:
@@ -117,10 +106,6 @@ public:
         return typeid(T);
     }
 };
-
-using AbstractReference = std::shared_ptr<AbstractValue>;
-template <typename T>
-using BaseReference = std::shared_ptr<BaseValue<T>>;
 
 } // namespace core
 
