@@ -76,6 +76,12 @@ private:
 };
 
 template <typename T>
+constexpr bool is_vector = false;
+
+template <typename U>
+constexpr bool is_vector<std::vector<U>> = true;
+
+template <typename T>
 class BaseValue : public AbstractValue {
 public:
     virtual T get(Time t) const = 0;
@@ -100,6 +106,15 @@ public:
     }
     bool can_set_any(boost::any const& value_) const override {
         return can_set() && value_.type() == typeid(T);
+    }
+    void step_into_list(Time time, std::function<void(std::shared_ptr<AbstractValue>,Time)> f) const override {
+        if constexpr (is_vector<T>) {
+            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_links()) {
+                f(e, time);
+            }
+        } else {
+            AbstractValue::step_into_list(time, f);
+        }
     }
 public:
     static Type static_type() {
