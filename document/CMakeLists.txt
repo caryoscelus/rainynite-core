@@ -29,6 +29,7 @@ target_sources(document
         nodes/file_string.cpp
         nodes/math.cpp
         nodes/rectangle.cpp
+        nodes/list.cpp
         nodes/renderable/empty.cpp
         nodes/renderable/composite.cpp
         nodes/renderable/image.cpp
