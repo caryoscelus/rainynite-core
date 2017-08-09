@@ -30,6 +30,7 @@ target_sources(document
         nodes/math.cpp
         nodes/rectangle.cpp
         nodes/list.cpp
+        nodes/random.cpp
         nodes/renderable/empty.cpp
         nodes/renderable/composite.cpp
         nodes/renderable/image.cpp
