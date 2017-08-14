@@ -52,6 +52,9 @@ public:
         );
         return result;
     }
+    std::vector<AbstractReference> get_list_links(Time /*t*/) const override {
+        return get_links();
+    }
     void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
         for (auto child : values) {
             f(child, time);

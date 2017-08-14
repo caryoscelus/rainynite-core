@@ -27,6 +27,7 @@ class AbstractListLinked {
 public:
     virtual size_t link_count() const = 0;
     virtual std::vector<AbstractReference> get_links() const = 0;
+    virtual std::vector<AbstractReference> get_list_links(Time t) const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
     virtual boost::optional<Type> get_link_type(size_t i) const = 0;
     virtual void set_link(size_t i, AbstractReference value) = 0;

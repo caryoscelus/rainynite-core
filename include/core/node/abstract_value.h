@@ -84,7 +84,23 @@ constexpr bool is_vector<std::vector<U>> = true;
 template <typename T>
 class BaseValue : public AbstractValue {
 public:
-    virtual T get(Time t) const = 0;
+    virtual T get(Time t) const {
+        if constexpr (is_vector<T>) {
+            using E = T::value_type;
+            T result;
+            step_into_list(
+                t,
+                [&result](auto node, auto time) {
+                    if (auto value = dynamic_cast<BaseValue<E>*>(node.get())) {
+                        result.push_back(value->get(time));
+                    }
+                }
+            );
+            return result;
+        } else {
+            throw NodeAccessError("Get not implemented in node");
+        }
+    }
     virtual void set(T) {
         throw NodeAccessError("Cannot set");
     }
@@ -109,7 +125,7 @@ public:
     }
     void step_into_list(Time time, std::function<void(std::shared_ptr<AbstractValue>,Time)> f) const override {
         if constexpr (is_vector<T>) {
-            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_links()) {
+            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_list_links()) {
                 f(e, time);
             }
         } else {
