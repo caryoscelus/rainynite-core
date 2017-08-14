@@ -86,7 +86,7 @@ class BaseValue : public AbstractValue {
 public:
     virtual T get(Time t) const {
         if constexpr (is_vector<T>) {
-            using E = T::value_type;
+            using E = typename T::value_type;
             T result;
             step_into_list(
                 t,
@@ -125,7 +125,7 @@ public:
     }
     void step_into_list(Time time, std::function<void(std::shared_ptr<AbstractValue>,Time)> f) const override {
         if constexpr (is_vector<T>) {
-            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_list_links()) {
+            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_list_links(time)) {
                 f(e, time);
             }
         } else {
