@@ -98,6 +98,7 @@ public:
             );
             return result;
         } else {
+            (void) t;
             throw NodeAccessError("Get not implemented in node");
         }
     }
