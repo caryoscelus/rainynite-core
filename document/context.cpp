@@ -33,15 +33,12 @@ Context::Context(std::weak_ptr<Document> document_) :
 }
 
 Context::Context(Context const& context_) :
-    Context(context_.document)
+    document(context_.document),
+    fps(context_.fps),
+    time(context_.time),
+    time_period(context_.time_period),
+    render_settings(context_.render_settings)
 {
-    render_settings = context_.render_settings;
-    fps = context_.fps;
-    time_period = context_.time_period;
-    time = context_.time;
-}
-
-Context::~Context() {
 }
 
 void Context::set_period(TimePeriod const& period) {

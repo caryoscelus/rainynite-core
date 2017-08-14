@@ -34,13 +34,13 @@ class Value;
 
 class Context {
 public:
-    explicit Context() = default;
+    Context() = default;
     explicit Context(std::weak_ptr<Document> document_);
     Context(Context const& context_);
     Context(Context&& context_) = default;
     Context& operator=(Context const& context_) = default;
     Context& operator=(Context&& context_) = default;
-    virtual ~Context();
+    virtual ~Context() = default;
 public:
     inline std::shared_ptr<Document> get_document() const {
         return document.lock();
