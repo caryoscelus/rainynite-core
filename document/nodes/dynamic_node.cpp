@@ -77,9 +77,9 @@ public:
 public:
     void step_into_list(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
-            using List = std::vector<AbstractReference>;
+            using List = std::vector<NodeInContext>;
             using Iter = List::const_iterator;
-            auto list_of_lists = list_arguments_list()->get_links();
+            auto list_of_lists = list_arguments_list()->get_list_links(ctx);
             if (list_of_lists.size() == 0)
                 return;
             std::vector<List> links;
@@ -89,9 +89,14 @@ public:
                 std::begin(list_of_lists),
                 std::end(list_of_lists),
                 std::back_inserter(links),
-                [&fail](auto node) {
-                    if (auto list_node = dynamic_cast<AbstractListLinked*>(node.get()))
-                        return list_node->get_links();
+                [&fail](auto e) {
+                    if (auto list_node = dynamic_cast<AbstractListLinked*>(e.node.get())) {
+                        try {
+                            return list_node->get_list_links(e.context);
+                        } catch (...) {
+                            fail = true;
+                        }
+                    }
                     fail = true;
                     return List();
                 }
@@ -118,7 +123,8 @@ public:
                 for (auto& e : iterators) {
                     if (e.first == e.second)
                         return;
-                    list_node->set_link(i, *e.first);
+                    // TODO: fix contexts
+                    list_node->set_link(i, e.first->node);
                     ++e.first;
                     ++i;
                 }
