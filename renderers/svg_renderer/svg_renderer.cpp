@@ -167,9 +167,9 @@ std::string SvgRenderer::Impl::frame_to_svg(std::shared_ptr<Context> context) co
     return node_to_svg({document->get_root(), context});
 }
 
-std::string get_extra_style(AbstractNode const& node, std::shared_ptr<Context> context, SvgRendererSettings const& settings) {
+std::string get_extra_style(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& settings) {
     if (settings.extra_style)
-        return node.get_property_value<std::string>("_svg_style", context).value_or("");
+        return node.get_property_value<std::string>("_svg_style", ctx).value_or("");
     return "";
 }
 
@@ -186,7 +186,7 @@ std::string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) 
     auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
     auto name = node_name(*node_ptr);
     try {
-        return class_init::name_info<SvgRendererModule>(name)(nic, settings);
+        return class_init::name_info<SvgRendererModule>(name)(*node, context, settings);
     } catch (class_init::TypeLookupError const&) {
         if (auto proxy = dynamic_cast<ProxyNode<Renderable>*>(node)) {
             std::string result;

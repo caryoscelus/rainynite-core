@@ -28,13 +28,13 @@ namespace renderers {
 class CompositeSvgRenderer : SVG_RENDERER_MODULE_CLASS(CompositeSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Composite");
 public:
-    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
+    std::string operator()(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
         auto list_node = node.get_property("layers");
         std::string s;
         list_node->step_into_list(
-            time,
-            [&s, &settings](AbstractReference child, Time t) {
-                s += node_to_svg(child, t, settings);
+            ctx,
+            [&s, &settings](NodeInContext e) {
+                s += node_to_svg(e, settings);
             }
         );
         return s;

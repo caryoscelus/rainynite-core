@@ -4,7 +4,7 @@ add_library(renderers SHARED)
 ## for some reason it doesn't work to simply link renderers with svg_renderer:
 ## when installed, librenderers.so cannot find libsvg_renderer.so...
 
-set(BUILD_SVG_RENDERER_MODULES OFF CACHE BOOL "Whether to build actual SVG renderer modules (useful to turn off to just run basic tests)")
+set(BUILD_SVG_RENDERER_MODULES ON CACHE BOOL "Whether to build actual SVG renderer modules (useful to turn off to just run basic tests)")
 
 target_sources(renderers
     PRIVATE

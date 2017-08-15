@@ -35,10 +35,10 @@ namespace renderers {
 class ShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(ShapeSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("RenderShape");
 public:
-    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const override {
-        auto shape = node.get_property("shape")->get_any(time);
-        auto color = node.get_property_as<colors::Color>("fill_color")->get(time);
-        auto extra_style = get_extra_style(node, time, settings);
+    std::string operator()(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
+        auto shape = node.get_property("shape")->get_any(ctx);
+        auto color = node.get_property_as<colors::Color>("fill_color")->get(ctx);
+        auto extra_style = get_extra_style(node, ctx, settings);
         return fmt::format(
             render_svg_shape(shape),
             "fill_color"_a=colors::to_hex24(color),
