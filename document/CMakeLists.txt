@@ -37,7 +37,7 @@ if (BUILD_NODES)
             nodes/math.cpp
             nodes/rectangle.cpp
             nodes/list.cpp
-#             nodes/random.cpp
+            nodes/random.cpp
             nodes/renderable/empty.cpp
             nodes/renderable/composite.cpp
             nodes/renderable/image.cpp

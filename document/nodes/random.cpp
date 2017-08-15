@@ -41,24 +41,36 @@ public:
         init<double>(seed, 0);
     }
 public:
-    std::vector<double> get(Time time) const override {
+    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
+        std::vector<NodeInContext> result;
+        random_sequence(ctx, [&result, ctx](auto r) {
+            result.emplace_back(make_value<double>(r), ctx);
+        });
+        return result;
+    }
+    std::vector<double> get(std::shared_ptr<Context> ctx) const override {
+        std::vector<double> result;
+        random_sequence(ctx, [&result](auto r) {
+            result.push_back(r);
+        });
+        return result;
+    }
+private:
+    void random_sequence(std::shared_ptr<Context> ctx, auto f) const {
         try {
-            int length = get_length()->get(time);
+            int length = get_length()->get(ctx);
             if (length < 1)
-                return {};
-            auto seed = get_seed()->get(time);
+                return;
+            auto seed = get_seed()->get(ctx);
             random_engine.seed(seed);
             // TODO: cache
-            std::vector<double> result;
             while (length--) {
                 double random = random_engine();
                 static_assert(decltype(random_engine)::min() == 0);
                 random /= decltype(random_engine)::max()+1;
-                result.push_back(random);
+                f(random);
             }
-            return result;
         } catch (...) {
-            return {};
         }
     }
 private:
