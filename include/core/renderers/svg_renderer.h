@@ -39,8 +39,8 @@ public:
     SvgRenderer();
     virtual ~SvgRenderer();
 public:
-    virtual void render(Context context) override;
-    virtual bool is_finished() override;
+    void render(Context&& context) override;
+    bool is_finished() override;
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

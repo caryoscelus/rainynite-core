@@ -20,6 +20,7 @@
 #define __CORE__NODE__ABSTRACT_LIST_H__A2D19F78
 
 #include "common.h"
+#include "node_in_context.h"
 
 namespace core {
 
@@ -27,7 +28,7 @@ class AbstractListLinked {
 public:
     virtual size_t link_count() const = 0;
     virtual std::vector<AbstractReference> get_links() const = 0;
-    virtual std::vector<AbstractReference> get_list_links(Time t) const = 0;
+    virtual std::vector<NodeInContext> get_list_links(std::shared_ptr<Context>) const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
     virtual boost::optional<Type> get_link_type(size_t i) const = 0;
     virtual void set_link(size_t i, AbstractReference value) = 0;

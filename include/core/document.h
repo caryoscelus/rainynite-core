@@ -49,7 +49,7 @@ public:
     }
 
 public:
-    virtual DocumentType get(Time) const override;
+    DocumentType get(std::shared_ptr<Context> context) const override;
 
 private:
     std::shared_ptr<Context> default_context;

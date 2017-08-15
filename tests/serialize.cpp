@@ -42,9 +42,9 @@ public:
         init<double>(b, 0);
     }
 public:
-    virtual double get(Time t) const override {
-        auto a = get_a()->get(t);
-        auto b = get_b()->get(t);
+    double get(std::shared_ptr<Context> context) const override {
+        auto a = get_a()->get(context);
+        auto b = get_b()->get(context);
         return a+b;
     }
 

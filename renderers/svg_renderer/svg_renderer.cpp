@@ -69,13 +69,13 @@ struct SvgRenderer::Impl {
         parent(parent_)
     {}
 
-    void render(Context context_);
+    void render(Context&& context_);
     void prepare_render();
-    void render_frame(Time time);
+    void render_frame(std::shared_ptr<Context> context);
     void finish_render();
-    std::string definitions(Time time) const;
-    std::string frame_to_svg(Time time) const;
-    std::string node_to_svg(core::AbstractReference root_ptr, Time time) const;
+//     std::string definitions(std::shared_ptr<Context> context) const;
+    std::string frame_to_svg(std::shared_ptr<Context> context) const;
+    std::string node_to_svg(NodeInContext nic) const;
     void start_png();
     void render_png(std::string const& svg, std::string const& png);
     void quit_png();
@@ -105,15 +105,15 @@ SvgRenderer::SvgRenderer() :
 SvgRenderer::~SvgRenderer() {
 }
 
-void SvgRenderer::render(Context context) {
-    impl->render(context);
+void SvgRenderer::render(Context&& context_) {
+    impl->render(std::move(context_));
 }
 
 bool SvgRenderer::is_finished() {
     return impl->finished;
 }
 
-void SvgRenderer::Impl::render(Context context_) {
+void SvgRenderer::Impl::render(Context&& context_) {
     finished = false;
     rendered_frames_count = 0;
     std::cout << "SvgRenderer start" << std::endl;
@@ -128,7 +128,9 @@ void SvgRenderer::Impl::render(Context context_) {
     }
     prepare_render();
     for (auto time : context.get_period()) {
-        render_frame(time);
+        auto ctx = std::make_shared<Context>(context);
+        ctx->set_time(time);
+        render_frame(ctx);
         ++rendered_frames_count;
     }
     finish_render();
@@ -145,48 +147,51 @@ void SvgRenderer::Impl::prepare_render() {
         start_png();
 }
 
-void SvgRenderer::Impl::render_frame(Time time) {
+void SvgRenderer::Impl::render_frame(std::shared_ptr<Context> context) {
+    auto time = context->get_time();
     auto base_name = "renders/{:.3f}"_format(time.get_seconds());
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
-    auto size = document->get_size()->get(time);
-    auto viewport_size = document->get_property_value<Geom::Point>("_svg_viewport_size", time).value_or(size);
-    auto definitions = document->get_property_value<std::string>("_svg_definitions", time).value_or("");
-    fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(time));
+    auto size = document->get_size()->get(context);
+    auto viewport_size = document->get_property_value<Geom::Point>("_svg_viewport_size", context).value_or(size);
+    auto definitions = document->get_property_value<std::string>("_svg_definitions", context).value_or("");
+    fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(context));
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, base_name+".png");
     parent->finished_frame()(time);
 }
 
-std::string SvgRenderer::Impl::frame_to_svg(Time time) const {
-    return node_to_svg(document->get_root(), time);
+std::string SvgRenderer::Impl::frame_to_svg(std::shared_ptr<Context> context) const {
+    return node_to_svg({document->get_root(), context});
 }
 
-std::string get_extra_style(AbstractNode const& node, Time time, SvgRendererSettings const& settings) {
+std::string get_extra_style(AbstractNode const& node, std::shared_ptr<Context> context, SvgRendererSettings const& settings) {
     if (settings.extra_style)
-        return node.get_property_value<std::string>("_svg_style", time).value_or("");
+        return node.get_property_value<std::string>("_svg_style", context).value_or("");
     return "";
 }
 
-std::string node_to_svg(AbstractReference node_ptr, Time time, SvgRendererSettings const& settings) {
+std::string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
+    auto node_ptr = nic.node;
+    auto context = nic.context;
     if (!node_ptr)
         return "";
-    auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
     if (node_ptr->get_type() != typeid(Renderable)) {
         std::cerr << "ERROR: node isn't renderable" << std::endl;
         // throw
         return "";
     }
+    auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
     auto name = node_name(*node_ptr);
     try {
-        return class_init::name_info<SvgRendererModule>(name)(*node, time, settings);
+        return class_init::name_info<SvgRendererModule>(name)(nic, settings);
     } catch (class_init::TypeLookupError const&) {
         if (auto proxy = dynamic_cast<ProxyNode<Renderable>*>(node)) {
             std::string result;
-            proxy->step_into(time, [&settings, &result](AbstractReference cnode, Time t) {
-                result = node_to_svg(cnode, t, settings);
+            proxy->step_into(context, [&settings, &result](NodeInContext nic) {
+                result = node_to_svg(nic, settings);
             });
             return result;
         }
@@ -196,8 +201,8 @@ std::string node_to_svg(AbstractReference node_ptr, Time time, SvgRendererSettin
     }
 }
 
-std::string SvgRenderer::Impl::node_to_svg(AbstractReference node_ptr, Time time) const {
-    return renderers::node_to_svg(node_ptr, time, settings);
+std::string SvgRenderer::Impl::node_to_svg(NodeInContext nic) const {
+    return renderers::node_to_svg(nic, settings);
 }
 
 void SvgRenderer::Impl::finish_render() {

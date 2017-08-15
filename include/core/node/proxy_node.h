@@ -36,14 +36,14 @@ public:
     /**
      * Call arbitrary function with correct child node and time.
      */
-    virtual void step_into(Time time, std::function<void(AbstractReference,Time)> f) const = 0;
+    virtual void step_into(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const = 0;
 public:
-    virtual T get(Time time) const override {
+    T get(std::shared_ptr<Context> context) const override {
         try {
             T result;
-            step_into(time, [&result](AbstractReference node, Time t) {
-                if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
-                    result = vnode->get(t);
+            step_into(context, [&result](NodeInContext nic) {
+                if (auto vnode = dynamic_cast<BaseValue<T>*>(nic.node.get()))
+                    result = vnode->get(nic.context);
             });
             return result;
         } catch (...) {

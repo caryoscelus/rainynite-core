@@ -62,11 +62,11 @@ inline NodeInfo const& get_node_type(std::string const& name) {
 }
 
 template <typename T>
-std::shared_ptr<T> make_node_with_name(std::string const& name, AbstractReference source=nullptr, Time time={}) {
+std::shared_ptr<T> make_node_with_name(std::string const& name, AbstractReference source=nullptr, std::shared_ptr<Context> context=nullptr) {
     auto node = get_node_type(name).new_empty();
     node->new_id(); // TODO: don't do that here?
-    if (source) {
-        auto value = source->get_any(time);
+    if (source && context) {
+        auto value = source->get_any(context);
         if (node->can_set_source(source))
             node->set_source(source);
         else if (source && node->can_set_any(value))

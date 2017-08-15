@@ -41,8 +41,8 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
 Document::~Document() {
 }
 
-DocumentType Document::get(Time) const {
-    return DocumentType();
+DocumentType Document::get(std::shared_ptr<Context> /*context*/) const {
+    return {};
 }
 
 std::shared_ptr<Context> Document::get_default_context() {

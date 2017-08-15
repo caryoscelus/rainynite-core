@@ -31,13 +31,13 @@ namespace renderers {
 
 struct SvgRendererSettings;
 
-std::string get_extra_style(AbstractNode const& node, Time time, SvgRendererSettings const& settings);
+std::string get_extra_style(NodeInContext nic, SvgRendererSettings const& settings);
 
-std::string node_to_svg(AbstractReference node_ptr, Time time, SvgRendererSettings const&);
+std::string node_to_svg(NodeInContext nic, SvgRendererSettings const&);
 
 class SvgRendererModule {
 public:
-    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& settings) const = 0;
+    virtual std::string operator()(NodeInContext nic, SvgRendererSettings const& settings) const = 0;
 };
 
 #define SVG_RENDERER_MODULE_CLASS(Self) \

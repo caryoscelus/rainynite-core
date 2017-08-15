@@ -23,7 +23,6 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
-#include <core/time/time.h>
 #include "notify.h"
 #include "abstract_list.h"
 
@@ -37,7 +36,7 @@ public:
         return false;
     }
     virtual Type get_type() const = 0;
-    virtual boost::any get_any(Time t) const = 0;
+    virtual boost::any get_any(std::shared_ptr<Context> context) const = 0;
     virtual void set_any(boost::any const& /*value*/) {
         throw NodeAccessError("Cannot set");
     }
@@ -54,11 +53,11 @@ public:
         return false;
     }
     /**
-     * Call arbitrary function with all dynamic list member nodes and correct times.
+     * Call arbitrary function with all dynamic list member nodes in context.
      *
      * If this node is not a list, throws NodeAccessError
      */
-    virtual void step_into_list(Time /*time*/, std::function<void(std::shared_ptr<AbstractValue>,Time)> /*f*/) const {
+    virtual void step_into_list(std::shared_ptr<Context> /*context*/, std::function<void(NodeInContext)> /*f*/) const {
         throw NodeAccessError("This node is not a list");
     }
 public:
@@ -84,25 +83,25 @@ constexpr bool is_vector<std::vector<U>> = true;
 template <typename T>
 class BaseValue : public AbstractValue {
 public:
-    virtual T get(Time t) const {
+    virtual T get(std::shared_ptr<Context> context) const {
         if constexpr (is_vector<T>) {
             using E = typename T::value_type;
             T result;
             step_into_list(
-                t,
-                [&result](auto node, auto time) {
-                    if (auto value = dynamic_cast<BaseValue<E>*>(node.get())) {
-                        result.push_back(value->get(time));
+                context,
+                [&result](NodeInContext nic) {
+                    if (auto value = dynamic_cast<BaseValue<E>*>(nic.node.get())) {
+                        result.push_back(value->get(nic.context));
                     }
                 }
             );
             return result;
         } else {
-            (void) t;
+            (void) context;
             throw NodeAccessError("Get not implemented in node");
         }
     }
-    virtual void set(T) {
+    virtual void set(T /*value*/) {
         throw NodeAccessError("Cannot set");
     }
     virtual T& mod() {
@@ -115,8 +114,8 @@ public:
     Type get_type() const override {
         return typeid(T);
     }
-    boost::any get_any(Time t) const override {
-        return get(t);
+    boost::any get_any(std::shared_ptr<Context> context) const override {
+        return get(context);
     }
     void set_any(boost::any const& value_) override {
         set(boost::any_cast<T>(value_));
@@ -124,13 +123,13 @@ public:
     bool can_set_any(boost::any const& value_) const override {
         return can_set() && value_.type() == typeid(T);
     }
-    void step_into_list(Time time, std::function<void(std::shared_ptr<AbstractValue>,Time)> f) const override {
+    void step_into_list(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
         if constexpr (is_vector<T>) {
-            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_list_links(time)) {
-                f(e, time);
+            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_list_links(context)) {
+                f(e);
             }
         } else {
-            AbstractValue::step_into_list(time, f);
+            AbstractValue::step_into_list(context, f);
         }
     }
 public:

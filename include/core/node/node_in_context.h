@@ -1,5 +1,5 @@
 /*
- *  renderable.h - renderable type
+ *  node_in_context.h - node in context
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,22 +16,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__RENDERABLE_H__38DF5A1E
-#define __CORE__RENDERABLE_H__38DF5A1E
+#ifndef __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
+#define __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
 
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <memory>
 
 namespace core {
 
-class Renderable {
-};
+class AbstractValue;
+class Context;
 
-class RenderableNode : public Node<Renderable> {
-public:
-    Renderable get(std::shared_ptr<Context> /*context*/) const override {
-        return {};
-    }
+struct NodeInContext {
+    std::shared_ptr<AbstractValue> node;
+    std::shared_ptr<Context> context;
+
+    NodeInContext(std::shared_ptr<AbstractValue> node_=nullptr, std::shared_ptr<Context> context_=nullptr) :
+        node(node_),
+        context(context_)
+    {}
 };
 
 } // namespace core
