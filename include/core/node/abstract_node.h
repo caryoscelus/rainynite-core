@@ -53,9 +53,6 @@ public:
         return names_list[id];
     }
 public:
-    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> /*context*/) const override {
-        throw NodeAccessError("get_list_links not implemented");
-    }
     std::vector<AbstractReference> get_links() const override {
         return numbered_storage;
     }

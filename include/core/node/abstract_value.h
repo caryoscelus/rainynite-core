@@ -60,6 +60,13 @@ public:
     virtual void step_into_list(std::shared_ptr<Context> /*context*/, std::function<void(NodeInContext)> /*f*/) const {
         throw NodeAccessError("This node is not a list");
     }
+    virtual std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const {
+        std::vector<NodeInContext> result;
+        step_into_list(ctx, [&result](auto e) {
+            result.push_back(std::move(e));
+        });
+        return result;
+    }
 public:
     Id get_id() {
         return id;
@@ -125,9 +132,8 @@ public:
     }
     void step_into_list(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
         if constexpr (is_vector<T>) {
-            for (auto&& e : dynamic_cast<AbstractListLinked const*>(this)->get_list_links(context)) {
+            for (auto&& e : get_list_links(context))
                 f(e);
-            }
         } else {
             AbstractValue::step_into_list(context, f);
         }

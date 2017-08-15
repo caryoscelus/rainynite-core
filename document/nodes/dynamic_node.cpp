@@ -44,7 +44,7 @@ public:
             }
             size_t i = 0;
             auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
-            for (auto const& arg : list_arguments()->get_list_links(ctx)) {
+            for (auto const& arg : get_arguments()->get_list_links(ctx)) {
                 // TODO: context
                 node_list->set_link(i, arg.node);
                 ++i;
@@ -80,7 +80,7 @@ public:
         try {
             using List = std::vector<NodeInContext>;
             using Iter = List::const_iterator;
-            auto list_of_lists = list_arguments_list()->get_list_links(ctx);
+            auto list_of_lists = get_arguments_list()->get_list_links(ctx);
             if (list_of_lists.size() == 0)
                 return;
             std::vector<List> links;
@@ -91,12 +91,9 @@ public:
                 std::end(list_of_lists),
                 std::back_inserter(links),
                 [&fail](auto e) {
-                    if (auto list_node = dynamic_cast<AbstractListLinked*>(e.node.get())) {
-                        try {
-                            return list_node->get_list_links(e.context);
-                        } catch (...) {
-                            fail = true;
-                        }
+                    try {
+                        return e.node->get_list_links(e.context);
+                    } catch (...) {
                     }
                     fail = true;
                     return List();

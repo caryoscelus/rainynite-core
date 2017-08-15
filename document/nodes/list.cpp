@@ -30,7 +30,7 @@ public:
     }
 public:
     std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
-        if (auto list = std::dynamic_pointer_cast<AbstractListLinked>(get_property("source")))
+        if (auto list = get_property("source"))
             return list->get_list_links(ctx);
         return {};
     }
