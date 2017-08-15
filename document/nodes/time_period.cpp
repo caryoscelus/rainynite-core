@@ -31,8 +31,8 @@ public:
         init<Time>(last, {});
     }
 public:
-    TimePeriod get(Time t) const override {
-        return {get_first()->get(t), get_last()->get(t)};
+    TimePeriod get(std::shared_ptr<Context> ctx) const override {
+        return {get_first()->get(ctx), get_last()->get(ctx)};
     }
 
 private:
@@ -49,9 +49,9 @@ public:
         init<Time>(length, {});
     }
 public:
-    TimePeriod get(Time t) const override {
-        auto first = get_first()->get(t);
-        return {first, first+get_length()->get(t)};
+    TimePeriod get(std::shared_ptr<Context> ctx) const override {
+        auto first = get_first()->get(ctx);
+        return {first, first+get_length()->get(ctx)};
     }
 
 private:

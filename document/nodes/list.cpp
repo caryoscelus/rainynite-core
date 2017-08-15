@@ -29,12 +29,12 @@ public:
         init_property("source", boost::none, make_value<Nothing>());
     }
 public:
-    void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
+    void step_into_list(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         if (auto list = get_property("source")) {
-            list->step_into_list(time, f);
+            list->step_into_list(ctx, f);
         }
     }
-    Nothing get(Time /*time*/) const override {
+    Nothing get(std::shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
 };
@@ -48,24 +48,22 @@ public:
         this->init_property("source", boost::none, make_value<Nothing>());
         this->template init<double>(n, 0);
     }
-    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
-        size_t n = std::max(get_n()->get(time), 0.0);
+    void step_into(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
+        size_t n = std::max(get_n()->get(ctx), 0.0);
         size_t i = 0;
         auto list = this->get_property("source");
-        AbstractReference result = nullptr;
-        Time result_time;
+        NodeInContext result;
         list->step_into_list(
-            time,
-            [n, &i, &result, &result_time](AbstractReference e, Time t) {
+            ctx,
+            [n, &i, &result](NodeInContext nic) {
                 if (i == n) {
-                    result = e;
-                    result_time = t;
+                    result = nic;
                 }
                 ++i;
             }
         );
         if (result)
-            f(result, result_time);
+            f(result);
     }
 private:
     NODE_PROPERTY(n, double);

@@ -35,16 +35,16 @@ public:
         init<double>(progress, 0);
     }
 public:
-    Geom::BezierKnots get(Time time) const override {
+    Geom::BezierKnots get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto a = get_a()->get(time);
-            auto b = get_b()->get(time);
+            auto a = get_a()->get(ctx);
+            auto b = get_b()->get(ctx);
             if (a != cached_a || b != cached_b) {
                 morphing::prepare_average(a, b, avg_a, avg_b);
                 cached_a = a;
                 cached_b = b;
             }
-            auto t = get_progress()->get(time);
+            auto t = get_progress()->get(ctx);
             return morphing::simple_average(avg_a, avg_b, t);
         } catch (...) {
             // TODO: DEBUG

@@ -22,6 +22,7 @@
 #include <core/node/proxy_node.h>
 #include <core/time/time_period.h>
 #include <core/all_types.h>
+#include <core/context.h>
 
 namespace core {
 namespace nodes {
@@ -35,13 +36,15 @@ public:
         this->template init<Time>(step, {});
     }
 public:
-    void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
+    void step_into_list(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
             auto source = get_source();
-            auto period = get_period()->get(time);
-            auto step = get_step()->get(time);
+            auto period = get_period()->get(ctx);
+            auto step = get_step()->get(ctx);
             for (auto t = period.get_first(); t < period.get_last(); t += step) {
-                f(source, t);
+                auto nctx = std::make_shared<Context>(*ctx);
+                nctx->set_time(t);
+                f({source, nctx});
             }
         } catch (...) {
         }

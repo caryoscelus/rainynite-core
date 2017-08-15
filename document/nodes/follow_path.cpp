@@ -19,6 +19,7 @@
 #include <core/node_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
+#include <core/context.h>
 
 #include <geom_helpers/knots.h>
 
@@ -31,10 +32,10 @@ public:
         init<Geom::BezierKnots>(path, {});
     }
 public:
-    virtual Geom::Point get(Time time) const override {
+    Geom::Point get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto path = get_path()->get(time);
-            auto t = time.get_seconds();
+            auto path = get_path()->get(ctx);
+            auto t = ctx->get_time().get_seconds();
             return Geom::knots_to_path(path).pointAt(t);
         } catch (...) {
             return {};

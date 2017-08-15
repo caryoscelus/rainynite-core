@@ -1,6 +1,6 @@
 add_library(document SHARED)
 
-set(BUILD_NODES OFF CACHE BOOL "Whether to build actual nodes (useful to turn off to just run basic tests)")
+set(BUILD_NODES ON CACHE BOOL "Whether to build actual nodes (useful to turn off to just run basic tests)")
 
 target_sources(document
     PRIVATE

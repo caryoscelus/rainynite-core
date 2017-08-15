@@ -31,9 +31,9 @@ public:
         init<Geom::BezierKnots>(path, {});
     }
 public:
-    virtual std::vector<Geom::Knot> get(Time time) const override {
+    std::vector<Geom::Knot> get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto path = get_path()->get(time);
+            auto path = get_path()->get(ctx);
             return path.knots;
         } catch (...) {
             return {};
@@ -53,10 +53,10 @@ public:
         init<bool>(closed, false);
     }
 public:
-    virtual Geom::BezierKnots get(Time time) const override {
+    Geom::BezierKnots get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto knots = get_knots()->get(time);
-            auto closed = get_closed()->get(time);
+            auto knots = get_knots()->get(ctx);
+            auto closed = get_closed()->get(ctx);
             return Geom::BezierKnots(knots, closed);
         } catch (...) {
             return {};

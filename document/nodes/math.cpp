@@ -36,9 +36,9 @@ public:
         init<double>(b, 0);
     }
 public:
-    virtual double get(Time time) const override {
+    double get(std::shared_ptr<Context> ctx) const override {
         try {
-            return get_a()->get(time) + get_b()->get(time);
+            return get_a()->get(ctx) + get_b()->get(ctx);
         } catch (...) {
             return {};
         }
@@ -57,9 +57,9 @@ public:
         init<double>(b, 0);
     }
 public:
-    virtual double get(Time time) const override {
+    double get(std::shared_ptr<Context> ctx) const override {
         try {
-            return get_a()->get(time) * get_b()->get(time);
+            return get_a()->get(ctx) * get_b()->get(ctx);
         } catch (...) {
             return {};
         }
@@ -77,9 +77,9 @@ public:
         init<double>(turns, 0);
     }
 public:
-    virtual double get(Time time) const override {
+    double get(std::shared_ptr<Context> ctx) const override {
         try {
-            return std::sin(get_turns()->get(time) * pi * 2);
+            return std::sin(get_turns()->get(ctx) * pi * 2);
         } catch (...) {
             return {};
         }

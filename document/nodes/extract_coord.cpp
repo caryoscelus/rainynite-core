@@ -35,9 +35,9 @@ public:
         init<Geom::Point>(point, {});
     }
 public:
-    virtual double get(Time time) const override {
+    double get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto p = get_point()->get(time);
+            auto p = get_point()->get(ctx);
             return p[dimension];
         } catch (...) {
             return {};

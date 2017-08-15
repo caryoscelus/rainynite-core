@@ -32,10 +32,10 @@ public:
         init<double>(progress, 0);
     }
 public:
-    virtual colors::Color get(Time time) const override {
-        auto a = get_a()->get(time);
-        auto b = get_b()->get(time);
-        auto t = get_progress()->get(time);
+    colors::Color get(std::shared_ptr<Context> ctx) const override {
+        auto a = get_a()->get(ctx);
+        auto b = get_b()->get(ctx);
+        auto t = get_progress()->get(ctx);
         return colors::mix(a, b, t);
     }
 

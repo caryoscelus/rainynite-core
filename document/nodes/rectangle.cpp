@@ -32,9 +32,9 @@ public:
         init<Geom::Point>(size, {});
     }
 public:
-    virtual Geom::Rectangle get(Time time) const override {
+    Geom::Rectangle get(std::shared_ptr<Context> ctx) const override {
         try {
-            return {get_position()->get(time), get_size()->get(time)};
+            return {get_position()->get(ctx), get_size()->get(ctx)};
         } catch (...) {
             return {};
         }
@@ -55,9 +55,9 @@ public:
         init<Geom::Point>(b, {});
     }
 public:
-    virtual Geom::Rectangle get(Time time) const override {
+    Geom::Rectangle get(std::shared_ptr<Context> ctx) const override {
         try {
-            return Geom::Rectangle::fromTwoPoints(get_a()->get(time), get_b()->get(time));
+            return Geom::Rectangle::fromTwoPoints(get_a()->get(ctx), get_b()->get(ctx));
         } catch (...) {
             return {};
         }

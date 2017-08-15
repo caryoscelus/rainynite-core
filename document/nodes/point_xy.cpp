@@ -32,9 +32,9 @@ public:
         init<double>(y, 0);
     }
 public:
-    virtual Geom::Point get(Time time) const override {
+    Geom::Point get(std::shared_ptr<Context> ctx) const override {
         try {
-            return {get_x()->get(time), get_y()->get(time)};
+            return {get_x()->get(ctx), get_y()->get(ctx)};
         } catch (...) {
             return {};
         }

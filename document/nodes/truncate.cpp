@@ -31,9 +31,9 @@ public:
         init<double>(source, 0);
     }
 public:
-    virtual double get(Time time) const override {
+    double get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto v = get_source()->get(time);
+            auto v = get_source()->get(ctx);
             double r;
             std::modf(v, &r);
             return r;

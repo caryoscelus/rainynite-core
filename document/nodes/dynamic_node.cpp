@@ -35,9 +35,9 @@ public:
         this->template init_property(arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
-    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
+    void step_into(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
-            auto type = get_node_type()->get(time);
+            auto type = get_node_type()->get(ctx);
             if (cached_type != type) {
                 node = make_node_with_name<AbstractValue>(type);
                 cached_type = type;
@@ -48,7 +48,7 @@ public:
                 node_list->set_link(i, arg);
                 ++i;
             }
-            f(std::dynamic_pointer_cast<AbstractValue>(node), time);
+            f({node, ctx});
         } catch (...) {
         }
     }
@@ -75,7 +75,7 @@ public:
         this->template init_property(arguments_list, boost::make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
-    void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
+    void step_into_list(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
             using List = std::vector<AbstractReference>;
             using Iter = List::const_iterator;
@@ -108,7 +108,7 @@ public:
                     return { std::begin(list), std::end(list) };
                 }
             );
-            auto type = get_node_type()->get(time);
+            auto type = get_node_type()->get(ctx);
             while (true) {
                 auto node = make_node_with_name<AbstractValue>(type);
                 auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
@@ -122,7 +122,7 @@ public:
                     ++e.first;
                     ++i;
                 }
-                f(node, time);
+                f({node, ctx});
             }
         } catch (...) {
         }

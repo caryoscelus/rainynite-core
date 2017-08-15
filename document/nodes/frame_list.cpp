@@ -19,6 +19,7 @@
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/all_types.h>
+#include <core/context.h>
 
 namespace core {
 namespace nodes {
@@ -31,7 +32,7 @@ public:
         this->template init<Time>(time, {});
     }
 public:
-    TimePointType get(Time /*t*/) const override {
+    TimePointType get(std::shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
 private:
@@ -53,30 +54,31 @@ public:
         this->get_frame_list()->new_id();
     }
 public:
-    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
-        f(find_appropriate(time), time);
+    void step_into(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
+        f(find_appropriate(context));
     }
 private:
-    AbstractReference find_appropriate(Time time) const {
+    AbstractReference find_appropriate(std::shared_ptr<Context> context) const {
         auto aframes = list_frame_list()->get_links();
         std::vector<TimePoint<T>> frames;
         std::transform(
             std::begin(aframes),
             std::end(aframes),
             std::back_inserter(frames),
-            [time](auto frame) -> TimePoint<T> {
+            [context](auto frame) -> TimePoint<T> {
                 if (auto f = std::dynamic_pointer_cast<Frame<T>>(frame))
-                    return { f->get_time()->get(time), f->get_value() };
+                    return { f->get_time()->get(context), f->get_value() };
                 return { Time::infinity(), nullptr };
             }
         );
         std::sort(
             std::begin(frames),
             std::end(frames),
-            [time](auto a, auto b) -> bool {
+            [](auto a, auto b) -> bool {
                 return a.time < b.time;
             }
         );
+        auto time = context->get_time();
         TimePoint<T> const* last = nullptr;
         for (auto const& frame : frames) {
             if (!frame.value)
