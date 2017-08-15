@@ -20,6 +20,7 @@
 #define __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
 
 #include <memory>
+#include <utility>
 
 namespace core {
 
@@ -34,6 +35,15 @@ struct NodeInContext {
         node(node_),
         context(context_)
     {}
+
+    operator bool() const {
+        return node && context;
+    }
+
+    using pair = std::pair<std::shared_ptr<AbstractValue>, std::shared_ptr<Context>>;
+    operator pair() const {
+        return { node, context };
+    }
 };
 
 } // namespace core
