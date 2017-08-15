@@ -44,12 +44,16 @@ public:
             }
             size_t i = 0;
             auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
-            for (auto const& arg : get_arguments()->get_list_links(ctx)) {
-                // TODO: context
-                node_list->set_link(i, arg.node);
-                ++i;
+            if (auto args = this->get_property("arguments")) {
+                for (auto const& arg : args->get_list_links(ctx)) {
+                    // TODO: context
+                    node_list->set_link(i, arg.node);
+                    ++i;
+                }
+                f({node, ctx});
+            } else {
+                throw NodeAccessError("DynamicNode: arguments property is null");
             }
-            f({node, ctx});
         } catch (...) {
         }
     }
@@ -80,7 +84,10 @@ public:
         try {
             using List = std::vector<NodeInContext>;
             using Iter = List::const_iterator;
-            auto list_of_lists = get_arguments_list()->get_list_links(ctx);
+            auto args = this->get_property("arguments_list");
+            if (!args)
+                throw NodeAccessError("arguments list is null");
+            auto list_of_lists = args->get_list_links(ctx);
             if (list_of_lists.size() == 0)
                 return;
             std::vector<List> links;
