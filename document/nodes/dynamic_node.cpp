@@ -44,8 +44,9 @@ public:
             }
             size_t i = 0;
             auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
-            for (auto const& arg : list_arguments()->get_links()) {
-                node_list->set_link(i, arg);
+            for (auto const& arg : list_arguments()->get_list_links(ctx)) {
+                // TODO: context
+                node_list->set_link(i, arg.node);
                 ++i;
             }
             f({node, ctx});
