@@ -39,6 +39,7 @@ public:
     RandomList() {
         init<double>(length, 0);
         init<double>(seed, 0);
+        init<double>(max, 1);
     }
 public:
     std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
@@ -62,10 +63,11 @@ private:
             if (length < 1)
                 return;
             auto seed = get_seed()->get(ctx);
+            auto max = get_max()->get(ctx);
             random_engine.seed(seed);
             // TODO: cache
             while (length--) {
-                double random = random_engine();
+                double random = random_engine() * max;
                 static_assert(decltype(random_engine)::min() == 0);
                 random /= decltype(random_engine)::max()+1;
                 f(random);
@@ -78,6 +80,7 @@ private:
 private:
     NODE_PROPERTY(length, double);
     NODE_PROPERTY(seed, double);
+    NODE_PROPERTY(max, double);
 };
 
 REGISTER_NODE(RandomList);
