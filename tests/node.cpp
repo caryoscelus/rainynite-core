@@ -26,6 +26,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/node/traverse.h>
+#include <core/context.h>
 
 using namespace core;
 
@@ -40,9 +41,9 @@ public:
         init<Real>(b, 0);
     }
 public:
-    virtual Real get(Time t) const override {
-        auto a = get_a()->get(t);
-        auto b = get_b()->get(t);
+    Real get(std::shared_ptr<Context> context) const override {
+        auto a = get_a()->get(context);
+        auto b = get_b()->get(context);
         return a+b;
     }
 
@@ -50,17 +51,22 @@ public:
     NODE_PROPERTY(b, Real);
 };
 
+std::shared_ptr<Context> zero_context() {
+    static auto instance = std::make_shared<Context>();
+    return instance;
+}
+
 TEST_CASE("Test Add node", "[node]") {
     auto add = std::make_shared<Add>();
     auto one = make_value<Real>(1.0);
     auto two = make_value<Real>(2.0);
-    CHECK(add->get(Time()) == 0.0);
+    CHECK(add->get(zero_context()) == 0.0);
     add->set_a(one);
-    CHECK(add->get(Time()) == 1.0);
+    CHECK(add->get(zero_context()) == 1.0);
     add->set_property("b", two);
-    CHECK(add->get(Time()) == 3.0);
+    CHECK(add->get(zero_context()) == 3.0);
     one->set(4.0);
-    CHECK(add->get(Time()) == 6.0);
+    CHECK(add->get(zero_context()) == 6.0);
 }
 
 class Sum : public Node<Real> {
@@ -69,8 +75,8 @@ public:
         init<List<Real>>(list, {});
     }
 public:
-    virtual Real get(Time t) const override {
-        auto list = get_list()->get(t);
+    Real get(std::shared_ptr<Context> context) const override {
+        auto list = get_list()->get(context);
         Real result = 0;
         for (auto const& x : list)
             result += x;
@@ -83,13 +89,13 @@ public:
 TEST_CASE("Sum Node", "[node]") {
     auto list = make_value<List<Real>>();
     auto sum = std::make_shared<Sum>();
-    CHECK(sum->get(Time()) == 0.0);
+    CHECK(sum->get(zero_context()) == 0.0);
     sum->set_property("list", list);
-    CHECK(sum->get(Time()) == 0.0);
+    CHECK(sum->get(zero_context()) == 0.0);
     list->mod().push_back(1.0);
-    CHECK(sum->get(Time()) == 1.0);
+    CHECK(sum->get(zero_context()) == 1.0);
     list->mod().push_back(4.0);
-    CHECK(sum->get(Time()) == 5.0);
+    CHECK(sum->get(zero_context()) == 5.0);
 }
 
 class SumNode : public Node<Real> {
@@ -98,11 +104,11 @@ public:
         init<List<BaseReference<Real>>>(list, {});
     }
 public:
-    virtual Real get(Time t) const override {
-        auto list = get_list()->get(t);
+    Real get(std::shared_ptr<Context> context) const override {
+        auto list = get_list()->get(context);
         Real result = 0;
         for (auto x : list)
-            result += x->get(t);
+            result += x->get(context);
         return result;
     }
 
@@ -112,16 +118,16 @@ public:
 TEST_CASE("Real node sum", "[node]") {
     auto list = make_value<List<BaseReference<Real>>>();
     auto sum = std::make_shared<SumNode>();
-    CHECK(sum->get(Time()) == 0.0);
+    CHECK(sum->get(zero_context()) == 0.0);
     sum->set_property("list", list);
-    CHECK(sum->get(Time()) == 0.0);
+    CHECK(sum->get(zero_context()) == 0.0);
     auto one = make_value<Real>(1.0);
     list->mod().push_back(one);
-    CHECK(sum->get(Time()) == 1.0);
+    CHECK(sum->get(zero_context()) == 1.0);
     list->mod().push_back(one);
-    CHECK(sum->get(Time()) == 2.0);
+    CHECK(sum->get(zero_context()) == 2.0);
     one->set(3.0);
-    CHECK(sum->get(Time()) == 6.0);
+    CHECK(sum->get(zero_context()) == 6.0);
 }
 
 std::string value_to_string(AbstractReference node) {

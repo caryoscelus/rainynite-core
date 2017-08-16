@@ -30,9 +30,9 @@ const std::string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x
 class ImageSvgRenderer : SVG_RENDERER_MODULE_CLASS(ImageSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Image");
 public:
-    virtual std::string operator()(AbstractNode const& node, Time time, SvgRendererSettings const& /*settings*/) const override {
-        auto fname = node.get_property_as<std::string>("file_path")->get(time);
-        auto size = node.get_property_as<Geom::Point>("size")->get(time);
+    std::string operator()(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& /*settings*/) const override {
+        auto fname = node.get_property_as<std::string>("file_path")->get(ctx);
+        auto size = node.get_property_as<Geom::Point>("size")->get(ctx);
         return fmt::format(svg_image, fname, size.x(), size.y());
     }
 };

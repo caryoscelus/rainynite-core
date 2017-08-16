@@ -32,9 +32,9 @@ public:
         init<std::string>(file_name, "");
     }
 public:
-    virtual std::string get(Time time) const override {
+    std::string get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto fname = get_file_name()->get(time);
+            auto fname = get_file_name()->get(ctx);
             std::ifstream stream(fname);
             std::stringstream buffer;
             buffer << stream.rdbuf();

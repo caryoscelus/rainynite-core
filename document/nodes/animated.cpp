@@ -23,6 +23,7 @@
 #include <core/nodes/animated.h>
 #include <core/types.h>
 #include <core/all_types.h>
+#include <core/context.h>
 
 namespace core {
 namespace nodes {
@@ -40,11 +41,8 @@ public:
         get_periods()->new_id();
     }
 public:
-    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
-        AbstractReference r;
-        Time t;
-        std::tie(r, t) = find_appropriate(time);
-        f(r, t);
+    void step_into(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
+        f(find_appropriate(context));
     }
 public:
     void add_child(TimePeriod period, AbstractReference ref) override {
@@ -55,16 +53,19 @@ public:
         return list_children()->link_count();
     }
 private:
-    std::pair<AbstractReference, Time> find_appropriate(Time time) const {
+    NodeInContext find_appropriate(std::shared_ptr<Context> ctx) const {
         size_t i = 0;
-        for (auto period : get_periods()->get(time)) {
+        auto time = ctx->get_time();
+        for (auto period : get_periods()->get(ctx)) {
             period.set_fps(time.get_fps());
             if (period.contains(time)) {
-                return { list_children()->get_link(i), calculate_time(period, time) };
+                auto nctx = std::make_shared<Context>(*ctx);
+                nctx->set_time(calculate_time(period, time));
+                return { list_children()->get_link(i), nctx };
             }
             ++i;
         }
-        return { get_default_value(), time };
+        return { get_default_value(), ctx };
     }
     Time calculate_time(TimePeriod const& period, Time time) const {
         auto a = period.get_first();

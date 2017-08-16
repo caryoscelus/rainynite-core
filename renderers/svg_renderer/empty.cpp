@@ -24,7 +24,7 @@ namespace renderers {
 class EmptySvgRenderer : SVG_RENDERER_MODULE_CLASS(EmptySvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Empty");
 public:
-    virtual std::string operator()(AbstractNode const& /*node*/, Time /*time*/, SvgRendererSettings const& /*settings*/) const override {
+    std::string operator()(AbstractNode const& /*node*/, std::shared_ptr<Context> /*ctx*/, SvgRendererSettings const& /*settings*/) const override {
         return "";
     }
 };

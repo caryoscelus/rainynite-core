@@ -1,5 +1,5 @@
 /*
- *  follow_path.cpp - follow path node
+ *  node_in_context.h - node in context
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,37 +16,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node_info.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
-#include <core/context.h>
+#ifndef __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
+#define __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
 
-#include <geom_helpers/knots.h>
+#include <memory>
+#include <utility>
 
 namespace core {
-namespace nodes {
 
-class FollowPath : public Node<Geom::Point> {
-public:
-    FollowPath() {
-        init<Geom::BezierKnots>(path, {});
-    }
-public:
-    Geom::Point get(std::shared_ptr<Context> ctx) const override {
-        try {
-            auto path = get_path()->get(ctx);
-            auto t = ctx->get_time().get_seconds();
-            return Geom::knots_to_path(path).pointAt(t);
-        } catch (...) {
-            return {};
-        }
+class AbstractValue;
+class Context;
+
+struct NodeInContext {
+    std::shared_ptr<AbstractValue> node;
+    std::shared_ptr<Context> context;
+
+    NodeInContext(std::shared_ptr<AbstractValue> node_=nullptr, std::shared_ptr<Context> context_=nullptr) :
+        node(node_),
+        context(context_)
+    {}
+
+    operator bool() const {
+        return node && context;
     }
 
-private:
-    NODE_PROPERTY(path, Geom::BezierKnots);
+    using pair = std::pair<std::shared_ptr<AbstractValue>, std::shared_ptr<Context>>;
+    operator pair() const {
+        return { node, context };
+    }
 };
 
-REGISTER_NODE(FollowPath);
-
-} // namespace nodes
 } // namespace core
+
+#endif

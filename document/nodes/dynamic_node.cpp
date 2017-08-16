@@ -35,20 +35,25 @@ public:
         this->template init_property(arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
-    void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
+    void step_into(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
-            auto type = get_node_type()->get(time);
+            auto type = get_node_type()->get(ctx);
             if (cached_type != type) {
                 node = make_node_with_name<AbstractValue>(type);
                 cached_type = type;
             }
             size_t i = 0;
             auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
-            for (auto const& arg : list_arguments()->get_links()) {
-                node_list->set_link(i, arg);
-                ++i;
+            if (auto args = this->get_property("arguments")) {
+                for (auto const& arg : args->get_list_links(ctx)) {
+                    // TODO: context
+                    node_list->set_link(i, arg.node);
+                    ++i;
+                }
+                f({node, ctx});
+            } else {
+                throw NodeAccessError("DynamicNode: arguments property is null");
             }
-            f(std::dynamic_pointer_cast<AbstractValue>(node), time);
         } catch (...) {
         }
     }
@@ -75,11 +80,14 @@ public:
         this->template init_property(arguments_list, boost::make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
-    void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
+    void step_into_list(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
-            using List = std::vector<AbstractReference>;
+            using List = std::vector<NodeInContext>;
             using Iter = List::const_iterator;
-            auto list_of_lists = list_arguments_list()->get_links();
+            auto args = this->get_property("arguments_list");
+            if (!args)
+                throw NodeAccessError("arguments list is null");
+            auto list_of_lists = args->get_list_links(ctx);
             if (list_of_lists.size() == 0)
                 return;
             std::vector<List> links;
@@ -89,9 +97,11 @@ public:
                 std::begin(list_of_lists),
                 std::end(list_of_lists),
                 std::back_inserter(links),
-                [&fail](auto node) {
-                    if (auto list_node = dynamic_cast<AbstractListLinked*>(node.get()))
-                        return list_node->get_links();
+                [&fail](auto e) {
+                    try {
+                        return e.node->get_list_links(e.context);
+                    } catch (...) {
+                    }
                     fail = true;
                     return List();
                 }
@@ -108,7 +118,7 @@ public:
                     return { std::begin(list), std::end(list) };
                 }
             );
-            auto type = get_node_type()->get(time);
+            auto type = get_node_type()->get(ctx);
             while (true) {
                 auto node = make_node_with_name<AbstractValue>(type);
                 auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
@@ -118,11 +128,12 @@ public:
                 for (auto& e : iterators) {
                     if (e.first == e.second)
                         return;
-                    list_node->set_link(i, *e.first);
+                    // TODO: fix contexts
+                    list_node->set_link(i, e.first->node);
                     ++e.first;
                     ++i;
                 }
-                f(node, time);
+                f({node, ctx});
             }
         } catch (...) {
         }

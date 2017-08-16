@@ -26,6 +26,7 @@
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
 #include <core/time/format.h>
+#include <core/context.h>
 
 #include <geom_helpers/knots.h>
 
@@ -39,19 +40,19 @@ public:
         init<double>(x, 0);
     }
 public:
-    double get(Time t) const override {
-        auto path = Geom::knots_to_path(get_path()->get(t));
+    double get(std::shared_ptr<Context> ctx) const override {
+        auto path = Geom::knots_to_path(get_path()->get(ctx));
         auto x = std::max(
             path.initialPoint().x(),
             std::min(
                 path.finalPoint().x(),
-                get_x()->get(t)
+                get_x()->get(ctx)
             )
         );
         auto path_roots = path.roots(x, Geom::X);
         // since x is in range between initial and final point, we should always get a root
         if (path_roots.size() < 1) {
-            throw std::runtime_error("TimeCurve: no roots found at time: {}"_format(t));
+            throw std::runtime_error("TimeCurve: no roots found at time: {}"_format(ctx->get_time()));
             return 0;
         }
         // enable this when upstream issue is resolved

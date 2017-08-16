@@ -30,9 +30,9 @@ public:
         init<colors::Color>(color, {});
     }
 public:
-    virtual std::string get(Time time) const override {
+    std::string get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto c = get_color()->get(time);
+            auto c = get_color()->get(ctx);
             return colors::to_hex24(c);
         } catch (...) {
             return {};

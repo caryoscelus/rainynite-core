@@ -29,7 +29,7 @@ public:
     bool is_const() const override {
         return true;
     }
-    T get(Time) const override {
+    T get(std::shared_ptr<Context> /*context*/) const override {
         return value;
     }
     void set(T value_) override {

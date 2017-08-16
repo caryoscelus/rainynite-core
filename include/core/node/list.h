@@ -52,12 +52,21 @@ public:
         );
         return result;
     }
-    std::vector<AbstractReference> get_list_links(Time /*t*/) const override {
-        return get_links();
+    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> context) const override {
+        std::vector<NodeInContext> result;
+        std::transform(
+            values.begin(),
+            values.end(),
+            std::back_inserter(result),
+            [context](auto&& e) {
+                return NodeInContext(e, context);
+            }
+        );
+        return result;
     }
-    void step_into_list(Time time, std::function<void(AbstractReference,Time)> f) const override {
-        for (auto child : values) {
-            f(child, time);
+    void step_into_list(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
+        for (auto&& child : values) {
+            f(NodeInContext(child, context));
         }
     }
     AbstractReference get_link(size_t i) const override {
@@ -110,15 +119,15 @@ class ListValue : public ListValueBase<BaseValue<T>, BaseValue<std::vector<T>>> 
 public:
     ListValue() = default;
 public:
-    std::vector<T> get(Time t) const override {
+    std::vector<T> get(std::shared_ptr<Context> context) const override {
         // TODO: caching
         std::vector<T> result;
         std::transform(
             this->values.begin(),
             this->values.end(),
             std::back_inserter(result),
-            [t](auto e) {
-                return e->get(t);
+            [context](auto e) {
+                return e->get(context);
             }
         );
         return result;
@@ -139,7 +148,7 @@ public:
     Type get_type() const override {
         return typeid(Nothing);
     }
-    boost::any get_any(Time) const {
+    boost::any get_any(std::shared_ptr<Context> /*context*/) const override {
         return Nothing();
     }
     boost::optional<std::type_index> get_link_type(size_t) const override {

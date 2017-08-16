@@ -1,5 +1,7 @@
 add_library(document SHARED)
 
+set(BUILD_NODES ON CACHE BOOL "Whether to build actual nodes (useful to turn off to just run basic tests)")
+
 target_sources(document
     PRIVATE
         context.cpp
@@ -7,39 +9,45 @@ target_sources(document
         instance.cpp
         color.cpp
         node/abstract_node.cpp
-        nodes/animated.cpp
-        nodes/frame_list.cpp
-        nodes/time.cpp
-        nodes/time_list.cpp
-        nodes/time_period.cpp
-        nodes/dynamic_node.cpp
-        nodes/morph.cpp
-        nodes/format_string.cpp
-        nodes/color_mix.cpp
-        nodes/follow_path.cpp
-        nodes/path_xy.cpp
-        nodes/extract_coord.cpp
-        nodes/point_xy.cpp
-        nodes/knot.cpp
-        nodes/knot_list.cpp
-        nodes/linear.cpp
-        nodes/truncate.cpp
-        nodes/to_string.cpp
-        nodes/color_string.cpp
-        nodes/file_string.cpp
-        nodes/math.cpp
-        nodes/rectangle.cpp
-        nodes/list.cpp
-        nodes/random.cpp
-        nodes/renderable/empty.cpp
-        nodes/renderable/composite.cpp
-        nodes/renderable/image.cpp
-        nodes/renderable/translate.cpp
-        nodes/renderable/scale.cpp
-        nodes/renderable/rotate.cpp
-        nodes/renderable/text.cpp
-        nodes/renderable/render_shape.cpp
 )
+
+if (BUILD_NODES)
+    target_sources(document
+        PRIVATE
+            nodes/animated.cpp
+            nodes/frame_list.cpp
+            nodes/time.cpp
+            nodes/time_list.cpp
+            nodes/time_period.cpp
+            nodes/dynamic_node.cpp
+            nodes/morph.cpp
+            nodes/format_string.cpp
+            nodes/color_mix.cpp
+            nodes/follow_path.cpp
+            nodes/path_xy.cpp
+            nodes/extract_coord.cpp
+            nodes/point_xy.cpp
+            nodes/knot.cpp
+            nodes/knot_list.cpp
+            nodes/linear.cpp
+            nodes/truncate.cpp
+            nodes/to_string.cpp
+            nodes/color_string.cpp
+            nodes/file_string.cpp
+            nodes/math.cpp
+            nodes/rectangle.cpp
+            nodes/list.cpp
+            nodes/random.cpp
+            nodes/renderable/empty.cpp
+            nodes/renderable/composite.cpp
+            nodes/renderable/image.cpp
+            nodes/renderable/translate.cpp
+            nodes/renderable/scale.cpp
+            nodes/renderable/rotate.cpp
+            nodes/renderable/text.cpp
+            nodes/renderable/render_shape.cpp
+    )
+endif()
 
 target_link_libraries(document morphing fmt)
 

@@ -19,6 +19,7 @@
 #include <core/node_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
+#include <core/context.h>
 
 namespace core {
 namespace nodes {
@@ -30,11 +31,11 @@ public:
         init<double>(speed, 1);
     }
 public:
-    virtual double get(Time time) const override {
+    double get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto b = get_base()->get(time);
-            auto f = get_speed()->get(time);
-            return b+f*time.get_seconds();
+            auto b = get_base()->get(ctx);
+            auto f = get_speed()->get(ctx);
+            return b+f*ctx->get_time().get_seconds();
         } catch (...) {
             return {};
         }

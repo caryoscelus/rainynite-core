@@ -33,12 +33,12 @@ public:
         init<Geom::Point>(tg2, {});
     }
 public:
-    virtual Geom::Knot get(Time time) const override {
+    Geom::Knot get(std::shared_ptr<Context> ctx) const override {
         try {
             return Geom::Knot {
-                get_pos()->get(time),
-                get_tg1()->get(time),
-                get_tg2()->get(time)
+                get_pos()->get(ctx),
+                get_tg1()->get(ctx),
+                get_tg2()->get(ctx)
             };
         } catch (...) {
             return {};

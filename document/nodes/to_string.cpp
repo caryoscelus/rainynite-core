@@ -30,9 +30,9 @@ public:
         init_property("source", boost::none, make_value<std::string>(""));
     }
 public:
-    virtual std::string get(Time time) const override {
+    std::string get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto v = get_property("source")->get_any(time);
+            auto v = get_property("source")->get_any(ctx);
             return serialize::value_to_string(v);
         } catch (...) {
             return {};

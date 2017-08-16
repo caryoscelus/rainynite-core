@@ -23,7 +23,6 @@
 
 #include <boost/signals2/signal.hpp>
 
-#include <core/time/time.h>
 #include "abstract_list.h"
 
 namespace core {
@@ -38,9 +37,9 @@ public:
         return std::dynamic_pointer_cast<BaseValue<T>>(get_property(name));
     }
     template <typename T>
-    boost::optional<T> get_property_value(std::string const& name, Time time) const {
+    boost::optional<T> get_property_value(std::string const& name, std::shared_ptr<Context> context) const {
         try {
-            return get_property_as<T>(name)->get(time);
+            return get_property_as<T>(name)->get(context);
         } catch (NodeAccessError const&) {
             return boost::none;
         } catch (...) {
@@ -54,9 +53,6 @@ public:
         return names_list[id];
     }
 public:
-    std::vector<AbstractReference> get_list_links(Time /*t*/) const override {
-        throw NodeAccessError("get_list_links not implemented");
-    }
     std::vector<AbstractReference> get_links() const override {
         return numbered_storage;
     }

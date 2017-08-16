@@ -20,6 +20,7 @@
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
+#include <core/context.h>
 
 namespace core {
 namespace nodes {
@@ -33,9 +34,11 @@ public:
         this->template init<Time>(offset, {});
     }
 public:
-    virtual void step_into(Time time, std::function<void(AbstractReference,Time)> f) const override {
-        auto t = time * get_multiplier()->get(time) + get_offset()->get(time);
-        f(get_source(), t);
+    void step_into(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
+        auto t = ctx->get_time() * get_multiplier()->get(ctx) + get_offset()->get(ctx);
+        auto nctx = std::make_shared<Context>(*ctx);
+        nctx->set_time(t);
+        f({get_source(), nctx});
     }
 
 private:
@@ -52,8 +55,8 @@ public:
     Now() {
     }
 public:
-    Time get(Time t) const override {
-        return t;
+    Time get(std::shared_ptr<Context> ctx) const override {
+        return ctx->get_time();
     }
 };
 

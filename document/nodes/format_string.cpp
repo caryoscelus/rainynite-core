@@ -39,10 +39,10 @@ public:
         init_list<std::string>(arguments);
     }
 public:
-    virtual std::string get(Time time) const override {
+    std::string get(std::shared_ptr<Context> ctx) const override {
         try {
-            auto str = get_format()->get(time);
-            auto args = get_arguments()->get(time);
+            auto str = get_format()->get(ctx);
+            auto args = get_arguments()->get(ctx);
             if (args.size() > FORMAT_ARGS)
                 throw std::runtime_error("FormatString: too much arguments");
             while (args.size() < FORMAT_ARGS) {

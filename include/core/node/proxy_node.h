@@ -36,14 +36,14 @@ public:
     /**
      * Call arbitrary function with correct child node and time.
      */
-    virtual void step_into(Time time, std::function<void(AbstractReference,Time)> f) const = 0;
+    virtual void step_into(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const = 0;
 public:
-    virtual T get(Time time) const override {
+    T get(std::shared_ptr<Context> context) const override {
         try {
             T result;
-            step_into(time, [&result](AbstractReference node, Time t) {
-                if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
-                    result = vnode->get(t);
+            step_into(context, [&result](NodeInContext nic) {
+                if (auto vnode = dynamic_cast<BaseValue<T>*>(nic.node.get()))
+                    result = vnode->get(nic.context);
             });
             return result;
         } catch (...) {
@@ -58,12 +58,12 @@ public:
 template <typename T>
 class ProxyListNode : public Node<std::vector<T>> {
 public:
-    std::vector<T> get(Time time) const override {
+    std::vector<T> get(std::shared_ptr<Context> ctx) const override {
         try {
             std::vector<T> result;
-            this->step_into_list(time, [&result](AbstractReference node, Time t) {
-                if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
-                    result.push_back(vnode->get(t));
+            this->step_into_list(ctx, [&result](NodeInContext nic) {
+                if (auto vnode = dynamic_cast<BaseValue<T>*>(nic.node.get()))
+                    result.push_back(vnode->get(nic.context));
             });
             return result;
         } catch (...) {

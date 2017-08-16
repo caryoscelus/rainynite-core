@@ -29,7 +29,7 @@ class Renderable {
 
 class RenderableNode : public Node<Renderable> {
 public:
-    virtual Renderable get(Time) const override {
+    Renderable get(std::shared_ptr<Context> /*context*/) const override {
         return {};
     }
 };
