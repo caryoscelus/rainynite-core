@@ -26,7 +26,7 @@ namespace filters {
 
 class JsonWriter : public DocumentWriter {
 public:
-    virtual void write_document(std::ostream& output, std::shared_ptr<Document> document) override;
+    void write_document(std::ostream& output, std::shared_ptr<Document> document) override;
 };
 
 } // namespace filters

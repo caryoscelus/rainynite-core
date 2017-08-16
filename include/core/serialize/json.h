@@ -35,50 +35,50 @@ public:
         stream(stream_)
     {}
 public:
-    virtual void object_start(U id) override {
+    void object_start(U id) override {
         element();
         write("{");
         prev_element = false;
         key("UID");
         string(V::id_to_string(id));
     }
-    virtual void object_end() override {
+    void object_end() override {
         write("}");
         prev_element = true;
     }
-    virtual void object_value_start() override {
+    void object_value_start() override {
         key("VALUE");
     }
-    virtual void object_value_end() override {
+    void object_value_end() override {
     }
-    virtual void list_start() override {
+    void list_start() override {
         write("[");
         prev_element = false;
     }
-    virtual void list_end() override {
+    void list_end() override {
         write("]");
         prev_element = true;
     }
-    virtual void type(std::string const& s) override {
+    void type(std::string const& s) override {
         key("TYPE");
         write_string(s);
         element();
     }
-    virtual void string(std::string const& s) override {
+    void string(std::string const& s) override {
         element();
         write_string(s);
     }
-    virtual void key(std::string const& s) override {
+    void key(std::string const& s) override {
         element();
         write_string(s);
         write(":");
         prev_element = false;
     }
-    virtual void number(double x) override {
+    void number(double x) override {
         element();
         write(std::to_string(x));
     }
-    virtual void reference(U id) override {
+    void reference(U id) override {
         string(V::id_to_string(id));
     }
 private:

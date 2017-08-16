@@ -38,11 +38,11 @@ public:
         return root;
     }
 public:
-    virtual void object_start(Id id) override {
+    void object_start(Id id) override {
         context.push_back(NodeContext());
         current().id = id;
     }
-    virtual void object_end() override {
+    void object_end() override {
         if (context.size() == 0)
             throw DeserializationError("Unexpacted end of object");
         auto last = std::move(current());
@@ -66,23 +66,23 @@ public:
             default: break;
         }
     }
-    virtual void object_value_start() override {
+    void object_value_start() override {
         await(RecordType::Value);
     }
-    virtual void object_value_end() override {
+    void object_value_end() override {
         await(RecordType::Nothing);
     }
-    virtual void list_start() override {
+    void list_start() override {
         await(RecordType::List);
     }
-    virtual void list_end() override {
+    void list_end() override {
         await(RecordType::Nothing);
     }
-    virtual void type(std::string const& s) override {
+    void type(std::string const& s) override {
         current().object = make_node_with_name<AbstractValue>(s);
         objects.emplace(current().id, current().object);
     }
-    virtual void string(std::string const& s) override {
+    void string(std::string const& s) override {
         switch (current().awaiting) {
             case RecordType::Value: {
                 if (!current().object)
@@ -95,14 +95,14 @@ public:
                 throw DeserializationError("Unexpected string");
         }
     }
-    virtual void key(std::string const& s) override {
+    void key(std::string const& s) override {
         await(RecordType::Map);
         current().key = s;
     }
-    virtual void number(double) override {
+    void number(double) override {
         throw DeserializationError("Unexpected number");
     }
-    virtual void reference(Id id) override {
+    void reference(Id id) override {
         // TODO: allow reference before value is constructed?
         auto target = objects.at(id);
         switch (current().awaiting) {

@@ -36,14 +36,14 @@ const std::string svg_rectangle = R"(<rect x="{x}" y="{y}" width="{width}" heigh
 
 class NullShapeSvgSubRenderer : SVG_SHAPE_RENDERER(NullShapeSvgSubRenderer, Geom::NullShape) {
 public:
-    virtual std::string operator()(boost::any const& /*shape*/) const override {
+    std::string operator()(boost::any const& /*shape*/) const override {
         return "";
     }
 };
 
 class PathShapeSvgSubRenderer : SVG_SHAPE_RENDERER(PathShapeSvgSubRenderer, Geom::BezierKnots) {
 public:
-    virtual std::string operator()(boost::any const& shape) const override {
+    std::string operator()(boost::any const& shape) const override {
         auto path = boost::any_cast<Geom::BezierKnots>(shape);
         return fmt::format(svg_path, "path"_a=Geom::knots_to_svg(path));
     }
@@ -51,7 +51,7 @@ public:
 
 class RectangleShapeSvgSubRenderer : SVG_SHAPE_RENDERER(RectangleShapeSvgSubRenderer, Geom::Rectangle) {
 public:
-    virtual std::string operator()(boost::any const& shape) const override {
+    std::string operator()(boost::any const& shape) const override {
         auto rect = boost::any_cast<Geom::Rectangle>(shape);
         return fmt::format(
             svg_rectangle,

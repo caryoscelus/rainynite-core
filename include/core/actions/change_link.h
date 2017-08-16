@@ -33,11 +33,11 @@ public:
         new_value(new_value_)
     {}
 public:
-    virtual void redo_action() override {
+    void redo_action() override {
         old_value = node->get_link(index);
         node->set_link(index, new_value);
     }
-    virtual void undo_action() override {
+    void undo_action() override {
         new_value = node->get_link(index);
         node->set_link(index, old_value);
     }

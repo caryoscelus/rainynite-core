@@ -48,7 +48,7 @@ public:
 
 class BarName : public ClassName, Registered<BarName, Bar, ClassName>, ReverseRegistered<BarName, Bar, std::string> {
 public:
-    virtual std::string operator()() const override {
+    std::string operator()() const override {
         return "Bar";
     }
 };
@@ -73,7 +73,7 @@ public:
 
 class FooBaz : public FooBar {
 public:
-    virtual std::string name() const override {
+    std::string name() const override {
         return "FooBaz";
     }
 };
@@ -85,7 +85,7 @@ public:
 
 class FooBarName : public PolyClassName, Registered<FooBarName, FooBar*, PolyClassName> {
 public:
-    virtual std::string operator()(boost::any const& object) const override {
+    std::string operator()(boost::any const& object) const override {
         auto p = boost::any_cast<FooBar*>(object);
         return p->name();
     }

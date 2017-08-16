@@ -36,10 +36,10 @@ class Type##TypeInfo : \
     class_init::ReverseRegistered<Type##TypeInfo, Type, std::string> \
 { \
 public: \
-    virtual std::string operator()() const override { \
+    std::string operator()() const override { \
         return name; \
     } \
-    virtual boost::any parse_string(std::string const& s) const override { \
+    boost::any parse_string(std::string const& s) const override { \
         return parse(s); \
     } \
 }

@@ -27,7 +27,7 @@ namespace filters {
 
 class JsonReader : public DocumentReader {
 public:
-    virtual std::shared_ptr<Document> read_document(std::istream& input) override;
+    std::shared_ptr<Document> read_document(std::istream& input) override;
 };
 
 } // namespace filters

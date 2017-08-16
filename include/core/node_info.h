@@ -117,16 +117,16 @@ private RegisterNodeByType<Self>
 template <typename T> \
 class Name##NodeInfo : NODE_INFO_PARENTS(Name##NodeInfo<T>, Node) { \
 public: \
-    virtual std::string name() const override { \
+    std::string name() const override { \
         return #Name"<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">"; \
     } \
-    virtual AbstractReference new_empty() const override { \
+    AbstractReference new_empty() const override { \
         return std::make_shared<Node>(); \
     } \
-    virtual AbstractReference clone(AbstractValue const& source) const override { \
+    AbstractReference clone(AbstractValue const& source) const override { \
         return std::make_shared<Node>(static_cast<Node const&>(source)); \
     } \
-    virtual Type type() const override { \
+    Type type() const override { \
         return typeid(NodeType); \
     } \
 }
@@ -135,16 +135,16 @@ public: \
 class NodeNodeInfo : NODE_INFO_PARENTS(NodeNodeInfo, Node) \
 { \
 public: \
-    virtual std::string name() const override { \
+    std::string name() const override { \
         return _name; \
     } \
-    virtual AbstractReference new_empty() const override { \
+    AbstractReference new_empty() const override { \
         return std::static_pointer_cast<AbstractValue>(std::make_shared<Node>()); \
     } \
-    virtual AbstractReference clone(AbstractValue const& source) const override { \
+    AbstractReference clone(AbstractValue const& source) const override { \
         return std::make_shared<Node>(static_cast<Node const&>(source)); \
     } \
-    virtual core::Type type() const override { \
+    core::Type type() const override { \
         return Node::static_type(); \
     } \
 }

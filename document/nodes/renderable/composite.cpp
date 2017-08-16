@@ -30,10 +30,10 @@ public:
     }
 
 public:
-    virtual bool can_set_source(std::shared_ptr<AbstractValue> src) const override {
+    bool can_set_source(std::shared_ptr<AbstractValue> src) const override {
         return src->get_type() == this->get_type();
     }
-    virtual void set_source(std::shared_ptr<AbstractValue> src) override {
+    void set_source(std::shared_ptr<AbstractValue> src) override {
         dynamic_cast<AbstractListLinked*>(get_layers().get())->push_back(src);
     }
 

@@ -42,7 +42,7 @@ class AutoValueToString :
     class_init::Registered<AutoValueToString<T>, T, ValueToString>
 {
 public:
-    virtual std::string operator()(boost::any const& object) const override {
+    std::string operator()(boost::any const& object) const override {
         auto value = boost::any_cast<T>(object);
         std::ostringstream stream;
         stream << std::boolalpha << value;
@@ -56,7 +56,7 @@ class NumericValueToString :
     class_init::Registered<AutoValueToString<T>, T, ValueToString>
 {
 public:
-    virtual std::string operator()(boost::any const& object) const override {
+    std::string operator()(boost::any const& object) const override {
         auto value = boost::any_cast<T>(object);
         return std::to_string(value);
     }
