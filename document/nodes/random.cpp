@@ -21,11 +21,19 @@
 #include <core/node_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
-
-#include <iostream>
+#include <core/context.h>
 
 namespace core {
 namespace nodes {
+
+// TODO: use generate_canonical instead
+template <typename R>
+double get_random_in_range(R& engine, double max) {
+    static_assert(R::min() == 0);
+    double random = engine() * max;
+    random /= R::max()+1.0;
+    return random;
+}
 
 /**
  * Node that generates list of static random numbers.
@@ -67,9 +75,7 @@ private:
             random_engine.seed(seed);
             // TODO: cache
             while (length--) {
-                double random = random_engine() * max;
-                static_assert(decltype(random_engine)::min() == 0);
-                random /= decltype(random_engine)::max()+1;
+                auto random = get_random_in_range(random_engine, max);
                 f(random);
             }
         } catch (...) {
@@ -84,6 +90,41 @@ private:
 };
 
 REGISTER_NODE(RandomList);
+
+class MovingRandom : public Node<double> {
+public:
+    MovingRandom() {
+        init<double>(max, 1);
+        init<double>(period, 1);
+        init<double>(seed, 0);
+    }
+public:
+    double get(std::shared_ptr<Context> ctx) const {
+        try {
+            auto max = get_max()->get(ctx);
+            auto period = get_period()->get(ctx);
+            auto seed = get_seed()->get(ctx);
+
+            random_engine.seed(seed);
+            double p = ctx->get_time().get_seconds() / period;
+            random_engine.discard((int)std::floor(p));
+            auto a = get_random_in_range(random_engine, max);
+            auto b = get_random_in_range(random_engine, max);
+            auto offset = p - std::floor(p);
+            return a*(1-offset)+b*offset;
+        } catch (...) {
+            return 0;
+        }
+    }
+private:
+    mutable std::mt19937 random_engine;
+private:
+    NODE_PROPERTY(max, double);
+    NODE_PROPERTY(period, double);
+    NODE_PROPERTY(seed, double);
+};
+
+REGISTER_NODE(MovingRandom);
 
 } // namespace nodes
 } // namespace core
