@@ -51,6 +51,8 @@ public:
     NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
         auto list = this->get_property("source");
         auto l = list->get_list_links(ctx);
+        if (l.size() == 0)
+            throw NodeAccessError("Requested element of empty list");
         size_t n = std::clamp(get_n()->get(ctx), 0.0, l.size()-1.0);
         return l[n];
     }
