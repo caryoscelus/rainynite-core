@@ -70,6 +70,79 @@ private:
 NODE_INFO_TEMPLATE(DynamicNode, DynamicNode<T>, T);
 TYPE_INSTANCES(DynamicNodeNodeInfo)
 
+/**
+ * Convert list by applying node to each element.
+ *
+ * Returns list, each element of which is node with a few common properties
+ * and one from input list.
+ */
+template <typename T>
+class ApplyToList : public ProxyListNode<T> {
+public:
+    ApplyToList() {
+        this->template init<std::string>(node_type, {});
+        this->template init<std::string>(property_name, {});
+        // TODO: make a function
+        {
+            auto args = std::make_shared<UntypedListValue>();
+            args->new_id();
+            this->template init_property(static_arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
+        }
+        {
+            auto args = std::make_shared<UntypedListValue>();
+            args->new_id();
+            this->template init_property(dynamic_arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
+        }
+    }
+public:
+    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
+        std::vector<NodeInContext> result;
+        try {
+            auto type = get_node_type()->get(ctx);
+            auto property = get_property_name()->get(ctx);
+            auto base_node = make_node_with_name<AbstractValue>(type);
+            auto bnode = dynamic_cast<AbstractListLinked*>(base_node.get());
+            auto st_args = this->get_property(static_arguments)->get_list_links(ctx);
+            unsigned i = 0;
+            for (auto const& e : st_args) {
+                // TODO: fix context
+                bnode->set_link(i, e.node);
+                ++i;
+            }
+            auto dy_args = this->get_property(dynamic_arguments)->get_list_links(ctx);
+            std::transform(
+                std::begin(dy_args),
+                std::end(dy_args),
+                std::back_inserter(result),
+                [base_node, property](auto e) {
+                    auto node = shallow_copy(*base_node);
+                    // TODO: fix context
+                    dynamic_cast<AbstractNode*>(node.get())->set_property(property, e.node);
+                    return node;
+                }
+            );
+        } catch (...) {
+        }
+        return result;
+    }
+private:
+    NODE_PROPERTY(node_type, std::string);
+    NODE_PROPERTY(property_name, std::string);
+    NODE_LIST_PROPERTY(static_arguments, Nothing);
+    NODE_LIST_PROPERTY(dynamic_arguments, Nothing);
+};
+
+NODE_INFO_TEMPLATE(ApplyToList, ApplyToList<T>, std::vector<T>);
+TYPE_INSTANCES(ApplyToListNodeInfo)
+
+/**
+ * Zip lists of lists into a list of nodes with args.
+ *
+ * Takes few homogeneous lists and uses their elements as node properties
+ * (each list representing one property) in new node list.
+ *
+ * TODO: rename to ..Zip
+ */
 template <typename T>
 class DynamicListTie : public ProxyListNode<T> {
 public:
