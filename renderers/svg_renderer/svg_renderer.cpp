@@ -76,9 +76,12 @@ struct SvgRenderer::Impl {
 //     std::string definitions(std::shared_ptr<Context> context) const;
     std::string frame_to_svg(std::shared_ptr<Context> context) const;
     std::string node_to_svg(NodeInContext nic) const;
-    void start_png();
+    void start_png(bool force=false);
+    void restart_png() {
+        start_png(true);
+    }
     void render_png(std::string const& svg, std::string const& png);
-    void quit_png();
+    void quit_png(bool force=false);
 
     bool finished = false;
     Context context;
@@ -148,6 +151,8 @@ void SvgRenderer::Impl::prepare_render() {
         base_path = settings.path;
         base_path.remove_filename();
         boost::filesystem::current_path(base_path);
+        if (settings.render_pngs)
+            restart_png();
     }
     if (settings.render_pngs)
         start_png();
@@ -215,9 +220,12 @@ void SvgRenderer::Impl::finish_render() {
         quit_png();
 }
 
-void SvgRenderer::Impl::start_png() {
-    if (subprocess_initialized)
-        return;
+void SvgRenderer::Impl::start_png(bool force) {
+    if (subprocess_initialized) {
+        if (!force)
+            return;
+        quit_png(true);
+    }
 
     // TODO: wrap all this C mess and move out of here
     int write_pipe_ds[2];
@@ -255,8 +263,8 @@ void SvgRenderer::Impl::render_png(std::string const& svg, std::string const& pn
     fflush(png_renderer_pipe);
 }
 
-void SvgRenderer::Impl::quit_png() {
-    if (!settings.keep_alive) {
+void SvgRenderer::Impl::quit_png(bool force) {
+    if (!settings.keep_alive || force) {
         subprocess_initialized = false;
 
         fputs("quit\n", png_renderer_pipe);
@@ -282,7 +290,7 @@ void SvgRenderer::Impl::quit_png() {
         std::this_thread::sleep_for(std::chrono::milliseconds(64));
     }
 
-    if (!settings.keep_alive) {
+    if (!settings.keep_alive || force) {
         int status;
         waitpid(png_renderer_pid, &status, 0);
     }
