@@ -74,6 +74,10 @@ Time& Time::operator/=(double other) {
     return *this;
 }
 
+double Time::operator/(Time const& other) {
+    return get_seconds() / other.get_seconds();
+}
+
 void Time::require_same_fps(Time const& other) const {
     // consider zero case
     if (fps != other.fps)

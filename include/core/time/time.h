@@ -64,6 +64,7 @@ public:
     Time& operator-=(Time const& other);
     Time& operator*=(double other);
     Time& operator/=(double other);
+    double operator/(Time const& other);
 public:
     void require_same_fps(Time const& other) const;
     fps_type common_fps(Time const& other) const;
