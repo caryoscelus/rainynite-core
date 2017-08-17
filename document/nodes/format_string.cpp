@@ -22,10 +22,10 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-#define FORMAT_ARGS 16
-
 namespace core {
 namespace nodes {
+
+static const size_t FORMAT_ARGS = 16;
 
 template <size_t... i>
 std::string format_vector(std::string format, std::vector<std::string> args, std::index_sequence<i...>) {
