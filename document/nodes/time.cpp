@@ -34,11 +34,11 @@ public:
         this->template init<Time>(offset, {});
     }
 public:
-    void step_into(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
+    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
         auto t = ctx->get_time() * get_multiplier()->get(ctx) + get_offset()->get(ctx);
         auto nctx = std::make_shared<Context>(*ctx);
         nctx->set_time(t);
-        f({get_source(), nctx});
+        return { get_source(), nctx };
     }
 
 private:

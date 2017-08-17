@@ -54,20 +54,16 @@ public:
         this->get_frame_list()->new_id();
     }
 public:
-    void step_into(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
-        f(find_appropriate(context));
-    }
-private:
-    AbstractReference find_appropriate(std::shared_ptr<Context> context) const {
+    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
         auto aframes = list_frame_list()->get_links();
         std::vector<TimePoint<T>> frames;
         std::transform(
             std::begin(aframes),
             std::end(aframes),
             std::back_inserter(frames),
-            [context](auto frame) -> TimePoint<T> {
+            [ctx](auto frame) -> TimePoint<T> {
                 if (auto f = std::dynamic_pointer_cast<Frame<T>>(frame))
-                    return { f->get_time()->get(context), f->get_value() };
+                    return { f->get_time()->get(ctx), f->get_value() };
                 return { Time::infinity(), nullptr };
             }
         );
@@ -78,22 +74,22 @@ private:
                 return a.time < b.time;
             }
         );
-        auto time = context->get_time();
+        auto time = ctx->get_time();
         TimePoint<T> const* last = nullptr;
         for (auto const& frame : frames) {
             if (!frame.value)
                 continue;
             if (frame.time == time)
-                return frame.value;
+                return {frame.value, ctx};
             if (frame.time > time)
                 break;
             last = &frame;
         }
         if (last)
-            return last->value;
-        return get_default_value();
+            return {last->value, ctx};
+        return {get_default_value(), ctx};
     }
-
+private:
     NODE_LIST_PROPERTY(frame_list, TimePointType);
     NODE_PROPERTY(default_value, T);
 };

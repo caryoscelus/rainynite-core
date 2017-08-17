@@ -190,9 +190,7 @@ std::string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) 
     } catch (class_init::TypeLookupError const&) {
         if (auto proxy = dynamic_cast<ProxyNode<Renderable>*>(node)) {
             std::string result;
-            proxy->step_into(context, [&settings, &result](NodeInContext nic) {
-                result = node_to_svg(nic, settings);
-            });
+            result = node_to_svg(proxy->get_proxy(context), settings);
             return result;
         }
         std::cerr << "ERROR: node type isn't supported" << std::endl;

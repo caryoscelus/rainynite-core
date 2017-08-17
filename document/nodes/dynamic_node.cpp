@@ -35,7 +35,7 @@ public:
         this->template init_property(arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
-    void step_into(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
+    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
         try {
             auto type = get_node_type()->get(ctx);
             if (cached_type != type) {
@@ -50,11 +50,12 @@ public:
                     node_list->set_link(i, arg.node);
                     ++i;
                 }
-                f({node, ctx});
+                return {node, ctx};
             } else {
                 throw NodeAccessError("DynamicNode: arguments property is null");
             }
         } catch (...) {
+            return { make_value<T>(), ctx };
         }
     }
 

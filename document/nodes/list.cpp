@@ -48,22 +48,11 @@ public:
         this->init_property("source", boost::none, make_value<Nothing>());
         this->template init<double>(n, 0);
     }
-    void step_into(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
-        size_t n = std::max(get_n()->get(ctx), 0.0);
-        size_t i = 0;
+    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
         auto list = this->get_property("source");
-        NodeInContext result;
-        list->step_into_list(
-            ctx,
-            [n, &i, &result](NodeInContext nic) {
-                if (i == n) {
-                    result = nic;
-                }
-                ++i;
-            }
-        );
-        if (result)
-            f(result);
+        auto l = list->get_list_links(ctx);
+        size_t n = std::clamp(get_n()->get(ctx), 0.0, l.size()-1.0);
+        return l[n];
     }
 private:
     NODE_PROPERTY(n, double);

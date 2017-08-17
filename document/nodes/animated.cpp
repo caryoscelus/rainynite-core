@@ -41,19 +41,7 @@ public:
         get_periods()->new_id();
     }
 public:
-    void step_into(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
-        f(find_appropriate(context));
-    }
-public:
-    void add_child(TimePeriod period, AbstractReference ref) override {
-        push_value(list_periods(), period);
-        list_children()->push_back(std::dynamic_pointer_cast<BaseValue<T>>(ref));
-    }
-    size_t child_count() const override {
-        return list_children()->link_count();
-    }
-private:
-    NodeInContext find_appropriate(std::shared_ptr<Context> ctx) const {
+    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
         size_t i = 0;
         auto time = ctx->get_time();
         for (auto period : get_periods()->get(ctx)) {
@@ -67,6 +55,15 @@ private:
         }
         return { get_default_value(), ctx };
     }
+public:
+    void add_child(TimePeriod period, AbstractReference ref) override {
+        push_value(list_periods(), period);
+        list_children()->push_back(std::dynamic_pointer_cast<BaseValue<T>>(ref));
+    }
+    size_t child_count() const override {
+        return list_children()->link_count();
+    }
+private:
     Time calculate_time(TimePeriod const& period, Time time) const {
         auto a = period.get_first();
         auto b = period.get_last();

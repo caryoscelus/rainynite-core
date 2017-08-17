@@ -34,18 +34,16 @@ template <typename T>
 class ProxyNode : public Node<T> {
 public:
     /**
-     * Call arbitrary function with correct child node and time.
+     * Get proxied NodeInContext
      */
-    virtual void step_into(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const = 0;
+    virtual NodeInContext get_proxy(std::shared_ptr<Context> ctx) const = 0;
 public:
-    T get(std::shared_ptr<Context> context) const override {
+    T get(std::shared_ptr<Context> ctx) const override {
         try {
-            T result;
-            step_into(context, [&result](NodeInContext nic) {
-                if (auto vnode = dynamic_cast<BaseValue<T>*>(nic.node.get()))
-                    result = vnode->get(nic.context);
-            });
-            return result;
+            auto [node, nctx] = get_proxy(ctx);
+            if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
+                return vnode->get(nctx);
+            throw NodeAccessError("Proxied node is of different type");
         } catch (...) {
             return {};
         }
