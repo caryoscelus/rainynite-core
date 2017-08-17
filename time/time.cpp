@@ -16,14 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if __cplusplus >= 201703
 #include <numeric>
-#else
-#include <experimental/numeric>
-namespace std {
-using experimental::lcm;
-}
-#endif
 
 #include <core/time/time_period.h>
 
