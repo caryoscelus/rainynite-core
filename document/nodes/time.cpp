@@ -62,5 +62,36 @@ public:
 
 REGISTER_NODE(Now);
 
+template <typename T>
+class TimeLoop : public ProxyNode<T> {
+public:
+    TimeLoop() {
+        this->template init<T>(source, {});
+        this->template init<Time>(period, {});
+        this->template init<Time>(offset, {});
+    }
+public:
+    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
+        auto period = get_period()->get(ctx);
+        auto t = ctx->get_time() + get_offset()->get(ctx);
+        Time time;
+        if (period <= Time()) {
+            time = t;
+        } else {
+            time = t - std::floor(t/period)*period;
+        }
+        auto nctx = std::make_shared<Context>(*ctx);
+        nctx->set_time(time);
+        return { get_source(), nctx };
+    }
+private:
+    NODE_PROPERTY(source, T);
+    NODE_PROPERTY(period, Time);
+    NODE_PROPERTY(offset, Time);
+};
+
+NODE_INFO_TEMPLATE(TimeLoop, TimeLoop<T>, T);
+TYPE_INSTANCES(TimeLoopNodeInfo)
+
 } // namespace nodes
 } // namespace core
