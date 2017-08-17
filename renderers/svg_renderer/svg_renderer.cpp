@@ -145,6 +145,11 @@ void SvgRenderer::Impl::prepare_render() {
     }
     if (settings.render_pngs)
         start_png();
+    if (!settings.path.empty()) {
+        boost::filesystem::path path { settings.path };
+        path.remove_filename();
+        boost::filesystem::current_path(path);
+    }
 }
 
 void SvgRenderer::Impl::render_frame(std::shared_ptr<Context> context) {
