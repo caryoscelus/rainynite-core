@@ -30,13 +30,14 @@ class FollowPath : public Node<Geom::Point> {
 public:
     FollowPath() {
         init<Geom::BezierKnots>(path, {});
+        init<double>(position, 0);
     }
 public:
     Geom::Point get(std::shared_ptr<Context> ctx) const override {
         try {
             auto path = get_path()->get(ctx);
-            auto t = ctx->get_time().get_seconds();
-            return Geom::knots_to_path(path).pointAt(t);
+            auto position = get_position()->get(ctx);
+            return Geom::knots_to_path(path).pointAt(position);
         } catch (...) {
             return {};
         }
@@ -44,6 +45,7 @@ public:
 
 private:
     NODE_PROPERTY(path, Geom::BezierKnots);
+    NODE_PROPERTY(position, double);
 };
 
 REGISTER_NODE(FollowPath);
