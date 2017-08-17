@@ -87,6 +87,7 @@ struct SvgRenderer::Impl {
     SvgRendererSettings settings;
 
     boost::filesystem::path render_path { "renders/" };
+    boost::filesystem::path base_path;
 
     FILE* png_renderer_pipe;
     FILE* png_renderer_pipe_output;
@@ -143,13 +144,13 @@ void SvgRenderer::Impl::prepare_render() {
         if (!boost::filesystem::create_directory(render_path))
             throw RenderFailure("Cannot create render directory");
     }
+    if (!settings.path.empty()) {
+        base_path = settings.path;
+        base_path.remove_filename();
+        boost::filesystem::current_path(base_path);
+    }
     if (settings.render_pngs)
         start_png();
-    if (!settings.path.empty()) {
-        boost::filesystem::path path { settings.path };
-        path.remove_filename();
-        boost::filesystem::current_path(path);
-    }
 }
 
 void SvgRenderer::Impl::render_frame(std::shared_ptr<Context> context) {
@@ -164,7 +165,7 @@ void SvgRenderer::Impl::render_frame(std::shared_ptr<Context> context) {
     fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(context));
     f.close();
     if (settings.render_pngs)
-        render_png(svg_name, base_name+".png");
+        render_png(svg_name, (base_path / (base_name+".png")).string());
     parent->finished_frame()(time);
 }
 
