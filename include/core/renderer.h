@@ -40,7 +40,7 @@ public:
 class Renderer {
 public:
     virtual void render(Context&& context) = 0;
-    virtual bool is_finished() = 0;
+    virtual bool is_finished() const = 0;
 public:
     inline boost::signals2::signal<void(Time)>& finished_frame() {
         return finished_frame_signal;

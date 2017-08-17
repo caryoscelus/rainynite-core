@@ -40,7 +40,7 @@ public:
     virtual ~SvgRenderer();
 public:
     void render(Context&& context) override;
-    bool is_finished() override;
+    bool is_finished() const override;
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

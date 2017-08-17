@@ -109,7 +109,7 @@ void SvgRenderer::render(Context&& context_) {
     impl->render(std::move(context_));
 }
 
-bool SvgRenderer::is_finished() {
+bool SvgRenderer::is_finished() const {
     return impl->finished;
 }
 
