@@ -81,14 +81,9 @@ template <typename T>
 class ApplyToList : public ProxyListNode<T> {
 public:
     ApplyToList() {
-        this->template init<std::string>(node_type, {});
+        this->template init<T>(source, {});
         this->template init<std::string>(property_name, {});
         // TODO: make a function
-        {
-            auto args = std::make_shared<UntypedListValue>();
-            args->new_id();
-            this->template init_property(static_arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
-        }
         {
             auto args = std::make_shared<UntypedListValue>();
             args->new_id();
@@ -99,17 +94,8 @@ public:
     std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
         std::vector<NodeInContext> result;
         try {
-            auto type = get_node_type()->get(ctx);
             auto property = get_property_name()->get(ctx);
-            auto base_node = make_node_with_name<AbstractValue>(type);
-            auto bnode = dynamic_cast<AbstractListLinked*>(base_node.get());
-            auto st_args = this->get_property(static_arguments)->get_list_links(ctx);
-            unsigned i = 0;
-            for (auto const& e : st_args) {
-                // TODO: fix context
-                bnode->set_link(i, e.node);
-                ++i;
-            }
+            auto base_node = get_source();
             auto dy_args = this->get_property(dynamic_arguments)->get_list_links(ctx);
             std::transform(
                 std::begin(dy_args),
@@ -127,9 +113,8 @@ public:
         return result;
     }
 private:
-    NODE_PROPERTY(node_type, std::string);
+    NODE_PROPERTY(source, T);
     NODE_PROPERTY(property_name, std::string);
-    NODE_LIST_PROPERTY(static_arguments, Nothing);
     NODE_LIST_PROPERTY(dynamic_arguments, Nothing);
 };
 
