@@ -101,11 +101,11 @@ public:
                 std::begin(dy_args),
                 std::end(dy_args),
                 std::back_inserter(result),
-                [base_node, property](auto e) {
+                [base_node, property](auto e) -> NodeInContext {
                     auto node = shallow_copy(*base_node);
                     // TODO: fix context
                     dynamic_cast<AbstractNode*>(node.get())->set_property(property, e.node);
-                    return node;
+                    return { node, e.context };
                 }
             );
         } catch (...) {
