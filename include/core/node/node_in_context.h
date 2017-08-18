@@ -31,7 +31,8 @@ struct NodeInContext {
     std::shared_ptr<AbstractValue> node;
     std::shared_ptr<Context> context;
 
-    NodeInContext(std::shared_ptr<AbstractValue> node_=nullptr, std::shared_ptr<Context> context_=nullptr) :
+    NodeInContext() = default;
+    NodeInContext(std::shared_ptr<AbstractValue> node_, std::shared_ptr<Context> context_) :
         node(node_),
         context(context_)
     {}
