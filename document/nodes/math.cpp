@@ -20,6 +20,8 @@
 
 #include <boost/math/constants/constants.hpp>
 
+#include <2geom/point.h>
+
 #include <core/node_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
@@ -49,6 +51,28 @@ private:
     NODE_PROPERTY(b, double);
 };
 REGISTER_NODE(Add);
+
+// TODO: generic Add node
+class PointAdd : public Node<Geom::Point> {
+public:
+    PointAdd() {
+        init<Geom::Point>(a, {});
+        init<Geom::Point>(b, {});
+    }
+public:
+    Geom::Point get(std::shared_ptr<Context> ctx) const override {
+        try {
+            return get_a()->get(ctx) + get_b()->get(ctx);
+        } catch (...) {
+            return {};
+        }
+    }
+
+private:
+    NODE_PROPERTY(a, Geom::Point);
+    NODE_PROPERTY(b, Geom::Point);
+};
+REGISTER_NODE(PointAdd);
 
 class Multiply : public Node<double> {
 public:
