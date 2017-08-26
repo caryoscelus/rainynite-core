@@ -252,7 +252,7 @@ void SvgRenderer::Impl::start_png(bool force) {
         close(read_pipe_ds[0]);
         close(read_pipe_ds[1]);
 
-        execl("/usr/bin/env", "env", "inkscape", "--shell", (char*)nullptr);
+        execl("/usr/bin/env", "env", "inkscape", "--shell", "-z", (char*)nullptr);
         throw std::runtime_error("execl returned");
     }
 
