@@ -98,6 +98,9 @@ struct SvgRenderer::Impl {
     size_t rendered_frames_count;
     bool subprocess_initialized = false;
     bool requested_to_stop = false;
+    bool svgs_finished = false;
+
+    std::thread read_thread;
 
     SvgRenderer* parent;
 };
@@ -161,6 +164,7 @@ void SvgRenderer::Impl::prepare_render() {
         if (settings.render_pngs)
             restart_png();
     }
+    svgs_finished = false;
     if (settings.render_pngs)
         start_png();
 }
@@ -222,6 +226,7 @@ std::string SvgRenderer::Impl::node_to_svg(NodeInContext nic) const {
 }
 
 void SvgRenderer::Impl::finish_render() {
+    svgs_finished = true;
     document.reset();
     if (settings.render_pngs)
         quit_png();
@@ -286,6 +291,28 @@ void SvgRenderer::Impl::start_png(bool force) {
 
     png_renderer_pid = fork_pipe(png_renderer_pipe, png_renderer_pipe_output, {"/usr/bin/env", "inkscape", "--shell", "-z"});
 
+    read_thread = std::thread([this]() {
+        auto buff = std::make_unique<char[]>(256);
+        std::string sbuff;
+        size_t frames_count = 0;
+        while (!svgs_finished || frames_count < rendered_frames_count) {
+            // TODO: replace with blocking read?
+            std::this_thread::sleep_for(std::chrono::milliseconds(64));
+
+            size_t read_chars;
+            while ((read_chars = fread((void*)buff.get(), 1, 256, png_renderer_pipe_output)) > 0) {
+                auto s = std::string(buff.get(), read_chars);
+                std::cout << s;
+                sbuff += s;
+                size_t found;
+                while ((found = sbuff.find("Bitmap saved as:")) != std::string::npos) {
+                    ++frames_count;
+                    sbuff = sbuff.substr(found+1);
+                }
+            }
+        }
+    });
+
     subprocess_initialized = true;
 }
 
@@ -304,23 +331,8 @@ void SvgRenderer::Impl::quit_png(bool force) {
     }
 
     // now wait until inkscape renders all the frames..
-    auto buff = std::make_unique<char[]>(256);
-    std::string sbuff;
-    size_t frames_count = 0;
-    while (frames_count < rendered_frames_count) {
-        size_t read_chars;
-        while ((read_chars = fread((void*)buff.get(), 1, 256, png_renderer_pipe_output)) > 0) {
-            auto s = std::string(buff.get(), read_chars);
-            std::cout << s;
-            sbuff += s;
-            size_t found;
-            while ((found = sbuff.find("Bitmap saved as:")) != std::string::npos) {
-                ++frames_count;
-                sbuff = sbuff.substr(found+1);
-            }
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(64));
-    }
+    if (read_thread.joinable())
+        read_thread.join();
 
     if (quit_inkscape) {
         int status;
