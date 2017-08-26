@@ -264,7 +264,8 @@ void SvgRenderer::Impl::render_png(std::string const& svg, std::string const& pn
 }
 
 void SvgRenderer::Impl::quit_png(bool force) {
-    if (!settings.keep_alive || force) {
+    bool quit_inkscape = force || !settings.keep_alive;
+    if (quit_inkscape) {
         subprocess_initialized = false;
 
         fputs("quit\n", png_renderer_pipe);
@@ -290,7 +291,7 @@ void SvgRenderer::Impl::quit_png(bool force) {
         std::this_thread::sleep_for(std::chrono::milliseconds(64));
     }
 
-    if (!settings.keep_alive || force) {
+    if (quit_inkscape) {
         int status;
         waitpid(png_renderer_pid, &status, 0);
     }
