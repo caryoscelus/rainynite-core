@@ -42,6 +42,7 @@ public:
 public:
     void render(Context&& context) override;
     bool is_finished() const override;
+    void stop() override;
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

@@ -97,6 +97,7 @@ struct SvgRenderer::Impl {
     pid_t png_renderer_pid;
     size_t rendered_frames_count;
     bool subprocess_initialized = false;
+    bool requested_to_stop = false;
 
     SvgRenderer* parent;
 };
@@ -117,6 +118,10 @@ bool SvgRenderer::is_finished() const {
     return impl->finished;
 }
 
+void SvgRenderer::stop() {
+    impl->requested_to_stop = true;
+}
+
 void SvgRenderer::Impl::render(Context&& context_) {
     finished = false;
     rendered_frames_count = 0;
@@ -132,6 +137,8 @@ void SvgRenderer::Impl::render(Context&& context_) {
     }
     prepare_render();
     for (auto time : context.get_period()) {
+        if (requested_to_stop)
+            break;
         auto ctx = std::make_shared<Context>(context);
         ctx->set_time(time);
         render_frame(ctx);
@@ -218,6 +225,7 @@ void SvgRenderer::Impl::finish_render() {
     document.reset();
     if (settings.render_pngs)
         quit_png();
+    requested_to_stop = false;
 }
 
 void SvgRenderer::Impl::start_png(bool force) {
@@ -264,7 +272,7 @@ void SvgRenderer::Impl::render_png(std::string const& svg, std::string const& pn
 }
 
 void SvgRenderer::Impl::quit_png(bool force) {
-    bool quit_inkscape = force || !settings.keep_alive;
+    bool quit_inkscape = force || !settings.keep_alive || requested_to_stop;
     if (quit_inkscape) {
         subprocess_initialized = false;
 
