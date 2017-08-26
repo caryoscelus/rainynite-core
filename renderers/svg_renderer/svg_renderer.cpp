@@ -228,21 +228,22 @@ void SvgRenderer::Impl::finish_render() {
     requested_to_stop = false;
 }
 
-void SvgRenderer::Impl::start_png(bool force) {
-    if (subprocess_initialized) {
-        if (!force)
-            return;
-        quit_png(true);
-    }
+/**
+ * Pipe, fork & exec
+ *
+ * @return pid of new process
+ */
+pid_t fork_pipe(FILE*& write_pipe, FILE*& read_pipe, std::vector<std::string> args) {
+    if (args.size() < 1)
+        throw std::invalid_argument("Empty argument list");
 
-    // TODO: wrap all this C mess and move out of here
     int write_pipe_ds[2];
     pipe(write_pipe_ds);
     int read_pipe_ds[2];
     pipe(read_pipe_ds);
 
-    png_renderer_pid = fork();
-    if (png_renderer_pid == 0) {
+    auto pid = fork();
+    if (pid == 0) {
         dup2(write_pipe_ds[0], STDIN_FILENO);
         close(write_pipe_ds[0]);
         close(write_pipe_ds[1]);
@@ -252,16 +253,38 @@ void SvgRenderer::Impl::start_png(bool force) {
         close(read_pipe_ds[0]);
         close(read_pipe_ds[1]);
 
-        execl("/usr/bin/env", "env", "inkscape", "--shell", "-z", (char*)nullptr);
+        char const** c_args = new char const*[args.size()+1];
+        std::transform(
+            std::begin(args),
+            std::end(args),
+            c_args,
+            [](auto const& s) {
+                return s.c_str();
+            }
+        );
+        c_args[args.size()] = nullptr;
+        execv(args[0].c_str(), const_cast<char* const*>(c_args));
         throw std::runtime_error("execl returned");
     }
 
-    png_renderer_pipe = fdopen(write_pipe_ds[1], "w");
+    write_pipe = fdopen(write_pipe_ds[1], "w");
     close(write_pipe_ds[0]);
 
     fcntl(read_pipe_ds[0], F_SETFL, O_NONBLOCK);
-    png_renderer_pipe_output = fdopen(read_pipe_ds[0], "r");
+    read_pipe = fdopen(read_pipe_ds[0], "r");
     close(read_pipe_ds[1]);
+
+    return pid;
+}
+
+void SvgRenderer::Impl::start_png(bool force) {
+    if (subprocess_initialized) {
+        if (!force)
+            return;
+        quit_png(true);
+    }
+
+    png_renderer_pid = fork_pipe(png_renderer_pipe, png_renderer_pipe_output, {"/usr/bin/env", "inkscape", "--shell", "-z"});
 
     subprocess_initialized = true;
 }
