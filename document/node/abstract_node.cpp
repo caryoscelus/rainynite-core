@@ -45,6 +45,25 @@ void AbstractNode::set_property(std::string const& name, AbstractReference ref) 
     set_link(named_storage[name], ref);
 }
 
+bool AbstractNode::remove_property(std::string const& name) {
+    if (name[0] != '_')
+        return false; // can only remove custom props
+    auto iter = named_storage.find(name);
+    if (iter == std::end(named_storage))
+        return false;
+    auto i = iter->second;
+    // NOTE: this might be not thread-safe
+    named_storage.erase(iter);
+    names_list.erase(names_list.begin()+i);
+    numbered_storage.erase(numbered_storage.begin()+i);
+    // reassign links
+    for (auto& e : named_storage) {
+        if (e.second > i)
+            --e.second;
+    }
+    return true;
+}
+
 size_t AbstractNode::init_property(std::string const& name, boost::optional<Type> type, AbstractReference value) {
     size_t id = link_count();
     numbered_storage.push_back(value);

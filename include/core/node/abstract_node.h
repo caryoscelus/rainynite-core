@@ -47,6 +47,7 @@ public:
         }
     }
     void set_property(std::string const& name, AbstractReference ref);
+    bool remove_property(std::string const& name);
     size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value);
     std::map<std::string, AbstractReference> get_link_map() const;
     std::string get_name_at(size_t id) {

@@ -263,3 +263,17 @@ TEST_CASE("List node children change notify", "[node]") {
     one->set(2.0);
     CHECK(changed);
 }
+
+TEST_CASE("Removing custom properties", "[node]") {
+    auto add = make_node_with_name<AbstractNode>("Add");
+    CHECK(add->link_count() == 2);
+    add->set_property("_custom_0", make_value<double>(0.0));
+    CHECK(add->link_count() == 3);
+    add->set_property("_custom_1", make_value<double>(1.0));
+    CHECK(add->link_count() == 4);
+    CHECK(add->get_property_as<double>("_custom_0")->get(zero_context()) == 0);
+    CHECK(add->get_property_as<double>("_custom_1")->get(zero_context()) == 1);
+    add->remove_property("_custom_0");
+    CHECK(add->link_count() == 3);
+    CHECK(add->get_property_as<double>("_custom_1")->get(zero_context()) == 1);
+}
