@@ -36,6 +36,7 @@ if (BUILD_NODES)
             nodes/file_string.cpp
             nodes/math.cpp
             nodes/rectangle.cpp
+            nodes/circle.cpp
             nodes/list.cpp
             nodes/split_string.cpp
             nodes/random.cpp
