@@ -22,6 +22,7 @@
 #include "time/time_period.h"
 #include <geom_helpers/null_shape.h>
 #include <geom_helpers/rectangle.h>
+#include <geom_helpers/circle.h>
 #include <geom_helpers/knots.h>
 #include <core/color.h>
 #include <core/renderable.h>
@@ -39,6 +40,7 @@
     template class Template<Geom::NullShape>; \
     template class Template<Geom::BezierKnots>; \
     template class Template<Geom::Rectangle>; \
+    template class Template<Geom::Circle>; \
     template class Template<Geom::Knot>; \
     template class Template<colors::Color>;
 

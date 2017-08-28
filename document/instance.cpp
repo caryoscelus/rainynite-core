@@ -32,6 +32,7 @@
 #include <geom_helpers/point_io.h>
 #include <geom_helpers/null_shape.h>
 #include <geom_helpers/rectangle.h>
+#include <geom_helpers/circle.h>
 
 namespace Geom {
 
@@ -54,6 +55,11 @@ TYPE_INFO(NullShape, "NullShape", [](auto&&) {
 TYPE_INFO(Rectangle, "Rectangle", [](auto&& /*rect*/) {
     // TODO
     return Rectangle {};
+});
+
+TYPE_INFO(Circle, "Circle", [](auto&& /*circle*/) {
+    // TODO
+    return Circle {};
 });
 
 } // namespace Geom
