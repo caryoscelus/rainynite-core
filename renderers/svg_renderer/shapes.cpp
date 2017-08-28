@@ -23,6 +23,7 @@
 
 #include <geom_helpers/null_shape.h>
 #include <geom_helpers/rectangle.h>
+#include <geom_helpers/circle.h>
 #include <geom_helpers/knots.h>
 
 using namespace fmt::literals;
@@ -33,6 +34,8 @@ namespace renderers {
 const std::string svg_path = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
 
 const std::string svg_rectangle = R"(<rect x="{x}" y="{y}" width="{width}" height="{height}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
+
+const std::string svg_circle = R"(<circle cx="{x}" cy="{y}" r="{radius}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
 
 class NullShapeSvgSubRenderer : SVG_SHAPE_RENDERER(NullShapeSvgSubRenderer, Geom::NullShape) {
 public:
@@ -59,6 +62,19 @@ public:
             "y"_a=rect.pos.y(),
             "width"_a=rect.size.x(),
             "height"_a=rect.size.y()
+        );
+    }
+};
+
+class CircleShapeSvgSubRenderer : SVG_SHAPE_RENDERER(CircleShapeSvgSubRenderer, Geom::Circle) {
+public:
+    std::string operator()(boost::any const& shape) const override {
+        auto circle = boost::any_cast<Geom::Circle>(shape);
+        return fmt::format(
+            svg_circle,
+            "x"_a=circle.pos.x(),
+            "y"_a=circle.pos.y(),
+            "radius"_a=circle.radius
         );
     }
 };
