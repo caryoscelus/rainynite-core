@@ -22,7 +22,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 static const size_t FORMAT_ARGS = 16;
@@ -63,4 +63,4 @@ private:
 REGISTER_NODE(FormatString);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

@@ -21,7 +21,7 @@
 #include <core/node/property.h>
 #include <core/time/time_period.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class CompositeTimePeriod : public Node<TimePeriod> {
@@ -62,4 +62,4 @@ private:
 REGISTER_NODE(SizedTimePeriod);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

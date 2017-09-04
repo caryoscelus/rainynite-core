@@ -26,7 +26,7 @@
 
 #include <2geom/point.h>
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 struct SvgRendererSettings;
@@ -49,6 +49,6 @@ public: \
     static std::string name() { return name_; }
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core
 
 #endif

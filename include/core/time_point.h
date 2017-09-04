@@ -22,7 +22,7 @@
 #include "time/time.h"
 #include "node/abstract_value.h"
 
-namespace core {
+namespace rainynite::core {
 
 /// Tag type for TimePoint nodes
 struct TimePointType {
@@ -34,6 +34,6 @@ struct TimePoint {
     BaseReference<T> value;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

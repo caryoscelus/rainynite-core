@@ -28,7 +28,7 @@
 #include <core/node/abstract_node.h>
 #include "serialize.h"
 
-namespace core {
+namespace rainynite::core {
 namespace serialize {
 
 class ValueToString {
@@ -120,6 +120,6 @@ public:
 };
 
 } // namespace serialize
-} // namespace core
+} // namespace rainynite::core
 
 #endif

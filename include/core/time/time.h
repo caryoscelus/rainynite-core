@@ -25,7 +25,7 @@
 
 #include <boost/operators.hpp>
 
-namespace core {
+namespace rainynite::core {
 
 class Time :
     boost::totally_ordered<Time>,
@@ -100,6 +100,6 @@ private:
     fps_type fps;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

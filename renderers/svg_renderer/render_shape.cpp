@@ -29,7 +29,7 @@
 
 using namespace fmt::literals;
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 class ShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(ShapeSvgRenderer) {
@@ -49,4 +49,4 @@ public:
 };
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core

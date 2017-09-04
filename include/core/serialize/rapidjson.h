@@ -31,7 +31,7 @@
 
 using namespace fmt::literals;
 
-namespace core {
+namespace rainynite::core {
 namespace serialize {
 
 boost::uuids::string_generator s_to_id;
@@ -161,6 +161,6 @@ private:
 };
 
 } // namespace serialize
-} // namespace core
+} // namespace rainynite::core
 
 #endif

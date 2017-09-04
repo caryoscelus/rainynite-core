@@ -21,7 +21,7 @@
 #include <core/all_types.h>
 #include <core/context.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 template <typename T>
@@ -98,4 +98,4 @@ NODE_INFO_TEMPLATE(FrameList, FrameList<T>, T);
 TYPE_INSTANCES(FrameListNodeInfo)
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

@@ -23,7 +23,7 @@
 
 #include "time_period.h"
 
-namespace core {
+namespace rainynite::core {
 
 std::ostream& operator<<(std::ostream& stream, Time time);
 std::ostream& operator<<(std::ostream& stream, TimePeriod const& period);

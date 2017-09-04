@@ -21,7 +21,7 @@
 
 #include <stdexcept>
 
-namespace core {
+namespace rainynite::core {
 
 class ParseError : public std::runtime_error {
 public:
@@ -30,6 +30,6 @@ public:
     {}
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

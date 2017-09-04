@@ -28,7 +28,7 @@
 
 using boost::math::double_constants::pi;
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Add : public Node<double> {
@@ -115,4 +115,4 @@ private:
 REGISTER_NODE(Sin);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

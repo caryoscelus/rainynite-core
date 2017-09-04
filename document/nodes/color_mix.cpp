@@ -21,7 +21,7 @@
 #include <core/node/property.h>
 #include <core/color.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class ColorMix : public Node<colors::Color> {
@@ -48,4 +48,4 @@ private:
 REGISTER_NODE(ColorMix);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

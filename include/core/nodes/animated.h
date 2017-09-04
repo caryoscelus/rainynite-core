@@ -22,7 +22,7 @@
 #include <core/node/abstract_value.h>
 #include <core/time/time_period.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class AbstractAnimated {
@@ -32,6 +32,6 @@ public:
 };
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core
 
 #endif

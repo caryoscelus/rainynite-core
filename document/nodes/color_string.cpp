@@ -21,7 +21,7 @@
 #include <core/node/property.h>
 #include <core/color.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class ColorString : public Node<std::string> {
@@ -46,4 +46,4 @@ private:
 REGISTER_NODE(ColorString);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

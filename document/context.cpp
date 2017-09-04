@@ -19,7 +19,7 @@
 #include <core/context.h>
 #include <core/document.h>
 
-namespace core {
+namespace rainynite::core {
 
 Context::Context(std::weak_ptr<Document> document_) :
     document(document_)
@@ -57,4 +57,4 @@ void Context::set_fps(Time::fps_type fps_) {
     changed_fps(fps);
 }
 
-} // namespace core
+} // namespace rainynite::core

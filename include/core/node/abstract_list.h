@@ -22,7 +22,7 @@
 #include "common.h"
 #include "node_in_context.h"
 
-namespace core {
+namespace rainynite::core {
 
 class AbstractListLinked {
 public:
@@ -52,6 +52,6 @@ public:
 
 using AbstractListReference = std::shared_ptr<AbstractListLinked>;
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

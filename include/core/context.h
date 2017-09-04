@@ -26,7 +26,7 @@
 
 #include <core/time/time_period.h>
 
-namespace core {
+namespace rainynite::core {
 
 class Document;
 template <typename>
@@ -89,6 +89,6 @@ private:
     boost::any render_settings;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

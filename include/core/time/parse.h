@@ -21,7 +21,7 @@
 
 #include "time_period.h"
 
-namespace core {
+namespace rainynite::core {
 
 TimePeriod parse_time_period(std::string const& s);
 TimePeriod parse_time_period(std::istream& stream);

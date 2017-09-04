@@ -19,7 +19,7 @@
 #include <core/renderable.h>
 #include <core/node_info.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Empty : public RenderableNode {
@@ -30,4 +30,4 @@ public:
 REGISTER_NODE(Empty);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

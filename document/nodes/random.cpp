@@ -23,7 +23,7 @@
 #include <core/node/property.h>
 #include <core/context.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 // TODO: use generate_canonical instead
@@ -127,4 +127,4 @@ private:
 REGISTER_NODE(MovingRandom);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

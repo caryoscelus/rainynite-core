@@ -20,7 +20,7 @@
 
 #include <core/node/notify.h>
 
-using namespace core;
+using namespace rainynite::core;
 
 TEST_CASE("Notify", "") {
     AbstractNotify object;

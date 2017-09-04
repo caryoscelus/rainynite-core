@@ -22,7 +22,7 @@
 #include <core/node/proxy_node.h>
 #include <core/all_types.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 template <typename T>
@@ -206,4 +206,4 @@ NODE_INFO_TEMPLATE(DynamicListTie, DynamicListTie<T>, std::vector<T>);
 TYPE_INSTANCES(DynamicListTieNodeInfo)
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

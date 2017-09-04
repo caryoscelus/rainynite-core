@@ -22,7 +22,7 @@
 
 #include <geom_helpers/null_shape.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class RenderShape : public RenderableNode {
@@ -38,4 +38,4 @@ private:
 REGISTER_NODE(RenderShape);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

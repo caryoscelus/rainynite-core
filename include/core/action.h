@@ -23,7 +23,7 @@
 #include <vector>
 #include <memory>
 
-namespace core {
+namespace rainynite::core {
 
 struct ActionError : public std::runtime_error {
     ActionError(std::string const& msg) :
@@ -102,6 +102,6 @@ private:
     Stack redo_stack;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

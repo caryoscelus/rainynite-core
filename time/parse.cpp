@@ -21,7 +21,7 @@
 #include <core/parse.h>
 #include <core/time/parse.h>
 
-namespace core {
+namespace rainynite::core {
 
 TimePeriod parse_time_period(std::string const& s) {
     std::istringstream stream(s);
@@ -63,4 +63,4 @@ Time parse_time(std::istream& stream) {
     throw ParseError("Unsupported time format");
 }
 
-} // namespace core
+} // namespace rainynite::core

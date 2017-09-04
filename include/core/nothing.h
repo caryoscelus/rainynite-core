@@ -19,10 +19,10 @@
 #ifndef __CORE__NOTHING_H__95CFBBF2
 #define __CORE__NOTHING_H__95CFBBF2
 
-namespace core {
+namespace rainynite::core {
 
 struct Nothing {};
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

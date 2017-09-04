@@ -26,7 +26,7 @@
 #include "notify.h"
 #include "abstract_list.h"
 
-namespace core {
+namespace rainynite::core {
 
 using Id = boost::uuids::uuid;
 
@@ -144,6 +144,6 @@ public:
     }
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

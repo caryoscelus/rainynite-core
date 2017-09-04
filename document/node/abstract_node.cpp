@@ -19,7 +19,7 @@
 #include <core/node/abstract_node.h>
 #include <core/node/abstract_value.h>
 
-namespace core {
+namespace rainynite::core {
 
 AbstractNode::~AbstractNode() {
     for (auto const& connection : signal_connections) {
@@ -101,4 +101,4 @@ void AbstractNode::set_link(size_t i, AbstractReference value) {
     node_changed();
 }
 
-} // namespace core
+} // namespace rainynite::core

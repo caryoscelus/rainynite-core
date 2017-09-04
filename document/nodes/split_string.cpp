@@ -22,7 +22,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class SplitString : public Node<std::vector<std::string>> {
@@ -68,4 +68,4 @@ private:
 REGISTER_NODE(SplitString);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

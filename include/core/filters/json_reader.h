@@ -21,7 +21,7 @@
 
 #include "../reader.h"
 
-namespace core {
+namespace rainynite::core {
 
 namespace filters {
 
@@ -32,6 +32,6 @@ public:
 
 } // namespace filters
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

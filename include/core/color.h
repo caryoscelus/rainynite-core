@@ -27,7 +27,7 @@
 
 using namespace fmt::literals;
 
-namespace core {
+namespace rainynite::core {
 namespace colors {
 
 class AbstractColor {
@@ -110,6 +110,6 @@ RGBA<T> mix(RGBA<T> const& a, RGBA<T> const& b, double amount) {
 }
 
 } // namespace color
-} // namespace core
+} // namespace rainynite::core
 
 #endif

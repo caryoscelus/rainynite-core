@@ -22,7 +22,7 @@
 
 #include <geom_helpers/circle.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class CirclePR : public Node<Geom::Circle> {
@@ -48,4 +48,4 @@ private:
 REGISTER_NODE(CirclePR);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

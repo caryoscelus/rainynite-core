@@ -29,7 +29,7 @@
 #include <core/renderable.h>
 #include <core/action.h>
 
-namespace core {
+namespace rainynite::core {
 
 class Context;
 

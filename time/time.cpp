@@ -20,7 +20,7 @@
 
 #include <core/time/time_period.h>
 
-namespace core {
+namespace rainynite::core {
 
 bool Time::operator==(Time const& other) const {
     return seconds == other.seconds
@@ -133,4 +133,4 @@ bool TimePeriodIter::after_end() const {
     return now >= period.get_last();
 }
 
-} // namespace core
+} // namespace rainynite::core

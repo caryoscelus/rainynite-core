@@ -30,7 +30,7 @@
 
 #include <geom_helpers/knots.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class PathXY : public Node<double> {
@@ -71,4 +71,4 @@ private:
 REGISTER_NODE(PathXY);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

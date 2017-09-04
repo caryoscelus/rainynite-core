@@ -23,7 +23,7 @@
 
 #include "abstract_list.h"
 
-namespace core {
+namespace rainynite::core {
 
 enum class TraverseDepth {
     Once,
@@ -64,6 +64,6 @@ T traverse_once(AbstractReference root, F f, TraverseDepth depth = TraverseDepth
     return {};
 }
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

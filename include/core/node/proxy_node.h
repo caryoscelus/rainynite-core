@@ -23,7 +23,7 @@
 
 #include "node.h"
 
-namespace core {
+namespace rainynite::core {
 
 /**
  * ProxyNode is a node that returns value of another node, possibly with changed context.
@@ -70,6 +70,6 @@ public:
     }
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

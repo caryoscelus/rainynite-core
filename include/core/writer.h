@@ -22,7 +22,7 @@
 #include <memory>
 #include <ostream>
 
-namespace core {
+namespace rainynite::core {
 
 class Document;
 
@@ -31,6 +31,6 @@ public:
     virtual void write_document(std::ostream& output, std::shared_ptr<Document> document) = 0;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

@@ -22,7 +22,7 @@
 
 #include "svg_module.h"
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 const std::string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x="0" y="0" preserveAspectRatio="none"/>)";
@@ -38,4 +38,4 @@ public:
 };
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core

@@ -25,7 +25,7 @@
 #include <core/all_types.h>
 #include <core/context.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 template <class T>
@@ -79,4 +79,4 @@ NODE_INFO_TEMPLATE(Animated, Animated<T>, T);
 TYPE_INSTANCES(AnimatedNodeInfo)
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

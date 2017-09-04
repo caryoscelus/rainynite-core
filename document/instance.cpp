@@ -70,7 +70,7 @@ TYPE_INFO(string, "String", [](auto&& s) {
 });
 } // namespace std
 
-namespace core {
+namespace rainynite::core {
 
 namespace colors {
 TYPE_INFO(Color, "Color", [](auto&& s) {
@@ -146,4 +146,4 @@ TYPE_INSTANCES_WO_RENDERABLE(AutoValueToString)
 
 } // namespace serialize
 
-} // namespace core
+} // namespace rainynite::core

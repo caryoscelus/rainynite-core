@@ -21,7 +21,7 @@
 #include <core/node/property.h>
 #include <core/serialize/node_writer.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class ToString : public Node<std::string> {
@@ -43,4 +43,4 @@ public:
 REGISTER_NODE(ToString);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

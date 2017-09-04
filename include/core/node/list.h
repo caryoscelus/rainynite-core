@@ -25,7 +25,7 @@
 
 #include <core/nothing.h>
 
-namespace core {
+namespace rainynite::core {
 
 template <typename T, typename P>
 void push_value(P list, T const& value) {
@@ -160,6 +160,6 @@ public:
     }
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

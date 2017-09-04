@@ -21,7 +21,7 @@
 #include <core/actions/change_value.h>
 #include <core/node/make.h>
 
-using namespace core;
+using namespace rainynite::core;
 
 TEST_CASE("Undo/redo value change", "[action,node]") {
     ActionStack action_stack;

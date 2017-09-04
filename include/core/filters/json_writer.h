@@ -21,7 +21,7 @@
 
 #include "../writer.h"
 
-namespace core {
+namespace rainynite::core {
 namespace filters {
 
 class JsonWriter : public DocumentWriter {
@@ -30,6 +30,6 @@ public:
 };
 
 } // namespace filters
-} // namespace core
+} // namespace rainynite::core
 
 #endif

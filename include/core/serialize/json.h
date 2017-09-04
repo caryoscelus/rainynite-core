@@ -25,7 +25,7 @@
 
 #include "serialize.h"
 
-namespace core {
+namespace rainynite::core {
 namespace serialize {
 
 template <class V, typename U>
@@ -108,6 +108,6 @@ private:
 };
 
 } // namespace serialize
-} // namespace core
+} // namespace rainynite::core
 
 #endif

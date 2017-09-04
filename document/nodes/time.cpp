@@ -22,7 +22,7 @@
 #include <core/node/property.h>
 #include <core/context.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 template <typename T>
@@ -94,4 +94,4 @@ NODE_INFO_TEMPLATE(TimeLoop, TimeLoop<T>, T);
 TYPE_INSTANCES(TimeLoopNodeInfo)
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

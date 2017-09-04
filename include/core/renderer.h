@@ -26,7 +26,7 @@
 
 #include <core/time/time.h>
 
-namespace core {
+namespace rainynite::core {
 
 class Context;
 
@@ -50,6 +50,6 @@ private:
     boost::signals2::signal<void(Time)> finished_frame_signal;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

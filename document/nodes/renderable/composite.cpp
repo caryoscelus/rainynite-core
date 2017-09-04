@@ -19,7 +19,7 @@
 #include <core/renderable.h>
 #include <core/node_info.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Composite : public RenderableNode {
@@ -44,4 +44,4 @@ private:
 REGISTER_NODE(Composite);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

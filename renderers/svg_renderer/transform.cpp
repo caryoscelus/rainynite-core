@@ -24,7 +24,7 @@
 
 using namespace fmt::literals;
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 const std::string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)svg";
@@ -74,4 +74,4 @@ public:
 };
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core

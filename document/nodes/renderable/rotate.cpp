@@ -21,7 +21,7 @@
 
 #include <2geom/point.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Rotate : public RenderableNode {
@@ -41,4 +41,4 @@ private:
 REGISTER_NODE(Rotate);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

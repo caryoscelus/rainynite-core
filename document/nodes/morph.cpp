@@ -24,7 +24,7 @@
 
 #include <morphing/morphing.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class BezierMorph : public Node<Geom::BezierKnots> {
@@ -66,4 +66,4 @@ private:
 REGISTER_NODE(BezierMorph);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

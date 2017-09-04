@@ -18,7 +18,7 @@
 
 #include "svg_module.h"
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 class EmptySvgRenderer : SVG_RENDERER_MODULE_CLASS(EmptySvgRenderer) {
@@ -30,4 +30,4 @@ public:
 };
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core

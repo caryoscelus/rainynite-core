@@ -22,7 +22,7 @@
 
 #include <geom_helpers/rectangle.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class RectangleWH : public Node<Geom::Rectangle> {
@@ -71,4 +71,4 @@ private:
 REGISTER_NODE(RectangleAB);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

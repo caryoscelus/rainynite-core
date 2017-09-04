@@ -28,7 +28,7 @@
 
 using namespace fmt::literals;
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 const std::string svg_path = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
@@ -80,4 +80,4 @@ public:
 };
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core

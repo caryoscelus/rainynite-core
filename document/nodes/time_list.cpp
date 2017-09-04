@@ -24,7 +24,7 @@
 #include <core/all_types.h>
 #include <core/context.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 template <typename T>
@@ -60,4 +60,4 @@ NODE_INFO_TEMPLATE(TimeList, TimeList<T>, std::vector<T>);
 TYPE_INSTANCES(TimeListNodeInfo)
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

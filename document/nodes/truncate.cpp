@@ -22,7 +22,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Truncate : public Node<double> {
@@ -49,4 +49,4 @@ private:
 REGISTER_NODE(Truncate);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

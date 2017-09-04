@@ -23,7 +23,7 @@
 
 #include "time.h"
 
-namespace core {
+namespace rainynite::core {
 
 class TimePeriod;
 
@@ -120,6 +120,6 @@ private:
     Time::fps_type fps;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

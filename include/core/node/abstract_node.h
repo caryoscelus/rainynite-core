@@ -25,7 +25,7 @@
 
 #include "abstract_list.h"
 
-namespace core {
+namespace rainynite::core {
 
 class AbstractNode : public AbstractListLinked {
 public:
@@ -90,6 +90,6 @@ private:
     std::vector<boost::optional<Type>> types;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

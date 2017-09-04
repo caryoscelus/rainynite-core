@@ -23,7 +23,7 @@
 #include "abstract_value.h"
 #include "list.h"
 
-namespace core {
+namespace rainynite::core {
 
 /**
  * Basic representation of any time-changeable Node
@@ -56,6 +56,6 @@ protected:
     }
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

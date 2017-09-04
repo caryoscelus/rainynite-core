@@ -25,7 +25,7 @@
 #include <core/types.h>
 #include <core/node/abstract_value.h>
 
-namespace core {
+namespace rainynite::core {
 
 /**
  * Runtime node information interface.
@@ -144,7 +144,7 @@ public: \
     AbstractReference clone(AbstractValue const& source) const override { \
         return std::make_shared<Node>(static_cast<Node const&>(source)); \
     } \
-    core::Type type() const override { \
+    rainynite::core::Type type() const override { \
         return Node::static_type(); \
     } \
 }
@@ -153,6 +153,6 @@ public: \
 class Node; \
 REGISTER_NODE_NAMED(Node, Node##NodeInfo, #Node)
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

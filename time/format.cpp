@@ -18,7 +18,7 @@
 
 #include <core/time/format.h>
 
-namespace core {
+namespace rainynite::core {
 
 std::ostream& operator<<(std::ostream& stream, Time time) {
     return stream << time.get_frames() << "f@" << time.get_fps();
@@ -28,4 +28,4 @@ std::ostream& operator<<(std::ostream& stream, TimePeriod const& period) {
     return stream << "[" << period.get_first() << "," << period.get_last() << ")";
 }
 
-} // namespace core
+} // namespace rainynite::core

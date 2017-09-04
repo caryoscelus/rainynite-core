@@ -20,7 +20,7 @@
 #include <core/node_info.h>
 #include <core/color.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Text : public RenderableNode {
@@ -40,4 +40,4 @@ private:
 REGISTER_NODE(Text);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

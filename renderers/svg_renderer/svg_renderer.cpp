@@ -45,7 +45,7 @@
 
 using namespace fmt::literals;
 
-namespace core {
+namespace rainynite::core {
 
 namespace renderers {
 
@@ -342,4 +342,4 @@ void SvgRenderer::Impl::quit_png(bool force) {
 
 } // namespace filters
 
-} // namespace core
+} // namespace rainynite::core

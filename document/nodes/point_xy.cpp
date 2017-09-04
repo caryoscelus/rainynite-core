@@ -22,7 +22,7 @@
 
 #include <2geom/point.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class PointXY : public Node<Geom::Point> {
@@ -56,4 +56,4 @@ private:
 REGISTER_NODE(PointXY);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

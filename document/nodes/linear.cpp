@@ -21,7 +21,7 @@
 #include <core/node/property.h>
 #include <core/context.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Linear : public Node<double> {
@@ -49,4 +49,4 @@ private:
 REGISTER_NODE(Linear);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

@@ -23,12 +23,12 @@
 
 #include "nothing.h"
 
-namespace core {
+namespace rainynite::core {
 
 std::ostream& operator<<(std::ostream& s, Nothing) {
     return s << "Nothing";
 }
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

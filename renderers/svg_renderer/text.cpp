@@ -23,7 +23,7 @@
 #include <core/color.h>
 #include "svg_module.h"
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 const std::string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}</text>)";
@@ -40,4 +40,4 @@ public:
 };
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core

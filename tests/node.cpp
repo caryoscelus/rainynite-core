@@ -28,7 +28,7 @@
 #include <core/node/traverse.h>
 #include <core/context.h>
 
-using namespace core;
+using namespace rainynite::core;
 
 using Real = double;
 template <typename T>

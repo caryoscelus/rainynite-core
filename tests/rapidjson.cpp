@@ -30,9 +30,9 @@
 #include <core/serialize/node_reader.h>
 
 
-using namespace core;
+using namespace rainynite::core;
 
-namespace core {
+namespace rainynite::core {
 
 namespace serialize {
 template class AutoValueToString<double>;

@@ -18,7 +18,7 @@
 
 #include <core/color.h>
 
-namespace core {
+namespace rainynite::core {
 namespace colors {
 
 template <>
@@ -71,4 +71,4 @@ std::ostream& operator<<(std::ostream& stream, Color c) {
 }
 
 } // namespace color
-} // namespace core
+} // namespace rainynite::core

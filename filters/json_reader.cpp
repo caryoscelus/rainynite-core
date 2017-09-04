@@ -24,7 +24,7 @@
 #include <core/serialize/rapidjson.h>
 #include <core/serialize/node_reader.h>
 
-namespace core {
+namespace rainynite::core {
 
 namespace filters {
 
@@ -40,4 +40,4 @@ std::shared_ptr<Document> JsonReader::read_document(std::istream& input) {
 
 } // namespace filters
 
-} // namespace core
+} // namespace rainynite::core

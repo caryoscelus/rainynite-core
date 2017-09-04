@@ -21,7 +21,7 @@
 #include <core/node/property.h>
 #include <core/all_types.h>
 
-namespace core {
+namespace rainynite::core {
 
 class ToUntypedList : public Node<Nothing> {
 public:
@@ -63,4 +63,4 @@ private:
 NODE_INFO_TEMPLATE(ListElement, ListElement<T>, T);
 TYPE_INSTANCES(ListElementNodeInfo)
 
-} // namespace core
+} // namespace rainynite::core

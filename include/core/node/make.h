@@ -23,7 +23,7 @@
 
 #include "value.h"
 
-namespace core {
+namespace rainynite::core {
 
 template <typename T, typename... Args>
 std::shared_ptr<Value<T>> make_value(Args&&... args) {
@@ -40,6 +40,6 @@ std::shared_ptr<T> make_node() {
     return r;
 }
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

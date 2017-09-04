@@ -23,7 +23,7 @@
 
 #include <geom_helpers/knots.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class FollowPath : public Node<Geom::Point> {
@@ -51,4 +51,4 @@ private:
 REGISTER_NODE(FollowPath);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

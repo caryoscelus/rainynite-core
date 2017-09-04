@@ -21,7 +21,7 @@
 
 #include "abstract_value.h"
 
-namespace core {
+namespace rainynite::core {
 
 template <typename T>
 class Value : public BaseValue<T> {
@@ -59,6 +59,6 @@ private:
 template <typename T, typename... Args>
 std::shared_ptr<Value<T>> make_value(Args&&... args);
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

@@ -23,7 +23,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class FileString : public Node<std::string> {
@@ -51,4 +51,4 @@ private:
 REGISTER_NODE(FileString);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

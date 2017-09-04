@@ -25,7 +25,7 @@
 
 #include <boost/optional.hpp>
 
-namespace core {
+namespace rainynite::core {
 
 // forward declarations
 class AbstractValue;
@@ -49,6 +49,6 @@ public:
     {}
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

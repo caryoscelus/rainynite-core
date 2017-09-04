@@ -19,7 +19,7 @@
 #ifndef __CORE__RENDERERS__SVG_RENDERER__SHAPE_H__B1222A54
 #define __CORE__RENDERERS__SVG_RENDERER__SHAPE_H__B1222A54
 
-namespace core {
+namespace rainynite::core {
 namespace renderers {
 
 class SvgShapeRenderer {
@@ -43,6 +43,6 @@ public SvgShapeRenderer, \
 private class_init::Registered<Self, Shape, SvgShapeRenderer>
 
 } // namespace renderers
-} // namespace core
+} // namespace rainynite::core
 
 #endif

@@ -21,7 +21,7 @@
 
 #include <2geom/point.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Scale : public RenderableNode {
@@ -39,4 +39,4 @@ private:
 REGISTER_NODE(Scale);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

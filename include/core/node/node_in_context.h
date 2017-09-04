@@ -22,7 +22,7 @@
 #include <memory>
 #include <utility>
 
-namespace core {
+namespace rainynite::core {
 
 class AbstractValue;
 class Context;
@@ -47,6 +47,6 @@ struct NodeInContext {
     }
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

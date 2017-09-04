@@ -20,7 +20,7 @@
 #include <core/document.h>
 #include <core/context.h>
 
-namespace core {
+namespace rainynite::core {
 
 REGISTER_NODE(Document);
 
@@ -52,4 +52,4 @@ std::shared_ptr<Context> Document::get_default_context() {
     return default_context;
 }
 
-} // namespace core
+} // namespace rainynite::core

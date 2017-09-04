@@ -21,7 +21,7 @@
 #include <core/serialize/json.h>
 #include <core/filters/json_writer.h>
 
-namespace core {
+namespace rainynite::core {
 namespace filters {
 
 void JsonWriter::write_document(std::ostream& output, std::shared_ptr<Document> document) {
@@ -30,4 +30,4 @@ void JsonWriter::write_document(std::ostream& output, std::shared_ptr<Document> 
 }
 
 } // namespace filters
-} // namespace core
+} // namespace rainynite::core

@@ -21,7 +21,7 @@
 
 #include <core/class_init.h>
 
-namespace core {
+namespace rainynite::core {
 
 class TypeInfo {
 public:
@@ -31,8 +31,8 @@ public:
 
 #define TYPE_INFO(Type, name, parse) \
 class Type##TypeInfo : \
-    public core::TypeInfo, \
-    class_init::Registered<Type##TypeInfo, Type, core::TypeInfo>, \
+    public rainynite::core::TypeInfo, \
+    class_init::Registered<Type##TypeInfo, Type, rainynite::core::TypeInfo>, \
     class_init::ReverseRegistered<Type##TypeInfo, Type, std::string> \
 { \
 public: \
@@ -65,6 +65,6 @@ T parse_primitive_type_to(Args&&... args) {
     );
 }
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

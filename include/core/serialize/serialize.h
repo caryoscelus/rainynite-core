@@ -22,7 +22,7 @@
 #include <set>
 #include <stdexcept>
 
-namespace core {
+namespace rainynite::core {
 namespace serialize {
 
 class SerializationError : public std::runtime_error {
@@ -127,6 +127,6 @@ private:
 };
 
 } // namespace serialize
-} // namespace core
+} // namespace rainynite::core
 
 #endif

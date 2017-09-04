@@ -21,7 +21,7 @@
 #include <core/parse.h>
 #include <core/time/parse.h>
 
-using namespace core;
+using namespace rainynite::core;
 
 TEST_CASE("Parse time", "[time,parse]") {
     CHECK(parse_time("0f@12") == Time(0, 12, 0));

@@ -24,7 +24,7 @@
 #include "../context.h"
 #include "../renderer.h"
 
-namespace core {
+namespace rainynite::core {
 
 namespace renderers {
 
@@ -50,6 +50,6 @@ private:
 
 } // namespace renderers
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

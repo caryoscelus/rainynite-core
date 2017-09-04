@@ -22,7 +22,7 @@
 
 #include <2geom/point.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 using Geom::X;
@@ -53,4 +53,4 @@ REGISTER_NODE_NAMED(ExtractCoord<Y>, ExtractCoordYNodeInfo, "ExtractCoord<Y>");
 
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

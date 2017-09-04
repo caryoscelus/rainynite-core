@@ -22,7 +22,7 @@
 
 #include <geom_helpers/knots.h>
 
-namespace core {
+namespace rainynite::core {
 namespace nodes {
 
 class Knot : public Node<Geom::Knot> {
@@ -54,4 +54,4 @@ private:
 REGISTER_NODE(Knot);
 
 } // namespace nodes
-} // namespace core
+} // namespace rainynite::core

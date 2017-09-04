@@ -22,7 +22,7 @@
 #include <core/action.h>
 #include <core/node/abstract_node.h>
 
-namespace core {
+namespace rainynite::core {
 namespace actions {
 
 class ChangeLink : public AbstractAction {
@@ -49,6 +49,6 @@ private:
 };
 
 } // namespace actions
-} // namespace core
+} // namespace rainynite::core
 
 #endif

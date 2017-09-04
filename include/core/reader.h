@@ -22,7 +22,7 @@
 #include <istream>
 #include <memory>
 
-namespace core {
+namespace rainynite::core {
 
 class Document;
 
@@ -31,6 +31,6 @@ public:
     virtual std::shared_ptr<Document> read_document(std::istream& input) = 0;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

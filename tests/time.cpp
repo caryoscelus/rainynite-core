@@ -20,7 +20,7 @@
 
 #include <core/time/time_period.h>
 
-using namespace core;
+using namespace rainynite::core;
 
 TEST_CASE("Time sanity", "[time]") {
     Time a(3, 8, 4);

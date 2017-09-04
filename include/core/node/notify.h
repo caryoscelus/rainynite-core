@@ -23,7 +23,7 @@
 
 #include <boost/signals2/signal.hpp>
 
-namespace core {
+namespace rainynite::core {
 
 class AbstractNotify {
 public:
@@ -64,6 +64,6 @@ private:
     std::shared_ptr<Null> destroy_detector;
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif

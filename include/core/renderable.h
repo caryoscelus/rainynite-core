@@ -22,7 +22,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace core {
+namespace rainynite::core {
 
 class Renderable {
 };
@@ -34,6 +34,6 @@ public:
     }
 };
 
-} // namespace core
+} // namespace rainynite::core
 
 #endif
