@@ -36,7 +36,7 @@ public:
         return false;
     }
     virtual Type get_type() const = 0;
-    virtual any get_any(shared_ptr<Context> context) const = 0;
+    virtual any get_any(shared_ptr<Context> context) const noexcept = 0;
     virtual void set_any(any const& /*value*/) {
         throw NodeAccessError("Cannot set");
     }
@@ -141,8 +141,8 @@ public:
     Type get_type() const override {
         return typeid(T);
     }
-    any get_any(shared_ptr<Context> context) const override {
-        return get(context);
+    any get_any(shared_ptr<Context> context) const noexcept override {
+        return value(context);
     }
     void set_any(any const& value_) override {
         set(any_cast<T>(value_));

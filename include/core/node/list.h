@@ -148,7 +148,7 @@ public:
     Type get_type() const override {
         return typeid(Nothing);
     }
-    any get_any(shared_ptr<Context> /*context*/) const override {
+    any get_any(shared_ptr<Context> /*context*/) const noexcept override {
         return Nothing();
     }
     optional<std::type_index> get_link_type(size_t) const override {
