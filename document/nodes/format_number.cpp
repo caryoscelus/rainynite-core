@@ -24,16 +24,17 @@
 
 namespace rainynite::core::nodes {
 
-class FormatInteger : public Node<string> {
+template <typename N>
+class FormatNumber : public Node<string> {
 public:
-    FormatInteger() {
+    FormatNumber() {
         init<string>(format, {});
         init<double>(number, 0);
     }
 public:
     string get(shared_ptr<Context> ctx) const override {
         auto str = get_format()->value(ctx);
-        auto num = static_cast<long long>(get_number()->value(ctx));
+        auto num = static_cast<N>(get_number()->value(ctx));
         return fmt::format(str, num);
     }
 
@@ -42,6 +43,10 @@ private:
     NODE_PROPERTY(number, double);
 };
 
+using FormatInteger = FormatNumber<long long>;
+using FormatReal = FormatNumber<double>;
+
 REGISTER_NODE(FormatInteger);
+REGISTER_NODE(FormatReal);
 
 } // namespace rainynite::core::nodes
