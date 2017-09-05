@@ -90,6 +90,26 @@ constexpr bool is_vector<vector<U>> = true;
 template <typename T>
 class BaseValue : public AbstractValue {
 public:
+    /**
+     * Get value of this node in given context
+     *
+     * Any exceptions that are thrown during node calculation should be
+     * recorded in log (TODO; not yet implemented).
+     */
+    T value(shared_ptr<Context> context) const noexcept {
+        try {
+            return get(context);
+        } catch (...) {
+            // TODO: log exceptions
+            return {};
+        }
+    }
+public:
+    /**
+     * Get value of this node in given context - may throw
+     *
+     * TODO: make protected
+     */
     virtual T get(shared_ptr<Context> context) const {
         if constexpr (is_vector<T>) {
             using E = typename T::value_type;

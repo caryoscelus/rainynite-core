@@ -30,34 +30,34 @@ public:
         return true;
     }
     T get(shared_ptr<Context> /*context*/) const override {
-        return value;
+        return value_;
     }
-    void set(T value_) override {
-        value = value_;
+    void set(T value__) override {
+        value_ = value__;
         this->changed();
     }
     T& mod() override {
-        return value;
+        return value_;
     }
     bool can_set() const override {
         return true;
     }
     any static_any() const override {
-        return value;
+        return value_;
     }
 
 public:
     template <typename... Args>
     void emplace(Args&&... args) {
-        value = T(std::forward<Args>(args)...);
+        value_ = T(std::forward<Args>(args)...);
     }
 
 private:
-    T value;
+    T value_;
 };
 
 template <typename T, typename... Args>
-shared_ptr<Value<T>> make_value(Args&&... args);
+shared_ptr<Value<T>> make_value_(Args&&... args);
 
 } // namespace rainynite::core
 
