@@ -150,7 +150,6 @@ public: \
 }
 
 #define REGISTER_NODE(Node) \
-class Node; \
 REGISTER_NODE_NAMED(Node, Node##NodeInfo, #Node)
 
 } // namespace rainynite::core
