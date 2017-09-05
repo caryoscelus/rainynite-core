@@ -19,11 +19,12 @@
 #ifndef __CORE__NODE__COMMON_H__7A32160E
 #define __CORE__NODE__COMMON_H__7A32160E
 
-#include <typeindex>
-#include <memory>
 #include <stdexcept>
 
-#include <boost/optional.hpp>
+#include <core/std/type.h>
+#include <core/std/memory.h>
+#include <core/std/optional.h>
+#include <core/std/string.h>
 
 namespace rainynite::core {
 
@@ -36,15 +37,15 @@ class BaseValue;
 // type aliases
 using Type = std::type_index;
 
-using AbstractReference = std::shared_ptr<AbstractValue>;
+using AbstractReference = shared_ptr<AbstractValue>;
 
 template <typename T>
-using BaseReference = std::shared_ptr<BaseValue<T>>;
+using BaseReference = shared_ptr<BaseValue<T>>;
 
 // exceptions
 class NodeAccessError : public std::runtime_error {
 public:
-    NodeAccessError(std::string const& msg) :
+    NodeAccessError(string const& msg) :
         std::runtime_error(msg)
     {}
 };

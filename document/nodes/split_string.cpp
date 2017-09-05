@@ -25,15 +25,15 @@
 namespace rainynite::core {
 namespace nodes {
 
-class SplitString : public Node<std::vector<std::string>> {
+class SplitString : public Node<vector<string>> {
 public:
     SplitString() {
-        init<std::string>(source, "");
-        init<std::string>(split, "\n");
+        init<string>(source, "");
+        init<string>(split, "\n");
     }
 public:
-    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
-        std::vector<NodeInContext> result;
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        vector<NodeInContext> result;
         try {
             auto list = get(ctx);
             std::transform(
@@ -41,16 +41,16 @@ public:
                 std::end(list),
                 std::back_inserter(result),
                 [ctx](auto&& s) -> NodeInContext {
-                    return { make_value<std::string>(s), ctx };
+                    return { make_value<string>(s), ctx };
                 }
             );
         } catch (...) {
         }
         return result;
     }
-    std::vector<std::string> get(std::shared_ptr<Context> ctx) const override {
+    vector<string> get(shared_ptr<Context> ctx) const override {
         try {
-            std::vector<std::string> result;
+            vector<string> result;
             auto s = get_source()->get(ctx);
             auto split = get_split()->get(ctx);
             boost::split(result, s, boost::is_any_of(split));
@@ -61,8 +61,8 @@ public:
     }
 
 private:
-    NODE_PROPERTY(source, std::string);
-    NODE_PROPERTY(split, std::string);
+    NODE_PROPERTY(source, string);
+    NODE_PROPERTY(split, string);
 };
 
 REGISTER_NODE(SplitString);

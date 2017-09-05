@@ -31,13 +31,13 @@ namespace renderers {
 
 struct SvgRendererSettings;
 
-std::string get_extra_style(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& settings);
+string get_extra_style(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings);
 
-std::string node_to_svg(NodeInContext nic, SvgRendererSettings const&);
+string node_to_svg(NodeInContext nic, SvgRendererSettings const&);
 
 class SvgRendererModule {
 public:
-    virtual std::string operator()(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& settings) const = 0;
+    virtual string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) const = 0;
 };
 
 #define SVG_RENDERER_MODULE_CLASS(Self) \
@@ -46,7 +46,7 @@ private class_init::StringRegistered<Self, SvgRendererModule>
 
 #define SVG_RENDERER_MODULE_NAME(name_) \
 public: \
-    static std::string name() { return name_; }
+    static string name() { return name_; }
 
 } // namespace renderers
 } // namespace rainynite::core

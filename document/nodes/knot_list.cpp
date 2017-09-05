@@ -25,13 +25,13 @@
 namespace rainynite::core {
 namespace nodes {
 
-class KnotList : public Node<std::vector<Geom::Knot>> {
+class KnotList : public Node<vector<Geom::Knot>> {
 public:
     KnotList() {
         init<Geom::BezierKnots>(path, {});
     }
 public:
-    std::vector<Geom::Knot> get(std::shared_ptr<Context> ctx) const override {
+    vector<Geom::Knot> get(shared_ptr<Context> ctx) const override {
         try {
             auto path = get_path()->get(ctx);
             return path.knots;
@@ -53,7 +53,7 @@ public:
         init<bool>(closed, false);
     }
 public:
-    Geom::BezierKnots get(std::shared_ptr<Context> ctx) const override {
+    Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
         try {
             auto knots = get_knots()->get(ctx);
             auto closed = get_closed()->get(ctx);

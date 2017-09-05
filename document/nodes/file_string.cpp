@@ -26,13 +26,13 @@
 namespace rainynite::core {
 namespace nodes {
 
-class FileString : public Node<std::string> {
+class FileString : public Node<string> {
 public:
     FileString() {
-        init<std::string>(file_name, "");
+        init<string>(file_name, "");
     }
 public:
-    std::string get(std::shared_ptr<Context> ctx) const override {
+    string get(shared_ptr<Context> ctx) const override {
         try {
             auto fname = get_file_name()->get(ctx);
             std::ifstream stream(fname);
@@ -45,7 +45,7 @@ public:
     }
 
 private:
-    NODE_PROPERTY(file_name, std::string);
+    NODE_PROPERTY(file_name, string);
 };
 
 REGISTER_NODE(FileString);

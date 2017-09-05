@@ -59,16 +59,16 @@ public:
         write("]");
         prev_element = true;
     }
-    void type(std::string const& s) override {
+    void type(string const& s) override {
         key("TYPE");
         write_string(s);
         element();
     }
-    void string(std::string const& s) override {
+    void value_string(string const& s) override {
         element();
         write_string(s);
     }
-    void key(std::string const& s) override {
+    void key(string const& s) override {
         element();
         write_string(s);
         write(":");
@@ -87,17 +87,17 @@ private:
             write(",\n");
         prev_element = true;
     }
-    void write(std::string const& s) {
+    void write(string const& s) {
         stream << s;
     }
-    std::string escape(std::string const& s) {
-        std::string r = s;
+    string escape(string const& s) {
+        string r = s;
         boost::replace_all(r, "\\", "\\\\");
         boost::replace_all(r, "\"", "\\\"");
         boost::replace_all(r, "\n", "\\n");
         return r;
     }
-    void write_string(std::string const& s) {
+    void write_string(string const& s) {
         write("\"");
         write(escape(s));
         write("\"");

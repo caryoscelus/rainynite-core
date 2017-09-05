@@ -19,12 +19,18 @@
 #ifndef __CORE__CLASS_INIT_H__9F78DE78
 #define __CORE__CLASS_INIT_H__9F78DE78
 
-#include <typeindex>
-#include <map>
-
-#include <boost/any.hpp>
+#include <core/std/map.h>
+#include <core/std/any.h>
+#include <core/std/string.h>
+#include <core/std/type.h>
 
 namespace class_init {
+
+using rainynite::map;
+using rainynite::any;
+using rainynite::any_cast;
+using rainynite::string;
+using rainynite::Type;
 
 /**
  * Automatic class initialization helper.
@@ -52,20 +58,20 @@ template <typename T>
 typename Initialized<T>::Init Initialized<T>::instance;
 
 template <class T>
-std::map<std::type_index, T*>& class_registry() {
-    static std::map<std::type_index, T*> instance;
+map<Type, T*>& class_registry() {
+    static map<Type, T*> instance;
     return instance;
 }
 
 template <class T>
-std::map<T, std::type_index>& reverse_class_registry() {
-    static std::map<T, std::type_index> instance;
+map<T, Type>& reverse_class_registry() {
+    static map<T, Type> instance;
     return instance;
 }
 
 template <class T>
-std::map<std::string, T*>& string_registry() {
-    static std::map<std::string, T*> instance;
+map<string, T*>& string_registry() {
+    static map<string, T*> instance;
     return instance;
 }
 
@@ -123,27 +129,27 @@ public:
 
 class TypeLookupError : public std::runtime_error {
 public:
-    TypeLookupError(std::string msg="") :
+    TypeLookupError(string msg="") :
         std::runtime_error("Type lookup error "+msg)
     {}
 };
 
 class RuntimeTypeError : public std::runtime_error {
 public:
-    RuntimeTypeError(std::type_index type, std::string msg = "unknown error") :
-        std::runtime_error("Runtime type ("+std::string(type.name())+") "+msg)
+    RuntimeTypeError(Type type, string msg = "unknown error") :
+        std::runtime_error("Runtime type ("+string(type.name())+") "+msg)
     {}
 };
 
 class UnknownTypeError : public RuntimeTypeError {
 public:
-    UnknownTypeError(std::type_index type) :
+    UnknownTypeError(Type type) :
         RuntimeTypeError(type, "not registered")
     {}
 };
 
 template <class T>
-T& type_meta(std::type_index type) {
+T& type_meta(Type type) {
     auto const& map = class_registry<T>();
     auto iter = map.find(type);
     if (iter == map.end()) {
@@ -153,7 +159,7 @@ T& type_meta(std::type_index type) {
 }
 
 template <class T, class R>
-R type_info(std::type_index type) {
+R type_info(Type type) {
     auto const& t = type_meta<T>(type);
     try {
         return t();
@@ -163,8 +169,8 @@ R type_info(std::type_index type) {
 }
 
 template <class T, class R>
-R any_info(boost::any const& object) {
-    std::type_index type = object.type();
+R any_info(any const& object) {
+    Type type = object.type();
     auto const& t = type_meta<T>(type);
     try {
         return t(object);
@@ -174,7 +180,7 @@ R any_info(boost::any const& object) {
 }
 
 template <class K>
-std::type_index find_type(K const& key) {
+Type find_type(K const& key) {
     auto const& map = reverse_class_registry<K>();
     auto iter = map.find(key);
     if (iter != map.end())
@@ -183,7 +189,7 @@ std::type_index find_type(K const& key) {
 }
 
 template <class T>
-T& name_info(std::string const& name) {
+T& name_info(string const& name) {
     auto const& map = string_registry<T>();
     auto iter = map.find(name);
     if (iter == map.end()) {

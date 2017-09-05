@@ -49,7 +49,7 @@ namespace rainynite::core {
 
 namespace renderers {
 
-const std::string svg_template =
+const string svg_template =
 R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -71,21 +71,21 @@ struct SvgRenderer::Impl {
 
     void render(Context&& context_);
     void prepare_render();
-    void render_frame(std::shared_ptr<Context> context);
+    void render_frame(shared_ptr<Context> context);
     void finish_render();
-//     std::string definitions(std::shared_ptr<Context> context) const;
-    std::string frame_to_svg(std::shared_ptr<Context> context) const;
-    std::string node_to_svg(NodeInContext nic) const;
+//     string definitions(shared_ptr<Context> context) const;
+    string frame_to_svg(shared_ptr<Context> context) const;
+    string node_to_svg(NodeInContext nic) const;
     void start_png(bool force=false);
     void restart_png() {
         start_png(true);
     }
-    void render_png(std::string const& svg, std::string const& png);
+    void render_png(string const& svg, string const& png);
     void quit_png(bool force=false);
 
     bool finished = false;
     Context context;
-    std::shared_ptr<Document> document;
+    shared_ptr<Document> document;
 
     SvgRendererSettings settings;
 
@@ -134,9 +134,9 @@ void SvgRenderer::Impl::render(Context&& context_) {
     if (!document) {
         throw RenderFailure("No document present");
     }
-    boost::any maybe_settings = context.get_render_settings();
+    any maybe_settings = context.get_render_settings();
     if (!maybe_settings.empty()) {
-        settings = boost::any_cast<SvgRendererSettings>(maybe_settings);
+        settings = any_cast<SvgRendererSettings>(maybe_settings);
     }
     prepare_render();
     for (auto time : context.get_period()) {
@@ -169,7 +169,7 @@ void SvgRenderer::Impl::prepare_render() {
         start_png();
 }
 
-void SvgRenderer::Impl::render_frame(std::shared_ptr<Context> context) {
+void SvgRenderer::Impl::render_frame(shared_ptr<Context> context) {
     auto time = context->get_time();
     auto base_name = "renders/{:.3f}"_format(time.get_seconds());
     auto svg_name = base_name+".svg";
@@ -177,7 +177,7 @@ void SvgRenderer::Impl::render_frame(std::shared_ptr<Context> context) {
     std::ofstream f(svg_name);
     auto size = document->get_size()->get(context);
     auto viewport_size = document->get_property_value<Geom::Point>("_svg_viewport_size", context).value_or(size);
-    auto definitions = document->get_property_value<std::string>("_svg_definitions", context).value_or("");
+    auto definitions = document->get_property_value<string>("_svg_definitions", context).value_or("");
     fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(context));
     f.close();
     if (settings.render_pngs)
@@ -185,17 +185,17 @@ void SvgRenderer::Impl::render_frame(std::shared_ptr<Context> context) {
     parent->finished_frame()(time);
 }
 
-std::string SvgRenderer::Impl::frame_to_svg(std::shared_ptr<Context> context) const {
+string SvgRenderer::Impl::frame_to_svg(shared_ptr<Context> context) const {
     return node_to_svg({document->get_root(), context});
 }
 
-std::string get_extra_style(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& settings) {
+string get_extra_style(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) {
     if (settings.extra_style)
-        return node.get_property_value<std::string>("_svg_style", ctx).value_or("");
+        return node.get_property_value<string>("_svg_style", ctx).value_or("");
     return "";
 }
 
-std::string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
+string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
     auto node_ptr = nic.node;
     auto context = nic.context;
     if (!node_ptr)
@@ -211,7 +211,7 @@ std::string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) 
         return class_init::name_info<SvgRendererModule>(name)(*node, context, settings);
     } catch (class_init::TypeLookupError const&) {
         if (auto proxy = dynamic_cast<ProxyNode<Renderable>*>(node)) {
-            std::string result;
+            string result;
             result = node_to_svg(proxy->get_proxy(context), settings);
             return result;
         }
@@ -221,7 +221,7 @@ std::string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) 
     }
 }
 
-std::string SvgRenderer::Impl::node_to_svg(NodeInContext nic) const {
+string SvgRenderer::Impl::node_to_svg(NodeInContext nic) const {
     return renderers::node_to_svg(nic, settings);
 }
 
@@ -238,7 +238,7 @@ void SvgRenderer::Impl::finish_render() {
  *
  * @return pid of new process
  */
-pid_t fork_pipe(FILE*& write_pipe, FILE*& read_pipe, std::vector<std::string> args) {
+pid_t fork_pipe(FILE*& write_pipe, FILE*& read_pipe, vector<string> args) {
     if (args.size() < 1)
         throw std::invalid_argument("Empty argument list");
 
@@ -293,7 +293,7 @@ void SvgRenderer::Impl::start_png(bool force) {
 
     read_thread = std::thread([this]() {
         auto buff = std::make_unique<char[]>(256);
-        std::string sbuff;
+        string sbuff;
         size_t frames_count = 0;
         while (!svgs_finished || frames_count < rendered_frames_count) {
             // TODO: replace with blocking read?
@@ -301,11 +301,11 @@ void SvgRenderer::Impl::start_png(bool force) {
 
             size_t read_chars;
             while ((read_chars = fread((void*)buff.get(), 1, 256, png_renderer_pipe_output)) > 0) {
-                auto s = std::string(buff.get(), read_chars);
+                auto s = string(buff.get(), read_chars);
                 std::cout << s;
                 sbuff += s;
                 size_t found;
-                while ((found = sbuff.find("Bitmap saved as:")) != std::string::npos) {
+                while ((found = sbuff.find("Bitmap saved as:")) != string::npos) {
                     ++frames_count;
                     sbuff = sbuff.substr(found+1);
                 }
@@ -316,7 +316,7 @@ void SvgRenderer::Impl::start_png(bool force) {
     subprocess_initialized = true;
 }
 
-void SvgRenderer::Impl::render_png(std::string const& svg, std::string const& png) {
+void SvgRenderer::Impl::render_png(string const& svg, string const& png) {
     fputs("{} {} {}\n"_format(svg, "-e", png).c_str(), png_renderer_pipe);
     fflush(png_renderer_pipe);
 }

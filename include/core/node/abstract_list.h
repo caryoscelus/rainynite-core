@@ -19,6 +19,7 @@
 #ifndef __CORE__NODE__ABSTRACT_LIST_H__A2D19F78
 #define __CORE__NODE__ABSTRACT_LIST_H__A2D19F78
 
+#include <core/std/vector.h>
 #include "common.h"
 #include "node_in_context.h"
 
@@ -27,9 +28,9 @@ namespace rainynite::core {
 class AbstractListLinked {
 public:
     virtual size_t link_count() const = 0;
-    virtual std::vector<AbstractReference> get_links() const = 0;
+    virtual vector<AbstractReference> get_links() const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
-    virtual boost::optional<Type> get_link_type(size_t i) const = 0;
+    virtual optional<Type> get_link_type(size_t i) const = 0;
     virtual void set_link(size_t i, AbstractReference value) = 0;
     virtual void push_back(AbstractReference) {
         throw NodeAccessError("cannot push back");
@@ -50,7 +51,7 @@ public:
     }
 };
 
-using AbstractListReference = std::shared_ptr<AbstractListLinked>;
+using AbstractListReference = shared_ptr<AbstractListLinked>;
 
 } // namespace rainynite::core
 

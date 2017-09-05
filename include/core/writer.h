@@ -19,7 +19,7 @@
 #ifndef __CORE__WRITER_H__9D7C7FEE
 #define __CORE__WRITER_H__9D7C7FEE
 
-#include <memory>
+#include <core/std/memory.h>
 #include <ostream>
 
 namespace rainynite::core {
@@ -28,7 +28,7 @@ class Document;
 
 class DocumentWriter {
 public:
-    virtual void write_document(std::ostream& output, std::shared_ptr<Document> document) = 0;
+    virtual void write_document(std::ostream& output, shared_ptr<Document> document) = 0;
 };
 
 } // namespace rainynite::core

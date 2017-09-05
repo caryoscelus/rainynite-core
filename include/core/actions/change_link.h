@@ -27,7 +27,7 @@ namespace actions {
 
 class ChangeLink : public AbstractAction {
 public:
-    ChangeLink(std::shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference new_value_) :
+    ChangeLink(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference new_value_) :
         node(node_),
         index(index_),
         new_value(new_value_)
@@ -42,7 +42,7 @@ public:
         node->set_link(index, old_value);
     }
 private:
-    std::shared_ptr<AbstractListLinked> node;
+    shared_ptr<AbstractListLinked> node;
     size_t index;
     AbstractReference new_value;
     AbstractReference old_value;

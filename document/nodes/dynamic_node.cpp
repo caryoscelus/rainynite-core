@@ -29,13 +29,13 @@ template <typename T>
 class DynamicNode : public ProxyNode<T> {
 public:
     DynamicNode() {
-        this->template init<std::string>(node_type, {});
+        this->template init<string>(node_type, {});
         auto args = std::make_shared<UntypedListValue>();
         args->new_id();
-        this->template init_property(arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
+        this->template init_property(arguments, make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
-    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
+    NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         try {
             auto type = get_node_type()->get(ctx);
             if (cached_type != type) {
@@ -61,10 +61,10 @@ public:
 
 private:
     mutable AbstractReference node;
-    mutable std::string cached_type;
+    mutable string cached_type;
 
 private:
-    NODE_PROPERTY(node_type, std::string);
+    NODE_PROPERTY(node_type, string);
     NODE_LIST_PROPERTY(arguments, Nothing);
 };
 
@@ -82,17 +82,17 @@ class ApplyToList : public ProxyListNode<T> {
 public:
     ApplyToList() {
         this->template init<T>(source, {});
-        this->template init<std::string>(property_name, {});
+        this->template init<string>(property_name, {});
         // TODO: make a function
         {
             auto args = std::make_shared<UntypedListValue>();
             args->new_id();
-            this->template init_property(dynamic_arguments, boost::make_optional(Type(typeid(Nothing))), std::move(args));
+            this->template init_property(dynamic_arguments, make_optional(Type(typeid(Nothing))), std::move(args));
         }
     }
 public:
-    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
-        std::vector<NodeInContext> result;
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        vector<NodeInContext> result;
         try {
             auto property = get_property_name()->get(ctx);
             auto base_node = get_source();
@@ -114,11 +114,11 @@ public:
     }
 private:
     NODE_PROPERTY(source, T);
-    NODE_PROPERTY(property_name, std::string);
+    NODE_PROPERTY(property_name, string);
     NODE_LIST_PROPERTY(dynamic_arguments, Nothing);
 };
 
-NODE_INFO_TEMPLATE(ApplyToList, ApplyToList<T>, std::vector<T>);
+NODE_INFO_TEMPLATE(ApplyToList, ApplyToList<T>, vector<T>);
 TYPE_INSTANCES(ApplyToListNodeInfo)
 
 /**
@@ -133,15 +133,15 @@ template <typename T>
 class DynamicListTie : public ProxyListNode<T> {
 public:
     DynamicListTie() {
-        this->template init<std::string>(node_type, {});
+        this->template init<string>(node_type, {});
         auto args = std::make_shared<UntypedListValue>();
         args->new_id();
-        this->template init_property(arguments_list, boost::make_optional(Type(typeid(Nothing))), std::move(args));
+        this->template init_property(arguments_list, make_optional(Type(typeid(Nothing))), std::move(args));
     }
 public:
-    void step_into_list(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
+    void step_into_list(shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
-            using List = std::vector<NodeInContext>;
+            using List = vector<NodeInContext>;
             using Iter = List::const_iterator;
             auto args = this->get_property("arguments_list");
             if (!args)
@@ -149,8 +149,8 @@ public:
             auto list_of_lists = args->get_list_links(ctx);
             if (list_of_lists.size() == 0)
                 return;
-            std::vector<List> links;
-            std::vector<std::pair<Iter, Iter>> iterators;
+            vector<List> links;
+            vector<std::pair<Iter, Iter>> iterators;
             bool fail = false;
             std::transform(
                 std::begin(list_of_lists),
@@ -198,11 +198,11 @@ public:
         }
     }
 private:
-    NODE_PROPERTY(node_type, std::string);
+    NODE_PROPERTY(node_type, string);
     NODE_LIST_PROPERTY(arguments_list, Nothing);
 };
 
-NODE_INFO_TEMPLATE(DynamicListTie, DynamicListTie<T>, std::vector<T>);
+NODE_INFO_TEMPLATE(DynamicListTie, DynamicListTie<T>, vector<T>);
 TYPE_INSTANCES(DynamicListTieNodeInfo)
 
 } // namespace nodes

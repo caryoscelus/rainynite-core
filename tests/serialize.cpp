@@ -27,6 +27,7 @@
 #include <core/serialize/node_writer.h>
 #include <core/serialize/node_reader.h>
 
+using namespace rainynite;
 using namespace rainynite::core;
 
 namespace rainynite::core {
@@ -42,7 +43,7 @@ public:
         init<double>(b, 0);
     }
 public:
-    double get(std::shared_ptr<Context> context) const override {
+    double get(shared_ptr<Context> context) const override {
         auto a = get_a()->get(context);
         auto b = get_b()->get(context);
         return a+b;
@@ -90,18 +91,18 @@ TEST_CASE("Deserialize", "[serialize,node]") {
     s.object_start(uuid_gen());
     s.type("Value<Real>");
     s.object_value_start();
-    s.string("1");
+    s.value_string("1");
     s.object_value_end();
     s.object_end();
     s.key("b");
     s.object_start(uuid_gen());
     s.type("Value<Real>");
     s.object_value_start();
-    s.string("2");
+    s.value_string("2");
     s.object_value_end();
     s.object_end();
     s.object_end();
     auto add = s.get_root();
     CHECK(add->get_type() == typeid(double));
-    CHECK(boost::any_cast<double>(add->get_any({})) == 3);
+    CHECK(any_cast<double>(add->get_any({})) == 3);
 }

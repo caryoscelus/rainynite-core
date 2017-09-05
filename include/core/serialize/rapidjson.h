@@ -76,7 +76,7 @@ public:
         throw DeserializationError("Unexpected number");
     }
     bool String(char const* str, size_t length, bool) {
-        auto s = std::string(str, length);
+        auto s = string(str, length);
         std::cerr << "String: " << str << std::endl;
         try {
             switch (status) {
@@ -89,7 +89,7 @@ public:
                     writer.object_start(id);
                 } break;
                 case Status::Value: {
-                    writer.string(s);
+                    writer.value_string(s);
                 } break;
                 case Status::Empty: {
                     auto id = s_to_id(s);
@@ -113,7 +113,7 @@ public:
         return true;
     }
     bool Key(char const* str, size_t length, bool) {
-        auto key = std::string(str, length);
+        auto key = string(str, length);
         std::cerr << "Key: " << key << std::endl;
         if (key == "TYPE") {
             status = Status::Type;

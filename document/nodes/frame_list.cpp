@@ -32,7 +32,7 @@ public:
         this->template init<Time>(time, {});
     }
 public:
-    TimePointType get(std::shared_ptr<Context> /*ctx*/) const override {
+    TimePointType get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
 private:
@@ -54,9 +54,9 @@ public:
         this->get_frame_list()->new_id();
     }
 public:
-    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
+    NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto aframes = list_frame_list()->get_links();
-        std::vector<TimePoint<T>> frames;
+        vector<TimePoint<T>> frames;
         std::transform(
             std::begin(aframes),
             std::end(aframes),

@@ -32,7 +32,7 @@ public:
         init<double>(radius, {});
     }
 public:
-    Geom::Circle get(std::shared_ptr<Context> ctx) const override {
+    Geom::Circle get(shared_ptr<Context> ctx) const override {
         try {
             return {get_position()->get(ctx), get_radius()->get(ctx)};
         } catch (...) {

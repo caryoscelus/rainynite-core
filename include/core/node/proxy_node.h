@@ -36,9 +36,9 @@ public:
     /**
      * Get proxied NodeInContext
      */
-    virtual NodeInContext get_proxy(std::shared_ptr<Context> ctx) const = 0;
+    virtual NodeInContext get_proxy(shared_ptr<Context> ctx) const = 0;
 public:
-    T get(std::shared_ptr<Context> ctx) const override {
+    T get(shared_ptr<Context> ctx) const override {
         try {
             auto [node, nctx] = get_proxy(ctx);
             if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
@@ -54,11 +54,11 @@ public:
  * Similar to ProxyNode, but for dynamic lists
  */
 template <typename T>
-class ProxyListNode : public Node<std::vector<T>> {
+class ProxyListNode : public Node<vector<T>> {
 public:
-    std::vector<T> get(std::shared_ptr<Context> ctx) const override {
+    vector<T> get(shared_ptr<Context> ctx) const override {
         try {
-            std::vector<T> result;
+            vector<T> result;
             this->step_into_list(ctx, [&result](NodeInContext nic) {
                 if (auto vnode = dynamic_cast<BaseValue<T>*>(nic.node.get()))
                     result.push_back(vnode->get(nic.context));

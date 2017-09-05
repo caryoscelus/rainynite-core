@@ -32,18 +32,18 @@ public:
         init<double>(y, 0);
     }
 public:
-    Geom::Point get(std::shared_ptr<Context> ctx) const override {
+    Geom::Point get(shared_ptr<Context> ctx) const override {
         try {
             return {get_x()->get(ctx), get_y()->get(ctx)};
         } catch (...) {
             return {};
         }
     }
-    bool can_set_any(boost::any const& value) const override {
+    bool can_set_any(any const& value) const override {
         return get_type() == value.type();
     }
-    void set_any(boost::any const& value) override {
-        auto point = boost::any_cast<Geom::Point>(value);
+    void set_any(any const& value) override {
+        auto point = any_cast<Geom::Point>(value);
         set_property("x", make_value<double>(point.x()));
         set_property("y", make_value<double>(point.y()));
     }

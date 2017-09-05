@@ -32,10 +32,10 @@ namespace rainynite::core {
  */
 class NodeInfo {
 public:
-    std::string operator()() const {
+    string operator()() const {
         return name();
     }
-    virtual std::string name() const = 0;
+    virtual string name() const = 0;
     virtual AbstractReference new_empty() const = 0;
     virtual AbstractReference clone(AbstractValue const& source) const = 0;
     virtual Type type() const = 0;
@@ -45,24 +45,24 @@ inline NodeInfo const& get_node_info(std::type_index type) {
     return class_init::type_meta<NodeInfo>(type);
 }
 
-inline std::string node_type_name(std::type_index type) {
+inline string node_type_name(std::type_index type) {
     try {
-        return class_init::type_info<NodeInfo,std::string>(type);
+        return class_init::type_info<NodeInfo,string>(type);
     } catch (class_init::RuntimeTypeError const& ex) {
         return "unknown";
     }
 }
 
-inline std::string node_name(AbstractValue const& node) {
+inline string node_name(AbstractValue const& node) {
     return node_type_name(typeid(node));
 }
 
-inline NodeInfo const& get_node_type(std::string const& name) {
+inline NodeInfo const& get_node_type(string const& name) {
     return get_node_info(class_init::find_type(name));
 }
 
 template <typename T>
-std::shared_ptr<T> make_node_with_name(std::string const& name, AbstractReference source=nullptr, std::shared_ptr<Context> context=nullptr) {
+shared_ptr<T> make_node_with_name(string const& name, AbstractReference source=nullptr, shared_ptr<Context> context=nullptr) {
     auto node = get_node_type(name).new_empty();
     node->new_id(); // TODO: don't do that here?
     if (source && context) {
@@ -82,7 +82,7 @@ inline AbstractReference shallow_copy(AbstractValue const& source) {
 }
 
 template <class T>
-std::shared_ptr<T> shallow_copy_as(AbstractValue const& source) {
+shared_ptr<T> shallow_copy_as(AbstractValue const& source) {
     return std::dynamic_pointer_cast<T>(shallow_copy(source));
 }
 
@@ -110,15 +110,15 @@ struct RegisterNodeByType : class_init::Initialized<RegisterNodeByType<I>> {
 #define NODE_INFO_PARENTS(Self, Type) \
 public NodeInfo, \
 private class_init::Registered<Self, Type, NodeInfo>, \
-private class_init::ReverseRegistered<Self, Type, std::string>, \
+private class_init::ReverseRegistered<Self, Type, string>, \
 private RegisterNodeByType<Self>
 
 #define NODE_INFO_TEMPLATE(Name, Node, NodeType) \
 template <typename T> \
 class Name##NodeInfo : NODE_INFO_PARENTS(Name##NodeInfo<T>, Node) { \
 public: \
-    std::string name() const override { \
-        return #Name"<"+class_init::type_info<TypeInfo,std::string>(typeid(T))+">"; \
+    string name() const override { \
+        return #Name"<"+class_init::type_info<TypeInfo,string>(typeid(T))+">"; \
     } \
     AbstractReference new_empty() const override { \
         return std::make_shared<Node>(); \
@@ -135,7 +135,7 @@ public: \
 class NodeNodeInfo : NODE_INFO_PARENTS(NodeNodeInfo, Node) \
 { \
 public: \
-    std::string name() const override { \
+    string name() const override { \
         return _name; \
     } \
     AbstractReference new_empty() const override { \

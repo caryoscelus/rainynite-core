@@ -26,13 +26,13 @@ namespace nodes {
 class Text : public RenderableNode {
 public:
     Text() {
-        init<std::string>(text, "");
+        init<string>(text, "");
         init<colors::Color>(color, {});
         init<double>(size, 0);
     }
 
 private:
-    NODE_PROPERTY(text, std::string);
+    NODE_PROPERTY(text, string);
     NODE_PROPERTY(color, colors::Color);
     NODE_PROPERTY(size, double);
 };

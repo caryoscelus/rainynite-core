@@ -19,7 +19,7 @@
 #ifndef __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
 #define __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
 
-#include <memory>
+#include <core/std/memory.h>
 #include <utility>
 
 namespace rainynite::core {
@@ -28,11 +28,11 @@ class AbstractValue;
 class Context;
 
 struct NodeInContext {
-    std::shared_ptr<AbstractValue> node;
-    std::shared_ptr<Context> context;
+    shared_ptr<AbstractValue> node;
+    shared_ptr<Context> context;
 
     NodeInContext() = default;
-    NodeInContext(std::shared_ptr<AbstractValue> node_, std::shared_ptr<Context> context_) :
+    NodeInContext(shared_ptr<AbstractValue> node_, shared_ptr<Context> context_) :
         node(node_),
         context(context_)
     {}
@@ -41,7 +41,7 @@ struct NodeInContext {
         return node && context;
     }
 
-    using pair = std::pair<std::shared_ptr<AbstractValue>, std::shared_ptr<Context>>;
+    using pair = std::pair<shared_ptr<AbstractValue>, shared_ptr<Context>>;
     operator pair() const {
         return { node, context };
     }

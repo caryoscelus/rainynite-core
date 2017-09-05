@@ -45,7 +45,7 @@ public:
         init<double>(b, 0);
     }
 public:
-    double get(std::shared_ptr<Context> context) const override {
+    double get(shared_ptr<Context> context) const override {
         auto a = get_a()->get(context);
         auto b = get_b()->get(context);
         return a+b;

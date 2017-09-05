@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
+#include <core/std/string.h>
 
 #include <fmt/format.h>
 
@@ -35,7 +35,7 @@ namespace renderers {
 class ShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(ShapeSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("RenderShape");
 public:
-    std::string operator()(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
+    string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
         auto shape = node.get_property("shape")->get_any(ctx);
         auto color = node.get_property_as<colors::Color>("fill_color")->get(ctx);
         auto extra_style = get_extra_style(node, ctx, settings);

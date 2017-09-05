@@ -105,33 +105,33 @@ TYPE_INFO(Time, "Time", [](auto&& s) {
     return parse_time(s);
 });
 
-TYPE_INFO(Renderable, "Renderable", [](auto&&) -> boost::any {
+TYPE_INFO(Renderable, "Renderable", [](auto&&) -> any {
     throw serialize::DeserializationError("Renderable type cannot be deserialized");
 });
 
-TYPE_INFO(DocumentType, "Document", [](auto&&) -> boost::any {
+TYPE_INFO(DocumentType, "Document", [](auto&&) -> any {
     throw serialize::DeserializationError("Document type cannot be deserialized");
 });
 
-TYPE_INFO(TimePointType, "Frame", [](auto&&) -> boost::any {
+TYPE_INFO(TimePointType, "Frame", [](auto&&) -> any {
     throw serialize::DeserializationError("Frame type cannot be deserialized");
 });
 
 class ValueTypeInfoBase {
 public:
-    virtual std::string operator()(boost::any const& object) const = 0;
+    virtual string operator()(any const& object) const = 0;
 };
 
 class ValueTypeInfo : public ValueTypeInfoBase, class_init::Registered<ValueTypeInfo, AbstractReference, ValueTypeInfoBase> {
 public:
-    virtual std::string operator()(boost::any const& object) const {
-        auto value = boost::any_cast<AbstractReference>(object);
-        return class_init::type_info<TypeInfo, std::string>(value->get_type());
+    virtual string operator()(any const& object) const {
+        auto value = any_cast<AbstractReference>(object);
+        return class_init::type_info<TypeInfo, string>(value->get_type());
     }
 };
 
 NODE_INFO_TEMPLATE(Value, Value<T>, T);
-NODE_INFO_TEMPLATE(List, ListValue<T>, std::vector<T>);
+NODE_INFO_TEMPLATE(List, ListValue<T>, vector<T>);
 
 TYPE_INSTANCES_WO_RENDERABLE(ValueNodeInfo)
 TYPE_INSTANCES(ListNodeInfo)

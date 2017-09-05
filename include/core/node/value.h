@@ -29,7 +29,7 @@ public:
     bool is_const() const override {
         return true;
     }
-    T get(std::shared_ptr<Context> /*context*/) const override {
+    T get(shared_ptr<Context> /*context*/) const override {
         return value;
     }
     void set(T value_) override {
@@ -42,7 +42,7 @@ public:
     bool can_set() const override {
         return true;
     }
-    boost::any any() const override {
+    any static_any() const override {
         return value;
     }
 
@@ -57,7 +57,7 @@ private:
 };
 
 template <typename T, typename... Args>
-std::shared_ptr<Value<T>> make_value(Args&&... args);
+shared_ptr<Value<T>> make_value(Args&&... args);
 
 } // namespace rainynite::core
 

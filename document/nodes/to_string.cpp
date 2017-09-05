@@ -24,13 +24,13 @@
 namespace rainynite::core {
 namespace nodes {
 
-class ToString : public Node<std::string> {
+class ToString : public Node<string> {
 public:
     ToString() {
-        init_property("source", boost::none, make_value<std::string>(""));
+        init_property("source", {}, make_value<string>(""));
     }
 public:
-    std::string get(std::shared_ptr<Context> ctx) const override {
+    string get(shared_ptr<Context> ctx) const override {
         try {
             auto v = get_property("source")->get_any(ctx);
             return serialize::value_to_string(v);

@@ -27,25 +27,25 @@ AbstractNode::~AbstractNode() {
     }
 }
 
-AbstractReference AbstractNode::get_property(std::string const& name) const {
+AbstractReference AbstractNode::get_property(string const& name) const {
     auto result = named_storage.find(name);
     if (result == named_storage.end())
         throw NodeAccessError("Unknown property "+name);
     return get_by_id(result->second);
 }
 
-void AbstractNode::set_property(std::string const& name, AbstractReference ref) {
+void AbstractNode::set_property(string const& name, AbstractReference ref) {
     if (named_storage.count(name) == 0) {
         if (name[0] == '_') {
             // accept as custom attribute
-            init_property(name, boost::none, ref);
+            init_property(name, {}, ref);
         } else
             throw NodeAccessError("No such property");
     }
     set_link(named_storage[name], ref);
 }
 
-bool AbstractNode::remove_property(std::string const& name) {
+bool AbstractNode::remove_property(string const& name) {
     if (name[0] != '_')
         return false; // can only remove custom props
     auto iter = named_storage.find(name);
@@ -64,7 +64,7 @@ bool AbstractNode::remove_property(std::string const& name) {
     return true;
 }
 
-size_t AbstractNode::init_property(std::string const& name, boost::optional<Type> type, AbstractReference value) {
+size_t AbstractNode::init_property(string const& name, optional<Type> type, AbstractReference value) {
     size_t id = link_count();
     numbered_storage.push_back(value);
     names_list.push_back(name);
@@ -79,8 +79,8 @@ size_t AbstractNode::init_property(std::string const& name, boost::optional<Type
     return id;
 }
 
-std::map<std::string, AbstractReference> AbstractNode::get_link_map() const {
-    std::map<std::string, AbstractReference> result;
+std::map<string, AbstractReference> AbstractNode::get_link_map() const {
+    std::map<string, AbstractReference> result;
     // TODO: use generic conversion function
     for (auto const& e : named_storage) {
         result.emplace(e.first, get_by_id(e.second));
@@ -90,7 +90,7 @@ std::map<std::string, AbstractReference> AbstractNode::get_link_map() const {
 
 void AbstractNode::set_link(size_t i, AbstractReference value) {
     if (auto type = get_link_type(i)) {
-        if (value->get_type() != type.get())
+        if (value->get_type() != *type)
             throw NodeAccessError("Node property type mis-match");
     }
     signal_connections[i].disconnect();

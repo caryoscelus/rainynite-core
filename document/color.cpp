@@ -22,16 +22,16 @@ namespace rainynite::core {
 namespace colors {
 
 template <>
-std::string to_hex24(RGBA<uint8_t> const& color) {
+string to_hex24(RGBA<uint8_t> const& color) {
     return "#{:02x}{:02x}{:02x}"_format(color.r, color.g, color.b);
 }
 
 template <>
-std::string to_hex32(RGBA<uint8_t> const& color) {
+string to_hex32(RGBA<uint8_t> const& color) {
     return "#{:02x}{:02x}{:02x}{:02x}"_format(color.r, color.g, color.b, color.a);
 }
 
-RGBA32 parse_hex(std::string const& s) {
+RGBA32 parse_hex(string const& s) {
     RGBA32 color;
     color.a = 0xff;
     size_t sz = s.size()-1;

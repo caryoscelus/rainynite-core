@@ -20,7 +20,7 @@
 #define __CORE__READER_H__504DB02A
 
 #include <istream>
-#include <memory>
+#include <core/std/memory.h>
 
 namespace rainynite::core {
 
@@ -28,7 +28,7 @@ class Document;
 
 class DocumentReader {
 public:
-    virtual std::shared_ptr<Document> read_document(std::istream& input) = 0;
+    virtual shared_ptr<Document> read_document(std::istream& input) = 0;
 };
 
 } // namespace rainynite::core

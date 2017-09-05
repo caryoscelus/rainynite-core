@@ -23,9 +23,9 @@
 
 namespace rainynite::core {
 
-TimePeriod parse_time_period(std::string const& s);
+TimePeriod parse_time_period(string const& s);
 TimePeriod parse_time_period(std::istream& stream);
-Time parse_time(std::string const& s);
+Time parse_time(string const& s);
 Time parse_time(std::istream& stream);
 
 }

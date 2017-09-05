@@ -29,7 +29,7 @@ class Renderable {
 
 class RenderableNode : public Node<Renderable> {
 public:
-    Renderable get(std::shared_ptr<Context> /*context*/) const override {
+    Renderable get(shared_ptr<Context> /*context*/) const override {
         return {};
     }
 };

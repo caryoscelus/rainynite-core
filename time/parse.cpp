@@ -23,7 +23,7 @@
 
 namespace rainynite::core {
 
-TimePeriod parse_time_period(std::string const& s) {
+TimePeriod parse_time_period(string const& s) {
     std::istringstream stream(s);
     return parse_time_period(stream);
 }
@@ -40,7 +40,7 @@ TimePeriod parse_time_period(std::istream& stream) {
     return TimePeriod(a, b);
 }
 
-Time parse_time(std::string const& s) {
+Time parse_time(string const& s) {
     std::istringstream stream(s);
     return parse_time(stream);
 }

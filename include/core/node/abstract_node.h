@@ -31,36 +31,36 @@ class AbstractNode : public AbstractListLinked {
 public:
     virtual ~AbstractNode();
 public:
-    AbstractReference get_property(std::string const& name) const;
+    AbstractReference get_property(string const& name) const;
     template <typename T>
-    BaseReference<T> get_property_as(std::string const& name) const {
+    BaseReference<T> get_property_as(string const& name) const {
         return std::dynamic_pointer_cast<BaseValue<T>>(get_property(name));
     }
     template <typename T>
-    boost::optional<T> get_property_value(std::string const& name, std::shared_ptr<Context> context) const {
+    optional<T> get_property_value(string const& name, shared_ptr<Context> context) const {
         try {
             return get_property_as<T>(name)->get(context);
         } catch (NodeAccessError const&) {
-            return boost::none;
+            return {};
         } catch (...) {
-            return boost::none;
+            return {};
         }
     }
-    void set_property(std::string const& name, AbstractReference ref);
-    bool remove_property(std::string const& name);
-    size_t init_property(std::string const& name, boost::optional<Type> type, AbstractReference value);
-    std::map<std::string, AbstractReference> get_link_map() const;
-    std::string get_name_at(size_t id) {
+    void set_property(string const& name, AbstractReference ref);
+    bool remove_property(string const& name);
+    size_t init_property(string const& name, optional<Type> type, AbstractReference value);
+    std::map<string, AbstractReference> get_link_map() const;
+    string get_name_at(size_t id) {
         return names_list[id];
     }
 public:
-    std::vector<AbstractReference> get_links() const override {
+    vector<AbstractReference> get_links() const override {
         return numbered_storage;
     }
     AbstractReference get_link(size_t i) const override {
         return get_by_id(i);
     }
-    boost::optional<Type> get_link_type(size_t i) const override {
+    optional<Type> get_link_type(size_t i) const override {
         return types[i];
     }
     void set_link(size_t i, AbstractReference value) override;
@@ -83,11 +83,11 @@ private:
         return numbered_storage[index];
     }
 private:
-    std::map<std::string, size_t> named_storage;
-    std::vector<std::string> names_list;
-    std::vector<AbstractReference> numbered_storage;
-    std::vector<boost::signals2::connection> signal_connections;
-    std::vector<boost::optional<Type>> types;
+    std::map<string, size_t> named_storage;
+    vector<string> names_list;
+    vector<AbstractReference> numbered_storage;
+    vector<boost::signals2::connection> signal_connections;
+    vector<optional<Type>> types;
 };
 
 } // namespace rainynite::core

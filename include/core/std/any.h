@@ -1,5 +1,5 @@
 /*
- *  empty.cpp - SvgRenderer Empty renderer
+ *  std/any.h - re-import any
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "svg_module.h"
+#ifndef __CORE__STD__ANY_H__90A72F82
+#define __CORE__STD__ANY_H__90A72F82
 
-namespace rainynite::core {
-namespace renderers {
+#include <boost/any.hpp>
 
-class EmptySvgRenderer : SVG_RENDERER_MODULE_CLASS(EmptySvgRenderer) {
-    SVG_RENDERER_MODULE_NAME("Empty");
-public:
-    string operator()(AbstractNode const& /*node*/, shared_ptr<Context> /*ctx*/, SvgRendererSettings const& /*settings*/) const override {
-        return "";
-    }
-};
+namespace rainynite {
 
-} // namespace renderers
-} // namespace rainynite::core
+using boost::any;
+using boost::any_cast;
+
+} // namespace rainynite
+
+#endif

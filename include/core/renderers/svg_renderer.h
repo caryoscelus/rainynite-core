@@ -19,8 +19,7 @@
 #ifndef __CORE__RENDERERS__SVG_RENDERER_H__F493F66A
 #define __CORE__RENDERERS__SVG_RENDERER_H__F493F66A
 
-#include <memory>
-
+#include <core/std/memory.h>
 #include "../context.h"
 #include "../renderer.h"
 
@@ -32,7 +31,7 @@ struct SvgRendererSettings {
     bool render_pngs = false;
     bool keep_alive = false;
     bool extra_style = true;
-    std::string path;
+    string path;
 };
 
 class SvgRenderer : public Renderer {
@@ -45,7 +44,7 @@ public:
     void stop() override;
 private:
     struct Impl;
-    std::unique_ptr<Impl> impl;
+    unique_ptr<Impl> impl;
 };
 
 } // namespace renderers

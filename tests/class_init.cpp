@@ -43,29 +43,29 @@ class Bar {
 
 class ClassName {
 public:
-    virtual std::string operator()() const = 0;
+    virtual string operator()() const = 0;
 };
 
-class BarName : public ClassName, Registered<BarName, Bar, ClassName>, ReverseRegistered<BarName, Bar, std::string> {
+class BarName : public ClassName, Registered<BarName, Bar, ClassName>, ReverseRegistered<BarName, Bar, string> {
 public:
-    std::string operator()() const override {
+    string operator()() const override {
         return "Bar";
     }
 };
 
 TEST_CASE("Automatic class registration", "") {
-    CHECK((type_info<ClassName, std::string>(typeid(Bar)) == "Bar"));
-    CHECK_THROWS_AS((type_info<ClassName, std::string>(typeid(Foo))), UnknownTypeError);
+    CHECK((type_info<ClassName, string>(typeid(Bar)) == "Bar"));
+    CHECK_THROWS_AS((type_info<ClassName, string>(typeid(Foo))), UnknownTypeError);
 }
 
 TEST_CASE("Reverse class registration", "") {
-    CHECK(find_type<std::string>("Bar") == typeid(Bar));
-    CHECK_THROWS_AS(find_type<std::string>("Foo"), TypeLookupError);
+    CHECK(find_type<string>("Bar") == typeid(Bar));
+    CHECK_THROWS_AS(find_type<string>("Foo"), TypeLookupError);
 }
 
 class FooBar {
 public:
-    virtual std::string name() const {
+    virtual string name() const {
         return "FooBar";
     }
     virtual ~FooBar() {}
@@ -73,29 +73,29 @@ public:
 
 class FooBaz : public FooBar {
 public:
-    std::string name() const override {
+    string name() const override {
         return "FooBaz";
     }
 };
 
 class PolyClassName {
 public:
-    virtual std::string operator()(boost::any const& object) const = 0;
+    virtual string operator()(any const& object) const = 0;
 };
 
 class FooBarName : public PolyClassName, Registered<FooBarName, FooBar*, PolyClassName> {
 public:
-    std::string operator()(boost::any const& object) const override {
-        auto p = boost::any_cast<FooBar*>(object);
+    string operator()(any const& object) const override {
+        auto p = any_cast<FooBar*>(object);
         return p->name();
     }
 };
 
 TEST_CASE("Polymorphic class name", "") {
     FooBar* obj = new FooBar();
-    CHECK((any_info<PolyClassName, std::string>(obj) == "FooBar"));
+    CHECK((any_info<PolyClassName, string>(obj) == "FooBar"));
     delete obj;
     obj = new FooBaz();
-    CHECK((any_info<PolyClassName, std::string>(obj) == "FooBaz"));
-    CHECK_THROWS_AS((any_info<PolyClassName, std::string>(new FooBaz()) == "FooBaz"), UnknownTypeError);
+    CHECK((any_info<PolyClassName, string>(obj) == "FooBaz"));
+    CHECK_THROWS_AS((any_info<PolyClassName, string>(new FooBaz()) == "FooBaz"), UnknownTypeError);
 }

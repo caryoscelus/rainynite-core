@@ -35,7 +35,7 @@ public:
         init<double>(progress, 0);
     }
 public:
-    Geom::BezierKnots get(std::shared_ptr<Context> ctx) const override {
+    Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
         try {
             auto a = get_a()->get(ctx);
             auto b = get_b()->get(ctx);

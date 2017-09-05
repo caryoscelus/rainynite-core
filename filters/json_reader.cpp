@@ -30,7 +30,7 @@ namespace filters {
 
 struct DummyReader {};
 
-std::shared_ptr<Document> JsonReader::read_document(std::istream& input) {
+shared_ptr<Document> JsonReader::read_document(std::istream& input) {
     serialize::RJSONWrapper<serialize::NodeDeserializer<DummyReader>> node_reader;
     rapidjson::Reader json_reader;
     rapidjson::IStreamWrapper stream(input);

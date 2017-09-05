@@ -33,7 +33,7 @@ public:
         init<Geom::Point>(tg2, {});
     }
 public:
-    Geom::Knot get(std::shared_ptr<Context> ctx) const override {
+    Geom::Knot get(shared_ptr<Context> ctx) const override {
         try {
             return Geom::Knot {
                 get_pos()->get(ctx),

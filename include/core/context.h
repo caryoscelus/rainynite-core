@@ -19,11 +19,10 @@
 #ifndef __CORE__CONTEXT_H__50E71540
 #define __CORE__CONTEXT_H__50E71540
 
-#include <memory>
-
-#include <boost/any.hpp>
 #include <boost/signals2/signal.hpp>
 
+#include <core/std/memory.h>
+#include <core/std/any.h>
 #include <core/time/time_period.h>
 
 namespace rainynite::core {
@@ -42,7 +41,7 @@ public:
     Context& operator=(Context&& context_) = default;
     virtual ~Context() = default;
 public:
-    inline std::shared_ptr<Document> get_document() const {
+    inline shared_ptr<Document> get_document() const {
         return document.lock();
     }
     inline Time get_time() const {
@@ -68,10 +67,10 @@ public:
     }
     void set_period(TimePeriod const& period);
     TimePeriod get_period() const;
-    inline boost::any get_render_settings() const {
+    inline any get_render_settings() const {
         return render_settings;
     }
-    inline boost::any& mod_render_settings() {
+    inline any& mod_render_settings() {
         return render_settings;
     }
     inline Time::fps_type get_fps() {
@@ -85,8 +84,8 @@ private:
     std::weak_ptr<Document> document;
     Time::fps_type fps = 1;
     Time time;
-    std::shared_ptr<Value<TimePeriod>> time_period;
-    boost::any render_settings;
+    shared_ptr<Value<TimePeriod>> time_period;
+    any render_settings;
 };
 
 } // namespace rainynite::core

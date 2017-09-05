@@ -24,13 +24,13 @@
 namespace rainynite::core {
 namespace nodes {
 
-class ColorString : public Node<std::string> {
+class ColorString : public Node<string> {
 public:
     ColorString() {
         init<colors::Color>(color, {});
     }
 public:
-    std::string get(std::shared_ptr<Context> ctx) const override {
+    string get(shared_ptr<Context> ctx) const override {
         try {
             auto c = get_color()->get(ctx);
             return colors::to_hex24(c);

@@ -19,7 +19,7 @@
 #ifndef __CORE__NODE__NOTIFY_H__35072B50
 #define __CORE__NODE__NOTIFY_H__35072B50
 
-#include <memory>
+#include <core/std/memory.h>
 
 #include <boost/signals2/signal.hpp>
 
@@ -61,7 +61,7 @@ private:
 
 private:
     struct Null {};
-    std::shared_ptr<Null> destroy_detector;
+    shared_ptr<Null> destroy_detector;
 };
 
 } // namespace rainynite::core

@@ -20,13 +20,14 @@
 #define __CORE__ACTION_H__F4E4BABC
 
 #include <stdexcept>
-#include <vector>
-#include <memory>
+#include <core/std/vector.h>
+#include <core/std/memory.h>
+#include <core/std/string.h>
 
 namespace rainynite::core {
 
 struct ActionError : public std::runtime_error {
-    ActionError(std::string const& msg) :
+    ActionError(string const& msg) :
         std::runtime_error(msg)
     {}
 };
@@ -67,7 +68,7 @@ private:
 
 class ActionStack {
 public:
-    using Stack = std::vector<std::unique_ptr<AbstractAction>>;
+    using Stack = vector<unique_ptr<AbstractAction>>;
 public:
     template <typename R, typename... Ts>
     void emplace(Ts&&... args) {
@@ -76,7 +77,7 @@ public:
         undo_stack.emplace_back(action);
         redo_stack.clear();
     }
-    void push(std::unique_ptr<AbstractAction> action) {
+    void push(unique_ptr<AbstractAction> action) {
         action->redo();
         undo_stack.push_back(std::move(action));
         redo_stack.clear();

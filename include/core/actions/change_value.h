@@ -27,23 +27,23 @@ namespace actions {
 
 class ChangeValue : public AbstractAction {
 public:
-    ChangeValue(AbstractReference node_, boost::any new_value_) :
+    ChangeValue(AbstractReference node_, any new_value_) :
         node(node_),
         new_value(new_value_)
     {}
 public:
     void redo_action() override {
-        old_value = node->any();
+        old_value = node->static_any();
         node->set_any(new_value);
     }
     void undo_action() override {
-        new_value = node->any();
+        new_value = node->static_any();
         node->set_any(old_value);
     }
 private:
     AbstractReference node;
-    boost::any new_value;
-    boost::any old_value;
+    any new_value;
+    any old_value;
 };
 
 } // namespace actions

@@ -28,18 +28,18 @@ namespace nodes {
 static const size_t FORMAT_ARGS = 16;
 
 template <size_t... i>
-std::string format_vector(std::string format, std::vector<std::string> args, std::index_sequence<i...>) {
+string format_vector(string format, vector<string> args, std::index_sequence<i...>) {
     return fmt::format(format, args[i]...);
 }
 
-class FormatString : public Node<std::string> {
+class FormatString : public Node<string> {
 public:
     FormatString() {
-        init(format, std::string());
-        init_list<std::string>(arguments);
+        init(format, string());
+        init_list<string>(arguments);
     }
 public:
-    std::string get(std::shared_ptr<Context> ctx) const override {
+    string get(shared_ptr<Context> ctx) const override {
         try {
             auto str = get_format()->get(ctx);
             auto args = get_arguments()->get(ctx);
@@ -51,13 +51,13 @@ public:
             return format_vector(str, args, std::make_index_sequence<FORMAT_ARGS>());
         } catch (...) {
             // TODO: DEBUG
-            return std::string();
+            return string();
         }
     }
 
 private:
-    NODE_PROPERTY(format, std::string);
-    NODE_LIST_PROPERTY(arguments, std::string);
+    NODE_PROPERTY(format, string);
+    NODE_LIST_PROPERTY(arguments, string);
 };
 
 REGISTER_NODE(FormatString);

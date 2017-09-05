@@ -34,7 +34,7 @@ public:
         this->template init<Time>(offset, {});
     }
 public:
-    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
+    NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto t = ctx->get_time() * get_multiplier()->get(ctx) + get_offset()->get(ctx);
         auto nctx = std::make_shared<Context>(*ctx);
         nctx->set_time(t);
@@ -55,7 +55,7 @@ public:
     Now() {
     }
 public:
-    Time get(std::shared_ptr<Context> ctx) const override {
+    Time get(shared_ptr<Context> ctx) const override {
         return ctx->get_time();
     }
 };
@@ -71,7 +71,7 @@ public:
         this->template init<Time>(offset, {});
     }
 public:
-    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
+    NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto period = get_period()->get(ctx);
         auto t = ctx->get_time() + get_offset()->get(ctx);
         Time time;

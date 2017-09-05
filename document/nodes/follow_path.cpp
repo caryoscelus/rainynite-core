@@ -33,7 +33,7 @@ public:
         init<double>(position, 0);
     }
 public:
-    Geom::Point get(std::shared_ptr<Context> ctx) const override {
+    Geom::Point get(shared_ptr<Context> ctx) const override {
         try {
             auto path = get_path()->get(ctx);
             auto position = get_position()->get(ctx);

@@ -38,7 +38,7 @@ public:
         init<double>(b, 0);
     }
 public:
-    double get(std::shared_ptr<Context> ctx) const override {
+    double get(shared_ptr<Context> ctx) const override {
         try {
             return get_a()->get(ctx) + get_b()->get(ctx);
         } catch (...) {
@@ -60,7 +60,7 @@ public:
         init<Geom::Point>(b, {});
     }
 public:
-    Geom::Point get(std::shared_ptr<Context> ctx) const override {
+    Geom::Point get(shared_ptr<Context> ctx) const override {
         try {
             return get_a()->get(ctx) + get_b()->get(ctx);
         } catch (...) {
@@ -81,7 +81,7 @@ public:
         init<double>(b, 0);
     }
 public:
-    double get(std::shared_ptr<Context> ctx) const override {
+    double get(shared_ptr<Context> ctx) const override {
         try {
             return get_a()->get(ctx) * get_b()->get(ctx);
         } catch (...) {
@@ -101,7 +101,7 @@ public:
         init<double>(turns, 0);
     }
 public:
-    double get(std::shared_ptr<Context> ctx) const override {
+    double get(shared_ptr<Context> ctx) const override {
         try {
             return std::sin(get_turns()->get(ctx) * pi * 2);
         } catch (...) {

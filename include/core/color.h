@@ -21,7 +21,7 @@
 
 #include <cstdint>
 #include <limits>
-#include <string>
+#include <core/std/string.h>
 
 #include <fmt/format.h>
 
@@ -88,12 +88,12 @@ using RGBA32 = RGBA<uint8_t>;
 using Color = RGBA32;
 
 template <class C>
-std::string to_hex24(C const& color);
+string to_hex24(C const& color);
 
 template <class C>
-std::string to_hex32(C const& color);
+string to_hex32(C const& color);
 
-RGBA32 parse_hex(std::string const& s);
+RGBA32 parse_hex(string const& s);
 
 std::ostream& operator<<(std::ostream& stream, Color c);
 

@@ -41,7 +41,7 @@ public:
         get_periods()->new_id();
     }
 public:
-    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
+    NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         size_t i = 0;
         auto time = ctx->get_time();
         for (auto period : get_periods()->get(ctx)) {

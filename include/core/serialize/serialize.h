@@ -22,19 +22,20 @@
 #include <set>
 #include <stdexcept>
 
-namespace rainynite::core {
-namespace serialize {
+#include <core/std/string.h>
+
+namespace rainynite::core::serialize {
 
 class SerializationError : public std::runtime_error {
 public:
-    SerializationError(std::string const& msg) :
+    SerializationError(string const& msg) :
         std::runtime_error(msg)
     {}
 };
 
 class DeserializationError : public SerializationError {
 public:
-    DeserializationError(std::string const& msg) :
+    DeserializationError(string const& msg) :
         SerializationError(msg)
     {}
 };
@@ -61,10 +62,10 @@ public:
     static U get_reference(T const& object);
 
     template <typename U>
-    static std::string id_to_string(U id);
+    static string id_to_string(U id);
 
     template <class T>
-    static std::string get_type(T const& object);
+    static string get_type(T const& object);
 
     template <class T>
     static RecordType classify(T const& object);
@@ -111,9 +112,9 @@ public:
     virtual void object_value_end() = 0;
     virtual void list_start() = 0;
     virtual void list_end() = 0;
-    virtual void type(std::string const& s) = 0;
-    virtual void string(std::string const& s) = 0;
-    virtual void key(std::string const& s) = 0;
+    virtual void type(string const& s) = 0;
+    virtual void value_string(string const& s) = 0;
+    virtual void key(string const& s) = 0;
     virtual void number(double x) = 0;
     virtual void reference(U id) = 0;
 private:
@@ -126,7 +127,6 @@ private:
     }
 };
 
-} // namespace serialize
-} // namespace rainynite::core
+} // namespace rainynite::core::serialize
 
 #endif

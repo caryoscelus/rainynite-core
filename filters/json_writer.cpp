@@ -24,7 +24,7 @@
 namespace rainynite::core {
 namespace filters {
 
-void JsonWriter::write_document(std::ostream& output, std::shared_ptr<Document> document) {
+void JsonWriter::write_document(std::ostream& output, shared_ptr<Document> document) {
     auto writer = serialize::DumbJsonWriter<serialize::NodeWriter, AbstractReference>(output);
     writer.object(std::dynamic_pointer_cast<AbstractValue>(document));
 }

@@ -28,7 +28,7 @@ namespace nodes {
 class RenderShape : public RenderableNode {
 public:
     RenderShape() {
-        init_property("shape", boost::none, make_value<Geom::NullShape>());
+        init_property("shape", {}, make_value<Geom::NullShape>());
         init<colors::Color>(fill_color, colors::Color());
     }
 private:

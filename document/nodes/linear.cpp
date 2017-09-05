@@ -31,7 +31,7 @@ public:
         init<double>(speed, 1);
     }
 public:
-    double get(std::shared_ptr<Context> ctx) const override {
+    double get(shared_ptr<Context> ctx) const override {
         try {
             auto b = get_base()->get(ctx);
             auto f = get_speed()->get(ctx);

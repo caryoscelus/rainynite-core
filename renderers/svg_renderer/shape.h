@@ -31,11 +31,11 @@ public:
      * string with places to replace: "{fill_color}", "{svg_style}" and possibly
      * more in the future.
      */
-    virtual std::string operator()(boost::any const& shape) const = 0;
+    virtual string operator()(any const& shape) const = 0;
 };
 
-inline std::string render_svg_shape(boost::any const& shape) {
-    return class_init::any_info<SvgShapeRenderer, std::string>(shape);
+inline string render_svg_shape(any const& shape) {
+    return class_init::any_info<SvgShapeRenderer, string>(shape);
 }
 
 #define SVG_SHAPE_RENDERER(Self, Shape) \

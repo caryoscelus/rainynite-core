@@ -30,8 +30,8 @@ enum class TraverseDepth {
     Deeper
 };
 
-template <typename T, typename F>
-T traverse_once(AbstractReference root, F f, TraverseDepth depth = TraverseDepth::Once) {
+template <typename T>
+T traverse_once(AbstractReference root, std::function<optional<T>(AbstractReference)> f, TraverseDepth depth = TraverseDepth::Once) {
     std::set<AbstractReference> traversed;
     std::list<AbstractReference> to_traverse;
     to_traverse.push_back(root);
@@ -42,8 +42,8 @@ T traverse_once(AbstractReference root, F f, TraverseDepth depth = TraverseDepth
         if (traversed.count(node) > 0 && depth == TraverseDepth::Once)
             continue;
 
-        if (boost::optional<T> result = f(node))
-            return result.get();
+        if (optional<T> result = f(node))
+            return *result;
 
         if (traversed.count(node) == 0) {
             if (auto linked_node = std::dynamic_pointer_cast<AbstractListLinked>(node)) {

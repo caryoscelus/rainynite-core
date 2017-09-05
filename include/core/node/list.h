@@ -38,10 +38,10 @@ void push_value(P list, T const& value) {
 template <class S, class P>
 class ListValueBase : public AbstractListLinked, public P {
 public:
-    std::vector<AbstractReference> get_links() const override {
+    vector<AbstractReference> get_links() const override {
         if constexpr (std::is_same_v<S, AbstractValue>)
             return values;
-        std::vector<AbstractReference> result;
+        vector<AbstractReference> result;
         std::transform(
             values.begin(),
             values.end(),
@@ -52,8 +52,8 @@ public:
         );
         return result;
     }
-    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> context) const override {
-        std::vector<NodeInContext> result;
+    vector<NodeInContext> get_list_links(shared_ptr<Context> context) const override {
+        vector<NodeInContext> result;
         std::transform(
             values.begin(),
             values.end(),
@@ -64,7 +64,7 @@ public:
         );
         return result;
     }
-    void step_into_list(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
+    void step_into_list(shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
         for (auto&& child : values) {
             f(NodeInContext(child, context));
         }
@@ -107,21 +107,21 @@ public:
         return true;
     }
 protected:
-    std::vector<std::shared_ptr<S>> values;
-    std::vector<boost::signals2::connection> signal_connections;
+    vector<shared_ptr<S>> values;
+    vector<boost::signals2::connection> signal_connections;
 };
 
 /**
  * Typed (homogeneous) list
  */
 template <typename T>
-class ListValue : public ListValueBase<BaseValue<T>, BaseValue<std::vector<T>>> {
+class ListValue : public ListValueBase<BaseValue<T>, BaseValue<vector<T>>> {
 public:
     ListValue() = default;
 public:
-    std::vector<T> get(std::shared_ptr<Context> context) const override {
+    vector<T> get(shared_ptr<Context> context) const override {
         // TODO: caching
-        std::vector<T> result;
+        vector<T> result;
         std::transform(
             this->values.begin(),
             this->values.end(),
@@ -132,8 +132,8 @@ public:
         );
         return result;
     }
-    boost::optional<Type> get_link_type(size_t) const override {
-        return boost::make_optional(Type(typeid(T)));
+    optional<Type> get_link_type(size_t) const override {
+        return make_optional(Type(typeid(T)));
     }
     void push_new() override {
         push_value<T>(this, {});
@@ -148,11 +148,11 @@ public:
     Type get_type() const override {
         return typeid(Nothing);
     }
-    boost::any get_any(std::shared_ptr<Context> /*context*/) const override {
+    any get_any(shared_ptr<Context> /*context*/) const override {
         return Nothing();
     }
-    boost::optional<std::type_index> get_link_type(size_t) const override {
-        return boost::none;
+    optional<std::type_index> get_link_type(size_t) const override {
+        return {};
     }
 public:
     static Type static_type() {

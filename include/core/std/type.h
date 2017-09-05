@@ -1,5 +1,5 @@
 /*
- *  empty.cpp - SvgRenderer Empty renderer
+ *  std/type.h - re-import type
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "svg_module.h"
+#ifndef __CORE__STD__TYPE_H__4C6E074A
+#define __CORE__STD__TYPE_H__4C6E074A
 
-namespace rainynite::core {
-namespace renderers {
+#include <typeindex>
 
-class EmptySvgRenderer : SVG_RENDERER_MODULE_CLASS(EmptySvgRenderer) {
-    SVG_RENDERER_MODULE_NAME("Empty");
-public:
-    string operator()(AbstractNode const& /*node*/, shared_ptr<Context> /*ctx*/, SvgRendererSettings const& /*settings*/) const override {
-        return "";
-    }
-};
+namespace rainynite {
 
-} // namespace renderers
-} // namespace rainynite::core
+using Type = std::type_index;
+
+} // namespace rainynite
+
+#endif

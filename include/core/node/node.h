@@ -32,22 +32,22 @@ template <typename T>
 class Node : public BaseValue<T>, public AbstractNode {
 public:
     template <typename U>
-    void init(std::string const& name, U value) {
-        init_property(name, boost::make_optional(Type(typeid(U))), make_value<U>(value));
+    void init(string const& name, U value) {
+        init_property(name, make_optional(Type(typeid(U))), make_value<U>(value));
     }
     template <typename U>
-    void init_list(std::string const& name) {
-        init_property(name, boost::make_optional(Type(typeid(std::vector<U>))), std::make_shared<ListValue<U>>());
+    void init_list(string const& name) {
+        init_property(name, make_optional(Type(typeid(vector<U>))), std::make_shared<ListValue<U>>());
     }
 public:
-    bool can_set_source(std::shared_ptr<AbstractValue> src) const override {
+    bool can_set_source(shared_ptr<AbstractValue> src) const override {
         if (link_count() == 0)
             return false;
         if (auto type = get_link_type(0))
             return src->get_type() == *type;
         return true;
     }
-    void set_source(std::shared_ptr<AbstractValue> src) override {
+    void set_source(shared_ptr<AbstractValue> src) override {
         set_link(0, src);
     }
 protected:

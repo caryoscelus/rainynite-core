@@ -42,7 +42,7 @@ double get_random_in_range(R& engine, double max) {
  * useful than returning random 32bit ints and strict precision isn't
  * that important yet.
  */
-class RandomList : public Node<std::vector<double>> {
+class RandomList : public Node<vector<double>> {
 public:
     RandomList() {
         init<double>(length, 0);
@@ -50,22 +50,22 @@ public:
         init<double>(max, 1);
     }
 public:
-    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
-        std::vector<NodeInContext> result;
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        vector<NodeInContext> result;
         random_sequence(ctx, [&result, ctx](auto r) {
             result.emplace_back(make_value<double>(r), ctx);
         });
         return result;
     }
-    std::vector<double> get(std::shared_ptr<Context> ctx) const override {
-        std::vector<double> result;
+    vector<double> get(shared_ptr<Context> ctx) const override {
+        vector<double> result;
         random_sequence(ctx, [&result](auto r) {
             result.push_back(r);
         });
         return result;
     }
 private:
-    void random_sequence(std::shared_ptr<Context> ctx, auto f) const {
+    void random_sequence(shared_ptr<Context> ctx, auto f) const {
         try {
             int length = get_length()->get(ctx);
             if (length < 1)
@@ -99,7 +99,7 @@ public:
         init<double>(seed, 0);
     }
 public:
-    double get(std::shared_ptr<Context> ctx) const {
+    double get(shared_ptr<Context> ctx) const {
         try {
             auto max = get_max()->get(ctx);
             auto period = get_period()->get(ctx);

@@ -19,7 +19,7 @@
 #ifndef __CORE__DOCUMENT_H__62AC426A
 #define __CORE__DOCUMENT_H__62AC426A
 
-#include <memory>
+#include <core/std/memory.h>
 
 #include <geom_helpers/knots.h>
 
@@ -41,19 +41,19 @@ class Document :
     public std::enable_shared_from_this<Document>
 {
 public:
-    explicit Document(std::shared_ptr<BaseValue<Renderable>> root_=nullptr);
+    explicit Document(shared_ptr<BaseValue<Renderable>> root_=nullptr);
     virtual ~Document();
-    std::shared_ptr<Context> get_default_context();
-    inline std::shared_ptr<ActionStack> get_action_stack() {
+    shared_ptr<Context> get_default_context();
+    inline shared_ptr<ActionStack> get_action_stack() {
         return action_stack;
     }
 
 public:
-    DocumentType get(std::shared_ptr<Context> context) const override;
+    DocumentType get(shared_ptr<Context> context) const override;
 
 private:
-    std::shared_ptr<Context> default_context;
-    std::shared_ptr<ActionStack> action_stack;
+    shared_ptr<Context> default_context;
+    shared_ptr<ActionStack> action_stack;
 
     NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(size, Geom::Point);

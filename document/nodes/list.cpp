@@ -26,15 +26,15 @@ namespace rainynite::core {
 class ToUntypedList : public Node<Nothing> {
 public:
     ToUntypedList() {
-        init_property("source", boost::none, make_value<Nothing>());
+        init_property("source", {}, make_value<Nothing>());
     }
 public:
-    std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const override {
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         if (auto list = get_property("source"))
             return list->get_list_links(ctx);
         return {};
     }
-    Nothing get(std::shared_ptr<Context> /*ctx*/) const override {
+    Nothing get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
 };
@@ -45,10 +45,10 @@ template <typename T>
 class ListElement : public ProxyNode<T> {
 public:
     ListElement() {
-        this->init_property("source", boost::none, make_value<Nothing>());
+        this->init_property("source", {}, make_value<Nothing>());
         this->template init<double>(n, 0);
     }
-    NodeInContext get_proxy(std::shared_ptr<Context> ctx) const override {
+    NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto list = this->get_property("source");
         auto l = list->get_list_links(ctx);
         if (l.size() == 0)

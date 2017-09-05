@@ -25,21 +25,21 @@ namespace rainynite::core {
 
 class TypeInfo {
 public:
-    virtual std::string operator()() const = 0;
-    virtual boost::any parse_string(std::string const& s) const = 0;
+    virtual string operator()() const = 0;
+    virtual any parse_string(string const& s) const = 0;
 };
 
 #define TYPE_INFO(Type, name, parse) \
 class Type##TypeInfo : \
     public rainynite::core::TypeInfo, \
     class_init::Registered<Type##TypeInfo, Type, rainynite::core::TypeInfo>, \
-    class_init::ReverseRegistered<Type##TypeInfo, Type, std::string> \
+    class_init::ReverseRegistered<Type##TypeInfo, Type, rainynite::string> \
 { \
 public: \
-    std::string operator()() const override { \
+    rainynite::string operator()() const override { \
         return name; \
     } \
-    boost::any parse_string(std::string const& s) const override { \
+    rainynite::any parse_string(rainynite::string const& s) const override { \
         return parse(s); \
     } \
 }
@@ -48,19 +48,19 @@ inline TypeInfo const& get_primitive_type(std::type_index type) {
     return class_init::type_meta<TypeInfo>(type);
 }
 
-inline TypeInfo const& get_primitive_type(std::string const& name) {
+inline TypeInfo const& get_primitive_type(string const& name) {
     auto type = class_init::find_type(name);
     return get_primitive_type(type);
 }
 
 template <typename T>
-boost::any parse_primitive_type(T type, std::string const& str) {
+any parse_primitive_type(T type, string const& str) {
     return get_primitive_type(type).parse_string(str);
 }
 
 template <typename T, typename... Args>
 T parse_primitive_type_to(Args&&... args) {
-    return boost::any_cast<T>(
+    return any_cast<T>(
         parse_primitive_type(std::forward<Args>(args)...)
     );
 }

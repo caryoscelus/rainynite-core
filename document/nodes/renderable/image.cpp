@@ -27,12 +27,12 @@ namespace nodes {
 class Image : public RenderableNode {
 public:
     Image() {
-        init<std::string>(file_path, "");
+        init<string>(file_path, "");
         init<Geom::Point>(size, {0, 0});
     }
 
 private:
-    NODE_PROPERTY(file_path, std::string);
+    NODE_PROPERTY(file_path, string);
     NODE_PROPERTY(size, Geom::Point);
 };
 

@@ -21,11 +21,13 @@
 
 #include <stdexcept>
 
+#include <core/std/string.h>
+
 namespace rainynite::core {
 
 class ParseError : public std::runtime_error {
 public:
-    ParseError(std::string const& msg) :
+    ParseError(string const& msg) :
         std::runtime_error(msg)
     {}
 };

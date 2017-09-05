@@ -31,31 +31,31 @@ using namespace fmt::literals;
 namespace rainynite::core {
 namespace renderers {
 
-const std::string svg_path = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
+const string svg_path = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
 
-const std::string svg_rectangle = R"(<rect x="{x}" y="{y}" width="{width}" height="{height}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
+const string svg_rectangle = R"(<rect x="{x}" y="{y}" width="{width}" height="{height}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
 
-const std::string svg_circle = R"(<circle cx="{x}" cy="{y}" r="{radius}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
+const string svg_circle = R"(<circle cx="{x}" cy="{y}" r="{radius}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
 
 class NullShapeSvgSubRenderer : SVG_SHAPE_RENDERER(NullShapeSvgSubRenderer, Geom::NullShape) {
 public:
-    std::string operator()(boost::any const& /*shape*/) const override {
+    string operator()(any const& /*shape*/) const override {
         return "";
     }
 };
 
 class PathShapeSvgSubRenderer : SVG_SHAPE_RENDERER(PathShapeSvgSubRenderer, Geom::BezierKnots) {
 public:
-    std::string operator()(boost::any const& shape) const override {
-        auto path = boost::any_cast<Geom::BezierKnots>(shape);
+    string operator()(any const& shape) const override {
+        auto path = any_cast<Geom::BezierKnots>(shape);
         return fmt::format(svg_path, "path"_a=Geom::knots_to_svg(path));
     }
 };
 
 class RectangleShapeSvgSubRenderer : SVG_SHAPE_RENDERER(RectangleShapeSvgSubRenderer, Geom::Rectangle) {
 public:
-    std::string operator()(boost::any const& shape) const override {
-        auto rect = boost::any_cast<Geom::Rectangle>(shape);
+    string operator()(any const& shape) const override {
+        auto rect = any_cast<Geom::Rectangle>(shape);
         return fmt::format(
             svg_rectangle,
             "x"_a=rect.pos.x(),
@@ -68,8 +68,8 @@ public:
 
 class CircleShapeSvgSubRenderer : SVG_SHAPE_RENDERER(CircleShapeSvgSubRenderer, Geom::Circle) {
 public:
-    std::string operator()(boost::any const& shape) const override {
-        auto circle = boost::any_cast<Geom::Circle>(shape);
+    string operator()(any const& shape) const override {
+        auto circle = any_cast<Geom::Circle>(shape);
         return fmt::format(
             svg_circle,
             "x"_a=circle.pos.x(),

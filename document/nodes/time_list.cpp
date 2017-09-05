@@ -36,7 +36,7 @@ public:
         this->template init<Time>(step, {});
     }
 public:
-    void step_into_list(std::shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
+    void step_into_list(shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
         try {
             auto source = get_source();
             auto period = get_period()->get(ctx);
@@ -56,7 +56,7 @@ private:
     NODE_PROPERTY(step, Time);
 };
 
-NODE_INFO_TEMPLATE(TimeList, TimeList<T>, std::vector<T>);
+NODE_INFO_TEMPLATE(TimeList, TimeList<T>, vector<T>);
 TYPE_INSTANCES(TimeListNodeInfo)
 
 } // namespace nodes

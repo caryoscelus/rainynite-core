@@ -19,10 +19,10 @@
 #ifndef __CORE__NODE__ABSTRACT_VALUE_H__ACCED1BE
 #define __CORE__NODE__ABSTRACT_VALUE_H__ACCED1BE
 
-#include <boost/any.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
+#include <core/std/any.h>
 #include "notify.h"
 #include "abstract_list.h"
 
@@ -36,20 +36,20 @@ public:
         return false;
     }
     virtual Type get_type() const = 0;
-    virtual boost::any get_any(std::shared_ptr<Context> context) const = 0;
-    virtual void set_any(boost::any const& /*value*/) {
+    virtual any get_any(shared_ptr<Context> context) const = 0;
+    virtual void set_any(any const& /*value*/) {
         throw NodeAccessError("Cannot set");
     }
-    virtual bool can_set_any(boost::any const& /*value*/) const {
+    virtual bool can_set_any(any const& /*value*/) const {
         return false;
     }
-    virtual boost::any any() const {
+    virtual any static_any() const {
         throw NodeAccessError("No static value");
     }
-    virtual void set_source(std::shared_ptr<AbstractValue> /*source*/) {
+    virtual void set_source(shared_ptr<AbstractValue> /*source*/) {
         throw NodeAccessError("Cannot set source node");
     }
-    virtual bool can_set_source(std::shared_ptr<AbstractValue> /*source*/) const {
+    virtual bool can_set_source(shared_ptr<AbstractValue> /*source*/) const {
         return false;
     }
     /**
@@ -57,11 +57,11 @@ public:
      *
      * If this node is not a list, throws NodeAccessError
      */
-    virtual void step_into_list(std::shared_ptr<Context> /*context*/, std::function<void(NodeInContext)> /*f*/) const {
+    virtual void step_into_list(shared_ptr<Context> /*context*/, std::function<void(NodeInContext)> /*f*/) const {
         throw NodeAccessError("This node is not a list");
     }
-    virtual std::vector<NodeInContext> get_list_links(std::shared_ptr<Context> ctx) const {
-        std::vector<NodeInContext> result;
+    virtual vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const {
+        vector<NodeInContext> result;
         step_into_list(ctx, [&result](auto e) {
             result.push_back(std::move(e));
         });
@@ -85,12 +85,12 @@ template <typename T>
 constexpr bool is_vector = false;
 
 template <typename U>
-constexpr bool is_vector<std::vector<U>> = true;
+constexpr bool is_vector<vector<U>> = true;
 
 template <typename T>
 class BaseValue : public AbstractValue {
 public:
-    virtual T get(std::shared_ptr<Context> context) const {
+    virtual T get(shared_ptr<Context> context) const {
         if constexpr (is_vector<T>) {
             using E = typename T::value_type;
             T result;
@@ -121,16 +121,16 @@ public:
     Type get_type() const override {
         return typeid(T);
     }
-    boost::any get_any(std::shared_ptr<Context> context) const override {
+    any get_any(shared_ptr<Context> context) const override {
         return get(context);
     }
-    void set_any(boost::any const& value_) override {
-        set(boost::any_cast<T>(value_));
+    void set_any(any const& value_) override {
+        set(any_cast<T>(value_));
     }
-    bool can_set_any(boost::any const& value_) const override {
+    bool can_set_any(any const& value_) const override {
         return can_set() && value_.type() == typeid(T);
     }
-    void step_into_list(std::shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
+    void step_into_list(shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
         if constexpr (is_vector<T>) {
             for (auto&& e : get_list_links(context))
                 f(e);

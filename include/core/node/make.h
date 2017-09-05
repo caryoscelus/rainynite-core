@@ -19,14 +19,14 @@
 #ifndef __CORE__NODE__MAKE_H__A6087C20
 #define __CORE__NODE__MAKE_H__A6087C20
 
-#include <memory>
+#include <core/std/memory.h>
 
 #include "value.h"
 
 namespace rainynite::core {
 
 template <typename T, typename... Args>
-std::shared_ptr<Value<T>> make_value(Args&&... args) {
+shared_ptr<Value<T>> make_value(Args&&... args) {
     auto r = std::make_shared<Value<T>>();
     r->new_id();
     r->emplace(std::forward<Args>(args)...);
@@ -34,7 +34,7 @@ std::shared_ptr<Value<T>> make_value(Args&&... args) {
 }
 
 template <class T>
-std::shared_ptr<T> make_node() {
+shared_ptr<T> make_node() {
     auto r = std::make_shared<T>();
     r->new_id();
     return r;

@@ -32,7 +32,7 @@ public:
         init<double>(progress, 0);
     }
 public:
-    colors::Color get(std::shared_ptr<Context> ctx) const override {
+    colors::Color get(shared_ptr<Context> ctx) const override {
         auto a = get_a()->get(ctx);
         auto b = get_b()->get(ctx);
         auto t = get_progress()->get(ctx);

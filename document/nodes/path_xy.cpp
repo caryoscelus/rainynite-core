@@ -40,7 +40,7 @@ public:
         init<double>(x, 0);
     }
 public:
-    double get(std::shared_ptr<Context> ctx) const override {
+    double get(shared_ptr<Context> ctx) const override {
         auto path = Geom::knots_to_path(get_path()->get(ctx));
         auto x = std::max(
             path.initialPoint().x(),

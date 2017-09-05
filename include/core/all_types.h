@@ -33,7 +33,7 @@
     template class Template<Nothing>; \
     template class Template<bool>; \
     template class Template<double>; \
-    template class Template<std::string>; \
+    template class Template<string>; \
     template class Template<Time>; \
     template class Template<TimePeriod>; \
     template class Template<Geom::Point>; \

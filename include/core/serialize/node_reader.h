@@ -78,11 +78,11 @@ public:
     void list_end() override {
         await(RecordType::Nothing);
     }
-    void type(std::string const& s) override {
+    void type(string const& s) override {
         current().object = make_node_with_name<AbstractValue>(s);
         objects.emplace(current().id, current().object);
     }
-    void string(std::string const& s) override {
+    void value_string(string const& s) override {
         switch (current().awaiting) {
             case RecordType::Value: {
                 if (!current().object)
@@ -95,7 +95,7 @@ public:
                 throw DeserializationError("Unexpected string");
         }
     }
-    void key(std::string const& s) override {
+    void key(string const& s) override {
         await(RecordType::Map);
         current().key = s;
     }
@@ -123,7 +123,7 @@ private:
         Id id;
         AbstractReference object;
         RecordType awaiting;
-        std::string key;
+        string key;
     };
 private:
     void await(RecordType what) {
@@ -133,7 +133,7 @@ private:
         return context.back();
     }
 private:
-    std::vector<NodeContext> context;
+    vector<NodeContext> context;
     std::map<Id, AbstractReference> objects;
     AbstractReference root;
 };

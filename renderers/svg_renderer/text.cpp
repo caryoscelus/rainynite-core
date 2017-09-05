@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
+#include <core/std/string.h>
 
 #include <fmt/format.h>
 
@@ -26,13 +26,13 @@
 namespace rainynite::core {
 namespace renderers {
 
-const std::string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}</text>)";
+const string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}</text>)";
 
 class TextSvgRenderer : SVG_RENDERER_MODULE_CLASS(TextSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Text");
 public:
-    std::string operator()(AbstractNode const& node, std::shared_ptr<Context> ctx, SvgRendererSettings const& /*settings*/) const override {
-        auto text = node.get_property_as<std::string>("text")->get(ctx);
+    string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& /*settings*/) const override {
+        auto text = node.get_property_as<string>("text")->get(ctx);
         auto size = node.get_property_as<double>("size")->get(ctx);
         auto color = node.get_property_as<colors::Color>("color")->get(ctx);
         return fmt::format(svg_text, size, to_hex24(color), text);

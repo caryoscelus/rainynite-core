@@ -33,7 +33,7 @@ namespace serialize {
 
 class ValueToString {
 public:
-    virtual std::string operator()(boost::any const& object) const = 0;
+    virtual string operator()(any const& object) const = 0;
 };
 
 template <class T>
@@ -42,8 +42,8 @@ class AutoValueToString :
     class_init::Registered<AutoValueToString<T>, T, ValueToString>
 {
 public:
-    std::string operator()(boost::any const& object) const override {
-        auto value = boost::any_cast<T>(object);
+    string operator()(any const& object) const override {
+        auto value = any_cast<T>(object);
         std::ostringstream stream;
         stream << std::boolalpha << value;
         return stream.str();
@@ -56,21 +56,21 @@ class NumericValueToString :
     class_init::Registered<AutoValueToString<T>, T, ValueToString>
 {
 public:
-    std::string operator()(boost::any const& object) const override {
-        auto value = boost::any_cast<T>(object);
+    string operator()(any const& object) const override {
+        auto value = any_cast<T>(object);
         return std::to_string(value);
     }
 };
 
-inline std::string value_to_string(boost::any const& object) {
-    return class_init::any_info<ValueToString, std::string>(object);
+inline string value_to_string(any const& object) {
+    return class_init::any_info<ValueToString, string>(object);
 }
 
 class NodeWriter {
 public:
     template <class W>
     static void put_value(W& writer, AbstractReference const& object) {
-        writer.string(value_to_string(object->any()));
+        writer.value_string(value_to_string(object->static_any()));
     }
 
     template <class W>
@@ -100,11 +100,11 @@ public:
         return object;
     }
 
-    static std::string id_to_string(AbstractReference id) {
+    static string id_to_string(AbstractReference id) {
         return to_string(id->get_id());
     }
 
-    static std::string get_type(AbstractReference object) {
+    static string get_type(AbstractReference object) {
         return node_name(*object);
     }
 

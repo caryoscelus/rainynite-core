@@ -19,11 +19,12 @@
 #ifndef __CORE__RENDERER_H__67308EB8
 #define __CORE__RENDERER_H__67308EB8
 
-#include <memory>
 #include <stdexcept>
 
 #include <boost/signals2/signal.hpp>
 
+#include <core/std/memory.h>
+#include <core/std/string.h>
 #include <core/time/time.h>
 
 namespace rainynite::core {
@@ -32,7 +33,7 @@ class Context;
 
 class RenderFailure : public std::runtime_error {
 public:
-    RenderFailure(std::string const& msg) :
+    RenderFailure(string const& msg) :
         std::runtime_error(msg)
     {}
 };

@@ -24,7 +24,7 @@ namespace rainynite::core {
 
 REGISTER_NODE(Document);
 
-Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
+Document::Document(shared_ptr<BaseValue<Renderable>> root_) :
     default_context(nullptr),
     action_stack(std::make_shared<ActionStack>())
 {
@@ -41,11 +41,11 @@ Document::Document(std::shared_ptr<BaseValue<Renderable>> root_) :
 Document::~Document() {
 }
 
-DocumentType Document::get(std::shared_ptr<Context> /*context*/) const {
+DocumentType Document::get(shared_ptr<Context> /*context*/) const {
     return {};
 }
 
-std::shared_ptr<Context> Document::get_default_context() {
+shared_ptr<Context> Document::get_default_context() {
     if (!default_context) {
         default_context = std::make_shared<Context>(shared_from_this());
     }

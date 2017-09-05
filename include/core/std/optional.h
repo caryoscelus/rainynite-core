@@ -1,5 +1,5 @@
 /*
- *  empty.cpp - SvgRenderer Empty renderer
+ *  std/optional.h - re-import optional
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "svg_module.h"
+#ifndef __CORE__STD__OPTIONAL_H__E6E7EC9A
+#define __CORE__STD__OPTIONAL_H__E6E7EC9A
 
-namespace rainynite::core {
-namespace renderers {
+#include <optional>
 
-class EmptySvgRenderer : SVG_RENDERER_MODULE_CLASS(EmptySvgRenderer) {
-    SVG_RENDERER_MODULE_NAME("Empty");
-public:
-    string operator()(AbstractNode const& /*node*/, shared_ptr<Context> /*ctx*/, SvgRendererSettings const& /*settings*/) const override {
-        return "";
-    }
-};
+namespace rainynite {
 
-} // namespace renderers
-} // namespace rainynite::core
+using std::optional;
+using std::make_optional;
+
+} // namespace rainynite
+
+#endif

@@ -28,11 +28,12 @@
 #include <core/node/traverse.h>
 #include <core/context.h>
 
+using namespace rainynite;
 using namespace rainynite::core;
 
 using Real = double;
 template <typename T>
-using List = std::vector<T>;
+using List = vector<T>;
 
 class Add : public Node<Real> {
 public:
@@ -41,7 +42,7 @@ public:
         init<Real>(b, 0);
     }
 public:
-    Real get(std::shared_ptr<Context> context) const override {
+    Real get(shared_ptr<Context> context) const override {
         auto a = get_a()->get(context);
         auto b = get_b()->get(context);
         return a+b;
@@ -51,7 +52,7 @@ public:
     NODE_PROPERTY(b, Real);
 };
 
-std::shared_ptr<Context> zero_context() {
+shared_ptr<Context> zero_context() {
     static auto instance = std::make_shared<Context>();
     return instance;
 }
@@ -75,7 +76,7 @@ public:
         init<List<Real>>(list, {});
     }
 public:
-    Real get(std::shared_ptr<Context> context) const override {
+    Real get(shared_ptr<Context> context) const override {
         auto list = get_list()->get(context);
         Real result = 0;
         for (auto const& x : list)
@@ -104,7 +105,7 @@ public:
         init<List<BaseReference<Real>>>(list, {});
     }
 public:
-    Real get(std::shared_ptr<Context> context) const override {
+    Real get(shared_ptr<Context> context) const override {
         auto list = get_list()->get(context);
         Real result = 0;
         for (auto x : list)
@@ -130,7 +131,7 @@ TEST_CASE("Real node sum", "[node]") {
     CHECK(sum->get(zero_context()) == 6.0);
 }
 
-std::string value_to_string(AbstractReference node) {
+string value_to_string(AbstractReference node) {
     if (node->get_type() == typeid(Real)) {
         auto t = std::static_pointer_cast<Value<Real>>(node);
         return std::to_string(t->mod());
@@ -138,7 +139,7 @@ std::string value_to_string(AbstractReference node) {
     return "";
 }
 
-void serialize_map(std::ostream& stream, std::map<std::string, AbstractReference> const& map) {
+void serialize_map(std::ostream& stream, std::map<string, AbstractReference> const& map) {
     stream << "{\n";
     for (auto const& e : map) {
         stream << "\"" << e.first << "\": \"" << e.second->get_id() << "\"\n";
@@ -146,16 +147,16 @@ void serialize_map(std::ostream& stream, std::map<std::string, AbstractReference
     stream << "}\n";
 }
 
-std::string dump_node_tree(AbstractReference root) {
+string dump_node_tree(AbstractReference root) {
     std::ostringstream stream;
-    traverse_once<bool>(root, [&stream](AbstractReference node) {
+    traverse_once<bool>(root, [&stream](AbstractReference node) -> optional<bool> {
         stream << "\"" << node->get_id() << "\": ";
         if (node->is_const()) {
             stream << value_to_string(node) << "\n";
         } else if (auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node)) {
             serialize_map(stream, linked_node->get_link_map());
         }
-        return boost::none;
+        return {};
     });
     stream << "\n";
     return stream.str();
@@ -175,9 +176,9 @@ TEST_CASE("Dump node tree", "[node]") {
 
 unsigned count_nodes(AbstractReference root, TraverseDepth depth = TraverseDepth::Once) {
     unsigned result = 0;
-    traverse_once<bool>(root, [&result](AbstractReference) {
+    traverse_once<bool>(root, [&result](AbstractReference) -> optional<bool> {
         ++result;
-        return boost::none;
+        return {};
     }, depth);
     return result;
 }
