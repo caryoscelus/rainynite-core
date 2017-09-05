@@ -22,6 +22,7 @@ if (BUILD_NODES)
             nodes/dynamic_node.cpp
             nodes/morph.cpp
             nodes/format_string.cpp
+            nodes/format_number.cpp
             nodes/color_mix.cpp
             nodes/follow_path.cpp
             nodes/path_xy.cpp
