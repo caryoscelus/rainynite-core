@@ -32,8 +32,8 @@ public:
     T get(shared_ptr<Context> /*context*/) const override {
         return value_;
     }
-    void set(T value__) override {
-        value_ = value__;
+    void set(T new_value) override {
+        value_ = new_value;
         this->changed();
     }
     T& mod() override {
