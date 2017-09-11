@@ -19,6 +19,8 @@
 #ifndef CORE_NODE_HAS_ID_H_85A247EB_F007_5E20_80F3_8F1BA2F3FB36
 #define CORE_NODE_HAS_ID_H_85A247EB_F007_5E20_80F3_8F1BA2F3FB36
 
+namespace rainynite::core {
+
 template <typename Id, typename Generator>
 class HasId {
 public:
@@ -34,5 +36,7 @@ public:
 private:
     Id id;
 };
+
+} // namespace rainynite::core
 
 #endif
