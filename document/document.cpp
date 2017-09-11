@@ -47,7 +47,7 @@ DocumentType Document::get(shared_ptr<Context> /*context*/) const {
 
 shared_ptr<Context> Document::get_default_context() {
     if (!default_context) {
-        default_context = std::make_shared<Context>(shared_from_this());
+        default_context = make_shared<Context>(static_pointer_cast<Document>(shared_from_this()));
     }
     return default_context;
 }

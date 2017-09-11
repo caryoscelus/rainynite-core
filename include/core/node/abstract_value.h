@@ -23,6 +23,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 
 #include <core/std/any.h>
+#include <core/log/simple_exception_log.h>
 #include "notify.h"
 #include "has_id.h"
 #include "abstract_list.h"
@@ -78,7 +79,14 @@ template <typename U>
 constexpr bool is_vector<vector<U>> = true;
 
 template <typename T>
-class BaseValue : public AbstractValue {
+class BaseValue :
+    public AbstractValue,
+    public HasExceptionLogger
+{
+public:
+    BaseValue() :
+        HasExceptionLogger(make_shared<SimpleExceptionLogger>())
+    {}
 public:
     /**
      * Get value of this node in given context
@@ -89,8 +97,11 @@ public:
     T value(shared_ptr<Context> context) const noexcept {
         try {
             return get(context);
+        } catch (std::exception const& ex) {
+            log_exception_from_this(ex);
+            return {};
         } catch (...) {
-            // TODO: log exceptions
+            log_exception_from_this(NodeAccessError("Unknown error in BaseValue::value()"));
             return {};
         }
     }

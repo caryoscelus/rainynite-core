@@ -52,7 +52,7 @@ if (BUILD_NODES)
     )
 endif()
 
-target_link_libraries(document morphing fmt)
+target_link_libraries(document log morphing fmt)
 
 install(
     TARGETS document

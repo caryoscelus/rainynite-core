@@ -36,9 +36,7 @@ class Context;
 class DocumentType {
 };
 
-class Document :
-    public Node<DocumentType>,
-    public std::enable_shared_from_this<Document>
+class Document : public Node<DocumentType>
 {
 public:
     explicit Document(shared_ptr<BaseValue<Renderable>> root_=nullptr);
