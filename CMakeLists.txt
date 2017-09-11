@@ -25,6 +25,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 enable_testing()
 add_subdirectory(tests)
 
+add_subdirectory(log)
 add_subdirectory(document)
 add_subdirectory(filters)
 add_subdirectory(time)
