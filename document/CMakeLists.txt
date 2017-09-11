@@ -56,18 +56,7 @@ target_link_libraries(document morphing fmt)
 
 install(
     TARGETS document
-    EXPORT document
+    EXPORT rainynite_core
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
-)
-
-export(
-    EXPORT document
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/document-config.cmake"
-)
-
-install(
-    EXPORT document
-    FILE "document-config.cmake"
-    DESTINATION "lib/cmake/document"
 )

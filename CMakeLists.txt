@@ -30,6 +30,17 @@ add_subdirectory(filters)
 add_subdirectory(time)
 add_subdirectory(renderers)
 
+export(
+    EXPORT rainynite_core
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/rainynite_core-config.cmake"
+)
+
+install(
+    EXPORT rainynite_core
+    FILE "rainynite_core-config.cmake"
+    DESTINATION "lib/cmake/rainynite_core"
+)
+
 install(
     DIRECTORY include/
     DESTINATION include

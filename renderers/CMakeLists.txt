@@ -40,18 +40,8 @@ target_link_libraries(renderers
 
 install(
     TARGETS renderers
-    EXPORT renderers
+    EXPORT rainynite_core
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
-export(
-    EXPORT renderers
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/renderers-config.cmake"
-)
-
-install(
-    EXPORT renderers
-    FILE "renderers-config.cmake"
-    DESTINATION "lib/cmake/renderers"
-)

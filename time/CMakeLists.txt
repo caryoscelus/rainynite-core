@@ -11,18 +11,7 @@ target_link_libraries(time morphing)
 
 install(
     TARGETS time
-    EXPORT time
+    EXPORT rainynite_core
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
-)
-
-export(
-    EXPORT time
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/time-config.cmake"
-)
-
-install(
-    EXPORT time
-    FILE "time-config.cmake"
-    DESTINATION "lib/cmake/time"
 )
