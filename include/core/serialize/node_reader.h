@@ -24,21 +24,20 @@
 
 #include "serialize.h"
 
-namespace rainynite::core {
-namespace serialize {
+namespace rainynite::core::serialize {
 
 template <class V>
-class NodeDeserializer : public Writer<V, Id> {
+class NodeDeserializer : public Writer<V, NodeId> {
 public:
     NodeDeserializer() :
-        Writer<V, Id>()
+        Writer<V, NodeId>()
     {}
 public:
     AbstractReference get_root() const {
         return root;
     }
 public:
-    void object_start(Id id) override {
+    void object_start(NodeId id) override {
         context.push_back(NodeContext());
         current().id = id;
     }
@@ -102,7 +101,7 @@ public:
     void number(double) override {
         throw DeserializationError("Unexpected number");
     }
-    void reference(Id id) override {
+    void reference(NodeId id) override {
         // TODO: allow reference before value is constructed?
         auto target = objects.at(id);
         switch (current().awaiting) {
@@ -120,7 +119,7 @@ public:
     }
 private:
     struct NodeContext {
-        Id id;
+        NodeId id;
         AbstractReference object;
         RecordType awaiting;
         string key;
@@ -134,11 +133,10 @@ private:
     }
 private:
     vector<NodeContext> context;
-    std::map<Id, AbstractReference> objects;
+    std::map<NodeId, AbstractReference> objects;
     AbstractReference root;
 };
 
-} // namespace serialize
-} // namespace rainynite::core
+} // namespace rainynite::core::serialize
 
 #endif

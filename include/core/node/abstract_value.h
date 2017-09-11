@@ -24,13 +24,15 @@
 
 #include <core/std/any.h>
 #include "notify.h"
+#include "has_id.h"
 #include "abstract_list.h"
 
 namespace rainynite::core {
 
-using Id = boost::uuids::uuid;
+using NodeId = boost::uuids::uuid;
+using NodeIdGenerator = boost::uuids::random_generator;
 
-class AbstractValue : public AbstractNotify {
+class AbstractValue : public AbstractNotify, public HasId<NodeId, NodeIdGenerator> {
 public:
     virtual bool is_const() const {
         return false;
@@ -67,18 +69,6 @@ public:
         });
         return result;
     }
-public:
-    Id get_id() {
-        return id;
-    }
-    void set_id(Id id_) {
-        id = id_;
-    }
-    void new_id() {
-        id = boost::uuids::random_generator()();
-    }
-private:
-    Id id;
 };
 
 template <typename T>
