@@ -1,5 +1,5 @@
 /*
- *  std/memory.h - re-import memory
+ *  std/queue.h - re-import queue
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__STD__MEMORY_H__1D42DE8A
-#define __CORE__STD__MEMORY_H__1D42DE8A
+#ifndef CORE_STD_QUEUE_H_F98DB806_FCC1_54A9_B280_2C466F77281F
+#define CORE_STD_QUEUE_H_F98DB806_FCC1_54A9_B280_2C466F77281F
 
-#include <memory>
+#include <queue>
 
 namespace rainynite {
 
-using std::unique_ptr;
-using std::shared_ptr;
-using std::weak_ptr;
-
-using std::dynamic_pointer_cast;
-using std::static_pointer_cast;
-using std::const_pointer_cast;
-using std::reinterpret_pointer_cast;
-
-using std::enable_shared_from_this;
-using std::make_unique;
-using std::make_shared;
+using std::queue;
 
 } // namespace rainynite
 
