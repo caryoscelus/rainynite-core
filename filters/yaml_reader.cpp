@@ -58,8 +58,11 @@ public:
     void OnNull(Mark const&, anchor_t) override {
         throw DeserializationError("null is not supported (yet)");
     }
-    void OnAlias(Mark const&, anchor_t) override {
+    void OnAlias(Mark const&, anchor_t anchor_id) override {
         std::cerr << "Got alias\n";
+        auto id = s_to_id(anchors[anchor_id - 1]);
+        writer.reference(id);
+        update_map_status();
     }
     void OnScalar(Mark const&, string const& tag, anchor_t, string const& value) override {
         std::cerr << "Got tag {} with value {}\n"_format(tag, value);
@@ -97,8 +100,7 @@ public:
         writer.object_value_end();
         writer.object_end();
         pop_status(Status::List);
-        if (status() == Status::Value)
-            set_status(Status::Map);
+        update_map_status();
     }
 
     void OnMapStart(Mark const&, string const& tag, anchor_t, EmitterStyle::value /*style*/) override {
@@ -109,13 +111,13 @@ public:
     void OnMapEnd() override {
         writer.object_end();
         pop_status(Status::Map);
-        if (status() == Status::Value)
-            set_status(Status::Map);
+        update_map_status();
     }
 
     void OnAnchor(Mark const&, string const& anchor_name) override {
         std::cerr << "Got anchor {}\n"_format(anchor_name);
         anchor = anchor_name;
+        anchors.push_back(anchor);
     }
 
 public:
@@ -149,10 +151,15 @@ protected:
     void set_status(Status s) {
         status_stack.back() = s;
     }
+    void update_map_status() {
+        if (status() == Status::Value)
+            set_status(Status::Map);
+    }
 
 private:
     W writer;
     string anchor;
+    vector<string> anchors;
     vector<Status> status_stack;
 };
 
