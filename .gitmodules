@@ -1,3 +1,6 @@
 [submodule "thirdparty/rapidjson"]
 	path = thirdparty/rapidjson
 	url = https://notabug.org/caryoscelus/rapidjson.git
+[submodule "thirdparty/yaml-cpp"]
+	path = thirdparty/yaml-cpp
+	url = https://notabug.org/caryoscelus/yaml-cpp.git

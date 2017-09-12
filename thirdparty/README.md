@@ -4,3 +4,5 @@ Third-party dependencies.
   <http://catch-lib.net/>
 
 - RapidJSON (don't forget to initialize submodule) <http://rapidjson.org/>
+
+- yaml-cpp (also as submodule) <https://github.com/jbeder/yaml-cpp>
