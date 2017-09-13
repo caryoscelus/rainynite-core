@@ -6,6 +6,7 @@ target_sources(filters
         json_reader.cpp
         json_writer.cpp
         yaml_reader.cpp
+        yaml_writer.cpp
 )
 
 target_link_libraries(filters PUBLIC document geom_helpers)
