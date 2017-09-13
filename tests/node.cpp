@@ -53,12 +53,12 @@ public:
 };
 
 shared_ptr<Context> zero_context() {
-    static auto instance = std::make_shared<Context>();
+    static auto instance = make_shared<Context>();
     return instance;
 }
 
 TEST_CASE("Test Add node", "[node]") {
-    auto add = std::make_shared<Add>();
+    auto add = make_shared<Add>();
     auto one = make_value<Real>(1.0);
     auto two = make_value<Real>(2.0);
     CHECK(add->get(zero_context()) == 0.0);
@@ -89,7 +89,7 @@ public:
 
 TEST_CASE("Sum Node", "[node]") {
     auto list = make_value<List<Real>>();
-    auto sum = std::make_shared<Sum>();
+    auto sum = make_shared<Sum>();
     CHECK(sum->get(zero_context()) == 0.0);
     sum->set_property("list", list);
     CHECK(sum->get(zero_context()) == 0.0);
@@ -118,7 +118,7 @@ public:
 
 TEST_CASE("Real node sum", "[node]") {
     auto list = make_value<List<BaseReference<Real>>>();
-    auto sum = std::make_shared<SumNode>();
+    auto sum = make_shared<SumNode>();
     CHECK(sum->get(zero_context()) == 0.0);
     sum->set_property("list", list);
     CHECK(sum->get(zero_context()) == 0.0);
@@ -133,7 +133,7 @@ TEST_CASE("Real node sum", "[node]") {
 
 string value_to_string(AbstractReference node) {
     if (node->get_type() == typeid(Real)) {
-        auto t = std::static_pointer_cast<Value<Real>>(node);
+        auto t = static_pointer_cast<Value<Real>>(node);
         return std::to_string(t->mod());
     }
     return "";
@@ -153,7 +153,7 @@ string dump_node_tree(AbstractReference root) {
         stream << "\"" << node->get_id() << "\": ";
         if (node->is_const()) {
             stream << value_to_string(node) << "\n";
-        } else if (auto linked_node = std::dynamic_pointer_cast<AbstractNode>(node)) {
+        } else if (auto linked_node = dynamic_pointer_cast<AbstractNode>(node)) {
             serialize_map(stream, linked_node->get_link_map());
         }
         return {};
@@ -166,7 +166,7 @@ TEST_CASE("Dump node tree", "[node]") {
     std::cerr << dump_node_tree(make_value<Real>(5.4));
     auto one = make_value<Real>(1.0);
     std::cerr << dump_node_tree(one);
-    auto add = std::make_shared<Add>();
+    auto add = make_shared<Add>();
     std::cerr << dump_node_tree(add);
     add->set_a(one);
     std::cerr << dump_node_tree(add);
@@ -186,7 +186,7 @@ unsigned count_nodes(AbstractReference root, TraverseDepth depth = TraverseDepth
 TEST_CASE("Traverse node tree", "[node]") {
     auto one = make_value<Real>(1.0);
     CHECK(count_nodes(one) == 1);
-    auto add = std::make_shared<Add>();
+    auto add = make_shared<Add>();
     CHECK(count_nodes(add) == 3);
     add->set_a(one);
     CHECK(count_nodes(add) == 3);

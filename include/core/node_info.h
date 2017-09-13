@@ -71,7 +71,7 @@ shared_ptr<T> make_node_with_name(string const& name, AbstractReference source=n
         else if (source && node->can_set_any(value))
             node->set_any(value);
     }
-    return std::dynamic_pointer_cast<T>(node);
+    return dynamic_pointer_cast<T>(node);
 }
 
 inline AbstractReference shallow_copy(AbstractValue const& source) {
@@ -82,7 +82,7 @@ inline AbstractReference shallow_copy(AbstractValue const& source) {
 
 template <class T>
 shared_ptr<T> shallow_copy_as(AbstractValue const& source) {
-    return std::dynamic_pointer_cast<T>(shallow_copy(source));
+    return dynamic_pointer_cast<T>(shallow_copy(source));
 }
 
 inline map<Type, set<NodeInfo const*>>& node_types() {
@@ -120,10 +120,10 @@ public: \
         return #Name"<"+class_init::type_info<TypeInfo,string>(typeid(T))+">"; \
     } \
     AbstractReference new_empty() const override { \
-        return std::make_shared<Node>(); \
+        return make_shared<Node>(); \
     } \
     AbstractReference clone(AbstractValue const& source) const override { \
-        return std::make_shared<Node>(static_cast<Node const&>(source)); \
+        return make_shared<Node>(static_cast<Node const&>(source)); \
     } \
     Type type() const override { \
         return typeid(NodeType); \
@@ -138,10 +138,10 @@ public: \
         return _name; \
     } \
     AbstractReference new_empty() const override { \
-        return std::static_pointer_cast<AbstractValue>(std::make_shared<Node>()); \
+        return static_pointer_cast<AbstractValue>(make_shared<Node>()); \
     } \
     AbstractReference clone(AbstractValue const& source) const override { \
-        return std::make_shared<Node>(static_cast<Node const&>(source)); \
+        return make_shared<Node>(static_cast<Node const&>(source)); \
     } \
     rainynite::core::Type type() const override { \
         return Node::static_type(); \

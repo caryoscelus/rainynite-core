@@ -62,7 +62,7 @@ public:
             std::end(aframes),
             std::back_inserter(frames),
             [ctx](auto frame) -> TimePoint<T> {
-                if (auto f = std::dynamic_pointer_cast<Frame<T>>(frame))
+                if (auto f = dynamic_pointer_cast<Frame<T>>(frame))
                     return { f->get_time()->get(ctx), f->get_value() };
                 return { Time::infinity(), nullptr };
             }

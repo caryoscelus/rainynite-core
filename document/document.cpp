@@ -26,7 +26,7 @@ REGISTER_NODE(Document);
 
 Document::Document(shared_ptr<BaseValue<Renderable>> root_) :
     default_context(nullptr),
-    action_stack(std::make_shared<ActionStack>())
+    action_stack(make_shared<ActionStack>())
 {
     init<Renderable>(root, {});
     init<Geom::Point>(size, {320, 240});

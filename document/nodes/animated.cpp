@@ -47,7 +47,7 @@ public:
         for (auto period : get_periods()->get(ctx)) {
             period.set_fps(time.get_fps());
             if (period.contains(time)) {
-                auto nctx = std::make_shared<Context>(*ctx);
+                auto nctx = make_shared<Context>(*ctx);
                 nctx->set_time(calculate_time(period, time));
                 return { list_children()->get_link(i), nctx };
             }
@@ -58,7 +58,7 @@ public:
 public:
     void add_child(TimePeriod period, AbstractReference ref) override {
         push_value(list_periods(), period);
-        list_children()->push_back(std::dynamic_pointer_cast<BaseValue<T>>(ref));
+        list_children()->push_back(dynamic_pointer_cast<BaseValue<T>>(ref));
     }
     size_t child_count() const override {
         return list_children()->link_count();

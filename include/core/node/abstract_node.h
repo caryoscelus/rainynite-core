@@ -33,7 +33,7 @@ public:
     AbstractReference get_property(string const& name) const;
     template <typename T>
     BaseReference<T> get_property_as(string const& name) const {
-        return std::dynamic_pointer_cast<BaseValue<T>>(get_property(name));
+        return dynamic_pointer_cast<BaseValue<T>>(get_property(name));
     }
     template <typename T>
     optional<T> get_property_value(string const& name, shared_ptr<Context> context) const {

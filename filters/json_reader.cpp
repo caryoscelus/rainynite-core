@@ -35,7 +35,7 @@ shared_ptr<Document> JsonReader::read_document(std::istream& input) {
     rapidjson::Reader json_reader;
     rapidjson::IStreamWrapper stream(input);
     json_reader.Parse(stream, node_reader);
-    return std::dynamic_pointer_cast<Document>(node_reader.get_node_reader().get_root());
+    return dynamic_pointer_cast<Document>(node_reader.get_node_reader().get_root());
 }
 
 } // namespace filters

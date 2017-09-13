@@ -33,7 +33,7 @@ public: \
         return this->template get_property_as<type>(#name); \
     } \
     inline void set_##name(BaseReference<type> value) { \
-        this->set_property(#name, std::dynamic_pointer_cast<AbstractValue>(value)); \
+        this->set_property(#name, dynamic_pointer_cast<AbstractValue>(value)); \
     } \
 private: \
     string name { #name }
@@ -41,10 +41,10 @@ private: \
 #define NODE_STATIC_PROPERTY(name, type) \
 public: \
     inline shared_ptr<Value<type>> get_##name() const { \
-        return std::dynamic_pointer_cast<Value<type>>(this->get_property(#name)); \
+        return dynamic_pointer_cast<Value<type>>(this->get_property(#name)); \
     } \
     inline void set_##name(shared_ptr<Value<type>> value) { \
-        this->set_property(#name, std::dynamic_pointer_cast<AbstractValue>(value)); \
+        this->set_property(#name, dynamic_pointer_cast<AbstractValue>(value)); \
     } \
 private: \
     string name { #name }
@@ -52,7 +52,7 @@ private: \
 #define NODE_LIST_PROPERTY(name, type) \
 public: \
     inline AbstractListReference list_##name() const { \
-        return std::dynamic_pointer_cast<AbstractListLinked>(this->get_property(#name)); \
+        return dynamic_pointer_cast<AbstractListLinked>(this->get_property(#name)); \
     } \
 NODE_PROPERTY(name, vector<type>)
 

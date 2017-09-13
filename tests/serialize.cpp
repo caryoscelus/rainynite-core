@@ -68,7 +68,7 @@ TEST_CASE("Dumb json serialize", "[serialize,node]") {
     writer.object(add_a);
     std::cout << stream.str() << std::endl;
     stream.str("");
-    auto list = std::make_shared<ListValue<double>>();
+    auto list = make_shared<ListValue<double>>();
     list->new_id();
     push_value(list, 1.5);
     writer.object(list);

@@ -86,7 +86,7 @@ public:
 
     template <class W>
     static void put_map(W& writer, AbstractReference const& object) {
-        if (auto node = std::dynamic_pointer_cast<AbstractNode>(object)) {
+        if (auto node = dynamic_pointer_cast<AbstractNode>(object)) {
             for (auto const& e : node->get_link_map()) {
                 writer.key(e.first);
                 writer.object(e.second);
