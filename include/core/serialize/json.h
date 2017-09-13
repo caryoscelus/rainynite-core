@@ -40,7 +40,7 @@ public:
         write("{");
         prev_element = false;
         key("UID");
-        string(V::id_to_string(id));
+        value_string(V::id_to_string(id));
     }
     void object_end() override {
         write("}");
@@ -79,7 +79,7 @@ public:
         write(std::to_string(x));
     }
     void reference(U id) override {
-        string(V::id_to_string(id));
+        value_string(V::id_to_string(id));
     }
 private:
     void element() {
