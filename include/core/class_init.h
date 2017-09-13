@@ -150,9 +150,9 @@ public:
 
 template <class T>
 T& type_meta(Type type) {
-    auto const& map = class_registry<T>();
-    auto iter = map.find(type);
-    if (iter == map.end()) {
+    auto const& class_map = class_registry<T>();
+    auto iter = class_map.find(type);
+    if (iter == class_map.end()) {
         throw UnknownTypeError(type);
     }
     return *iter->second;
@@ -181,18 +181,18 @@ R any_info(any const& object) {
 
 template <class K>
 Type find_type(K const& key) {
-    auto const& map = reverse_class_registry<K>();
-    auto iter = map.find(key);
-    if (iter != map.end())
+    auto const& class_map = reverse_class_registry<K>();
+    auto iter = class_map.find(key);
+    if (iter != class_map.end())
         return iter->second;
     throw TypeLookupError(key);
 }
 
 template <class T>
 T& name_info(string const& name) {
-    auto const& map = string_registry<T>();
-    auto iter = map.find(name);
-    if (iter == map.end()) {
+    auto const& class_map = string_registry<T>();
+    auto iter = class_map.find(name);
+    if (iter == class_map.end()) {
         throw TypeLookupError(name);
     }
     return *iter->second;

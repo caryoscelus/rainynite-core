@@ -150,7 +150,7 @@ public:
             if (list_of_lists.size() == 0)
                 return;
             vector<List> links;
-            vector<std::pair<Iter, Iter>> iterators;
+            vector<pair<Iter, Iter>> iterators;
             bool fail = false;
             std::transform(
                 std::begin(list_of_lists),
@@ -173,7 +173,7 @@ public:
                 std::begin(links),
                 std::end(links),
                 std::back_inserter(iterators),
-                [](auto const& list) -> std::pair<Iter, Iter> {
+                [](auto const& list) -> pair<Iter, Iter> {
                     return { std::begin(list), std::end(list) };
                 }
             );

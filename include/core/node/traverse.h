@@ -16,11 +16,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__TRAVERSE_H__80549862
-#define __CORE__NODE__TRAVERSE_H__80549862
+#ifndef CORE_NODE_TRAVERSE_H_CC85EE3C_3B5E_5268_9929_8FC36285B95C
+#define CORE_NODE_TRAVERSE_H_CC85EE3C_3B5E_5268_9929_8FC36285B95C
 
 #include <list>
 
+#include <core/std/set.h>
 #include "abstract_list.h"
 
 namespace rainynite::core {
@@ -32,7 +33,7 @@ enum class TraverseDepth {
 
 template <typename T>
 T traverse_once(AbstractReference root, std::function<optional<T>(AbstractReference)> f, TraverseDepth depth = TraverseDepth::Once) {
-    std::set<AbstractReference> traversed;
+    set<AbstractReference> traversed;
     std::list<AbstractReference> to_traverse;
     to_traverse.push_back(root);
     while (!to_traverse.empty()) {

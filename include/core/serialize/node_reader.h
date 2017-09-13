@@ -133,7 +133,7 @@ private:
     }
 private:
     vector<NodeContext> context;
-    std::map<NodeId, AbstractReference> objects;
+    map<NodeId, AbstractReference> objects;
     AbstractReference root;
 };
 

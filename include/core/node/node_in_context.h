@@ -16,11 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
-#define __CORE__NODE__NODE_IN_CONTEXT_H__4A18E5A4
+#ifndef CORE_NODE_NODE_IN_CONTEXT_H_67AA500D_5DAB_5268_9265_5B16B7E57202
+#define CORE_NODE_NODE_IN_CONTEXT_H_67AA500D_5DAB_5268_9265_5B16B7E57202
 
 #include <core/std/memory.h>
-#include <utility>
+#include <core/std/tuple.h>
 
 namespace rainynite::core {
 
@@ -41,8 +41,8 @@ struct NodeInContext {
         return node && context;
     }
 
-    using pair = std::pair<shared_ptr<AbstractValue>, shared_ptr<Context>>;
-    operator pair() const {
+    using NicPair = pair<shared_ptr<AbstractValue>, shared_ptr<Context>>;
+    operator NicPair() const {
         return { node, context };
     }
 };

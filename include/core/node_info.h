@@ -16,11 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE_INFO_H__1D5DEEF0
-#define __CORE__NODE_INFO_H__1D5DEEF0
+#ifndef CORE_NODE_INFO_H_E59BD832_E858_5D6E_83EC_79AF65B01A25
+#define CORE_NODE_INFO_H_E59BD832_E858_5D6E_83EC_79AF65B01A25
 
-#include <set>
-
+#include <core/std/set.h>
 #include <core/class_init.h>
 #include <core/types.h>
 #include <core/node/abstract_value.h>
@@ -86,13 +85,13 @@ shared_ptr<T> shallow_copy_as(AbstractValue const& source) {
     return std::dynamic_pointer_cast<T>(shallow_copy(source));
 }
 
-inline std::map<Type, std::set<NodeInfo const*>>& node_types() {
-    static std::map<Type, std::set<NodeInfo const*>> instance;
+inline map<Type, set<NodeInfo const*>>& node_types() {
+    static map<Type, set<NodeInfo const*>> instance;
     return instance;
 }
 
-inline std::set<NodeInfo const*> all_node_infos() {
-    std::set<NodeInfo const*> result;
+inline set<NodeInfo const*> all_node_infos() {
+    set<NodeInfo const*> result;
     for (auto const& e : node_types()) {
         result.insert(e.second.begin(), e.second.end());
     }

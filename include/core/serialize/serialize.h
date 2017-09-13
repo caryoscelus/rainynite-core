@@ -16,12 +16,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__SERIALIZE__SERIALIZE_H__821FEF22
-#define __CORE__SERIALIZE__SERIALIZE_H__821FEF22
+#ifndef CORE_SERIALIZE_SERIALIZE_H_D7B6BA59_030E_5601_AA64_88A95D447ADB
+#define CORE_SERIALIZE_SERIALIZE_H_D7B6BA59_030E_5601_AA64_88A95D447ADB
 
-#include <set>
 #include <stdexcept>
 
+#include <core/std/set.h>
 #include <core/std/string.h>
 
 namespace rainynite::core::serialize {
@@ -118,7 +118,7 @@ public:
     virtual void number(double x) = 0;
     virtual void reference(U id) = 0;
 private:
-    std::set<U> storage;
+    set<U> storage;
     bool is_stored(U id) {
         return storage.count(id);
     }
