@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__CLASS_INIT_H__9F78DE78
-#define __CORE__CLASS_INIT_H__9F78DE78
+#ifndef CORE_CLASS_INIT_H_0DD6B78B_E387_5F16_9B97_E6E7F8FCBE57
+#define CORE_CLASS_INIT_H_0DD6B78B_E387_5F16_9B97_E6E7F8FCBE57
 
 #include <core/std/map.h>
 #include <core/std/any.h>
@@ -148,6 +148,7 @@ public:
     {}
 };
 
+/// Get type info (of type `T`) for type `type`
 template <class T>
 T& type_meta(Type type) {
     auto const& class_map = class_registry<T>();
@@ -158,6 +159,14 @@ T& type_meta(Type type) {
     return *iter->second;
 }
 
+/**
+ * Get type info for type `type`
+ *
+ * Since T (type info class) must be unique per type info set, even if it's
+ * only purpose is to store single value caller still needs to obtain that
+ * object and get value from it. This template allows to get required value
+ * (of type R) directly by calling operator() on T.
+ */
 template <class T, class R>
 R type_info(Type type) {
     auto const& t = type_meta<T>(type);
@@ -168,6 +177,12 @@ R type_info(Type type) {
     }
 }
 
+/**
+ * Get type_info for `any` object.
+ *
+ * This template is similar to type_info, with the difference that it accepts
+ * `any` instance and forwards it to operator() of T.
+ */
 template <class T, class R>
 R any_info(any const& object) {
     Type type = object.type();
@@ -179,6 +194,7 @@ R any_info(any const& object) {
     }
 }
 
+/// Find type that is registered using reverse_class_registry
 template <class K>
 Type find_type(K const& key) {
     auto const& class_map = reverse_class_registry<K>();
@@ -188,6 +204,7 @@ Type find_type(K const& key) {
     throw TypeLookupError(key);
 }
 
+/// Get name info from string_registry
 template <class T>
 T& name_info(string const& name) {
     auto const& class_map = string_registry<T>();
@@ -198,6 +215,6 @@ T& name_info(string const& name) {
     return *iter->second;
 }
 
-}
+} // namespace class_init
 
 #endif
