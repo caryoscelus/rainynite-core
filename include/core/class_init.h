@@ -202,11 +202,11 @@ T& type_meta(Type type) {
  * object and get value from it. This template allows to get required value
  * (of type R) directly by calling operator() on T.
  */
-template <class T, class R>
-R type_info(Type type) {
+template <class T, class R, typename... Args>
+R type_info(Type type, Args&&... args) {
     auto const& t = type_meta<T>(type);
     try {
-        return t();
+        return t(std::forward<Args>(args)...);
     } catch (...) {
         throw RuntimeTypeError(type);
     }
@@ -220,13 +220,7 @@ R type_info(Type type) {
  */
 template <class T, class R>
 R any_info(any const& object) {
-    Type type = object.type();
-    auto const& t = type_meta<T>(type);
-    try {
-        return t(object);
-    } catch (...) {
-        throw RuntimeTypeError(type);
-    }
+    return type_info<T, R>(object.type(), object);
 }
 
 /// Find type that is registered using reverse_class_registry
