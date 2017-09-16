@@ -26,7 +26,7 @@ namespace rainynite {
 template <typename T>
 class AbstractFactory {
 public:
-    virtual unique_ptr<T> operator()() = 0;
+    virtual unique_ptr<T> operator()() const = 0;
 };
 
 } // namespace rainynite
