@@ -145,7 +145,7 @@ protected:
     }
     void pop_status(Status s) {
         if (status() != s)
-            throw DeserializationError("Got status {} while expecting {}"_format((int)s, (int)status()));
+            throw DeserializationError("Got status {} while expecting {}"_format((int)status(), (int)s));
         status_stack.pop_back();
     }
     void set_status(Status s) {
