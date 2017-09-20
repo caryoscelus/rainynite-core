@@ -36,7 +36,7 @@ public:
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto t = ctx->get_time() * get_multiplier()->get(ctx) + get_offset()->get(ctx);
-        auto nctx = std::make_shared<Context>(*ctx);
+        auto nctx = make_shared<Context>(*ctx);
         nctx->set_time(t);
         return { get_source(), nctx };
     }
@@ -80,7 +80,7 @@ public:
         } else {
             time = t - std::floor(t/period)*period;
         }
-        auto nctx = std::make_shared<Context>(*ctx);
+        auto nctx = make_shared<Context>(*ctx);
         nctx->set_time(time);
         return { get_source(), nctx };
     }

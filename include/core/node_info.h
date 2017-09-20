@@ -16,11 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE_INFO_H__1D5DEEF0
-#define __CORE__NODE_INFO_H__1D5DEEF0
+#ifndef CORE_NODE_INFO_H_E59BD832_E858_5D6E_83EC_79AF65B01A25
+#define CORE_NODE_INFO_H_E59BD832_E858_5D6E_83EC_79AF65B01A25
 
-#include <set>
-
+#include <core/std/set.h>
 #include <core/class_init.h>
 #include <core/types.h>
 #include <core/node/abstract_value.h>
@@ -72,7 +71,7 @@ shared_ptr<T> make_node_with_name(string const& name, AbstractReference source=n
         else if (source && node->can_set_any(value))
             node->set_any(value);
     }
-    return std::dynamic_pointer_cast<T>(node);
+    return dynamic_pointer_cast<T>(node);
 }
 
 inline AbstractReference shallow_copy(AbstractValue const& source) {
@@ -83,16 +82,16 @@ inline AbstractReference shallow_copy(AbstractValue const& source) {
 
 template <class T>
 shared_ptr<T> shallow_copy_as(AbstractValue const& source) {
-    return std::dynamic_pointer_cast<T>(shallow_copy(source));
+    return dynamic_pointer_cast<T>(shallow_copy(source));
 }
 
-inline std::map<Type, std::set<NodeInfo const*>>& node_types() {
-    static std::map<Type, std::set<NodeInfo const*>> instance;
+inline map<Type, set<NodeInfo const*>>& node_types() {
+    static map<Type, set<NodeInfo const*>> instance;
     return instance;
 }
 
-inline std::set<NodeInfo const*> all_node_infos() {
-    std::set<NodeInfo const*> result;
+inline set<NodeInfo const*> all_node_infos() {
+    set<NodeInfo const*> result;
     for (auto const& e : node_types()) {
         result.insert(e.second.begin(), e.second.end());
     }
@@ -121,10 +120,10 @@ public: \
         return #Name"<"+class_init::type_info<TypeInfo,string>(typeid(T))+">"; \
     } \
     AbstractReference new_empty() const override { \
-        return std::make_shared<Node>(); \
+        return make_shared<Node>(); \
     } \
     AbstractReference clone(AbstractValue const& source) const override { \
-        return std::make_shared<Node>(static_cast<Node const&>(source)); \
+        return make_shared<Node>(static_cast<Node const&>(source)); \
     } \
     Type type() const override { \
         return typeid(NodeType); \
@@ -139,10 +138,10 @@ public: \
         return _name; \
     } \
     AbstractReference new_empty() const override { \
-        return std::static_pointer_cast<AbstractValue>(std::make_shared<Node>()); \
+        return static_pointer_cast<AbstractValue>(make_shared<Node>()); \
     } \
     AbstractReference clone(AbstractValue const& source) const override { \
-        return std::make_shared<Node>(static_cast<Node const&>(source)); \
+        return make_shared<Node>(static_cast<Node const&>(source)); \
     } \
     rainynite::core::Type type() const override { \
         return Node::static_type(); \

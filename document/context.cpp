@@ -21,7 +21,7 @@
 
 namespace rainynite::core {
 
-Context::Context(std::weak_ptr<Document> document_) :
+Context::Context(weak_ptr<Document> document_) :
     document(document_)
 {
     auto doc = get_document();

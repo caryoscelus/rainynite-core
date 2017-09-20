@@ -19,10 +19,9 @@
 #ifndef __CORE__NODE__ABSTRACT_NODE_H__24ECBF82
 #define __CORE__NODE__ABSTRACT_NODE_H__24ECBF82
 
-#include <map>
-
 #include <boost/signals2/signal.hpp>
 
+#include <core/std/map.h>
 #include "abstract_list.h"
 
 namespace rainynite::core {
@@ -34,7 +33,7 @@ public:
     AbstractReference get_property(string const& name) const;
     template <typename T>
     BaseReference<T> get_property_as(string const& name) const {
-        return std::dynamic_pointer_cast<BaseValue<T>>(get_property(name));
+        return dynamic_pointer_cast<BaseValue<T>>(get_property(name));
     }
     template <typename T>
     optional<T> get_property_value(string const& name, shared_ptr<Context> context) const {
@@ -49,7 +48,7 @@ public:
     void set_property(string const& name, AbstractReference ref);
     bool remove_property(string const& name);
     size_t init_property(string const& name, optional<Type> type, AbstractReference value);
-    std::map<string, AbstractReference> get_link_map() const;
+    map<string, AbstractReference> get_link_map() const;
     string get_name_at(size_t id) {
         return names_list[id];
     }
@@ -83,7 +82,7 @@ private:
         return numbered_storage[index];
     }
 private:
-    std::map<string, size_t> named_storage;
+    map<string, size_t> named_storage;
     vector<string> names_list;
     vector<AbstractReference> numbered_storage;
     vector<boost::signals2::connection> signal_connections;

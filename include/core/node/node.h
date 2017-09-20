@@ -37,7 +37,7 @@ public:
     }
     template <typename U>
     void init_list(string const& name) {
-        init_property(name, make_optional(Type(typeid(vector<U>))), std::make_shared<ListValue<U>>());
+        init_property(name, make_optional(Type(typeid(vector<U>))), make_shared<ListValue<U>>());
     }
 public:
     bool can_set_source(shared_ptr<AbstractValue> src) const override {

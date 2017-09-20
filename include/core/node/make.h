@@ -27,7 +27,7 @@ namespace rainynite::core {
 
 template <typename T, typename... Args>
 shared_ptr<Value<T>> make_value(Args&&... args) {
-    auto r = std::make_shared<Value<T>>();
+    auto r = make_shared<Value<T>>();
     r->new_id();
     r->emplace(std::forward<Args>(args)...);
     return r;
@@ -35,7 +35,7 @@ shared_ptr<Value<T>> make_value(Args&&... args) {
 
 template <class T>
 shared_ptr<T> make_node() {
-    auto r = std::make_shared<T>();
+    auto r = make_shared<T>();
     r->new_id();
     return r;
 }

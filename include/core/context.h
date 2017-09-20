@@ -34,7 +34,7 @@ class Value;
 class Context {
 public:
     Context() = default;
-    explicit Context(std::weak_ptr<Document> document_);
+    explicit Context(weak_ptr<Document> document_);
     Context(Context const& context_);
     Context(Context&& context_) = default;
     Context& operator=(Context const& context_) = default;
@@ -81,7 +81,7 @@ public:
     boost::signals2::signal<void(Time)> changed_time;
     boost::signals2::signal<void(Time::fps_type)> changed_fps;
 private:
-    std::weak_ptr<Document> document;
+    weak_ptr<Document> document;
     Time::fps_type fps = 1;
     Time time;
     shared_ptr<Value<TimePeriod>> time_period;

@@ -47,7 +47,7 @@ public:
 public:
     template <class T>
     BaseReference<T> get_link_as(size_t i) const {
-        return std::dynamic_pointer_cast<BaseValue<T>>(get_link(i));
+        return dynamic_pointer_cast<BaseValue<T>>(get_link(i));
     }
 };
 

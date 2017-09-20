@@ -76,7 +76,7 @@ public:
         return values.size();
     }
     void set_link(size_t i, AbstractReference value) override {
-        if (auto node = std::dynamic_pointer_cast<S>(std::move(value))) {
+        if (auto node = dynamic_pointer_cast<S>(std::move(value))) {
             values.at(i) = node;
             signal_connections[i].disconnect();
             signal_connections[i] = node->subscribe([this]() {
@@ -86,7 +86,7 @@ public:
         }
     }
     void push_back(AbstractReference value) override {
-        if (auto e = std::dynamic_pointer_cast<S>(std::move(value))) {
+        if (auto e = dynamic_pointer_cast<S>(std::move(value))) {
             values.push_back(e);
             signal_connections.push_back(e->subscribe([this]() {
                 this->changed();

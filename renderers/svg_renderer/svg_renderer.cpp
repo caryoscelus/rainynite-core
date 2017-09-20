@@ -106,7 +106,7 @@ struct SvgRenderer::Impl {
 };
 
 SvgRenderer::SvgRenderer() :
-    impl(std::make_unique<Impl>(this))
+    impl(make_unique<Impl>(this))
 {
 }
 
@@ -142,7 +142,7 @@ void SvgRenderer::Impl::render(Context&& context_) {
     for (auto time : context.get_period()) {
         if (requested_to_stop)
             break;
-        auto ctx = std::make_shared<Context>(context);
+        auto ctx = make_shared<Context>(context);
         ctx->set_time(time);
         render_frame(ctx);
         ++rendered_frames_count;
@@ -292,7 +292,7 @@ void SvgRenderer::Impl::start_png(bool force) {
     png_renderer_pid = fork_pipe(png_renderer_pipe, png_renderer_pipe_output, {"/usr/bin/env", "inkscape", "--shell", "-z"});
 
     read_thread = std::thread([this]() {
-        auto buff = std::make_unique<char[]>(256);
+        auto buff = make_unique<char[]>(256);
         string sbuff;
         size_t frames_count = 0;
         while (!svgs_finished || frames_count < rendered_frames_count) {

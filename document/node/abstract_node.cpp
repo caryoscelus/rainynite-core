@@ -79,8 +79,8 @@ size_t AbstractNode::init_property(string const& name, optional<Type> type, Abst
     return id;
 }
 
-std::map<string, AbstractReference> AbstractNode::get_link_map() const {
-    std::map<string, AbstractReference> result;
+map<string, AbstractReference> AbstractNode::get_link_map() const {
+    map<string, AbstractReference> result;
     // TODO: use generic conversion function
     for (auto const& e : named_storage) {
         result.emplace(e.first, get_by_id(e.second));

@@ -19,9 +19,9 @@
 #ifndef CORE_LOG_SIMPLE_EXCEPTION_LOG_H_C836E71D_C128_5309_B73E_639F5266F854
 #define CORE_LOG_SIMPLE_EXCEPTION_LOG_H_C836E71D_C128_5309_B73E_639F5266F854
 
-#include <utility>
-
 #include <core/std/queue.h>
+#include <core/std/tuple.h>
+#include <core/std/types.h>
 #include "exception_log.h"
 
 namespace rainynite::core {
@@ -35,7 +35,7 @@ public:
     void log_exception(weak_ptr<ExceptionSource const> source, std::exception const& ex) const noexcept override;
 
 private:
-    mutable queue<std::pair<weak_ptr<ExceptionSource const>, std::exception>> log;
+    mutable queue<pair<weak_ptr<ExceptionSource const>, std::exception>> log;
     size_t size;
 };
 

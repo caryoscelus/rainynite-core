@@ -1,5 +1,5 @@
 /*
- *  json_writer.cpp - simple json serializer
+ *  abstract_factory.h - Abstract Factory interface template
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/document.h>
-#include <core/serialize/node_writer.h>
-#include <core/serialize/json.h>
-#include <core/filters/json_writer.h>
+#ifndef CORE_ABSTRACT_FACTORY_H_302C0197_C085_5571_A533_C4B637493FFB
+#define CORE_ABSTRACT_FACTORY_H_302C0197_C085_5571_A533_C4B637493FFB
 
-namespace rainynite::core {
-namespace filters {
+#include <core/std/memory.h>
 
-void JsonWriter::write_document(std::ostream& output, shared_ptr<Document> document) {
-    auto writer = serialize::DumbJsonWriter<serialize::NodeWriter, AbstractReference>(output);
-    writer.object(dynamic_pointer_cast<AbstractValue>(document));
-}
+namespace rainynite {
 
-} // namespace filters
-} // namespace rainynite::core
+template <typename T>
+class AbstractFactory {
+public:
+    virtual unique_ptr<T> operator()() const = 0;
+};
+
+} // namespace rainynite
+
+#endif

@@ -29,11 +29,11 @@ class AbstractNotify {
 public:
     AbstractNotify() :
         changed_signal(),
-        destroy_detector(std::make_shared<Null>())
+        destroy_detector(make_shared<Null>())
     {}
     AbstractNotify(AbstractNotify const& /*other*/) :
         changed_signal(),
-        destroy_detector(std::make_shared<Null>())
+        destroy_detector(make_shared<Null>())
     {}
 public:
     /**

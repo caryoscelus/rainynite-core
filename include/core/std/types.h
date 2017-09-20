@@ -1,5 +1,5 @@
 /*
- *  json_writer.cpp - simple json serializer
+ *  std/types.h - re-import standard types
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/document.h>
-#include <core/serialize/node_writer.h>
-#include <core/serialize/json.h>
-#include <core/filters/json_writer.h>
+#ifndef CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
+#define CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
 
-namespace rainynite::core {
-namespace filters {
+#include <cstddef>
 
-void JsonWriter::write_document(std::ostream& output, shared_ptr<Document> document) {
-    auto writer = serialize::DumbJsonWriter<serialize::NodeWriter, AbstractReference>(output);
-    writer.object(dynamic_pointer_cast<AbstractValue>(document));
-}
+namespace rainynite {
 
-} // namespace filters
-} // namespace rainynite::core
+using std::size_t;
+using std::ptrdiff_t;
+using std::nullptr_t;
+using std::byte;
+
+// TODO: consider adding fixed-width ints?
+
+} // namespace rainynite
+
+#endif

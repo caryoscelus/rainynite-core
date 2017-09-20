@@ -1,5 +1,5 @@
 /*
- *  json_writer.cpp - simple json serializer
+ *  std/tuple.h - re-import tuple & related stuff
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/document.h>
-#include <core/serialize/node_writer.h>
-#include <core/serialize/json.h>
-#include <core/filters/json_writer.h>
+#ifndef CORE_STD_TUPLE_H_10B8095C_47E2_553F_B018_56905B33E397
+#define CORE_STD_TUPLE_H_10B8095C_47E2_553F_B018_56905B33E397
 
-namespace rainynite::core {
-namespace filters {
+#include <utility>
 
-void JsonWriter::write_document(std::ostream& output, shared_ptr<Document> document) {
-    auto writer = serialize::DumbJsonWriter<serialize::NodeWriter, AbstractReference>(output);
-    writer.object(dynamic_pointer_cast<AbstractValue>(document));
-}
+namespace rainynite {
 
-} // namespace filters
-} // namespace rainynite::core
+using std::pair;
+using std::tuple;
+using std::apply;
+
+} // namespace rainynite
+
+#endif

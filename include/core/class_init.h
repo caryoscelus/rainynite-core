@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__CLASS_INIT_H__9F78DE78
-#define __CORE__CLASS_INIT_H__9F78DE78
+#ifndef CORE_CLASS_INIT_H_0DD6B78B_E387_5F16_9B97_E6E7F8FCBE57
+#define CORE_CLASS_INIT_H_0DD6B78B_E387_5F16_9B97_E6E7F8FCBE57
 
 #include <core/std/map.h>
 #include <core/std/any.h>
@@ -33,6 +33,38 @@ using rainynite::string;
 using rainynite::Type;
 
 /**
+ * Type lookup error.
+ *
+ * Thrown when the key doesn't have a type associated with it.
+ */
+struct TypeLookupError : public std::runtime_error {
+    TypeLookupError(string msg="") :
+        std::runtime_error("Type lookup error "+msg)
+    {}
+};
+
+/**
+ * Runtime type error.
+ *
+ * Thrown by various runtime type info functions when requested type
+ * isn't found.
+ */
+struct RuntimeTypeError : public std::runtime_error {
+    RuntimeTypeError(Type type, string msg = "unknown error") :
+        std::runtime_error("Runtime type ("+string(type.name())+") "+msg)
+    {}
+};
+
+/**
+ * Runtime type error: type is unknown
+ */
+struct UnknownTypeError : public RuntimeTypeError {
+    UnknownTypeError(Type type) :
+        RuntimeTypeError(type, "not registered")
+    {}
+};
+
+/**
  * Automatic class initialization helper.
  *
  * To use this class, inherit from it in a "curiously returning template
@@ -43,7 +75,6 @@ using rainynite::Type;
  */
 template <class T>
 class Initialized {
-private:
     struct Init {
         Init() {
             T::init();
@@ -91,113 +122,129 @@ map<string, T*>& string_registry() {
  *   information (type_index or type_info which converts to it).
  */
 template <class S, class T, class R>
-class Registered : public Initialized<Registered<S, T, R>> {
-private:
-    /**
-     * Curiously-recurring pattern class argument
-     */
+struct Registered : public Initialized<Registered<S, T, R>> {
+    /// Curiously-recurring pattern class argument
     using Self = S;
-    /**
-     * Type to register
-     */
+    /// Type to register
     using Type = T;
-    /**
-     * Base type holding registered info
-     */
+    /// Base type holding registered info
     using RegisteredInfo = R;
-public:
     static void init() {
         class_registry<R>()[typeid(T)] = new S();
     }
 };
 
+/**
+ * Automatic string-to-class registration helper.
+ *
+ * This template allows associating strings with classes (quite
+ * often those classes are factories).
+ */
 template <class S, class R>
-class StringRegistered : private Initialized<StringRegistered<S, R>> {
-public:
+struct StringRegistered : private Initialized<StringRegistered<S, R>> {
+    /**
+     * Curiously-recurring pattern class argument
+     *
+     * Should have public static string name() which result is
+     * used for registering.
+     */
+    using Self = S;
+    /// Base class of registered info
+    using RegisteredInfo = R;
     static void init() {
         string_registry<R>()[S::name()] = new S();
     }
 };
 
-template <class S, class T, class R>
-class ReverseRegistered : public Initialized<ReverseRegistered<S, T, R>> {
-public:
+/**
+ * Automatic "reverse" class registry helper.
+ *
+ * Usage:
+ *
+ * - For each registered type, create a subclass of this template with
+ *   appropriate template arguments (Self, Type, Key).
+ * - That subclass should have operator()() that returns unique Key for
+ *   the Type.
+ */
+template <class S, class T, class K>
+struct ReverseRegistered : public Initialized<ReverseRegistered<S, T, K>> {
+    /**
+     * Curiously-recurring pattern class argument
+     *
+     * Should have R operator()() that returns desired key
+     */
+    using Self = S;
+    /// Type to register
+    using Type = T;
+    /// Key type
+    using Key = K;
     static void init() {
-        reverse_class_registry<R>().emplace(S()(), typeid(T));
+        reverse_class_registry<K>().emplace(S()(), typeid(T));
     }
 };
 
-class TypeLookupError : public std::runtime_error {
-public:
-    TypeLookupError(string msg="") :
-        std::runtime_error("Type lookup error "+msg)
-    {}
-};
-
-class RuntimeTypeError : public std::runtime_error {
-public:
-    RuntimeTypeError(Type type, string msg = "unknown error") :
-        std::runtime_error("Runtime type ("+string(type.name())+") "+msg)
-    {}
-};
-
-class UnknownTypeError : public RuntimeTypeError {
-public:
-    UnknownTypeError(Type type) :
-        RuntimeTypeError(type, "not registered")
-    {}
-};
-
+/// Get type info (of type `T`) for type `type`
 template <class T>
 T& type_meta(Type type) {
-    auto const& map = class_registry<T>();
-    auto iter = map.find(type);
-    if (iter == map.end()) {
+    auto const& class_map = class_registry<T>();
+    auto iter = class_map.find(type);
+    if (iter == class_map.end()) {
         throw UnknownTypeError(type);
     }
     return *iter->second;
 }
 
-template <class T, class R>
-R type_info(Type type) {
+/**
+ * Get type info for type `type`
+ *
+ * Since T (type info class) must be unique per type info set, even if it's
+ * only purpose is to store single value caller still needs to obtain that
+ * object and get value from it. This template allows to get required value
+ * (of type R) directly by calling operator() on T.
+ */
+template <class T, class R, typename... Args>
+R type_info(Type type, Args&&... args) {
     auto const& t = type_meta<T>(type);
     try {
-        return t();
+        return t(std::forward<Args>(args)...);
     } catch (...) {
         throw RuntimeTypeError(type);
     }
 }
 
+/**
+ * Get type_info for `any` object.
+ *
+ * This template is similar to type_info, with the difference that it accepts
+ * `any` instance and forwards it to operator() of T.
+ */
 template <class T, class R>
 R any_info(any const& object) {
-    Type type = object.type();
-    auto const& t = type_meta<T>(type);
-    try {
-        return t(object);
-    } catch (...) {
-        throw RuntimeTypeError(type);
-    }
+    return type_info<T, R>(object.type(), object);
 }
 
+/// Find type that is registered using reverse_class_registry
 template <class K>
 Type find_type(K const& key) {
-    auto const& map = reverse_class_registry<K>();
-    auto iter = map.find(key);
-    if (iter != map.end())
+    auto const& class_map = reverse_class_registry<K>();
+    auto iter = class_map.find(key);
+    if (iter != class_map.end())
         return iter->second;
     throw TypeLookupError(key);
 }
 
+/// Get name info from string_registry
 template <class T>
 T& name_info(string const& name) {
-    auto const& map = string_registry<T>();
-    auto iter = map.find(name);
-    if (iter == map.end()) {
+    auto const& class_map = string_registry<T>();
+    auto iter = class_map.find(name);
+    if (iter == class_map.end()) {
+        // TODO: should we really throw TypeLookupError here?
         throw TypeLookupError(name);
     }
     return *iter->second;
 }
 
-}
+} // namespace class_init
 
 #endif

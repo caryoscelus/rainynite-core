@@ -30,7 +30,7 @@ class DynamicNode : public ProxyNode<T> {
 public:
     DynamicNode() {
         this->template init<string>(node_type, {});
-        auto args = std::make_shared<UntypedListValue>();
+        auto args = make_shared<UntypedListValue>();
         args->new_id();
         this->template init_property(arguments, make_optional(Type(typeid(Nothing))), std::move(args));
     }
@@ -85,7 +85,7 @@ public:
         this->template init<string>(property_name, {});
         // TODO: make a function
         {
-            auto args = std::make_shared<UntypedListValue>();
+            auto args = make_shared<UntypedListValue>();
             args->new_id();
             this->template init_property(dynamic_arguments, make_optional(Type(typeid(Nothing))), std::move(args));
         }
@@ -134,7 +134,7 @@ class DynamicListTie : public ProxyListNode<T> {
 public:
     DynamicListTie() {
         this->template init<string>(node_type, {});
-        auto args = std::make_shared<UntypedListValue>();
+        auto args = make_shared<UntypedListValue>();
         args->new_id();
         this->template init_property(arguments_list, make_optional(Type(typeid(Nothing))), std::move(args));
     }
@@ -150,7 +150,7 @@ public:
             if (list_of_lists.size() == 0)
                 return;
             vector<List> links;
-            vector<std::pair<Iter, Iter>> iterators;
+            vector<pair<Iter, Iter>> iterators;
             bool fail = false;
             std::transform(
                 std::begin(list_of_lists),
@@ -173,7 +173,7 @@ public:
                 std::begin(links),
                 std::end(links),
                 std::back_inserter(iterators),
-                [](auto const& list) -> std::pair<Iter, Iter> {
+                [](auto const& list) -> pair<Iter, Iter> {
                     return { std::begin(list), std::end(list) };
                 }
             );

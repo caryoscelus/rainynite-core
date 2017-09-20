@@ -42,7 +42,7 @@ public:
             auto period = get_period()->get(ctx);
             auto step = get_step()->get(ctx);
             for (auto t = period.get_first(); t < period.get_last(); t += step) {
-                auto nctx = std::make_shared<Context>(*ctx);
+                auto nctx = make_shared<Context>(*ctx);
                 nctx->set_time(t);
                 f({source, nctx});
             }
