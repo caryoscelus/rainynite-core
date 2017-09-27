@@ -1,5 +1,4 @@
-/*
- *  list.h - list
+/*  list.h - list
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__LIST_H__5C3B88BA
-#define __CORE__NODE__LIST_H__5C3B88BA
+#ifndef CORE_NODE_LIST_H_12D92F7F_8F30_5447_9F54_AFB006578F3D
+#define CORE_NODE_LIST_H_12D92F7F_8F30_5447_9F54_AFB006578F3D
 
 #include "abstract_list.h"
 #include "abstract_value.h"
@@ -98,6 +97,13 @@ public:
     }
     void push_new() override {
         push_value<Nothing>(this, {});
+    }
+    void insert(size_t i, AbstractReference value) override {
+        if (auto e = dynamic_pointer_cast<S>(std::move(value))) {
+            values.insert(values.begin()+i, e);
+        } else {
+            // TODO: throw?
+        }
     }
     void remove(size_t index) override {
         values.erase(values.begin()+index);

@@ -1,5 +1,4 @@
-/*
- *  abstract_list.h - abstract list
+/*  abstract_list.h - abstract list
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__ABSTRACT_LIST_H__A2D19F78
-#define __CORE__NODE__ABSTRACT_LIST_H__A2D19F78
+#ifndef CORE_NODE_ABSTRACT_LIST_H_CC2AFA00_E2FA_5559_A49F_9E4CCC696C5D
+#define CORE_NODE_ABSTRACT_LIST_H_CC2AFA00_E2FA_5559_A49F_9E4CCC696C5D
 
 #include <core/std/vector.h>
 #include "common.h"
@@ -38,7 +37,10 @@ public:
     virtual void push_new() {
         throw NodeAccessError("cannot push back");
     }
-    virtual void remove(size_t) {
+    virtual void insert(size_t /*i*/, AbstractReference /*value*/) {
+        throw NodeAccessError("cannot insert");
+    }
+    virtual void remove(size_t /*i*/) {
         throw NodeAccessError("cannot remove");
     }
     virtual void pop() {
