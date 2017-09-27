@@ -48,15 +48,12 @@ private:
     };
 public:
     bool Null() {
-        std::cerr << "Null" << std::endl;
         throw DeserializationError("Unexpected null");
     }
     bool Bool(bool) {
-        std::cerr << "Bool" << std::endl;
         throw DeserializationError("Unexpected bool");
     }
     bool Int(int) {
-        std::cerr << "Int" << std::endl;
         throw DeserializationError("Unexpected int");
     }
     bool Uint(unsigned) {
@@ -72,12 +69,10 @@ public:
         throw DeserializationError("Unexpected double");
     }
     bool RawNumber(char const*, size_t, bool) {
-        std::cerr << "RawNumber" << std::endl;
         throw DeserializationError("Unexpected number");
     }
     bool String(char const* str, size_t length, bool) {
         auto s = string(str, length);
-        std::cerr << "String: " << str << std::endl;
         try {
             switch (status) {
                 case Status::Type: {
@@ -108,13 +103,11 @@ public:
         return true;
     }
     bool StartObject() {
-        std::cerr << "StartObject" << std::endl;
         status = Status::ObjectStart;
         return true;
     }
     bool Key(char const* str, size_t length, bool) {
         auto key = string(str, length);
-        std::cerr << "Key: " << key << std::endl;
         if (key == "TYPE") {
             status = Status::Type;
         } else if (key == "VALUE") {
@@ -123,30 +116,25 @@ public:
         } else if (key == "UID") {
             // relying on UID being first element in JSON object
             // this should NOT be relied on as JSON does not preserve order
-            std::cerr << "UID" << std::endl;
             if (status != Status::ObjectStart)
                 throw DeserializationError("Unexpected UID");
             status = Status::UID;
         } else {
             writer.key(key);
         }
-        std::cerr << "exit key" << std::endl;
         return true;
     }
     bool EndObject(size_t) {
-        std::cerr << "EndObject" << std::endl;
         status = Status::Empty;
         writer.object_end();
         return true;
     }
     bool StartArray() {
-        std::cerr << "StartArray" << std::endl;
         status = Status::Empty;
         writer.list_start();
         return true;
     }
     bool EndArray(size_t) {
-        std::cerr << "EndArray" << std::endl;
         status = Status::Empty;
         writer.list_end();
         return true;
