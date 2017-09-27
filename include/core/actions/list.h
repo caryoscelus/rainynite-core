@@ -19,7 +19,7 @@
 #define CORE_ACTIONS_LIST_H_E2B8B263_008B_58EA_8917_059B73FCC6C0
 
 #include <core/action.h>
-#include <core/node/abstract_node.h>
+#include <core/node/abstract_list.h>
 #include "reverse.h"
 
 namespace rainynite::core::actions {
@@ -39,6 +39,34 @@ public:
 
 private:
     shared_ptr<AbstractListLinked> const node;
+};
+
+class ListInsertElement : public AbstractAction {
+public:
+    ListInsertElement(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference value_) :
+        node(node_),
+        index(index_),
+        value(value_)
+    {}
+public:
+    void redo_action() override {
+        node->insert(index, value);
+    }
+    void undo_action() override {
+        value = node->get_link(index);
+        node->remove(index);
+    }
+private:
+    shared_ptr<AbstractListLinked> const node;
+    size_t index;
+    AbstractReference value;
+};
+
+class ListRemoveElement : public ReverseAction<ListInsertElement> {
+public:
+    ListRemoveElement(shared_ptr<AbstractListLinked> node_, size_t index_) :
+        ReverseAction<ListInsertElement>(node_, index_, nullptr)
+    {}
 };
 
 } // namespace rainynite::core::actions
