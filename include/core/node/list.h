@@ -85,15 +85,7 @@ public:
         }
     }
     void push_back(AbstractReference value) override {
-        if (auto e = dynamic_pointer_cast<S>(std::move(value))) {
-            values.push_back(e);
-            signal_connections.push_back(e->subscribe([this]() {
-                this->changed();
-            }));
-            this->changed();
-        } else {
-            //throw
-        }
+        insert(link_count(), value);
     }
     void push_new() override {
         push_value<Nothing>(this, {});
@@ -101,6 +93,13 @@ public:
     void insert(size_t i, AbstractReference value) override {
         if (auto e = dynamic_pointer_cast<S>(std::move(value))) {
             values.insert(values.begin()+i, e);
+            signal_connections.insert(
+                signal_connections.begin()+i,
+                e->subscribe([this]() {
+                    this->changed();
+                })
+            );
+            this->changed();
         } else {
             // TODO: throw?
         }
@@ -108,6 +107,7 @@ public:
     void remove(size_t index) override {
         values.erase(values.begin()+index);
         signal_connections.erase(signal_connections.begin()+index);
+        this->changed();
     }
     void pop() override {
         remove(values.size()-1);
