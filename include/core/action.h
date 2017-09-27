@@ -66,17 +66,6 @@ private:
     bool done = false;
 };
 
-template <class A>
-class ReverseAction : public A {
-public:
-    void redo_action() override {
-        A::undo_action();
-    }
-    void undo_action() override {
-        A::redo_action();
-    }
-};
-
 class ActionStack {
 public:
     using Stack = vector<unique_ptr<AbstractAction>>;
