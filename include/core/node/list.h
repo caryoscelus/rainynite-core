@@ -103,6 +103,9 @@ public:
         values.erase(values.begin()+index);
         signal_connections.erase(signal_connections.begin()+index);
     }
+    void pop() override {
+        remove(values.size()-1);
+    }
     bool is_editable_list() const override {
         return true;
     }

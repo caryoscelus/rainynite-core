@@ -41,6 +41,9 @@ public:
     virtual void remove(size_t) {
         throw NodeAccessError("cannot remove");
     }
+    virtual void pop() {
+        throw NodeAccessError("cannot pop");
+    }
     virtual bool is_editable_list() const {
         return false;
     }
