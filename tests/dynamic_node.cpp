@@ -37,3 +37,20 @@ TEST_CASE("Test dynamic node", "[node]") {
     list->push_back(make_value<double>(3.0));
     CHECK(dynamic->value(zero_context()) == 4.0);
 }
+
+TEST_CASE("Test ApplyToList node", "[node]") {
+    auto apply = make_node_with_name<Node<vector<double>>>("ApplyToList<Real>");
+    auto add = make_node_with_name<Node<double>>("Add");
+    add->get_property("a")->set_any(0.5);
+    apply->set_property("source", add);
+    apply->get_property("property_name")->set_any(string("b"));
+    auto args = apply->get_property("dynamic_arguments");
+    REQUIRE(args != nullptr);
+    auto list = dynamic_cast<UntypedListValue*>(args.get());
+    REQUIRE(list != nullptr);
+    CHECK(apply->value(zero_context()) == vector<double>{});
+    list->push_back(make_value<double>(1.0));
+    CHECK(apply->value(zero_context()) == vector<double>{1.5});
+    list->push_back(make_value<double>(3.0));
+    CHECK((apply->value(zero_context()) == vector<double>{1.5, 3.5}));
+}
