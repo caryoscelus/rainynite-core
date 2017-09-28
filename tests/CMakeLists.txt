@@ -30,5 +30,8 @@ target_link_libraries(test_actions document time)
 add_catch_test(notify)
 target_link_libraries(test_notify document time)
 
+add_catch_test(list_nodes)
+target_link_libraries(test_list_nodes document time)
+
 add_catch_test(dynamic_node)
 target_link_libraries(test_dynamic_node document time)

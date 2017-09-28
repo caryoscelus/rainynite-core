@@ -1,5 +1,4 @@
-/*
- *  list.cpp - list utils
+/*  list.cpp - list utils
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -40,6 +39,32 @@ public:
 };
 
 REGISTER_NODE(ToUntypedList);
+
+
+/**
+ * Convert UntypedListValue to typed list.
+ *
+ * NOTE: currently doesn't do any type-checking!
+ */
+template <typename T>
+class ToTypedList : public Node<vector<T>> {
+public:
+    ToTypedList() {
+        auto src = make_shared<UntypedListValue>();
+        src->new_id();
+        this->template init_property("source", make_optional(Type(typeid(Nothing))), std::move(src));
+    }
+
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        if (auto list = this->get_property("source"))
+            return list->get_list_links(ctx);
+        return {};
+    }
+};
+
+NODE_INFO_TEMPLATE(ToTypedList, ToTypedList<T>, vector<T>);
+TYPE_INSTANCES(ToTypedListNodeInfo)
+
 
 template <typename T>
 class ListElement : public ProxyNode<T> {
