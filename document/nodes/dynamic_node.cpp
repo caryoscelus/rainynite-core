@@ -126,13 +126,11 @@ TYPE_INSTANCES(ApplyToListNodeInfo)
  *
  * Takes few homogeneous lists and uses their elements as node properties
  * (each list representing one property) in new node list.
- *
- * TODO: rename to ..Zip
  */
 template <typename T>
-class DynamicListTie : public ProxyListNode<T> {
+class DynamicListZip : public ProxyListNode<T> {
 public:
-    DynamicListTie() {
+    DynamicListZip() {
         this->template init<string>(node_type, {});
         auto args = make_shared<UntypedListValue>();
         args->new_id();
@@ -140,61 +138,58 @@ public:
     }
 public:
     void step_into_list(shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
-        try {
-            using List = vector<NodeInContext>;
-            using Iter = List::const_iterator;
-            auto args = this->get_property("arguments_list");
-            if (!args)
-                throw NodeAccessError("arguments list is null");
-            auto list_of_lists = args->get_list_links(ctx);
-            if (list_of_lists.size() == 0)
-                return;
-            vector<List> links;
-            vector<pair<Iter, Iter>> iterators;
-            bool fail = false;
-            std::transform(
-                std::begin(list_of_lists),
-                std::end(list_of_lists),
-                std::back_inserter(links),
-                [&fail](auto e) {
-                    try {
-                        return e.node->get_list_links(e.context);
-                    } catch (...) {
-                    }
-                    fail = true;
-                    return List();
+        using List = vector<NodeInContext>;
+        using Iter = List::const_iterator;
+        auto args = this->get_property("arguments_list");
+        if (!args)
+            throw NodeAccessError("arguments list is null");
+        auto list_of_lists = args->get_list_links(ctx);
+        if (list_of_lists.size() == 0)
+            return;
+        vector<List> links;
+        vector<pair<Iter, Iter>> iterators;
+        bool fail = false;
+        std::transform(
+            std::begin(list_of_lists),
+            std::end(list_of_lists),
+            std::back_inserter(links),
+            [&fail](auto e) {
+                try {
+                    return e.node->get_list_links(e.context);
+                } catch (...) {
                 }
-            );
-            if (fail) {
-                return;
-                // throw
+                fail = true;
+                return List();
             }
-            std::transform(
-                std::begin(links),
-                std::end(links),
-                std::back_inserter(iterators),
-                [](auto const& list) -> pair<Iter, Iter> {
-                    return { std::begin(list), std::end(list) };
-                }
-            );
-            auto type = get_node_type()->get(ctx);
-            while (true) {
-                auto node = make_node_with_name<AbstractValue>(type);
-                auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
-                if (!list_node)
+        );
+        if (fail) {
+            return;
+            // throw
+        }
+        std::transform(
+            std::begin(links),
+            std::end(links),
+            std::back_inserter(iterators),
+            [](auto const& list) -> pair<Iter, Iter> {
+                return { std::begin(list), std::end(list) };
+            }
+        );
+        auto type = get_node_type()->get(ctx);
+        while (true) {
+            auto node = make_node_with_name<AbstractValue>(type);
+            auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
+            if (!list_node)
+                return;
+            size_t i = 0;
+            for (auto& e : iterators) {
+                if (e.first == e.second)
                     return;
-                size_t i = 0;
-                for (auto& e : iterators) {
-                    if (e.first == e.second)
-                        return;
-                    // TODO: fix contexts
-                    list_node->set_link(i, e.first->node);
-                    ++e.first;
-                    ++i;
-                }
-                f({node, ctx});
+                // TODO: fix contexts
+                list_node->set_link(i, e.first->node);
+                ++e.first;
+                ++i;
             }
-        } catch (...) {
+            f({node, ctx});
         }
     }
 private:
@@ -202,8 +197,8 @@ private:
     NODE_LIST_PROPERTY(arguments_list, Nothing);
 };
 
-NODE_INFO_TEMPLATE(DynamicListTie, DynamicListTie<T>, vector<T>);
-TYPE_INSTANCES(DynamicListTieNodeInfo)
+NODE_INFO_TEMPLATE(DynamicListZip, DynamicListZip<T>, vector<T>);
+TYPE_INSTANCES(DynamicListZipNodeInfo)
 
 } // namespace nodes
 } // namespace rainynite::core
