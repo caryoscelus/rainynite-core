@@ -1,5 +1,4 @@
-/*
- *  serialize.h - node tree (de)serializer
+/*  serialize.h - node tree (de)serializer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,26 +18,12 @@
 #ifndef CORE_SERIALIZE_SERIALIZE_H_D7B6BA59_030E_5601_AA64_88A95D447ADB
 #define CORE_SERIALIZE_SERIALIZE_H_D7B6BA59_030E_5601_AA64_88A95D447ADB
 
-#include <stdexcept>
-
 #include <core/std/set.h>
 #include <core/std/string.h>
 
+#include "exceptions.h"
+
 namespace rainynite::core::serialize {
-
-class SerializationError : public std::runtime_error {
-public:
-    SerializationError(string const& msg) :
-        std::runtime_error(msg)
-    {}
-};
-
-class DeserializationError : public SerializationError {
-public:
-    DeserializationError(string const& msg) :
-        SerializationError(msg)
-    {}
-};
 
 enum class RecordType {
     Nothing,
