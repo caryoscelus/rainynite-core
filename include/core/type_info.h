@@ -1,5 +1,4 @@
-/*
- *  types.h - runtime primitive type information
+/*  type_info.h - runtime primitive type information
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__TYPES_H__0EBC3D4C
-#define __CORE__TYPES_H__0EBC3D4C
+#ifndef CORE_TYPES_H_9E3A32A1_A9D0_52CB_AA5B_25CABBDD7A32
+#define CORE_TYPES_H_9E3A32A1_A9D0_52CB_AA5B_25CABBDD7A32
 
 #include <core/class_init.h>
 

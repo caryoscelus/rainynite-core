@@ -21,7 +21,7 @@
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/nodes/animated.h>
-#include <core/types.h>
+#include <core/type_info.h>
 #include <core/all_types.h>
 #include <core/context.h>
 

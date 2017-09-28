@@ -20,7 +20,7 @@
 
 #include <iostream>
 
-#include <core/types.h>
+#include <core/type_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/serialize/json.h>

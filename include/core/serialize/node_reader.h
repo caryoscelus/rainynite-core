@@ -20,7 +20,7 @@
 #define __CORE__SERIALIZE__NODE_READER_H__C23C4D8A
 
 #include <core/node_info.h>
-#include <core/types.h>
+#include <core/type_info.h>
 
 #include "serialize.h"
 

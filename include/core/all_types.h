@@ -1,5 +1,4 @@
-/*
- *  types.h - runtime primitive type information
+/*  all_types.h - macros for instancing templates with registered types
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__ALL_TYPES_H__969ABB32
-#define __CORE__ALL_TYPES_H__969ABB32
+#ifndef CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
+#define CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
 
 #include "time/time_period.h"
 #include <geom_helpers/null_shape.h>

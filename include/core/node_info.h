@@ -21,7 +21,7 @@
 
 #include <core/std/set.h>
 #include <core/class_init.h>
-#include <core/types.h>
+#include <core/type_info.h>
 #include <core/node/abstract_value.h>
 
 namespace rainynite::core {
