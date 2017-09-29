@@ -1,5 +1,4 @@
-/*
- *  dynamic_node.cpp - create node from argument list
+/*  dynamic_node.cpp - create node from argument list
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -70,6 +69,26 @@ private:
 
 NODE_INFO_TEMPLATE(DynamicNode, DynamicNode<T>, T);
 TYPE_INSTANCES(DynamicNodeNodeInfo)
+
+/**
+ * Node that replaces context for its child node.
+ *
+ * Currently can only be used internally.
+ */
+template <typename T>
+class ReplaceContextNode : public ProxyNode<T> {
+public:
+    ReplaceContextNode(NodeInContext nic_) :
+        nic(nic_)
+    {}
+
+    NodeInContext get_proxy(shared_ptr<Context> /*ctx*/) const override {
+        return nic;
+    }
+
+private:
+    NodeInContext const nic;
+};
 
 /**
  * Convert list by applying node to each element.
@@ -183,8 +202,7 @@ public:
             for (auto& e : iterators) {
                 if (e.first == e.second)
                     return;
-                // TODO: fix contexts
-                list_node->set_link(i, e.first->node);
+                list_node->set_link(i, make_shared<ReplaceContextNode<T>>(*e.first));
                 ++e.first;
                 ++i;
             }

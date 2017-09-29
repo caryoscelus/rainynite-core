@@ -38,6 +38,16 @@ TEST_CASE("Test dynamic node", "[node]") {
     CHECK(dynamic->value(zero_context()) == 4.0);
 }
 
+AbstractReference make_time_list_0_1() {
+    auto time_list = make_node_with_name<Node<vector<double>>>("TimeList<Real>");
+    time_list->get_property("step")->set_any(Time(1.0));
+    time_list->get_property("period")->set_any(TimePeriod(Time(0.0), Time(2.0)));
+    time_list->set_property("source", make_node_with_name<AbstractValue>("Linear"));
+    auto untyped = make_node_with_name<Node<Nothing>>("ToUntypedList");
+    untyped->set_property("source", time_list);
+    return untyped;
+}
+
 TEST_CASE("Test ApplyToList node", "[node]") {
     auto apply = make_node_with_name<Node<vector<double>>>("ApplyToList<Real>");
     auto add = make_node_with_name<Node<double>>("Add");
@@ -65,13 +75,8 @@ TEST_CASE("Test ApplyToList node", "[node]") {
         CHECK(apply->value(zero_context()) == vector<double>{1.5});
     }
     SECTION("Preserve context") {
-        auto time_list = make_node_with_name<Node<vector<double>>>("TimeList<Real>");
-        time_list->get_property("step")->set_any(Time(1.0));
-        time_list->get_property("period")->set_any(TimePeriod(Time(0.0), Time(2.0)));
-        time_list->set_property("source", make_node_with_name<AbstractValue>("Linear"));
-        auto untyped = make_node_with_name<Node<Nothing>>("ToUntypedList");
-        untyped->set_property("source", time_list);
-        apply->set_property("dynamic_arguments", untyped);
+        auto time_list = make_time_list_0_1();
+        apply->set_property("dynamic_arguments", time_list);
         auto exp = vector<double>{0.5, 1.5};
         CHECK(apply->value(zero_context()) == exp);
     }
@@ -82,15 +87,24 @@ TEST_CASE("Test DynamicListZip node", "[node]") {
     zip->get_property("node_type")->set_any(string("Add"));
     auto args = zip->get_property("arguments_list");
     auto list_of_lists = dynamic_cast<UntypedListValue*>(args.get());
-    auto a_list = make_shared<UntypedListValue>();
-    auto b_list = make_shared<UntypedListValue>();
-    list_of_lists->push_back(a_list);
-    list_of_lists->push_back(b_list);
-    CHECK(zip->value(zero_context()) == vector<double>{});
-    a_list->push_back(make_value<double>(1.0));
-    b_list->push_back(make_value<double>(1.5));
-    CHECK(zip->value(zero_context()) == vector<double>{2.5});
-    a_list->push_back(make_value<double>(2.0));
-    b_list->push_back(make_value<double>(3.5));
-    CHECK((zip->value(zero_context()) == vector<double>{2.5, 5.5}));
+    SECTION("Simple") {
+        auto a_list = make_shared<UntypedListValue>();
+        auto b_list = make_shared<UntypedListValue>();
+        list_of_lists->push_back(a_list);
+        list_of_lists->push_back(b_list);
+        CHECK(zip->value(zero_context()) == vector<double>{});
+        a_list->push_back(make_value<double>(1.0));
+        b_list->push_back(make_value<double>(1.5));
+        CHECK(zip->value(zero_context()) == vector<double>{2.5});
+        a_list->push_back(make_value<double>(2.0));
+        b_list->push_back(make_value<double>(3.5));
+        CHECK((zip->value(zero_context()) == vector<double>{2.5, 5.5}));
+    }
+    SECTION("Preserve context") {
+        auto t_list = make_time_list_0_1();
+        list_of_lists->push_back(t_list);
+        list_of_lists->push_back(t_list);
+        auto exp = vector<double>{0, 2};
+        CHECK(zip->value(zero_context()) == exp);
+    }
 }
