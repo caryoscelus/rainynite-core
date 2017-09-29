@@ -1,0 +1,46 @@
+/*  time_nodes.cpp - test time-related nodes
+ *  Copyright (C) 2017 caryoscelus
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <catch.hpp>
+
+#include <core/node_info.h>
+#include <core/node/node.h>
+#include <core/context.h>
+
+#include "zero_context.h"
+
+using namespace rainynite;
+using namespace rainynite::core;
+
+TEST_CASE("Test TimeMap node", "[node]") {
+    auto tmap = make_node_with_name<Node<double>>("TimeMap<Real>");
+    tmap->set_property("source", make_node_with_name<AbstractValue>("Linear"));
+    CHECK(tmap->value(zero_context()) == 0.0);
+    tmap->get_property("offset")->set_any(Time(1.0));
+    CHECK(tmap->value(zero_context()) == 1.0);
+    tmap->get_property("multiplier")->set_any(2.0);
+    CHECK(tmap->value(zero_context()) == 1.0);
+    tmap->get_property("offset")->set_any(Time(2.0));
+    CHECK(tmap->value(zero_context()) == 2.0);
+    auto ctx = make_shared<Context>();
+    ctx->set_time(Time(0.5));
+    CHECK(tmap->value(ctx) == 3.0);
+    ctx->set_time(Time(1.0));
+    CHECK(tmap->value(ctx) == 4.0);
+    tmap->get_property("multiplier")->set_any(0.0);
+    CHECK(tmap->value(ctx) == 2.0);
+}
