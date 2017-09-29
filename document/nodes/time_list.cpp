@@ -27,6 +27,11 @@
 namespace rainynite::core {
 namespace nodes {
 
+/**
+ * Node that makes a list of its source at different times.
+ *
+ * TODO: use List<Time> instead of TimePeriod and Time parameters
+ */
 template <typename T>
 class TimeList : public ProxyListNode<T> {
 public:
