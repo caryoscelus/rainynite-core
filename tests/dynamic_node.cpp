@@ -64,6 +64,17 @@ TEST_CASE("Test ApplyToList node", "[node]") {
         list->push_back(time_map);
         CHECK(apply->value(zero_context()) == vector<double>{1.5});
     }
+    SECTION("Preserve context") {
+        auto time_list = make_node_with_name<Node<vector<double>>>("TimeList<Real>");
+        time_list->get_property("step")->set_any(Time(1.0));
+        time_list->get_property("period")->set_any(TimePeriod(Time(0.0), Time(2.0)));
+        time_list->set_property("source", make_node_with_name<AbstractValue>("Linear"));
+        auto untyped = make_node_with_name<Node<Nothing>>("ToUntypedList");
+        untyped->set_property("source", time_list);
+        apply->set_property("dynamic_arguments", untyped);
+        auto exp = vector<double>{0.5, 1.5};
+        CHECK(apply->value(zero_context()) == exp);
+    }
 }
 
 TEST_CASE("Test DynamicListZip node", "[node]") {
