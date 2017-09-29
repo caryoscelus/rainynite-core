@@ -49,10 +49,21 @@ TEST_CASE("Test ApplyToList node", "[node]") {
     auto list = dynamic_cast<UntypedListValue*>(args.get());
     REQUIRE(list != nullptr);
     CHECK(apply->value(zero_context()) == vector<double>{});
-    list->push_back(make_value<double>(1.0));
-    CHECK(apply->value(zero_context()) == vector<double>{1.5});
-    list->push_back(make_value<double>(3.0));
-    CHECK((apply->value(zero_context()) == vector<double>{1.5, 3.5}));
+    SECTION("Simple") {
+        list->push_back(make_value<double>(1.0));
+        CHECK(apply->value(zero_context()) == vector<double>{1.5});
+        list->push_back(make_value<double>(3.0));
+        CHECK((apply->value(zero_context()) == vector<double>{1.5, 3.5}));
+    }
+    SECTION("More complex") {
+        // This isn't really required..
+        auto time_map = make_node_with_name<Node<double>>("TimeMap<Real>");
+        time_map->get_property("offset")->set_any(Time(1.0));
+        time_map->set_property("source", make_node_with_name<AbstractValue>("Linear"));
+        REQUIRE(time_map->value(zero_context()) == 1.0);
+        list->push_back(time_map);
+        CHECK(apply->value(zero_context()) == vector<double>{1.5});
+    }
 }
 
 TEST_CASE("Test DynamicListZip node", "[node]") {
