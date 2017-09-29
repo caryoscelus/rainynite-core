@@ -54,3 +54,21 @@ TEST_CASE("Test ApplyToList node", "[node]") {
     list->push_back(make_value<double>(3.0));
     CHECK((apply->value(zero_context()) == vector<double>{1.5, 3.5}));
 }
+
+TEST_CASE("Test DynamicListZip node", "[node]") {
+    auto zip = make_node_with_name<Node<vector<double>>>("DynamicListZip<Real>");
+    zip->get_property("node_type")->set_any(string("Add"));
+    auto args = zip->get_property("arguments_list");
+    auto list_of_lists = dynamic_cast<UntypedListValue*>(args.get());
+    auto a_list = make_shared<UntypedListValue>();
+    auto b_list = make_shared<UntypedListValue>();
+    list_of_lists->push_back(a_list);
+    list_of_lists->push_back(b_list);
+    CHECK(zip->value(zero_context()) == vector<double>{});
+    a_list->push_back(make_value<double>(1.0));
+    b_list->push_back(make_value<double>(1.5));
+    CHECK(zip->value(zero_context()) == vector<double>{2.5});
+    a_list->push_back(make_value<double>(2.0));
+    b_list->push_back(make_value<double>(3.5));
+    CHECK((zip->value(zero_context()) == vector<double>{2.5, 5.5}));
+}
