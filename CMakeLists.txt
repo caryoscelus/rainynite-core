@@ -19,6 +19,7 @@ include_directories(SYSTEM "${RAPIDJSON_INCLUDE_DIRS}")
 
 set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "YAML: Enable testing and parse tools")
 set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "YAML: Enable contrib stuff in library")
+set(BUILD_SHARED_LIBS ON)
 add_subdirectory(thirdparty/yaml-cpp)
 
 find_package(geom_helpers REQUIRED)
