@@ -153,16 +153,16 @@ void SvgRenderer::Impl::render(Context&& context_) {
 }
 
 void SvgRenderer::Impl::prepare_render() {
-    if (!boost::filesystem::exists(render_path)) {
-        if (!boost::filesystem::create_directory(render_path))
-            throw RenderFailure("Cannot create render directory");
-    }
     if (!settings.path.empty()) {
         base_path = settings.path;
         base_path.remove_filename();
         boost::filesystem::current_path(base_path);
         if (settings.render_pngs)
             restart_png();
+    }
+    if (!boost::filesystem::exists(render_path)) {
+        if (!boost::filesystem::create_directory(render_path))
+            throw RenderFailure("Cannot create render directory");
     }
     svgs_finished = false;
     if (settings.render_pngs)
