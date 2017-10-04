@@ -90,14 +90,14 @@ private:
     NodeInContext const nic;
 };
 
-/**
- * Convert list by applying node to each element.
- *
- * Returns list, each element of which is node with a few common properties
- * and one from input list.
- */
 template <typename T>
 class ApplyToList : public ProxyListNode<T> {
+    DOC_STRING(
+        "Convert list by applying node to each element.\n"
+        "\n"
+        "Returns list, each element of which is node with a few common properties"
+        "and one from input list."
+    )
 public:
     ApplyToList() {
         this->template init<T>(source, {});
@@ -139,14 +139,14 @@ private:
 NODE_INFO_TEMPLATE(ApplyToList, ApplyToList<T>, vector<T>);
 TYPE_INSTANCES(ApplyToListNodeInfo)
 
-/**
- * Zip lists of lists into a list of nodes with args.
- *
- * Takes few homogeneous lists and uses their elements as node properties
- * (each list representing one property) in new node list.
- */
 template <typename T>
 class DynamicListZip : public ProxyListNode<T> {
+    DOC_STRING(
+        "Zip lists of lists into a list of nodes with args.\n"
+        "\n"
+        "Takes few homogeneous lists and uses their elements as node properties"
+        "(each list representing one property) in new node list."
+    )
 public:
     DynamicListZip() {
         this->template init<string>(node_type, {});

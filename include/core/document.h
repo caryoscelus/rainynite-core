@@ -1,5 +1,4 @@
-/*
- *  document.h - document
+/*  document.h - document
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__DOCUMENT_H__62AC426A
-#define __CORE__DOCUMENT_H__62AC426A
+#ifndef CORE_DOCUMENT_H_87F22B17_CBE2_5508_B5CD_09A0EBABED26
+#define CORE_DOCUMENT_H_87F22B17_CBE2_5508_B5CD_09A0EBABED26
 
 #include <core/std/memory.h>
 
@@ -38,6 +37,9 @@ class DocumentType {
 
 class Document : public Node<DocumentType>
 {
+    DOC_STRING(
+        "Document is the core node of any RainyNite document."
+    )
 public:
     explicit Document(shared_ptr<BaseValue<Renderable>> root_=nullptr);
     virtual ~Document();

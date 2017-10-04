@@ -1,5 +1,4 @@
-/*
- *  circle.cpp - circle constructing nodes
+/*  circle.cpp - circle constructing nodes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -26,6 +25,9 @@ namespace rainynite::core {
 namespace nodes {
 
 class CirclePR : public Node<Geom::Circle> {
+    DOC_STRING(
+        "Construct circle from center position and radius."
+    )
 public:
     CirclePR() {
         init<Geom::Point>(position, {});
