@@ -44,4 +44,10 @@ public:
 
 } // namespace rainynite::core
 
+#define DOC_STRING(s) \
+public: \
+    string doc_string() const override { \
+        return s; \
+    }
+
 #endif
