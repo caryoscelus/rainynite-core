@@ -39,6 +39,7 @@ if (BUILD_NODES)
             nodes/rectangle.cpp
             nodes/circle.cpp
             nodes/list.cpp
+            nodes/conditional.cpp
             nodes/split_string.cpp
             nodes/random.cpp
             nodes/renderable/empty.cpp
