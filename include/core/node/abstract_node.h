@@ -1,5 +1,4 @@
-/*
- *  abstract_node.h - abstract Node
+/*  abstract_node.h - abstract Node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,17 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__ABSTRACT_NODE_H__24ECBF82
-#define __CORE__NODE__ABSTRACT_NODE_H__24ECBF82
+#ifndef CORE_NODE_ABSTRACT_NODE_H_EE148DA4_6D84_5EDA_A5B0_C192A55C5B09
+#define CORE_NODE_ABSTRACT_NODE_H_EE148DA4_6D84_5EDA_A5B0_C192A55C5B09
 
 #include <boost/signals2/signal.hpp>
 
 #include <core/std/map.h>
 #include "abstract_list.h"
+#include "doc_string.h"
 
 namespace rainynite::core {
 
-class AbstractNode : public AbstractListLinked {
+class AbstractNode : public AbstractListLinked, public DocString {
 public:
     virtual ~AbstractNode();
 public:
