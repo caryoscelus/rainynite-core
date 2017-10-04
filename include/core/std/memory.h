@@ -1,5 +1,4 @@
-/*
- *  std/memory.h - re-import memory
+/*  std/memory.h - re-import memory
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,16 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__STD__MEMORY_H__1D42DE8A
-#define __CORE__STD__MEMORY_H__1D42DE8A
+#ifndef CORE_STD_MEMORY_H_FF669312_947A_59A4_929E_E7C040C4BDBC
+#define CORE_STD_MEMORY_H_FF669312_947A_59A4_929E_E7C040C4BDBC
 
 #include <memory>
+#include <experimental/memory>
 
 namespace rainynite {
 
 using std::unique_ptr;
 using std::shared_ptr;
 using std::weak_ptr;
+using std::experimental::observer_ptr;
 
 using std::dynamic_pointer_cast;
 using std::static_pointer_cast;
