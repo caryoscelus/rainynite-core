@@ -1,5 +1,4 @@
-/*
- *  value.h - Node Value
+/*  value.h - Node Value
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__VALUE_H__B8E31170
-#define __CORE__NODE__VALUE_H__B8E31170
+#ifndef CORE_NODE_VALUE_H_7884E691_994C_52B4_A222_E536C3B5F9D9
+#define CORE_NODE_VALUE_H_7884E691_994C_52B4_A222_E536C3B5F9D9
 
 #include "abstract_value.h"
 
@@ -55,9 +54,6 @@ public:
 private:
     T value_;
 };
-
-template <typename T, typename... Args>
-shared_ptr<Value<T>> make_value_(Args&&... args);
 
 } // namespace rainynite::core
 
