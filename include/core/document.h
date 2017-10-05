@@ -26,6 +26,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/renderable.h>
+#include <core/audio.h>
 #include <core/action.h>
 
 namespace rainynite::core {
@@ -58,6 +59,7 @@ private:
     NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(size, Geom::Point);
     NODE_STATIC_PROPERTY(main_time_period, TimePeriod);
+    NODE_PROPERTY(soundtrack, Audio);
 };
 
 }

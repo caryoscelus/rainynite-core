@@ -25,6 +25,7 @@
 #include <geom_helpers/knots.h>
 #include <core/color.h>
 #include <core/renderable.h>
+#include <core/audio.h>
 #include <core/time_point.h>
 #include <core/nothing.h>
 
@@ -46,6 +47,7 @@
 #define TYPE_INSTANCES(Template) \
     TYPE_INSTANCES_WO_RENDERABLE(Template) \
     template class Template<Renderable>; \
+    template class Template<Audio>; \
     template class Template<TimePointType>;
 
 #endif

@@ -109,6 +109,10 @@ TYPE_INFO(Renderable, "Renderable", [](auto&&) -> any {
     throw serialize::DeserializationError("Renderable type cannot be deserialized");
 });
 
+TYPE_INFO(Audio, "Audio", [](auto&&) -> any {
+    throw serialize::DeserializationError("Audio type cannot be deserialized");
+});
+
 TYPE_INFO(DocumentType, "Document", [](auto&&) -> any {
     throw serialize::DeserializationError("Document type cannot be deserialized");
 });

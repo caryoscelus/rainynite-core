@@ -42,6 +42,7 @@ if (BUILD_NODES)
             nodes/conditional.cpp
             nodes/split_string.cpp
             nodes/random.cpp
+            nodes/audio.cpp
             nodes/renderable/empty.cpp
             nodes/renderable/composite.cpp
             nodes/renderable/image.cpp
