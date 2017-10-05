@@ -60,7 +60,7 @@ inline NodeInfo const& get_node_type(string const& name) {
     return get_node_info(class_init::find_type(name));
 }
 
-template <typename T>
+template <typename T=AbstractValue>
 shared_ptr<T> make_node_with_name(string const& name, AbstractReference source=nullptr, shared_ptr<Context> context=nullptr) {
     auto node = get_node_type(name).new_empty();
     node->new_id(); // TODO: don't do that here?
