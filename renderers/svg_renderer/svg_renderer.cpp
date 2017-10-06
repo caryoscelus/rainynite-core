@@ -1,5 +1,4 @@
-/*
- *  svg_renderer.cpp - primitive .svg renderer
+/*  svg_renderer.cpp - primitive .svg renderer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -21,8 +20,6 @@
 #include <thread>
 #include <fstream>
 
-#include <unistd.h>
-#include <fcntl.h>
 #include <sys/wait.h>
 
 #include <boost/filesystem.hpp>
@@ -37,6 +34,7 @@
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/class_init.h>
+#include <core/os/fork_pipe.h>
 #include "svg_module.h"
 
 #include <geom_helpers/knots.h>
@@ -231,55 +229,6 @@ void SvgRenderer::Impl::finish_render() {
     if (settings.render_pngs)
         quit_png();
     requested_to_stop = false;
-}
-
-/**
- * Pipe, fork & exec
- *
- * @return pid of new process
- */
-pid_t fork_pipe(FILE*& write_pipe, FILE*& read_pipe, vector<string> args) {
-    if (args.size() < 1)
-        throw std::invalid_argument("Empty argument list");
-
-    int write_pipe_ds[2];
-    pipe(write_pipe_ds);
-    int read_pipe_ds[2];
-    pipe(read_pipe_ds);
-
-    auto pid = fork();
-    if (pid == 0) {
-        dup2(write_pipe_ds[0], STDIN_FILENO);
-        close(write_pipe_ds[0]);
-        close(write_pipe_ds[1]);
-
-        dup2(read_pipe_ds[1], STDOUT_FILENO);
-        dup2(read_pipe_ds[1], STDERR_FILENO);
-        close(read_pipe_ds[0]);
-        close(read_pipe_ds[1]);
-
-        char const** c_args = new char const*[args.size()+1];
-        std::transform(
-            std::begin(args),
-            std::end(args),
-            c_args,
-            [](auto const& s) {
-                return s.c_str();
-            }
-        );
-        c_args[args.size()] = nullptr;
-        execv(args[0].c_str(), const_cast<char* const*>(c_args));
-        throw std::runtime_error("execl returned");
-    }
-
-    write_pipe = fdopen(write_pipe_ds[1], "w");
-    close(write_pipe_ds[0]);
-
-    fcntl(read_pipe_ds[0], F_SETFL, O_NONBLOCK);
-    read_pipe = fdopen(read_pipe_ds[0], "r");
-    close(read_pipe_ds[1]);
-
-    return pid;
 }
 
 void SvgRenderer::Impl::start_png(bool force) {

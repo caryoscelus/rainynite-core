@@ -31,6 +31,7 @@ enable_testing()
 add_subdirectory(tests)
 
 add_subdirectory(log)
+add_subdirectory(os)
 add_subdirectory(document)
 add_subdirectory(filters)
 add_subdirectory(time)

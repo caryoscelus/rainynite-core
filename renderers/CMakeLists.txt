@@ -31,6 +31,7 @@ if (NOT TARGET time)
 endif()
 
 target_link_libraries(renderers
+    os
     document
     time
     geom_helpers
