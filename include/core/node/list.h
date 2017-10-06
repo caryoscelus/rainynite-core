@@ -141,8 +141,8 @@ public:
         );
         return result;
     }
-    optional<Type> get_link_type(size_t) const override {
-        return make_optional(Type(typeid(T)));
+    TypeConstraint get_link_type(size_t) const override {
+        return {Type(typeid(T))};
     }
     void push_new() override {
         push_value<T>(this, {});
@@ -160,7 +160,7 @@ public:
     any get_any(shared_ptr<Context> /*context*/) const noexcept override {
         return Nothing();
     }
-    optional<std::type_index> get_link_type(size_t) const override {
+    TypeConstraint get_link_type(size_t) const override {
         return {};
     }
 public:

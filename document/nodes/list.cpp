@@ -52,7 +52,7 @@ public:
     ToTypedList() {
         auto src = make_shared<UntypedListValue>();
         src->new_id();
-        this->template init_property("source", make_optional(Type(typeid(Nothing))), std::move(src));
+        this->template init_property("source", Type(typeid(Nothing)), std::move(src));
     }
 
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {

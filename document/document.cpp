@@ -31,7 +31,8 @@ Document::Document(shared_ptr<BaseValue<Renderable>> root_) :
     init<Renderable>(root, {});
     init<Geom::Point>(size, {320, 240});
     init<TimePeriod>(main_time_period, {Time(0, 12), Time(5, 12)});
-    init_property(soundtrack, make_optional(Type(typeid(Audio))), make_node_with_name("EmptyAudio"));
+    // TODO: use constraints
+    init_property(soundtrack, Type(typeid(Audio)), make_node_with_name("EmptyAudio"));
     if (root_)
         set_root(root_);
     else

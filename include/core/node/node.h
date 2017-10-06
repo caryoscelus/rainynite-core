@@ -33,19 +33,17 @@ class Node : public BaseValue<T>, public AbstractNode {
 public:
     template <typename U>
     void init(string const& name, U value) {
-        init_property(name, make_optional(Type(typeid(U))), make_value<U>(value));
+        init_property(name, Type(typeid(U)), make_value<U>(value));
     }
     template <typename U>
     void init_list(string const& name) {
-        init_property(name, make_optional(Type(typeid(vector<U>))), make_shared<ListValue<U>>());
+        init_property(name, Type(typeid(vector<U>)), make_shared<ListValue<U>>());
     }
 public:
     bool can_set_source(shared_ptr<AbstractValue> src) const override {
         if (link_count() == 0)
             return false;
-        if (auto type = get_link_type(0))
-            return src->get_type() == *type;
-        return true;
+        return get_link_type(0).accept(src->get_type());
     }
     void set_source(shared_ptr<AbstractValue> src) override {
         set_link(0, src);

@@ -19,6 +19,7 @@
 #define CORE_NODE_ABSTRACT_LIST_H_CC2AFA00_E2FA_5559_A49F_9E4CCC696C5D
 
 #include <core/std/vector.h>
+#include "type_constraint.h"
 #include "common.h"
 #include "node_in_context.h"
 
@@ -29,7 +30,7 @@ public:
     virtual size_t link_count() const = 0;
     virtual vector<AbstractReference> get_links() const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
-    virtual optional<Type> get_link_type(size_t i) const = 0;
+    virtual TypeConstraint get_link_type(size_t i) const = 0;
     virtual void set_link(size_t i, AbstractReference value) = 0;
     virtual void push_back(AbstractReference) {
         throw NodeAccessError("cannot push back");

@@ -47,7 +47,7 @@ public:
     }
     void set_property(string const& name, AbstractReference ref);
     bool remove_property(string const& name);
-    size_t init_property(string const& name, optional<Type> type, AbstractReference value);
+    size_t init_property(string const& name, TypeConstraint type, AbstractReference value);
     map<string, AbstractReference> get_link_map() const;
     string get_name_at(size_t id) {
         return names_list[id];
@@ -59,7 +59,7 @@ public:
     AbstractReference get_link(size_t i) const override {
         return get_by_id(i);
     }
-    optional<Type> get_link_type(size_t i) const override {
+    TypeConstraint get_link_type(size_t i) const override {
         return types[i];
     }
     void set_link(size_t i, AbstractReference value) override;
@@ -86,7 +86,7 @@ private:
     vector<string> names_list;
     vector<AbstractReference> numbered_storage;
     vector<boost::signals2::connection> signal_connections;
-    vector<optional<Type>> types;
+    vector<TypeConstraint> types;
 };
 
 } // namespace rainynite::core

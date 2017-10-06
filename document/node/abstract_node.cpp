@@ -64,7 +64,7 @@ bool AbstractNode::remove_property(string const& name) {
     return true;
 }
 
-size_t AbstractNode::init_property(string const& name, optional<Type> type, AbstractReference value) {
+size_t AbstractNode::init_property(string const& name, TypeConstraint type, AbstractReference value) {
     size_t id = link_count();
     numbered_storage.push_back(value);
     names_list.push_back(name);
@@ -89,10 +89,8 @@ map<string, AbstractReference> AbstractNode::get_link_map() const {
 }
 
 void AbstractNode::set_link(size_t i, AbstractReference value) {
-    if (auto type = get_link_type(i)) {
-        if (value->get_type() != *type)
-            throw NodeAccessError("Node property type mis-match");
-    }
+    if (!get_link_type(i).accept(value->get_type()))
+        throw NodeAccessError("Node property type mis-match");
     signal_connections[i].disconnect();
     get_by_id(i) = value;
     signal_connections[i] = value->subscribe([this]() {

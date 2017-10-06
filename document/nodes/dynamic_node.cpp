@@ -31,7 +31,7 @@ public:
         this->template init<string>(node_type, {});
         auto args = make_shared<UntypedListValue>();
         args->new_id();
-        this->template init_property(arguments, make_optional(Type(typeid(Nothing))), std::move(args));
+        this->template init_property(arguments, Type(typeid(Nothing)), std::move(args));
     }
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
@@ -106,7 +106,7 @@ public:
         {
             auto args = make_shared<UntypedListValue>();
             args->new_id();
-            this->template init_property(dynamic_arguments, make_optional(Type(typeid(Nothing))), std::move(args));
+            this->template init_property(dynamic_arguments, Type(typeid(Nothing)), std::move(args));
         }
     }
 public:
@@ -152,7 +152,7 @@ public:
         this->template init<string>(node_type, {});
         auto args = make_shared<UntypedListValue>();
         args->new_id();
-        this->template init_property(arguments_list, make_optional(Type(typeid(Nothing))), std::move(args));
+        this->template init_property(arguments_list, Type(typeid(Nothing)), std::move(args));
     }
 public:
     void step_into_list(shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
