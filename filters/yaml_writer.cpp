@@ -83,10 +83,7 @@ public:
     }
     void type(string const& s) override {
         expect_state(State::ObjectStart);
-        auto tag = s;
-        std::replace(tag.begin(), tag.end(), '<', '(');
-        std::replace(tag.begin(), tag.end(), '>', ')');
-        emitter << YAML::LocalTag(tag);
+        emitter << YAML::LocalTag(s);
         set_state(State::TypedObject);
     }
     void value_string(string const& s) override {

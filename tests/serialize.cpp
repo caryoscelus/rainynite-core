@@ -89,14 +89,14 @@ TEST_CASE("Deserialize", "[serialize,node]") {
     s.type("Add");
     s.key("a");
     s.object_start(uuid_gen());
-    s.type("Value<Real>");
+    s.type("Value#Real");
     s.object_value_start();
     s.value_string("1");
     s.object_value_end();
     s.object_end();
     s.key("b");
     s.object_start(uuid_gen());
-    s.type("Value<Real>");
+    s.type("Value#Real");
     s.object_value_start();
     s.value_string("2");
     s.object_value_end();

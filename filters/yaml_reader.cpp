@@ -140,8 +140,6 @@ protected:
         auto type = tag.substr(1);
         auto id = anchor.empty() ? random_id() : s_to_id(anchor);
         writer.object_start(id);
-        std::replace(type.begin(), type.end(), '(', '<');
-        std::replace(type.begin(), type.end(), ')', '>');
         writer.type(type);
         anchor.clear();
     }
