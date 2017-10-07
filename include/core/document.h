@@ -54,7 +54,7 @@ public:
 
 private:
     shared_ptr<Context> default_context;
-    shared_ptr<ActionStack> action_stack;
+    shared_ptr<ActionStack> const action_stack;
 
     NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(size, Geom::Point);
