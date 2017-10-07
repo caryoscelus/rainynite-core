@@ -1,5 +1,4 @@
-/*
- *  action.h - Action - command pattern
+/*  action.h - Action - command pattern (undo/redo)
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__ACTION_H__F4E4BABC
-#define __CORE__ACTION_H__F4E4BABC
+#ifndef CORE_ACTION_H_8B0DA2F0_CBAB_5765_994D_8CE9E17977D3
+#define CORE_ACTION_H_8B0DA2F0_CBAB_5765_994D_8CE9E17977D3
 
 #include <stdexcept>
 #include <core/std/vector.h>
@@ -37,33 +36,42 @@ enum class UndoRedo {
     Redo
 };
 
+/**
+ * Command pattern: action.
+ *
+ * Can be done, undone, redone and possibly appended.
+ */
 class AbstractAction {
 public:
-    void redo() {
-        if (done)
-            throw ActionError("Attempt to redo done action");
-        redo_action();
-        done = true;
-    }
-    void undo() {
-        if (!done)
-            throw ActionError("Attempt to undo undone action");
-        undo_action();
-        done = false;
-    }
-    void undo_redo(UndoRedo op) {
-        if (op == UndoRedo::Undo)
-            undo();
-        else if (op == UndoRedo::Redo)
-            redo();
-        else
-            throw ActionError("Unknown undo-redo op");
-    }
+    void redo();
+    void undo();
+
+    /// Perform either undo or redo depending on op
+    void undo_redo(UndoRedo op);
+
+    bool append(AbstractAction const& action);
+
+    /// Close action so that it can no longer be appended
+    void close();
+
 protected:
     virtual void redo_action() = 0;
     virtual void undo_action() = 0;
+
+    /**
+     * Append to this action.
+     *
+     * Override this to support merging similar actions into one.
+     *
+     * @returns true if action was appended.
+     */
+    virtual bool append_action(AbstractAction const& /*action*/) {
+        return false;
+    }
+
 private:
     bool done = false;
+    bool closed = false;
 };
 
 class ActionStack {
@@ -72,32 +80,22 @@ public:
 public:
     template <typename R, typename... Ts>
     void emplace(Ts&&... args) {
-        auto action = new R(std::forward<Ts>(args)...);
-        action->redo();
-        undo_stack.emplace_back(action);
-        redo_stack.clear();
+        push(make_unique<R>(std::forward<Ts>(args)...));
     }
-    void push(unique_ptr<AbstractAction> action) {
-        action->redo();
-        undo_stack.push_back(std::move(action));
-        redo_stack.clear();
-    }
-    bool undo() {
-        return undo_redo(undo_stack, redo_stack, UndoRedo::Undo);
-    }
-    bool redo() {
-        return undo_redo(redo_stack, undo_stack, UndoRedo::Redo);
-    }
+
+    /// Add action to the stack
+    void push(unique_ptr<AbstractAction> action);
+
+    /// Try to append to last action
+    bool append(AbstractAction const& action);
+
+    /// Close latest action so that it can no longer be appended
+    void close();
+
+    bool undo();
+    bool redo();
 private:
-    bool undo_redo(Stack& from, Stack& to, UndoRedo op) {
-        if (from.size() == 0)
-            return false;
-        auto action = std::move(from.back());
-        from.pop_back();
-        action->undo_redo(op);
-        to.push_back(std::move(action));
-        return true;
-    }
+    bool undo_redo(Stack& from, Stack& to, UndoRedo op);
 private:
     Stack undo_stack;
     Stack redo_stack;

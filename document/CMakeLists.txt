@@ -8,6 +8,7 @@ target_sources(document
         document.cpp
         instance.cpp
         color.cpp
+        action.cpp
         node/abstract_node.cpp
 )
 
