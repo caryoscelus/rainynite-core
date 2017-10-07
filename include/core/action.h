@@ -19,6 +19,9 @@
 #define CORE_ACTION_H_8B0DA2F0_CBAB_5765_994D_8CE9E17977D3
 
 #include <stdexcept>
+
+#include <boost/signals2/signal.hpp>
+
 #include <core/std/vector.h>
 #include <core/std/memory.h>
 #include <core/std/string.h>
@@ -94,6 +97,9 @@ public:
 
     bool undo();
     bool redo();
+
+    boost::signals2::signal<void()> action_closed;
+
 private:
     bool undo_redo(Stack& from, Stack& to, UndoRedo op);
 private:

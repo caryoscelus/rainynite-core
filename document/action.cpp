@@ -84,8 +84,10 @@ bool ActionStack::undo_redo(Stack& from, Stack& to, UndoRedo op) {
 }
 
 void ActionStack::close() {
-    if (!undo_stack.empty())
+    if (!undo_stack.empty()) {
         undo_stack.back()->close();
+        action_closed();
+    }
 }
 
 } // namespace rainynite::core
