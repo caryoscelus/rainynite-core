@@ -54,8 +54,17 @@ public:
 
     bool append(AbstractAction const& action);
 
-    /// Close action so that it can no longer be appended
-    void close();
+    /**
+     * Close action so that it can no longer be appended
+     *
+     * @returns false if action was already closed
+     */
+    bool close();
+
+    /// Whether this action type can ever be appended
+    virtual bool appendable() {
+        return false;
+    }
 
 protected:
     virtual void redo_action() = 0;

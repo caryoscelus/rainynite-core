@@ -46,8 +46,10 @@ bool AbstractAction::append(AbstractAction const& action) {
     return !closed && append_action(action);
 }
 
-void AbstractAction::close() {
-    closed = true;
+bool AbstractAction::close() {
+    if (closed)
+        return false;
+    return closed = true;
 }
 
 bool ActionStack::append(AbstractAction const& action) {
@@ -61,7 +63,10 @@ void ActionStack::push(unique_ptr<AbstractAction> action) {
     redo_stack.clear();
     if (!append(*action)) {
         close();
+        bool should_close = !action->appendable();
         undo_stack.emplace_back(std::move(action));
+        if (should_close)
+            close();
     }
 }
 
@@ -85,8 +90,8 @@ bool ActionStack::undo_redo(Stack& from, Stack& to, UndoRedo op) {
 
 void ActionStack::close() {
     if (!undo_stack.empty()) {
-        undo_stack.back()->close();
-        action_closed();
+        if (undo_stack.back()->close())
+            action_closed();
     }
 }
 
