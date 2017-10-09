@@ -66,6 +66,7 @@ struct SvgRenderer::Impl {
     Impl(SvgRenderer* parent_) :
         parent(parent_)
     {}
+    ~Impl();
 
     void render(Context&& context_);
     void prepare_render();
@@ -97,6 +98,7 @@ struct SvgRenderer::Impl {
     bool subprocess_initialized = false;
     bool requested_to_stop = false;
     bool svgs_finished = false;
+    bool read_thread_quit = false;
 
     std::thread read_thread;
 
@@ -121,6 +123,13 @@ bool SvgRenderer::is_finished() const {
 
 void SvgRenderer::stop() {
     impl->requested_to_stop = true;
+}
+
+SvgRenderer::Impl::~Impl() {
+    read_thread_quit = true;
+    quit_png(true);
+    if (read_thread.joinable())
+        read_thread.join();
 }
 
 void SvgRenderer::Impl::render(Context&& context_) {
@@ -232,24 +241,19 @@ void SvgRenderer::Impl::finish_render() {
 }
 
 void SvgRenderer::Impl::start_png(bool force) {
-    if (subprocess_initialized) {
-        if (!force)
-            return;
-        quit_png(true);
-    }
-
-    png_renderer_pid = fork_pipe(png_renderer_pipe, png_renderer_pipe_output, {"/usr/bin/env", "inkscape", "--shell", "-z"});
+    if (read_thread.joinable())
+        read_thread.join();
 
     read_thread = std::thread([this]() {
         auto buff = make_unique<char[]>(256);
         string sbuff;
         size_t frames_count = 0;
-        while (!svgs_finished || frames_count < rendered_frames_count) {
+        while ((!svgs_finished || frames_count < rendered_frames_count) && !read_thread_quit) {
             // TODO: replace with blocking read?
             std::this_thread::sleep_for(std::chrono::milliseconds(64));
 
             size_t read_chars;
-            while ((read_chars = fread((void*)buff.get(), 1, 256, png_renderer_pipe_output)) > 0) {
+            while ((read_chars = fread((void*)buff.get(), 1, 256, png_renderer_pipe_output)) > 0 && !read_thread_quit) {
                 auto s = string(buff.get(), read_chars);
                 std::cout << s;
                 sbuff += s;
@@ -261,6 +265,14 @@ void SvgRenderer::Impl::start_png(bool force) {
             }
         }
     });
+
+    if (subprocess_initialized) {
+        if (!force)
+            return;
+        quit_png(true);
+    }
+
+    png_renderer_pid = fork_pipe(png_renderer_pipe, png_renderer_pipe_output, {"/usr/bin/env", "inkscape", "--shell", "-z"});
 
     subprocess_initialized = true;
 }
