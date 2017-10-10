@@ -37,3 +37,8 @@ TEST_CASE("Type constraint initialization", "[node]") {
     CHECK(anything.accept(typeid(double)));
     CHECK(anything.accept(typeid(string)));
 }
+
+TEST_CASE("Type constraint synonymous types", "[node]") {
+    TypeConstraint int_only { Only<int>() };
+    CHECK(int_only == TypeConstraint { typeid(int) });
+}
