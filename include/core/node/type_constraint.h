@@ -41,6 +41,8 @@ struct TypeConstraint {
     set<Type> accepted;
 };
 
+namespace types {
+
 template <typename T>
 struct Only {
     operator Type() {
@@ -56,6 +58,14 @@ struct AnyOf {
         });
     }
 };
+
+struct Any {
+    operator TypeConstraint() {
+        return {};
+    }
+};
+
+} // namespace types
 
 } // namespace rainynite::core
 

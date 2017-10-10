@@ -39,8 +39,10 @@ TEST_CASE("Type constraint initialization", "[node]") {
 }
 
 TEST_CASE("Type constraint synonymous types", "[node]") {
-    TypeConstraint int_only { Only<int>() };
+    TypeConstraint int_only { types::Only<int>() };
     CHECK(int_only == TypeConstraint { typeid(int) });
-    TypeConstraint numbers { AnyOf<int, double>() };
+    TypeConstraint numbers { types::AnyOf<int, double>() };
     CHECK(numbers == TypeConstraint({ typeid(int), typeid(double) }));
+    TypeConstraint anything { types::Any() };
+    CHECK(anything == TypeConstraint());
 }
