@@ -48,6 +48,15 @@ struct Only {
     }
 };
 
+template <typename... Ts>
+struct AnyOf {
+    operator TypeConstraint() {
+        return TypeConstraint(set {
+            Type(typeid(Ts))...
+        });
+    }
+};
+
 } // namespace rainynite::core
 
 #endif
