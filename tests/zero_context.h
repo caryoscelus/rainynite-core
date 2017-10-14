@@ -18,6 +18,8 @@
 #ifndef CORE_TESTS_ZERO_CONTEXT_H_3CDF8C89_6812_56CC_801D_C11BAEDD432C
 #define CORE_TESTS_ZERO_CONTEXT_H_3CDF8C89_6812_56CC_801D_C11BAEDD432C
 
+#include <core/context.h>
+
 namespace rainynite::core {
 
 shared_ptr<Context> zero_context() {
