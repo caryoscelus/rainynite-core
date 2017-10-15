@@ -43,6 +43,10 @@ enum class UndoRedo {
  * Command pattern: action.
  *
  * Can be done, undone, redone and possibly appended.
+ *
+ * Actions are supposed to be appendable by default, which is why append_action
+ * is left abstract. If your action is not appendable, inherit from AtomicAction
+ * instead.
  */
 class AbstractAction {
 public:
@@ -63,7 +67,7 @@ public:
 
     /// Whether this action type can ever be appended
     virtual bool appendable() {
-        return false;
+        return true;
     }
 
 protected:
@@ -77,13 +81,28 @@ protected:
      *
      * @returns true if action was appended.
      */
-    virtual bool append_action(AbstractAction const& /*action*/) {
-        return false;
-    }
+    virtual bool append_action(AbstractAction const& action) = 0;
 
 private:
     bool done = false;
     bool closed = false;
+};
+
+/**
+ * Action that cannot be appended.
+ *
+ * This is a convenience base class with do-nothing
+ * implementation.
+ */
+class AtomicAction : public AbstractAction {
+public:
+    bool appendable() override {
+        return false;
+    }
+protected:
+    bool append_action(AbstractAction const& /*action*/) override {
+        return false;
+    }
 };
 
 class ActionStack {

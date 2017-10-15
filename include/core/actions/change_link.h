@@ -1,5 +1,4 @@
-/*
- *  change_link.h - change child link action
+/*  change_link.h - change child link action
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,16 +15,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__ACTIONS__CHANGE_LINK_H__720E8E3C
-#define __CORE__ACTIONS__CHANGE_LINK_H__720E8E3C
+#ifndef CORE_ACTIONS_CHANGE_LINK_H_CB8454D2_D558_5662_86E9_98499B171404
+#define CORE_ACTIONS_CHANGE_LINK_H_CB8454D2_D558_5662_86E9_98499B171404
 
 #include <core/action.h>
 #include <core/node/abstract_node.h>
 
-namespace rainynite::core {
-namespace actions {
+namespace rainynite::core::actions {
 
-class ChangeLink : public AbstractAction {
+class ChangeLink : public AtomicAction {
 public:
     ChangeLink(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference new_value_) :
         node(node_),
@@ -48,7 +46,6 @@ private:
     AbstractReference old_value;
 };
 
-} // namespace actions
-} // namespace rainynite::core
+} // namespace rainynite::core::actions
 
 #endif

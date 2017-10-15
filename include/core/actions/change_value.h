@@ -1,5 +1,4 @@
-/*
- *  change_value.h - change value action
+/*  change_value.h - change value action
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,14 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__ACTIONS__CHANGE_VALUE_H__20F972B6
-#define __CORE__ACTIONS__CHANGE_VALUE_H__20F972B6
+#ifndef CORE_ACTIONS_CHANGE_VALUE_H_FA028A83_DD3B_5568_A0FA_F0052D8F88AD
+#define CORE_ACTIONS_CHANGE_VALUE_H_FA028A83_DD3B_5568_A0FA_F0052D8F88AD
 
 #include <core/action.h>
 #include <core/node/abstract_value.h>
 
-namespace rainynite::core {
-namespace actions {
+namespace rainynite::core::actions {
 
 class ChangeValue : public AbstractAction {
 public:
@@ -40,13 +38,20 @@ public:
         new_value = node->static_any();
         node->set_any(old_value);
     }
+protected:
+    bool append_action(AbstractAction const& action) override {
+        if (auto cv_action = dynamic_cast<ChangeValue const*>(&action)) {
+            new_value = cv_action->new_value;
+            return true;
+        }
+        return false;
+    }
 private:
     AbstractReference node;
     any new_value;
     any old_value;
 };
 
-} // namespace actions
-} // namespace rainynite::core
+} // namespace rainynite::core::actions
 
 #endif

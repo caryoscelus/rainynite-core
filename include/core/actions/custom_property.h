@@ -1,5 +1,4 @@
-/*
- *  custom_property.h - add/remove custom property actions
+/*  custom_property.h - add/remove custom property actions
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -25,7 +24,7 @@
 
 namespace rainynite::core::actions {
 
-class AddCustomProperty : public AbstractAction {
+class AddCustomProperty : public AtomicAction {
 public:
     AddCustomProperty(shared_ptr<AbstractNode> node_, string const& prop_name_, AbstractReference value_) :
         node(node_),

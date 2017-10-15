@@ -24,7 +24,7 @@
 
 namespace rainynite::core::actions {
 
-class ListPushNew : public AbstractAction {
+class ListPushNew : public AtomicAction {
 public:
     ListPushNew(shared_ptr<AbstractListLinked> node_) :
         node(node_)
@@ -41,7 +41,7 @@ private:
     shared_ptr<AbstractListLinked> const node;
 };
 
-class ListInsertElement : public AbstractAction {
+class ListInsertElement : public AtomicAction {
 public:
     ListInsertElement(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference value_) :
         node(node_),
