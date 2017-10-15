@@ -52,6 +52,7 @@ bool ActionStack::undo_redo(Stack& from, Stack& to, UndoRedo op) {
     from.pop_back();
     action->undo_redo(op);
     to.push_back(std::move(action));
+    undone_or_redone();
     return true;
 }
 
