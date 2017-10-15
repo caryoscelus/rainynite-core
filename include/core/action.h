@@ -20,10 +20,6 @@
 
 #include <stdexcept>
 
-#include <boost/signals2/signal.hpp>
-
-#include <core/std/vector.h>
-#include <core/std/memory.h>
 #include <core/std/string.h>
 
 namespace rainynite::core {
@@ -103,36 +99,6 @@ protected:
     bool append_action(AbstractAction const& /*action*/) override {
         return false;
     }
-};
-
-class ActionStack {
-public:
-    using Stack = vector<unique_ptr<AbstractAction>>;
-public:
-    template <typename R, typename... Ts>
-    void emplace(Ts&&... args) {
-        push(make_unique<R>(std::forward<Ts>(args)...));
-    }
-
-    /// Add action to the stack
-    void push(unique_ptr<AbstractAction> action);
-
-    /// Try to append to last action
-    bool append(AbstractAction const& action);
-
-    /// Close latest action so that it can no longer be appended
-    void close();
-
-    bool undo();
-    bool redo();
-
-    boost::signals2::signal<void()> action_closed;
-
-private:
-    bool undo_redo(Stack& from, Stack& to, UndoRedo op);
-private:
-    Stack undo_stack;
-    Stack redo_stack;
 };
 
 } // namespace rainynite::core

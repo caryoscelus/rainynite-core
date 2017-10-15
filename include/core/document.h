@@ -27,11 +27,11 @@
 #include <core/node/property.h>
 #include <core/renderable.h>
 #include <core/audio.h>
-#include <core/action.h>
 
 namespace rainynite::core {
 
 class Context;
+class ActionStack;
 
 class DocumentType {
 };

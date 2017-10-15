@@ -1,5 +1,4 @@
-/*
- *  document.cpp - document
+/*  document.cpp - document
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,6 +18,7 @@
 #include <core/node_info.h>
 #include <core/document.h>
 #include <core/context.h>
+#include <core/action_stack.h>
 
 namespace rainynite::core {
 
