@@ -61,13 +61,13 @@ TEST_CASE("Test Add node", "[node]") {
     auto add = make_shared<Add>();
     auto one = make_value<Real>(1.0);
     auto two = make_value<Real>(2.0);
-    CHECK(add->get(zero_context()) == 0.0);
-    add->set_a(one);
-    CHECK(add->get(zero_context()) == 1.0);
+    CHECK(add->value(zero_context()) == 0.0);
+    add->set_property("a", one);
+    CHECK(add->value(zero_context()) == 1.0);
     add->set_property("b", two);
-    CHECK(add->get(zero_context()) == 3.0);
+    CHECK(add->value(zero_context()) == 3.0);
     one->set(4.0);
-    CHECK(add->get(zero_context()) == 6.0);
+    CHECK(add->value(zero_context()) == 6.0);
 }
 
 class Sum : public Node<Real> {
@@ -90,13 +90,13 @@ public:
 TEST_CASE("Sum Node", "[node]") {
     auto list = make_value<List<Real>>();
     auto sum = make_shared<Sum>();
-    CHECK(sum->get(zero_context()) == 0.0);
+    CHECK(sum->value(zero_context()) == 0.0);
     sum->set_property("list", list);
-    CHECK(sum->get(zero_context()) == 0.0);
+    CHECK(sum->value(zero_context()) == 0.0);
     list->mod().push_back(1.0);
-    CHECK(sum->get(zero_context()) == 1.0);
+    CHECK(sum->value(zero_context()) == 1.0);
     list->mod().push_back(4.0);
-    CHECK(sum->get(zero_context()) == 5.0);
+    CHECK(sum->value(zero_context()) == 5.0);
 }
 
 class SumNode : public Node<Real> {
@@ -119,16 +119,16 @@ public:
 TEST_CASE("Real node sum", "[node]") {
     auto list = make_value<List<BaseReference<Real>>>();
     auto sum = make_shared<SumNode>();
-    CHECK(sum->get(zero_context()) == 0.0);
+    CHECK(sum->value(zero_context()) == 0.0);
     sum->set_property("list", list);
-    CHECK(sum->get(zero_context()) == 0.0);
+    CHECK(sum->value(zero_context()) == 0.0);
     auto one = make_value<Real>(1.0);
     list->mod().push_back(one);
-    CHECK(sum->get(zero_context()) == 1.0);
+    CHECK(sum->value(zero_context()) == 1.0);
     list->mod().push_back(one);
-    CHECK(sum->get(zero_context()) == 2.0);
+    CHECK(sum->value(zero_context()) == 2.0);
     one->set(3.0);
-    CHECK(sum->get(zero_context()) == 6.0);
+    CHECK(sum->value(zero_context()) == 6.0);
 }
 
 string value_to_string(AbstractReference node) {
@@ -137,41 +137,6 @@ string value_to_string(AbstractReference node) {
         return std::to_string(t->mod());
     }
     return "";
-}
-
-void serialize_map(std::ostream& stream, map<string, AbstractReference> const& named_map) {
-    stream << "{\n";
-    for (auto const& e : named_map) {
-        stream << "\"" << e.first << "\": \"" << e.second->get_id() << "\"\n";
-    }
-    stream << "}\n";
-}
-
-string dump_node_tree(AbstractReference root) {
-    std::ostringstream stream;
-    traverse_once<bool>(root, [&stream](AbstractReference node) -> optional<bool> {
-        stream << "\"" << node->get_id() << "\": ";
-        if (node->is_const()) {
-            stream << value_to_string(node) << "\n";
-        } else if (auto linked_node = dynamic_pointer_cast<AbstractNode>(node)) {
-            serialize_map(stream, linked_node->get_link_map());
-        }
-        return {};
-    });
-    stream << "\n";
-    return stream.str();
-}
-
-TEST_CASE("Dump node tree", "[node]") {
-    std::cerr << dump_node_tree(make_value<Real>(5.4));
-    auto one = make_value<Real>(1.0);
-    std::cerr << dump_node_tree(one);
-    auto add = make_shared<Add>();
-    std::cerr << dump_node_tree(add);
-    add->set_a(one);
-    std::cerr << dump_node_tree(add);
-    add->set_property("b", one);
-    std::cerr << dump_node_tree(add);
 }
 
 unsigned count_nodes(AbstractReference root, TraverseDepth depth = TraverseDepth::Once) {
@@ -272,9 +237,9 @@ TEST_CASE("Removing custom properties", "[node]") {
     CHECK(add->link_count() == 3);
     add->set_property("_custom_1", make_value<double>(1.0));
     CHECK(add->link_count() == 4);
-    CHECK(add->get_property_as<double>("_custom_0")->get(zero_context()) == 0);
-    CHECK(add->get_property_as<double>("_custom_1")->get(zero_context()) == 1);
+    CHECK(add->get_property_as<double>("_custom_0")->value(zero_context()) == 0);
+    CHECK(add->get_property_as<double>("_custom_1")->value(zero_context()) == 1);
     add->remove_property("_custom_0");
     CHECK(add->link_count() == 3);
-    CHECK(add->get_property_as<double>("_custom_1")->get(zero_context()) == 1);
+    CHECK(add->get_property_as<double>("_custom_1")->value(zero_context()) == 1);
 }

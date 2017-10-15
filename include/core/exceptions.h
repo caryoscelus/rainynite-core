@@ -1,4 +1,4 @@
-/*  zero_context.h - zero context helper for tests
+/*  exceptions.h - common exceptions
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,18 +15,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_TESTS_ZERO_CONTEXT_H_3CDF8C89_6812_56CC_801D_C11BAEDD432C
-#define CORE_TESTS_ZERO_CONTEXT_H_3CDF8C89_6812_56CC_801D_C11BAEDD432C
+#ifndef CORE_EXCEPTIONS_H_FA533FB1_76E7_51B9_A5B4_EE4A25D88CC9
+#define CORE_EXCEPTIONS_H_FA533FB1_76E7_51B9_A5B4_EE4A25D88CC9
 
-#include <core/context.h>
+#include <stdexcept>
 
-namespace rainynite::core {
+#include <core/std/string.h>
 
-shared_ptr<Context> zero_context() {
-    static auto instance = make_shared<Context>();
-    return instance;
-}
+namespace rainynite {
 
-} // namespace rainynite::core
+struct NullPointerException : public std::runtime_error {
+    NullPointerException(string const& msg) :
+        runtime_error(msg)
+    {}
+};
+
+} // namespace rainynite
 
 #endif

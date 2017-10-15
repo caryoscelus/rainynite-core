@@ -38,3 +38,5 @@ target_link_libraries(test_time_nodes document time)
 
 add_catch_test(dynamic_node)
 target_link_libraries(test_dynamic_node document time)
+
+add_catch_test(type_constraint)

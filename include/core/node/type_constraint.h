@@ -32,11 +32,40 @@ struct TypeConstraint {
     {}
     TypeConstraint()
     {}
+    bool operator==(TypeConstraint const& other) {
+        return accepted == other.accepted;
+    }
     bool accept(Type type) const {
         return accepted.empty() || accepted.find(type) != accepted.end();
     }
     set<Type> accepted;
 };
+
+namespace types {
+
+template <typename T>
+struct Only {
+    operator Type() {
+        return typeid(T);
+    }
+};
+
+template <typename... Ts>
+struct AnyOf {
+    operator TypeConstraint() {
+        return TypeConstraint(set {
+            Type(typeid(Ts))...
+        });
+    }
+};
+
+struct Any {
+    operator TypeConstraint() {
+        return {};
+    }
+};
+
+} // namespace types
 
 } // namespace rainynite::core
 
