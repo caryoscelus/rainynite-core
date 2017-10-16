@@ -1,0 +1,5 @@
+--- !Document
+_tests: !List#Boolean
+  - !Equal#Real
+    a: !Value#Real 3.5
+    b: !Value#Real 3.500

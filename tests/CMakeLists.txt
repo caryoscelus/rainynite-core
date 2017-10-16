@@ -50,3 +50,4 @@ function(add_node_test name)
 endfunction()
 
 add_node_test(sanity)
+add_node_test(boolean)
