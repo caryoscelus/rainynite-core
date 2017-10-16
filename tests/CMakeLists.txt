@@ -40,3 +40,13 @@ add_catch_test(dynamic_node)
 target_link_libraries(test_dynamic_node document time)
 
 add_catch_test(type_constraint)
+
+
+## New node tests
+add_executable(node_tester node_tester.cpp)
+target_link_libraries(node_tester document time filters)
+function(add_node_test name)
+    add_test(test_node_tester_${name} node_tester "${CMAKE_CURRENT_SOURCE_DIR}/data/${name}.rnite")
+endfunction()
+
+add_node_test(sanity)
