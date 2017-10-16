@@ -41,6 +41,7 @@ if (BUILD_NODES)
             nodes/rectangle.cpp
             nodes/circle.cpp
             nodes/list.cpp
+            nodes/compare.cpp
             nodes/conditional.cpp
             nodes/split_string.cpp
             nodes/random.cpp
