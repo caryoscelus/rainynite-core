@@ -51,3 +51,4 @@ endfunction()
 
 add_node_test(sanity)
 add_node_test(boolean)
+add_node_test(dynamic)

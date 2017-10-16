@@ -29,15 +29,6 @@ shared_ptr<Context> zero_context() {
     return instance;
 }
 
-TEST_CASE("Test dynamic node", "[node]") {
-    auto dynamic = make_node_with_name<Node<double>>("DynamicNode#Real");
-    dynamic->get_property("node_type")->set_any(string("Add"));
-    auto list = dynamic_cast<UntypedListValue*>(dynamic->get_property("arguments").get());
-    list->push_back(make_value<double>(1.0));
-    list->push_back(make_value<double>(3.0));
-    CHECK(dynamic->value(zero_context()) == 4.0);
-}
-
 AbstractReference make_time_list_0_1() {
     auto time_list = make_node_with_name<Node<vector<double>>>("TimeList#Real");
     time_list->get_property("step")->set_any(Time(1.0));
