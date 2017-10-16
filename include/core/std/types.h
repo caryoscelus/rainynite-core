@@ -1,5 +1,4 @@
-/*
- *  std/types.h - re-import standard types
+/*  std/types.h - re-import standard types
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -26,7 +25,7 @@ namespace rainynite {
 using std::size_t;
 using std::ptrdiff_t;
 using std::nullptr_t;
-using std::byte;
+// using std::byte; // not used yet
 
 // TODO: consider adding fixed-width ints?
 
