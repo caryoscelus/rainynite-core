@@ -29,7 +29,11 @@ namespace rainynite {
 #ifdef __cpp_lib_clamp
 using std::clamp;
 #else
-using std::experimental::clamp;
+// using std::experimental::clamp; // apparently there is no such thing
+template <typename T>
+constexpr T const& clamp(T const& v, T const& lo, T const& hi) {
+    return v <= lo ? lo : v >= hi ? hi : v;
+}
 #endif
 
 } // namespace rainynite
