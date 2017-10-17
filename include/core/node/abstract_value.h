@@ -1,5 +1,4 @@
-/*
- *  abstract_value.h - Node abstract Value
+/*  abstract_value.h - Node abstract Value
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,14 +15,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__ABSTRACT_VALUE_H__ACCED1BE
-#define __CORE__NODE__ABSTRACT_VALUE_H__ACCED1BE
+#ifndef CORE_NODE_ABSTRACT_VALUE_H_D0A0875B_B140_5BFA_9B2E_C7C291245E53
+#define CORE_NODE_ABSTRACT_VALUE_H_D0A0875B_B140_5BFA_9B2E_C7C291245E53
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
 #include <core/std/any.h>
 #include <core/log/simple_exception_log.h>
+#include <core/log/global.h>
 #include "notify.h"
 #include "has_id.h"
 #include "abstract_list.h"
@@ -85,7 +85,7 @@ class BaseValue :
 {
 public:
     BaseValue() :
-        HasExceptionLogger(make_shared<SimpleExceptionLogger>())
+        HasExceptionLogger(make_shared<GlobalLog<SimpleExceptionLogger>>())
     {}
 public:
     /**
