@@ -16,6 +16,9 @@
  */
 
 #include <experimental/type_traits>
+#include <limits>
+
+#include <boost/math/special_functions/relative_difference.hpp>
 
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
@@ -63,5 +66,35 @@ private:
 
 NODE_INFO_TEMPLATE(Equal, Equal<T>, T);
 TYPE_INSTANCES(EqualNodeInfo)
+
+
+class FuzzyEqual : public Node<bool> {
+    DOC_STRING(
+        "Return whether two real numbers are equal within error margin"
+    )
+
+private:
+    static constexpr const double DEFAULT_EPS = std::numeric_limits<double>::min()*32;
+
+public:
+    FuzzyEqual() {
+        init<double>(a, 0);
+        init<double>(b, 0);
+        init<double>(relative_eps, DEFAULT_EPS);
+    }
+
+    bool get(shared_ptr<Context> ctx) const override {
+        using boost::math::relative_difference;
+        auto diff = relative_difference(get_a()->get(ctx), get_b()->get(ctx));
+        return diff < get_relative_eps()->get(ctx);
+    }
+
+private:
+    NODE_PROPERTY(a, double);
+    NODE_PROPERTY(b, double);
+    NODE_PROPERTY(relative_eps, double);
+};
+
+REGISTER_NODE(FuzzyEqual);
 
 } // namespace rainynite::core::nodes
