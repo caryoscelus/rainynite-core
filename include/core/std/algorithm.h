@@ -1,4 +1,4 @@
-/*  std/types.h - re-import standard types
+/*  std/algorithm.h - re-import algorithm library
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
-#define CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
+#ifndef CORE_STD_ALGORITHM_H_026AB086_E6C0_5E4D_95E8_EF7702E23787
+#define CORE_STD_ALGORITHM_H_026AB086_E6C0_5E4D_95E8_EF7702E23787
 
-#include <cstddef>
+#include <algorithm>
+
+#if __has_include(<experimental/algorithm>)
+#include <experimental/algorithm>
+#endif
 
 namespace rainynite {
 
-using std::size_t;
-using std::ptrdiff_t;
-using std::nullptr_t;
-// using std::byte; // not used yet
-
-// TODO: consider adding fixed-width ints?
+#ifdef __cpp_lib_clamp
+using std::clamp;
+#else
+// using std::experimental::clamp; // apparently there is no such thing
+template <typename T>
+constexpr T const& clamp(T const& v, T const& lo, T const& hi) {
+    return v <= lo ? lo : v >= hi ? hi : v;
+}
+#endif
 
 } // namespace rainynite
 

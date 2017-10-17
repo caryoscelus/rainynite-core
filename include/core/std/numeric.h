@@ -1,4 +1,4 @@
-/*  std/types.h - re-import standard types
+/*  std/numeric.h - re-import numeric
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
-#define CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
+#ifndef CORE_STD_NUMERIC_H_C583E30C_CE34_504A_9AB6_6496C28CC4B7
+#define CORE_STD_NUMERIC_H_C583E30C_CE34_504A_9AB6_6496C28CC4B7
 
-#include <cstddef>
+#include <numeric>
+
+#if __has_include(<experimental/numeric>)
+#include <experimental/numeric>
+#endif
 
 namespace rainynite {
 
-using std::size_t;
-using std::ptrdiff_t;
-using std::nullptr_t;
-// using std::byte; // not used yet
-
-// TODO: consider adding fixed-width ints?
+#ifdef __cpp_lib_lcm
+using std::lcm;
+#else
+using std::experimental::lcm;
+#endif
 
 } // namespace rainynite
 

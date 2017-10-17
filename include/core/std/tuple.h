@@ -1,5 +1,4 @@
-/*
- *  std/tuple.h - re-import tuple & related stuff
+/*  std/tuple.h - re-import tuple & related stuff
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -25,7 +24,7 @@ namespace rainynite {
 
 using std::pair;
 using std::tuple;
-using std::apply;
+// using std::apply; // isn't used yet
 
 } // namespace rainynite
 

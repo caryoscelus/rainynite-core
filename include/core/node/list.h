@@ -18,11 +18,11 @@
 #ifndef CORE_NODE_LIST_H_12D92F7F_8F30_5447_9F54_AFB006578F3D
 #define CORE_NODE_LIST_H_12D92F7F_8F30_5447_9F54_AFB006578F3D
 
+#include <core/std/traits.h>
+#include <core/nothing.h>
 #include "abstract_list.h"
 #include "abstract_value.h"
 #include "make.h"
-
-#include <core/nothing.h>
 
 namespace rainynite::core {
 
@@ -38,7 +38,7 @@ template <class S, class P>
 class ListValueBase : public AbstractListLinked, public P {
 public:
     vector<AbstractReference> get_links() const override {
-        if constexpr (std::is_same_v<S, AbstractValue>)
+        if constexpr (is_same_v<S, AbstractValue>)
             return values;
         vector<AbstractReference> result;
         std::transform(

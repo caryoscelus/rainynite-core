@@ -1,4 +1,4 @@
-/*  std/types.h - re-import standard types
+/*  std/traits.h - re-import standard traits
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
-#define CORE_STD_TYPES_H_1522FED2_0235_56C1_BF3B_6D1634FAE403
+#ifndef CORE_STD_TRAITS_H_AC7BDEFD_C75E_535D_BBC4_D867D68F4209
+#define CORE_STD_TRAITS_H_AC7BDEFD_C75E_535D_BBC4_D867D68F4209
 
-#include <cstddef>
+#include <type_traits>
+#include <experimental/type_traits>
 
 namespace rainynite {
 
-using std::size_t;
-using std::ptrdiff_t;
-using std::nullptr_t;
-// using std::byte; // not used yet
-
-// TODO: consider adding fixed-width ints?
+using std::is_same;
+using std::experimental::is_same_v;
 
 } // namespace rainynite
 
