@@ -1,5 +1,4 @@
-/*
- *  random.cpp - random-generating nodes
+/*  random.cpp - random-generating nodes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -65,7 +64,8 @@ public:
         return result;
     }
 private:
-    void random_sequence(shared_ptr<Context> ctx, auto f) const {
+    template <typename F>
+    void random_sequence(shared_ptr<Context> ctx, F f) const {
         try {
             int length = get_length()->get(ctx);
             if (length < 1)
