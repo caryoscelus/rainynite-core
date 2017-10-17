@@ -15,6 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/std/algorithm.h>
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
@@ -78,7 +79,7 @@ public:
         auto l = list->get_list_links(ctx);
         if (l.size() == 0)
             throw NodeAccessError("Requested element of empty list");
-        size_t n = std::clamp(get_n()->get(ctx), 0.0, l.size()-1.0);
+        size_t n = clamp(get_n()->get(ctx), 0.0, l.size()-1.0);
         return l[n];
     }
 private:
