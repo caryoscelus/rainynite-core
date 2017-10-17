@@ -1,5 +1,4 @@
-/*
- *  time.cpp - time
+/*  time.cpp - time
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <numeric>
-
+#include <core/std/numeric.h>
 #include <core/time/time_period.h>
 
 namespace rainynite::core {
@@ -78,7 +76,7 @@ void Time::require_same_fps(Time const& other) const {
 }
 
 Time::fps_type Time::common_fps(Time const& other) const {
-    return std::lcm(get_fps(), other.get_fps());
+    return lcm(get_fps(), other.get_fps());
 }
 
 void Time::to_common_fps(Time& other) {
