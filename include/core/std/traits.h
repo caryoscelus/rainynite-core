@@ -26,6 +26,9 @@ namespace rainynite {
 using std::is_same;
 using std::experimental::is_same_v;
 
+using std::is_base_of;
+using std::experimental::is_base_of_v;
+
 } // namespace rainynite
 
 #endif
