@@ -1,5 +1,4 @@
-/*
- *  instance.cpp - explicit template instantiation
+/*  instance.cpp - explicit template instantiation
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -34,6 +33,8 @@
 #include <geom_helpers/rectangle.h>
 #include <geom_helpers/circle.h>
 
+#include <2geom/affine.h>
+
 namespace Geom {
 
 TYPE_INFO(BezierKnots, "BezierPath", [](auto&& s) {
@@ -60,6 +61,11 @@ TYPE_INFO(Rectangle, "Rectangle", [](auto&& /*rect*/) {
 TYPE_INFO(Circle, "Circle", [](auto&& /*circle*/) {
     // TODO
     return Circle {};
+});
+
+TYPE_INFO(Affine, "Affine", [](auto&& /*s*/) {
+    // TODO
+    return Affine::identity();
 });
 
 } // namespace Geom
