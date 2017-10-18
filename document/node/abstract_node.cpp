@@ -40,7 +40,7 @@ void AbstractNode::set_property(string const& name, AbstractReference ref) {
             // accept as custom attribute
             init_property(name, {}, ref);
         } else
-            throw NodeAccessError("No such property");
+            throw NodeAccessError("No such property: "+name);
     }
     set_link(named_storage[name], ref);
 }
