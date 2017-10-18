@@ -1,5 +1,4 @@
-/*
- *  proxy_node.h - node redirecting to other nodes
+/*  proxy_node.h - node redirecting to other nodes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__PROXY_NODE_H__BFCE55CA
-#define __CORE__NODE__PROXY_NODE_H__BFCE55CA
+#ifndef CORE_NODE_PROXY_NODE_H_E46910AC_D319_5AB4_AB28_F69FAF7A6767
+#define CORE_NODE_PROXY_NODE_H_E46910AC_D319_5AB4_AB28_F69FAF7A6767
 
 #include <functional>
 
@@ -39,14 +38,10 @@ public:
     virtual NodeInContext get_proxy(shared_ptr<Context> ctx) const = 0;
 public:
     T get(shared_ptr<Context> ctx) const override {
-        try {
-            auto [node, nctx] = get_proxy(ctx);
-            if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
-                return vnode->get(nctx);
-            throw NodeAccessError("Proxied node is of different type");
-        } catch (...) {
-            return {};
-        }
+        auto [node, nctx] = get_proxy(ctx);
+        if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
+            return vnode->get(nctx);
+        throw NodeAccessError("Proxied node is of different type");
     }
 };
 
