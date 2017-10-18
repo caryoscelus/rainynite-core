@@ -1,5 +1,4 @@
-/*
- *  time.cpp - time-related nodes
+/*  time.cpp - time-related nodes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -22,8 +21,7 @@
 #include <core/node/property.h>
 #include <core/context.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 template <typename T>
 class TimeMap : public ProxyNode<T> {
@@ -49,6 +47,33 @@ private:
 
 NODE_INFO_TEMPLATE(TimeMap, TimeMap<T>, T);
 TYPE_INSTANCES(TimeMapNodeInfo)
+
+
+template <typename T>
+class AtTime : public ProxyNode<T> {
+    DOC_STRING(
+        "Get value of its child at given time."
+    )
+public:
+    AtTime() {
+        this->template init<T>(source, {});
+        this->template init<Time>(time, {});
+    }
+
+    NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
+        auto nctx = make_shared<Context>(*ctx);
+        nctx->set_time(get_time()->get(ctx));
+        return { get_source(), nctx };
+    }
+
+private:
+    NODE_PROPERTY(source, T);
+    NODE_PROPERTY(time, Time);
+};
+
+NODE_INFO_TEMPLATE(AtTime, AtTime<T>, T);
+TYPE_INSTANCES(AtTimeNodeInfo)
+
 
 class Now : public Node<Time> {
 public:
@@ -93,5 +118,4 @@ private:
 NODE_INFO_TEMPLATE(TimeLoop, TimeLoop<T>, T);
 TYPE_INSTANCES(TimeLoopNodeInfo)
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
