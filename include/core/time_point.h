@@ -24,10 +24,6 @@
 
 namespace rainynite::core {
 
-/// Tag type for TimePoint nodes
-struct TimePointType {
-};
-
 template <typename T>
 struct TimePoint {
     Time time;

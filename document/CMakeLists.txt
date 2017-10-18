@@ -16,6 +16,7 @@ target_sources(document
 if (BUILD_NODES)
     target_sources(document
         PRIVATE
+            nodes/frame.cpp
             nodes/animated.cpp
             nodes/frame_list.cpp
             nodes/time.cpp

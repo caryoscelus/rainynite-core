@@ -49,7 +49,6 @@
 #define TYPE_INSTANCES(Template) \
     TYPE_INSTANCES_WO_RENDERABLE(Template) \
     template class Template<Renderable>; \
-    template class Template<Audio>; \
-    template class Template<TimePointType>;
+    template class Template<Audio>;
 
 #endif

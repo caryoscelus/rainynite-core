@@ -123,10 +123,6 @@ TYPE_INFO(DocumentType, "Document", [](auto&&) -> any {
     throw serialize::DeserializationError("Document type cannot be deserialized");
 });
 
-TYPE_INFO(TimePointType, "Frame", [](auto&&) -> any {
-    throw serialize::DeserializationError("Frame type cannot be deserialized");
-});
-
 class ValueTypeInfoBase {
 public:
     virtual string operator()(any const& object) const = 0;

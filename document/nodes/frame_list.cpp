@@ -1,5 +1,4 @@
-/*
- *  frame_list.cpp - node that switches between its children in time
+/*  frame_list.cpp - node that switches between its children in time
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -21,52 +20,28 @@
 #include <core/all_types.h>
 #include <core/context.h>
 
-namespace rainynite::core {
-namespace nodes {
-
-template <typename T>
-class Frame : public Node<TimePointType> {
-public:
-    Frame() {
-        this->template init<T>(value, {});
-        this->template init<Time>(time, {});
-    }
-public:
-    TimePointType get(shared_ptr<Context> /*ctx*/) const override {
-        return {};
-    }
-private:
-    NODE_PROPERTY(value, T);
-    NODE_PROPERTY(time, Time);
-};
-
-NODE_INFO_TEMPLATE(Frame, Frame<T>, TimePointType);
-TYPE_INSTANCES(FrameNodeInfo)
+namespace rainynite::core::nodes {
 
 template <class T>
 class FrameList : public ProxyNode<T> {
+    DOC_STRING(
+        "Value based on list of time-value mappings"
+    )
+
 public:
     FrameList() {
-        this->template init_list<TimePointType>(frame_list);
+        this->template init_list<TimePoint<T>>(frame_list);
         this->template init<T>(default_value, {});
 
         // TODO: don't do this here?
         this->get_frame_list()->new_id();
     }
-public:
+
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto aframes = list_frame_list()->get_links();
-        vector<TimePoint<T>> frames;
-        std::transform(
-            std::begin(aframes),
-            std::end(aframes),
-            std::back_inserter(frames),
-            [ctx](auto frame) -> TimePoint<T> {
-                if (auto f = dynamic_pointer_cast<Frame<T>>(frame))
-                    return { f->get_time()->get(ctx), f->get_value() };
-                return { Time::infinity(), nullptr };
-            }
-        );
+        auto flist = dynamic_pointer_cast<BaseValue<vector<TimePoint<T>>>>(list_frame_list());
+        if (flist == nullptr)
+            throw NodeAccessError("FrameList: invalid frame_list");
+        auto frames = flist->get(ctx);
         std::sort(
             std::begin(frames),
             std::end(frames),
@@ -90,12 +65,11 @@ public:
         return {get_default_value(), ctx};
     }
 private:
-    NODE_LIST_PROPERTY(frame_list, TimePointType);
+    NODE_LIST_PROPERTY(frame_list, TimePoint<T>);
     NODE_PROPERTY(default_value, T);
 };
 
 NODE_INFO_TEMPLATE(FrameList, FrameList<T>, T);
 TYPE_INSTANCES(FrameListNodeInfo)
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
