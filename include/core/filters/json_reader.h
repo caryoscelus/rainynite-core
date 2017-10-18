@@ -1,5 +1,4 @@
-/*
- *  json_reader.h - simple JSON document reader
+/*  filters/json_reader.h - simple JSON document reader
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,22 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__FILTERS__JSON_READER_H__6C8511CE
-#define __CORE__FILTERS__JSON_READER_H__6C8511CE
+#ifndef CORE_SERIALIZE_JSON_READER_H_5D691790_F69D_565E_887B_9666CEADCB86
+#define CORE_SERIALIZE_JSON_READER_H_5D691790_F69D_565E_887B_9666CEADCB86
 
-#include "../reader.h"
+#include "reader.h"
 
-namespace rainynite::core {
-
-namespace filters {
+namespace rainynite::core::filters {
 
 class JsonReader : public DocumentReader {
 public:
     shared_ptr<Document> read_document(std::istream& input) override;
 };
 
-} // namespace filters
-
-} // namespace rainynite::core
+} // namespace rainynite::core::filters
 
 #endif

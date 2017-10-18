@@ -1,5 +1,4 @@
-/*
- *  reader.h - document reader interface
+/*  serialize/reader.h - document reader interface
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +15,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__READER_H__504DB02A
-#define __CORE__READER_H__504DB02A
+#ifndef CORE_SERIALIZE_READER_H_DBEA2CAD_1E49_53C1_BF95_1B25F5186F62
+#define CORE_SERIALIZE_READER_H_DBEA2CAD_1E49_53C1_BF95_1B25F5186F62
 
 #include <istream>
+
 #include <core/std/memory.h>
 
 namespace rainynite::core {
 
 class Document;
 
+/**
+ * Minimalist document reader interface
+ */
 class DocumentReader {
 public:
+    virtual ~DocumentReader() = default;
     virtual shared_ptr<Document> read_document(std::istream& input) = 0;
 };
 

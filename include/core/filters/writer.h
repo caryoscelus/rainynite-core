@@ -1,5 +1,4 @@
-/*
- *  reader.h - document reader interface
+/*  writer.h - document writer interface
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__WRITER_H__9D7C7FEE
-#define __CORE__WRITER_H__9D7C7FEE
+#ifndef CORE_WRITER_H_1930A317_8931_59EA_BFA9_58717ED304F7
+#define CORE_WRITER_H_1930A317_8931_59EA_BFA9_58717ED304F7
 
 #include <core/std/memory.h>
 #include <ostream>
@@ -26,6 +25,9 @@ namespace rainynite::core {
 
 class Document;
 
+/**
+ * Minimal document writer/serializer interface.
+ */
 class DocumentWriter {
 public:
     virtual void write_document(std::ostream& output, shared_ptr<Document> document) = 0;

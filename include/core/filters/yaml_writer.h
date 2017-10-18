@@ -1,5 +1,4 @@
-/*
- *  yaml_writer.h - yaml serializer
+/*  filters/yaml_writer.h - yaml serializer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +18,7 @@
 #ifndef CORE_FILTERS_YAML_WRITER_H_915BC576_E30C_5035_AFD6_BB344DA75AD2
 #define CORE_FILTERS_YAML_WRITER_H_915BC576_E30C_5035_AFD6_BB344DA75AD2
 
-#include "../writer.h"
+#include "writer.h"
 
 namespace rainynite::core::filters {
 

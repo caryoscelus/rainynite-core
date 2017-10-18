@@ -1,5 +1,4 @@
-/*
- *  yaml_reader.h - YAML document reader
+/*  filters/yaml_reader.h - YAML document reader
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,10 +15,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__FILTERS__YAML_READER_H__66063050
-#define __CORE__FILTERS__YAML_READER_H__66063050
+#ifndef CORE_SERIALIZE_YAML_READER_H_3AEA9FF2_1EC1_5130_81AE_BAD16615841D
+#define CORE_SERIALIZE_YAML_READER_H_3AEA9FF2_1EC1_5130_81AE_BAD16615841D
 
-#include "../reader.h"
+#include "reader.h"
 
 namespace rainynite::core::filters {
 

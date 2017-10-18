@@ -1,5 +1,4 @@
-/*
- *  json_writer.h - simple json serializer
+/*  filters/json_writer.h - simple json serializer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,20 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__FILTERS__JSON_WRITER_H__CC8DB984
-#define __CORE__FILTERS__JSON_WRITER_H__CC8DB984
+#ifndef CORE_SERIALIZE_JSON_WRITER_H_86F22847_207E_5BFB_9845_F2194F2ECCE7
+#define CORE_SERIALIZE_JSON_WRITER_H_86F22847_207E_5BFB_9845_F2194F2ECCE7
 
-#include "../writer.h"
+#include "writer.h"
 
-namespace rainynite::core {
-namespace filters {
+namespace rainynite::core::filters {
 
 class JsonWriter : public DocumentWriter {
 public:
     void write_document(std::ostream& output, shared_ptr<Document> document) override;
 };
 
-} // namespace filters
-} // namespace rainynite::core
+} // namespace rainynite::core::filters
 
 #endif
