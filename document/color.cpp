@@ -1,5 +1,4 @@
-/*
- *  color.cpp - Color types
+/*  color.cpp - Color types
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,8 +17,7 @@
 
 #include <core/color.h>
 
-namespace rainynite::core {
-namespace colors {
+namespace rainynite::core::colors {
 
 template <>
 string to_hex24(RGBA<uint8_t> const& color) {
@@ -70,5 +68,4 @@ std::ostream& operator<<(std::ostream& stream, Color c) {
     return stream << to_hex32(c);
 }
 
-} // namespace color
-} // namespace rainynite::core
+} // namespace rainynite::core::colors

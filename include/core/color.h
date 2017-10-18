@@ -1,5 +1,4 @@
-/*
- *  color.h - Color types
+/*  color.h - Color types
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__COLOR_H__36A9AB66
-#define __CORE__COLOR_H__36A9AB66
+#ifndef CORE_COLOR_H_57293FC5_57D6_5A47_9442_B89C021D2DF4
+#define CORE_COLOR_H_57293FC5_57D6_5A47_9442_B89C021D2DF4
 
 #include <cstdint>
 #include <limits>
@@ -27,10 +26,19 @@
 
 using namespace fmt::literals;
 
-namespace rainynite::core {
-namespace colors {
+namespace rainynite::core::colors {
 
+/**
+ * Abstract color type
+ */
 class AbstractColor {
+public:
+    virtual ~AbstractColor() = default;
+
+    virtual double red() const = 0;
+    virtual double green() const = 0;
+    virtual double blue() const = 0;
+    virtual double alpha() const = 0;
 };
 
 template <typename T>
@@ -54,27 +62,27 @@ public:
         );
     }
 public:
-    double red() const {
+    double red() const override {
         return r * 1.0 / Lim::max();
     }
-    double green() const {
+    double green() const override {
         return g * 1.0 / Lim::max();
     }
-    double blue() const {
+    double blue() const override {
         return b * 1.0 / Lim::max();
     }
-    double alpha() const {
+    double alpha() const override {
         return a * 1.0 / Lim::max();
     }
 public:
-    bool operator==(RGBA<T> const& other) {
+    bool operator==(RGBA<T> const& other) const {
         // different colors considered different even when alpha is zero
         return a == other.a
             && r == other.r
             && g == other.g
             && b == other.b;
     }
-    bool operator!=(RGBA<T> const& other) {
+    bool operator!=(RGBA<T> const& other) const {
         return !(*this == other);
     }
 public:
@@ -109,7 +117,6 @@ RGBA<T> mix(RGBA<T> const& a, RGBA<T> const& b, double amount) {
     );
 }
 
-} // namespace color
-} // namespace rainynite::core
+} // namespace rainynite::core::colors
 
 #endif
