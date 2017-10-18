@@ -1,5 +1,4 @@
-/*
- *  parse.cpp - parse testing
+/*  parse.cpp - parse testing
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,9 +17,10 @@
 
 #include <catch.hpp>
 
-#include <core/parse.h>
+#include <core/exceptions.h>
 #include <core/time/parse.h>
 
+using namespace rainynite;
 using namespace rainynite::core;
 
 TEST_CASE("Parse time", "[time,parse]") {

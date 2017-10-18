@@ -1,5 +1,4 @@
-/*
- *  parse.cpp - time parsing
+/*  parse.cpp - time parsing
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 
 #include <sstream>
 
-#include <core/parse.h>
+#include <core/exceptions.h>
 #include <core/time/parse.h>
 
 namespace rainynite::core {

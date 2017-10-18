@@ -30,6 +30,12 @@ struct NullPointerException : public std::runtime_error {
     {}
 };
 
+struct ParseError : public std::runtime_error {
+    ParseError(string const& msg) :
+        runtime_error(msg)
+    {}
+};
+
 } // namespace rainynite
 
 #endif
