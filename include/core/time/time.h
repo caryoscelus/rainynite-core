@@ -1,5 +1,4 @@
-/*
- *  time.h - Time representation
+/*  time.h - Time representation
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__TIME__TIME_H__B4FED896
-#define __CORE__TIME__TIME_H__B4FED896
+#ifndef CORE_TIME_TIME_H_46A52DEB_6768_5920_B301_D60EE5322217
+#define CORE_TIME_TIME_H_46A52DEB_6768_5920_B301_D60EE5322217
 
 #include <cmath>
 #include <stdexcept>
@@ -48,7 +47,10 @@ public:
     {
         set_frames(seconds_);
     }
-    static Time infinity() {
+    static Time start_of_time() {
+        return Time(-std::numeric_limits<double>::infinity());
+    }
+    static Time end_of_time() {
         return Time(std::numeric_limits<double>::infinity());
     }
     Time(Time const& other) = default;
