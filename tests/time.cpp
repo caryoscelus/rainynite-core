@@ -1,5 +1,4 @@
-/*
- *  time.cpp - time tests
+/*  time.cpp - time tests
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 
 #include <catch.hpp>
 
-#include <core/time/time_period.h>
+#include <core/time/period.h>
 
 using namespace rainynite::core;
 

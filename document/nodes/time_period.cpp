@@ -1,5 +1,4 @@
-/*
- *  time_period.cpp - TimePeriod related nodes
+/*  time_period.cpp - TimePeriod related nodes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,20 +18,22 @@
 #include <core/node_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
-#include <core/time/time_period.h>
+#include <core/time/period.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class CompositeTimePeriod : public Node<TimePeriod> {
+    DOC_STRING(
+        "Construct time period from starting and one-past-last point."
+    )
 public:
     CompositeTimePeriod() {
         init<Time>(first, {});
         init<Time>(last, {});
     }
-public:
+
     TimePeriod get(shared_ptr<Context> ctx) const override {
-        return {get_first()->get(ctx), get_last()->get(ctx)};
+        return {get_first()->value(ctx), get_last()->value(ctx)};
     }
 
 private:
@@ -43,15 +44,18 @@ private:
 REGISTER_NODE(CompositeTimePeriod);
 
 class SizedTimePeriod : public Node<TimePeriod> {
+    DOC_STRING(
+        "Construct time period from starting point and length."
+    )
 public:
     SizedTimePeriod() {
         init<Time>(first, {});
         init<Time>(length, {});
     }
-public:
+
     TimePeriod get(shared_ptr<Context> ctx) const override {
-        auto first = get_first()->get(ctx);
-        return {first, first+get_length()->get(ctx)};
+        auto first = get_first()->value(ctx);
+        return {first, first+get_length()->value(ctx)};
     }
 
 private:
@@ -61,5 +65,4 @@ private:
 
 REGISTER_NODE(SizedTimePeriod);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

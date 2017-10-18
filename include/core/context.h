@@ -1,5 +1,4 @@
-/*
- *  context.h - Context
+/*  context.h - Context
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,14 +15,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__CONTEXT_H__50E71540
-#define __CORE__CONTEXT_H__50E71540
+#ifndef CORE_CONTEXT_H_1B1FD015_F94D_5409_AC92_8B1D26396EFA
+#define CORE_CONTEXT_H_1B1FD015_F94D_5409_AC92_8B1D26396EFA
 
 #include <boost/signals2/signal.hpp>
 
 #include <core/std/memory.h>
 #include <core/std/any.h>
-#include <core/time/time_period.h>
+#include <core/time/period.h>
 
 namespace rainynite::core {
 
@@ -31,6 +30,11 @@ class Document;
 template <typename>
 class Value;
 
+/**
+ * Context for node calculation and rendering.
+ *
+ * For now it mostly contains document, time, fps and time period.
+ */
 class Context {
 public:
     Context() = default;

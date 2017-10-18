@@ -1,5 +1,4 @@
-/*
- *  format.h - time format
+/*  time/format.h - time format
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,18 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__TIME__FORMAT_H__C8982BB8
-#define __CORE__TIME__FORMAT_H__C8982BB8
+#ifndef CORE_TIME_FORMAT_H_73239C60_026C_5D2A_AD87_F7880896AB66
+#define CORE_TIME_FORMAT_H_73239C60_026C_5D2A_AD87_F7880896AB66
 
 #include <ostream>
 
-#include "time_period.h"
+#include "period.h"
 
 namespace rainynite::core {
 
 std::ostream& operator<<(std::ostream& stream, Time time);
 std::ostream& operator<<(std::ostream& stream, TimePeriod const& period);
 
-}
+} // rainynite::core
 
 #endif

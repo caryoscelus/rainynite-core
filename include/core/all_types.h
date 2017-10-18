@@ -18,7 +18,7 @@
 #ifndef CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
 #define CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
 
-#include "time/time_period.h"
+#include <core/time/period.h>
 #include <geom_helpers/null_shape.h>
 #include <geom_helpers/rectangle.h>
 #include <geom_helpers/circle.h>

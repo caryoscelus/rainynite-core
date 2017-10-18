@@ -1,5 +1,4 @@
-/*
- *  parse.h - time parsing
+/*  time/parse.h - time parsing
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,10 +15,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__TIME__PARSE_H__6062ABAE
-#define __CORE__TIME__PARSE_H__6062ABAE
+#ifndef CORE_TIME_PARSE_H_19E0F62E_D526_54F8_B715_4877C5577C23
+#define CORE_TIME_PARSE_H_19E0F62E_D526_54F8_B715_4877C5577C23
 
-#include "time_period.h"
+#include "period.h"
 
 namespace rainynite::core {
 
@@ -28,6 +27,6 @@ TimePeriod parse_time_period(std::istream& stream);
 Time parse_time(string const& s);
 Time parse_time(std::istream& stream);
 
-}
+} // namespace rainynite::core
 
 #endif

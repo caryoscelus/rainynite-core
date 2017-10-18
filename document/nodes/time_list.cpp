@@ -1,5 +1,4 @@
-/*
- *  time_list.cpp - TimeList node
+/*  time_list.cpp - TimeList node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -20,12 +19,10 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/node/proxy_node.h>
-#include <core/time/time_period.h>
 #include <core/all_types.h>
 #include <core/context.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 /**
  * Node that makes a list of its source at different times.
@@ -64,5 +61,4 @@ private:
 NODE_INFO_TEMPLATE(TimeList, TimeList<T>, vector<T>);
 TYPE_INSTANCES(TimeListNodeInfo)
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

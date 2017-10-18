@@ -22,7 +22,7 @@
 
 #include <geom_helpers/knots.h>
 
-#include <core/time/time_period.h>
+#include <core/time/period.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/renderable.h>

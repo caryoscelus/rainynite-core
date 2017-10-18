@@ -1,5 +1,4 @@
-/*
- *  time_period.h - TimePeriod
+/*  time/period.h - TimePeriod
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__TIME__TIME_PERIOD_H__4CC9C668
-#define __CORE__TIME__TIME_PERIOD_H__4CC9C668
+#ifndef CORE_TIME_PERIOD_H_AC1EAA14_64D5_5090_84BB_2AFFF35C7565
+#define CORE_TIME_PERIOD_H_AC1EAA14_64D5_5090_84BB_2AFFF35C7565
 
 #include <boost/iterator/iterator_facade.hpp>
 
@@ -62,6 +61,13 @@ private:
     Time now;
 };
 
+/**
+ * Period of time.
+ *
+ * Currently it is semi-open period: [first; last) in mathematical notation.
+ *
+ * Can be iterated over using for-loop.
+ */
 class TimePeriod : boost::operators<TimePeriod> {
 public:
     TimePeriod() :

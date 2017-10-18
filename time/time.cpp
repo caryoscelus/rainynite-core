@@ -16,7 +16,7 @@
  */
 
 #include <core/std/numeric.h>
-#include <core/time/time_period.h>
+#include <core/time/period.h>
 
 namespace rainynite::core {
 
