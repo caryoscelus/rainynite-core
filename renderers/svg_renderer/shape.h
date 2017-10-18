@@ -1,5 +1,4 @@
-/*
- *  shape.h - Svg renderer shape module definitions
+/*  svg_renderer/shape.h - Svg renderer shape module definitions
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,12 +15,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__RENDERERS__SVG_RENDERER__SHAPE_H__B1222A54
-#define __CORE__RENDERERS__SVG_RENDERER__SHAPE_H__B1222A54
+#ifndef SHAPE_H_21EA882C_4435_5D12_BDB2_AA2007E61909
+#define SHAPE_H_21EA882C_4435_5D12_BDB2_AA2007E61909
 
-namespace rainynite::core {
-namespace renderers {
+namespace rainynite::core::renderers {
 
+/**
+ * Base class for svg shape render modules.
+ *
+ * Use SVG_SHAPE_RENDERER when declaring render module to automatically
+ * register it.
+ */
 class SvgShapeRenderer {
 public:
     /**
@@ -34,6 +38,11 @@ public:
     virtual string operator()(any const& shape) const = 0;
 };
 
+/**
+ * Render shape to .svg.
+ *
+ * Accepts shape of any type that has a registered SvgShapeRenderer for it
+ */
 inline string render_svg_shape(any const& shape) {
     return class_init::any_info<SvgShapeRenderer, string>(shape);
 }
@@ -42,7 +51,6 @@ inline string render_svg_shape(any const& shape) {
 public SvgShapeRenderer, \
 private class_init::Registered<Self, Shape, SvgShapeRenderer>
 
-} // namespace renderers
-} // namespace rainynite::core
+} // namespace rainynite::core::renderers
 
 #endif

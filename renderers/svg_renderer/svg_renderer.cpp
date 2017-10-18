@@ -1,4 +1,4 @@
-/*  svg_renderer.cpp - primitive .svg renderer
+/*  svg_renderer.cpp - SVG "renderer"
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify

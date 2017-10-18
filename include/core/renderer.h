@@ -1,5 +1,4 @@
-/*
- *  renderer.h - Renderer interface
+/*  renderer.h - Renderer interface
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__RENDERER_H__67308EB8
-#define __CORE__RENDERER_H__67308EB8
+#ifndef CORE_RENDERER_H_E606EAD3_30E1_5114_9BF6_6D4FD2810CAA
+#define CORE_RENDERER_H_E606EAD3_30E1_5114_9BF6_6D4FD2810CAA
 
 #include <stdexcept>
 
@@ -38,17 +37,31 @@ public:
     {}
 };
 
+/**
+ * Interface for Context/Document renderer.
+ *
+ * TODO: better control.
+ */
 class Renderer {
+
 public:
+    /// Render context
     virtual void render(Context&& context) = 0;
+
+    /// Return true if rendering is done
     virtual bool is_finished() const = 0;
+
+    /// Stop any rendering
     virtual void stop() = 0;
-public:
+
+    /// Get finished frame signal that is called when a frame is rendered.
     inline boost::signals2::signal<void(Time)>& finished_frame() {
         return finished_frame_signal;
     }
+
 private:
     boost::signals2::signal<void(Time)> finished_frame_signal;
+
 };
 
 } // namespace rainynite::core

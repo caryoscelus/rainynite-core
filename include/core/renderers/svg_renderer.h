@@ -1,5 +1,4 @@
-/*
- *  svg_renderer.h - primitive .svg renderer
+/*  svg_renderer.h - SVG "renderer""
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,16 +15,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__RENDERERS__SVG_RENDERER_H__F493F66A
-#define __CORE__RENDERERS__SVG_RENDERER_H__F493F66A
+#ifndef CORE_RENDERERS_SVG_RENDERER_H_F428317B_656B_5ADE_885E_628657C57C69
+#define CORE_RENDERERS_SVG_RENDERER_H_F428317B_656B_5ADE_885E_628657C57C69
 
 #include <core/std/memory.h>
 #include "../context.h"
 #include "../renderer.h"
 
-namespace rainynite::core {
-
-namespace renderers {
+namespace rainynite::core::renderers {
 
 struct SvgRendererSettings {
     bool render_pngs = false;
@@ -34,6 +31,9 @@ struct SvgRendererSettings {
     string path;
 };
 
+/**
+ * Svg "renderer" - converts frames to .svg and optionally .png
+ */
 class SvgRenderer : public Renderer {
 public:
     SvgRenderer();
@@ -47,8 +47,6 @@ private:
     unique_ptr<Impl> impl;
 };
 
-} // namespace renderers
-
-} // namespace rainynite::core
+} // namespace rainynite::core::renderers
 
 #endif
