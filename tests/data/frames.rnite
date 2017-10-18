@@ -1,0 +1,59 @@
+--- !Document
+## Value to test
+_no_such_value: &c3ae2365-1d75-4252-8ba0-1782060efbc6 !FrameList#Real
+  frame_list: !List#Frame#Real
+    - !Frame#Real
+      time: !Value#Time 0f@1
+      value: !Value#Real 1
+    - !Frame#Real
+      time: !Value#Time 2f@1
+      value: !Value#Real 8
+    - !Frame#Real
+      time: !Value#Time 3f@1
+      value: !Linear
+        speed: !Value#Real 1
+
+## Test list
+_tests: !List#Boolean
+
+  ## Default
+  - !Equal#Real
+    a: !AtTime#Real
+      source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
+      time: !Value#Time -1f@1
+    b: !Value#Real 0
+
+  ## Value
+  - !Equal#Real
+    a: !AtTime#Real
+      source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
+      time: !Value#Time 0f@1
+    b: !Value#Real 1
+
+  ## Value
+  - !Equal#Real
+    a: !AtTime#Real
+      source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
+      time: !Value#Time 1f@1
+    b: !Value#Real 1
+
+  ## Value
+  - !Equal#Real
+    a: !AtTime#Real
+      source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
+      time: !Value#Time 2f@1
+    b: !Value#Real 8
+
+  ## Proxied: no time mapping
+  - !Equal#Real
+    a: !AtTime#Real
+      source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
+      time: !Value#Time 3f@1
+    b: !Value#Real 3
+
+  ## Proxied: no time offset
+  - !Equal#Real
+    a: !AtTime#Real
+      source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
+      time: !Value#Time 7f@2
+    b: !Value#Real 3.5
