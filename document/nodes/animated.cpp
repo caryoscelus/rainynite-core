@@ -1,5 +1,4 @@
-/*
- *  animated.cpp - node that switches between its children in time
+/*  animated.cpp - node that switches between its children in time
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -20,27 +19,21 @@
 
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
-#include <core/nodes/animated.h>
 #include <core/type_info.h>
 #include <core/all_types.h>
 #include <core/context.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 template <class T>
-class Animated : public AbstractAnimated, public ProxyNode<T> {
+class Animated : public ProxyNode<T> {
 public:
     Animated() {
         this->template init_list<T>(children);
         this->template init_list<TimePeriod>(periods);
         this->init(default_value, T());
-
-        // TODO: don't do this here?
-        get_children()->new_id();
-        get_periods()->new_id();
     }
-public:
+
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         size_t i = 0;
         auto time = ctx->get_time();
@@ -55,14 +48,16 @@ public:
         }
         return { get_default_value(), ctx };
     }
-public:
-    void add_child(TimePeriod period, AbstractReference ref) override {
+
+    void add_child(TimePeriod period, AbstractReference ref) {
         push_value(list_periods(), period);
         list_children()->push_back(dynamic_pointer_cast<BaseValue<T>>(ref));
     }
-    size_t child_count() const override {
+
+    size_t child_count() const {
         return list_children()->link_count();
     }
+
 private:
     Time calculate_time(TimePeriod const& period, Time time) const {
         auto a = period.get_first();
@@ -78,5 +73,4 @@ private:
 NODE_INFO_TEMPLATE(Animated, Animated<T>, T);
 TYPE_INSTANCES(AnimatedNodeInfo)
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
