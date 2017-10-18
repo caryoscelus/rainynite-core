@@ -12,6 +12,6 @@ target_link_libraries(time morphing)
 install(
     TARGETS time
     EXPORT rainynite_core
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib/rainynite/
+    ARCHIVE DESTINATION lib/rainynite/
 )

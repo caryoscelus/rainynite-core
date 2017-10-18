@@ -10,6 +10,6 @@ target_link_libraries(log fmt)
 install(
     TARGETS log
     EXPORT rainynite_core
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib/rainynite/
+    ARCHIVE DESTINATION lib/rainynite/
 )

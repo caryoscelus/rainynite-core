@@ -79,6 +79,6 @@ target_link_libraries(document log morphing fmt)
 install(
     TARGETS document
     EXPORT rainynite_core
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib/rainynite/
+    ARCHIVE DESTINATION lib/rainynite/
 )

@@ -42,7 +42,7 @@ target_link_libraries(renderers
 install(
     TARGETS renderers
     EXPORT rainynite_core
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib/rainynite/
+    ARCHIVE DESTINATION lib/rainynite/
 )
 
