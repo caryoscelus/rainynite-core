@@ -1,5 +1,4 @@
-/*
- *  simple_exception_log.h - simple exception log implementation
+/*  simple_exception_log.h - simple exception log implementation
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify

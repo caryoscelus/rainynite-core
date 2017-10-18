@@ -1,5 +1,4 @@
-/*
- *  exception_log.h - exception logging classes
+/*  exception_log.h - exception logging classes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ namespace rainynite::core {
  */
 class ExceptionSource {
 public:
-    virtual ~ExceptionSource() {}
+    virtual ~ExceptionSource() = default;
 };
 
 /**
@@ -38,6 +37,7 @@ public:
  */
 class ExceptionLogger {
 public:
+    virtual ~ExceptionLogger() = default;
     /// Write exception ex (caused by source) to log
     virtual void log_exception(weak_ptr<ExceptionSource const> source, std::exception const& ex) const noexcept = 0;
 };
