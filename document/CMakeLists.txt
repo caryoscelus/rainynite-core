@@ -17,6 +17,7 @@ set(ALL_NODES
     nodes/frame.cpp
     nodes/animated.cpp
     nodes/frame_list.cpp
+    nodes/interpolate.cpp
     nodes/time.cpp
     nodes/time_list.cpp
     nodes/time_period.cpp
