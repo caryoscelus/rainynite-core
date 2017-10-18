@@ -142,7 +142,7 @@ void SvgRenderer::Impl::render(Context&& context_) {
         throw RenderFailure("No document present");
     }
     any maybe_settings = context.get_render_settings();
-    if (!maybe_settings.empty()) {
+    if (any_has_value(maybe_settings)) {
         settings = any_cast<SvgRendererSettings>(maybe_settings);
     }
     prepare_render();
