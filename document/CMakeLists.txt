@@ -36,6 +36,7 @@ set(ALL_NODES
     nodes/to_string.cpp
     nodes/color_string.cpp
     nodes/file_string.cpp
+    nodes/average.cpp
     nodes/math.cpp
     nodes/rectangle.cpp
     nodes/circle.cpp
