@@ -1,5 +1,4 @@
-/*
- *  node.h - Node
+/*  node.h - Node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__NODE_H__245D750C
-#define __CORE__NODE__NODE_H__245D750C
+#ifndef CORE_NODE_NODE_H_476155BB_19F8_5EF7_9AC8_30BEA7394210
+#define CORE_NODE_NODE_H_476155BB_19F8_5EF7_9AC8_30BEA7394210
 
 #include "abstract_node.h"
 #include "abstract_value.h"
@@ -37,7 +36,9 @@ public:
     }
     template <typename U>
     void init_list(string const& name) {
-        init_property(name, Type(typeid(vector<U>)), make_shared<ListValue<U>>());
+        auto list = make_shared<ListValue<U>>();
+        list->new_id();
+        init_property(name, Type(typeid(vector<U>)), list);
     }
 public:
     bool can_set_source(shared_ptr<AbstractValue> src) const override {
