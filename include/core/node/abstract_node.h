@@ -26,13 +26,16 @@
 
 namespace rainynite::core {
 
+/**
+ * Abstract node: entity with links to AbstractValues
+ */
 class AbstractNode : public AbstractListLinked, public DocString {
 public:
     virtual ~AbstractNode();
 public:
     AbstractReference get_property(string const& name) const;
     template <typename T>
-    BaseReference<T> get_property_as(string const& name) const {
+    shared_ptr<BaseValue<T>> get_property_as(string const& name) const {
         return dynamic_pointer_cast<BaseValue<T>>(get_property(name));
     }
     template <typename T>

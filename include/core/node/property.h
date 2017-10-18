@@ -1,5 +1,4 @@
-/*
- *  property.h - Node property macros
+/*  property.h - Node property macros
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__PROPERTY_H__7328135E
-#define __CORE__NODE__PROPERTY_H__7328135E
+#ifndef CORE_NODE_PROPERTY_H_27CFE1E6_DA00_521C_9DCD_356AED53BCF0
+#define CORE_NODE_PROPERTY_H_27CFE1E6_DA00_521C_9DCD_356AED53BCF0
 
 /*
  * NOTE: static_pointer_cast might be unsafe (silently ignoring when node is
@@ -29,10 +28,10 @@
  */
 #define NODE_PROPERTY(name, type) \
 public: \
-    inline BaseReference<type> get_##name() const { \
+    inline shared_ptr<BaseValue<type>> get_##name() const { \
         return this->template get_property_as<type>(#name); \
     } \
-    inline void set_##name(BaseReference<type> value) { \
+    inline void set_##name(shared_ptr<BaseValue<type>> value) { \
         this->set_property(#name, dynamic_pointer_cast<AbstractValue>(value)); \
     } \
 private: \
@@ -51,7 +50,7 @@ private: \
 
 #define NODE_LIST_PROPERTY(name, type) \
 public: \
-    inline AbstractListReference list_##name() const { \
+    inline shared_ptr<AbstractListLinked> list_##name() const { \
         return dynamic_pointer_cast<AbstractListLinked>(this->get_property(#name)); \
     } \
 NODE_PROPERTY(name, vector<type>)

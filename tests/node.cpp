@@ -1,5 +1,4 @@
-/*
- *  node.cpp - node tests
+/*  node.cpp - node tests
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -102,7 +101,7 @@ TEST_CASE("Sum Node", "[node]") {
 class SumNode : public Node<Real> {
 public:
     SumNode() {
-        init<List<BaseReference<Real>>>(list, {});
+        init<List<shared_ptr<BaseValue<Real>>>>(list, {});
     }
 public:
     Real get(shared_ptr<Context> context) const override {
@@ -113,11 +112,11 @@ public:
         return result;
     }
 
-    NODE_PROPERTY(list, List<BaseReference<Real>>);
+    NODE_PROPERTY(list, List<shared_ptr<BaseValue<Real>>>);
 };
 
 TEST_CASE("Real node sum", "[node]") {
-    auto list = make_value<List<BaseReference<Real>>>();
+    auto list = make_value<List<shared_ptr<BaseValue<Real>>>>();
     auto sum = make_shared<SumNode>();
     CHECK(sum->value(zero_context()) == 0.0);
     sum->set_property("list", list);

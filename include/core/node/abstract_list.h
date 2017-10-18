@@ -25,6 +25,9 @@
 
 namespace rainynite::core {
 
+/**
+ * Abstract sequence of links to nodes.
+ */
 class AbstractListLinked {
 public:
     virtual size_t link_count() const = 0;
@@ -52,12 +55,10 @@ public:
     }
 public:
     template <class T>
-    BaseReference<T> get_link_as(size_t i) const {
+    shared_ptr<BaseValue<T>> get_link_as(size_t i) const {
         return dynamic_pointer_cast<BaseValue<T>>(get_link(i));
     }
 };
-
-using AbstractListReference = shared_ptr<AbstractListLinked>;
 
 } // namespace rainynite::core
 

@@ -1,5 +1,4 @@
-/*
- *  common.h - Node-related forward declarations and typedefs
+/*  common.h - Node-related forward declarations and typedefs
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__COMMON_H__7A32160E
-#define __CORE__NODE__COMMON_H__7A32160E
+#ifndef CORE_NODE_COMMON_H_DF61A21D_A0D3_524F_9B48_0558874F8AD5
+#define CORE_NODE_COMMON_H_DF61A21D_A0D3_524F_9B48_0558874F8AD5
 
 #include <stdexcept>
 
@@ -38,9 +37,6 @@ class BaseValue;
 using Type = std::type_index;
 
 using AbstractReference = shared_ptr<AbstractValue>;
-
-template <typename T>
-using BaseReference = shared_ptr<BaseValue<T>>;
 
 // exceptions
 class NodeAccessError : public std::runtime_error {
