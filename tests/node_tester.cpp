@@ -17,10 +17,17 @@
 
 #include <fstream>
 
+#include <boost/uuid/uuid_io.hpp>
+
+#include <fmt/format.h>
+
 #include <core/std/string.h>
 #include <core/filters/yaml_reader.h>
 #include <core/document.h>
+#include <core/node_info.h>
 #include "zero_context.h"
+
+using namespace fmt::literals;
 
 namespace rainynite::core {
 
@@ -33,13 +40,21 @@ bool load_and_test_file(string const& fname) {
     in.close();
     bool failed = false;
     if (auto test_list = document->get_property("_tests")) {
+        int i = 0;
         for (auto nic : test_list->get_list_links(zero_context())) {
             if (auto node = dynamic_cast<BaseValue<bool>*>(nic.node.get())) {
-                if (node->value(nic.context) != true)
+                if (node->value(nic.context) != true) {
                     failed = true;
+                    std::cerr << "Test #{} failed:\n  id = {}\n  type = {}\n"_format(
+                        i,
+                        to_string(node->get_id()),
+                        node_name(*node)
+                    );
+                }
             } else {
                 failed = true;
             }
+            ++i;
         }
     }
     return !failed;
