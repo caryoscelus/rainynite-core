@@ -111,6 +111,11 @@ TYPE_INFO(Time, "Time", [](auto&& s) {
     return parse_time(s);
 });
 
+TYPE_INFO(Shading, "Shading", [](auto&& s) {
+    // TODO
+    return Shading::default_shading();
+});
+
 TYPE_INFO(Renderable, "Renderable", [](auto&&) -> any {
     throw serialize::DeserializationError("Renderable type cannot be deserialized");
 });

@@ -24,7 +24,7 @@
 #include <geom_helpers/circle.h>
 #include <geom_helpers/knots.h>
 #include <2geom/affine.h>
-#include <core/color.h>
+#include <core/shading.h>
 #include <core/renderable.h>
 #include <core/audio.h>
 #include <core/time_point.h>
@@ -44,7 +44,8 @@
     template class Template<Geom::Circle>; \
     template class Template<Geom::Knot>; \
     template class Template<Geom::Affine>; \
-    template class Template<colors::Color>;
+    template class Template<colors::Color>; \
+    template class Template<Shading>;
 
 #define TYPE_INSTANCES(Template) \
     TYPE_INSTANCES_WO_RENDERABLE(Template) \

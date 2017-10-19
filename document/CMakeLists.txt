@@ -8,6 +8,7 @@ target_sources(document
         document.cpp
         instance.cpp
         color.cpp
+        shading.cpp
         action.cpp
         action_stack.cpp
         node/abstract_node.cpp
@@ -32,6 +33,7 @@ set(ALL_NODES
     nodes/point_xy.cpp
     nodes/knot.cpp
     nodes/knot_list.cpp
+    nodes/shading.cpp
     nodes/linear.cpp
     nodes/truncate.cpp
     nodes/to_string.cpp
