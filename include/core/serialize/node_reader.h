@@ -1,5 +1,4 @@
-/*
- *  node_reader.h - node reader implementation
+/*  serialize/node_reader.h - node reader implementation
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__SERIALIZE__NODE_READER_H__C23C4D8A
-#define __CORE__SERIALIZE__NODE_READER_H__C23C4D8A
+#ifndef CORE_SERIALIZE_NODE_READER_H_9D80AEB0_2C37_58D3_AB90_7780A924327A
+#define CORE_SERIALIZE_NODE_READER_H_9D80AEB0_2C37_58D3_AB90_7780A924327A
 
 #include <core/node_info.h>
 #include <core/type_info.h>

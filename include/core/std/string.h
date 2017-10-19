@@ -1,5 +1,4 @@
-/*
- *  std/string.h - re-import string
+/*  std/string.h - re-import string
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__STD__STRING_H__47D802F4
-#define __CORE__STD__STRING_H__47D802F4
+#ifndef CORE_STD_STRING_H_1850C1EA_1348_5151_AB7B_611271DDC2DC
+#define CORE_STD_STRING_H_1850C1EA_1348_5151_AB7B_611271DDC2DC
 
 #include <string>
 

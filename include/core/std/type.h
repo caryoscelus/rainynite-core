@@ -1,5 +1,4 @@
-/*
- *  std/type.h - re-import type
+/*  std/type.h - re-import runtime type info type
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__STD__TYPE_H__4C6E074A
-#define __CORE__STD__TYPE_H__4C6E074A
+#ifndef CORE_STD_TYPE_H_9219FF0C_DF06_5704_88A5_ADA30D24513D
+#define CORE_STD_TYPE_H_9219FF0C_DF06_5704_88A5_ADA30D24513D
 
 #include <typeindex>
 

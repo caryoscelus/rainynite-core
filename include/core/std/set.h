@@ -1,5 +1,4 @@
-/*
- *  std/set.h - re-import set
+/*  std/set.h - re-import set
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify

@@ -1,5 +1,4 @@
-/*
- *  node_writer.h - node writer implementation
+/*  serialize/node_writer.h - node writer implementation
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
-#define __CORE__SERIALIZE__NODE_WRITER_H__50EE0930
+#ifndef CORE_SERIALIZE_NODE_WRITER_H_845A4D1B_D3C6_5562_B46D_871B10B319D6
+#define CORE_SERIALIZE_NODE_WRITER_H_845A4D1B_D3C6_5562_B46D_871B10B319D6
 
 #include <sstream>
 

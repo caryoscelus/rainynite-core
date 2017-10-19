@@ -1,5 +1,4 @@
-/*
- *  std/vector.h - re-import vector
+/*  std/vector.h - re-import vector
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__STD__VECTOR_H__16BDCE20
-#define __CORE__STD__VECTOR_H__16BDCE20
+#ifndef CORE_STD_VECTOR_H_80068DE8_C06B_52CA_A9C9_78EB4F8A4AA7
+#define CORE_STD_VECTOR_H_80068DE8_C06B_52CA_A9C9_78EB4F8A4AA7
 
 #include <vector>
 
