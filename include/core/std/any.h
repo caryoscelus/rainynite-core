@@ -43,8 +43,6 @@ using std::declval;
 template <typename A>
 using has_has_value_t = decltype(declval<A const&>().has_value());
 
-static_assert(std::is_same_v<has_has_value_t<any>,bool>);
-
 template <typename A>
 using has_empty_t = decltype(declval<A const&>().empty());
 
