@@ -23,7 +23,6 @@
 #include <core/type_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
-#include <core/serialize/json.h>
 #include <core/serialize/node_writer.h>
 #include <core/serialize/node_reader.h>
 
@@ -55,24 +54,6 @@ public:
 
 REGISTER_NODE(Add);
 
-}
-
-TEST_CASE("Dumb json serialize", "[serialize,node]") {
-    std::ostringstream stream;
-    auto writer = serialize::DumbJsonWriter<serialize::NodeWriter, AbstractReference>(stream);
-    AbstractReference three = make_value<double>(3);
-    auto add = make_node<Add>();
-    add->set_property("a", three);
-    add->set_property("b", three);
-    AbstractReference add_a = add;
-    writer.object(add_a);
-    std::cout << stream.str() << std::endl;
-    stream.str("");
-    auto list = make_shared<ListValue<double>>();
-    list->new_id();
-    push_value(list, 1.5);
-    writer.object(list);
-    std::cout << stream.str() << std::endl;
 }
 
 TEST_CASE("Read double", "[serialize]") {

@@ -3,8 +3,6 @@ add_library(filters SHARED)
 target_sources(filters
     PRIVATE
         $<TARGET_OBJECTS:yaml-cpp>
-        json_reader.cpp
-        json_writer.cpp
         yaml_reader.cpp
         yaml_writer.cpp
 )

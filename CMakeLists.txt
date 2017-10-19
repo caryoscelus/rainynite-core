@@ -13,9 +13,6 @@ find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(FMT REQUIRED)
 
 set(CATCH_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/catch/" CACHE STRING "Path to Catch header library")
-set(RAPIDJSON_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/rapidjson/include/" CACHE STRING "Path to RapidJSON header library")
-
-include_directories(SYSTEM "${RAPIDJSON_INCLUDE_DIRS}")
 
 set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "YAML: Enable testing and parse tools")
 set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "YAML: Enable contrib stuff in library")

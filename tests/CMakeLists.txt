@@ -18,9 +18,6 @@ add_catch_test(class_init)
 add_catch_test(serialize)
 target_link_libraries(test_serialize document time)
 
-# add_catch_test(rapidjson)
-# target_link_libraries(test_rapidjson document time)
-
 add_catch_test(parse)
 target_link_libraries(test_parse time)
 
