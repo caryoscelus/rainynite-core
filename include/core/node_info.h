@@ -1,5 +1,4 @@
-/*
- *  node_info.h - runtime node information
+/*  node_info.h - runtime node information
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -44,6 +43,7 @@ inline NodeInfo const& get_node_info(std::type_index type) {
     return class_init::type_meta<NodeInfo>(type);
 }
 
+/// Get node name for given type if it's a type of registered node
 inline string node_type_name(std::type_index type) {
     try {
         return class_init::type_info<NodeInfo,string>(type);
@@ -52,6 +52,7 @@ inline string node_type_name(std::type_index type) {
     }
 }
 
+/// Get node name
 inline string node_name(AbstractValue const& node) {
     return node_type_name(typeid(node));
 }
@@ -60,6 +61,11 @@ inline NodeInfo const& get_node_type(string const& name) {
     return get_node_info(class_init::find_type(name));
 }
 
+/**
+ * Make node with given name, optionally using source & context to initialize it.
+ *
+ * TODO: throw instead of returning nullptr?
+ */
 template <typename T=AbstractValue>
 shared_ptr<T> make_node_with_name(string const& name, AbstractReference source=nullptr, shared_ptr<Context> context=nullptr) {
     auto node = get_node_type(name).new_empty();

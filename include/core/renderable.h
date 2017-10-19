@@ -1,5 +1,4 @@
-/*
- *  renderable.h - renderable type
+/*  renderable.h - renderable type
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,20 +15,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__RENDERABLE_H__38DF5A1E
-#define __CORE__RENDERABLE_H__38DF5A1E
+#ifndef CORE_RENDERABLE_H_0A68F741_3D2C_5985_89F7_AEABEADCA11B
+#define CORE_RENDERABLE_H_0A68F741_3D2C_5985_89F7_AEABEADCA11B
 
 #include <core/node/node.h>
 #include <core/node/property.h>
 
 namespace rainynite::core {
 
-class Renderable {
+/**
+ * "Tag" type which is used to identify renderable nodes.
+ *
+ * The idea is that there are renderable nodes, but instead of returning
+ * some real render result object they simply hold info that can be used
+ * by renderer.
+ */
+struct Renderable final {
 };
 
+/**
+ * Base class for all renderable nodes.
+ *
+ * Since Renderable is only tag class, the point of this base class
+ * is to provide empty get() override.
+ */
 class RenderableNode : public Node<Renderable> {
 public:
-    Renderable get(shared_ptr<Context> /*context*/) const override {
+    Renderable get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
 };

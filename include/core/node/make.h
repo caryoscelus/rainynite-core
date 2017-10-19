@@ -1,5 +1,4 @@
-/*
- *  make.h - Node-making functions
+/*  make.h - Node-making functions
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__MAKE_H__A6087C20
-#define __CORE__NODE__MAKE_H__A6087C20
+#ifndef CORE_NODE_MAKE_H_C211DBC5_E4F0_54CF_BD3E_EFA07946E7B1
+#define CORE_NODE_MAKE_H_C211DBC5_E4F0_54CF_BD3E_EFA07946E7B1
 
 #include <core/std/memory.h>
 
@@ -25,6 +24,11 @@
 
 namespace rainynite::core {
 
+/**
+ * Make value node.
+ *
+ * Optional arguments are passed to T ctor.
+ */
 template <typename T, typename... Args>
 shared_ptr<Value<T>> make_value(Args&&... args) {
     auto r = make_shared<Value<T>>();
@@ -33,6 +37,11 @@ shared_ptr<Value<T>> make_value(Args&&... args) {
     return r;
 }
 
+/**
+ * Make node of given type and init it's id.
+ *
+ * This should either be used or thrown out.
+ */
 template <class T>
 shared_ptr<T> make_node() {
     auto r = make_shared<T>();
