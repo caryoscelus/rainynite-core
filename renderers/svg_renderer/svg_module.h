@@ -25,6 +25,10 @@
 
 #include <2geom/point.h>
 
+namespace rainynite::core {
+struct Shading;
+} // namespace rainynite::core
+
 namespace rainynite::core::renderers {
 
 struct SvgRendererSettings;
@@ -36,6 +40,8 @@ struct SvgRendererSettings;
  * disabled in settings.
  */
 string get_extra_style(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings);
+
+string get_extra_style(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context> ctx, SvgRendererSettings const& settings);
 
 /**
  * Convert node to svg string.

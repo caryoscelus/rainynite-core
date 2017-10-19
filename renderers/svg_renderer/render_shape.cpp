@@ -23,9 +23,6 @@
 #include "svg_module.h"
 #include "shape.h"
 
-// #include <geom_helpers/knots.h>
-// #include <geom_helpers/null_shape.h>
-
 using namespace fmt::literals;
 
 namespace rainynite::core::renderers {
@@ -37,8 +34,9 @@ class ShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(ShapeSvgRenderer) {
 public:
     string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
         auto shape = node.get_property("shape")->get_any(ctx);
-        auto shading = node.get_property_as<Shading>("shading")->value(ctx);
-        auto extra_style = get_extra_style(node, ctx, settings);
+        auto shading_node = node.get_property_as<Shading>("shading");
+        auto shading = shading_node->value(ctx);
+        auto extra_style = get_extra_style(shading_node, ctx, settings);
         return fmt::format(
             styled_svg_element,
             "shape"_a=render_svg_shape(shape),

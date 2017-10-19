@@ -202,6 +202,13 @@ string get_extra_style(AbstractNode const& node, shared_ptr<Context> ctx, SvgRen
     return "";
 }
 
+string get_extra_style(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context> ctx, SvgRendererSettings const& settings) {
+    if (auto node = dynamic_cast<AbstractNode*>(value.get())) {
+        return get_extra_style(*node, ctx, settings);
+    }
+    return "";
+}
+
 string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
     auto node_ptr = nic.node;
     auto context = nic.context;
