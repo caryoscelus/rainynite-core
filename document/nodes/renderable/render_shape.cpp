@@ -1,5 +1,4 @@
-/*
- *  render_shape.cpp - Shape renderable node
+/*  render_shape.cpp - Shape renderable node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,24 +17,27 @@
 
 #include <core/renderable.h>
 #include <core/node_info.h>
-#include <core/color.h>
+#include <core/shading.h>
 
 #include <geom_helpers/null_shape.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class RenderShape : public RenderableNode {
+    DOC_STRING(
+        "Render any supported vector shape."
+    )
+
 public:
     RenderShape() {
         init_property("shape", {}, make_value<Geom::NullShape>());
-        init<colors::Color>(fill_color, colors::Color());
+        init<Shading>(shading, {});
     }
+
 private:
-    NODE_PROPERTY(fill_color, colors::Color);
+    NODE_PROPERTY(shading, Shading);
 };
 
 REGISTER_NODE(RenderShape);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

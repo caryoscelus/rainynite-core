@@ -1,5 +1,4 @@
-/*
- *  shapes.cpp - SvgRenderer shape renderer
+/*  shapes.cpp - SvgRenderer shape renderer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -28,14 +27,13 @@
 
 using namespace fmt::literals;
 
-namespace rainynite::core {
-namespace renderers {
+namespace rainynite::core::renderers {
 
-const string svg_path = R"(<path d="{path}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}" />)";
+const string svg_path = R"(path d="{path}")";
 
-const string svg_rectangle = R"(<rect x="{x}" y="{y}" width="{width}" height="{height}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
+const string svg_rectangle = R"(rect x="{x}" y="{y}" width="{width}" height="{height}")";
 
-const string svg_circle = R"(<circle cx="{x}" cy="{y}" r="{radius}" style="fill:{{fill_color}};fill-opacity:{{fill_opacity}};stroke:none;{{svg_style}}"/>)";
+const string svg_circle = R"(<circle cx="{x}" cy="{y}" r="{radius}")";
 
 class NullShapeSvgSubRenderer : SVG_SHAPE_RENDERER(NullShapeSvgSubRenderer, Geom::NullShape) {
 public:
@@ -79,5 +77,4 @@ public:
     }
 };
 
-} // namespace renderers
-} // namespace rainynite::core
+} // namespace rainynite::core::renderers
