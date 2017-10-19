@@ -41,7 +41,9 @@ public:
     template <typename T>
     optional<T> get_property_value(string const& name, shared_ptr<Context> context) const {
         try {
-            return get_property_as<T>(name)->get(context);
+            if (auto node = get_property_as<T>(name))
+                return node->value(context);
+            return {};
         } catch (NodeAccessError const&) {
             return {};
         } catch (...) {
