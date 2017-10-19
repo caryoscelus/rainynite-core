@@ -1,5 +1,4 @@
-/*
- *  notify.h - abstract class for things that notify about their changes
+/*  notify.h - abstract class for things that notify about their changes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,26 +15,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NODE__NOTIFY_H__35072B50
-#define __CORE__NODE__NOTIFY_H__35072B50
-
-#include <core/std/memory.h>
+#ifndef CORE_NODE_NOTIFY_H_BFB9C4AC_D9A9_552F_B76B_454E86DB73E8
+#define CORE_NODE_NOTIFY_H_BFB9C4AC_D9A9_552F_B76B_454E86DB73E8
 
 #include <boost/signals2/signal.hpp>
 
+#include <core/std/memory.h>
+#include <core/destroy_detector.h>
+
 namespace rainynite::core {
 
-class AbstractNotify {
+/**
+ * Abstract entity that notifies of its changes.
+ *
+ * TODO: move out of nodes
+ */
+class AbstractNotify : public DestroyDetector {
 public:
     AbstractNotify() :
-        changed_signal(),
-        destroy_detector(make_shared<Null>())
+        DestroyDetector(),
+        changed_signal()
     {}
     AbstractNotify(AbstractNotify const& /*other*/) :
-        changed_signal(),
-        destroy_detector(make_shared<Null>())
+        DestroyDetector(),
+        changed_signal()
     {}
-public:
+    virtual ~AbstractNotify() = default;
+
     /**
      * Function to be called when object has changed.
      */
@@ -48,9 +54,7 @@ public:
      */
     template <typename F>
     boost::signals2::connection subscribe(F f) {
-        auto slot = decltype(changed_signal)::slot_type(f);
-        slot.track_foreign(destroy_detector);
-        return changed_signal.connect(slot);
+        return connect_boost(changed_signal, f);
     }
 
 private:
@@ -58,10 +62,6 @@ private:
      * Signal to subscribe to this object's changes
      */
     boost::signals2::signal<void()> changed_signal;
-
-private:
-    struct Null {};
-    shared_ptr<Null> destroy_detector;
 };
 
 } // namespace rainynite::core

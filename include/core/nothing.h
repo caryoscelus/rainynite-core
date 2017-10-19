@@ -1,5 +1,4 @@
-/*
- *  nothing.h - empty type Nothing
+/*  nothing.h - empty type Nothing
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,13 +15,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NOTHING_H__95CFBBF2
-#define __CORE__NOTHING_H__95CFBBF2
+#ifndef CORE_NOTHING_H_F0DB7250_2560_595F_8810_3886FE7505B4
+#define CORE_NOTHING_H_F0DB7250_2560_595F_8810_3886FE7505B4
 
-namespace rainynite::core {
+namespace rainynite {
 
+/// Empty value
 struct Nothing {};
 
-} // namespace rainynite::core
+} // namespace rainynite
 
 #endif

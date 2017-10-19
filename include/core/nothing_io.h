@@ -1,5 +1,4 @@
-/*
- *  nothing_io.h - Nothing io
+/*  nothing_io.h - Nothing io
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,19 +15,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CORE__NOTHING_IO_H__77A99692
-#define __CORE__NOTHING_IO_H__77A99692
+#ifndef CORE_NOTHING_IO_H_11CC02AE_A8BF_544F_9DB8_2A591229833C
+#define CORE_NOTHING_IO_H_11CC02AE_A8BF_544F_9DB8_2A591229833C
 
 #include <iostream>
 
 #include "nothing.h"
 
-namespace rainynite::core {
+namespace rainynite {
 
 std::ostream& operator<<(std::ostream& s, Nothing) {
     return s << "Nothing";
 }
 
-} // namespace rainynite::core
+} // namespace rainynite
 
 #endif
