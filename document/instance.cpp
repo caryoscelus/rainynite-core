@@ -49,21 +49,21 @@ TYPE_INFO(Point, "Point", [](auto&& s) {
     return parse_point(s);
 });
 
-TYPE_INFO(NullShape, "NullShape", [](auto&&) {
+TYPE_INFO(NullShape, "NullShape", [](auto&& /*s*/) {
     return NullShape {};
 });
 
-TYPE_INFO(Rectangle, "Rectangle", [](auto&& /*rect*/) {
+TYPE_INFO(Rectangle, "Rectangle", [](auto&& s) {
     // TODO
     return Rectangle {};
 });
 
-TYPE_INFO(Circle, "Circle", [](auto&& /*circle*/) {
+TYPE_INFO(Circle, "Circle", [](auto&& s) {
     // TODO
     return Circle {};
 });
 
-TYPE_INFO(Affine, "Affine", [](auto&& /*s*/) {
+TYPE_INFO(Affine, "Affine", [](auto&& s) {
     // TODO
     return Affine::identity();
 });
@@ -86,7 +86,7 @@ TYPE_INFO(Color, "Color", [](auto&& s) {
 
 namespace nodes {
 
-TYPE_INFO(Nothing, "Nothing", [](auto&&) {
+TYPE_INFO(Nothing, "Nothing", [](auto&& /*s*/) {
     return Nothing();
 });
 
@@ -116,15 +116,15 @@ TYPE_INFO(Shading, "Shading", [](auto&& s) {
     return Shading::default_shading();
 });
 
-TYPE_INFO(Renderable, "Renderable", [](auto&&) -> any {
+TYPE_INFO(Renderable, "Renderable", [](auto&& /*s*/) -> any {
     throw serialize::DeserializationError("Renderable type cannot be deserialized");
 });
 
-TYPE_INFO(Audio, "Audio", [](auto&&) -> any {
+TYPE_INFO(Audio, "Audio", [](auto&& /*s*/) -> any {
     throw serialize::DeserializationError("Audio type cannot be deserialized");
 });
 
-TYPE_INFO(DocumentType, "Document", [](auto&&) -> any {
+TYPE_INFO(DocumentType, "Document", [](auto&& /*s*/) -> any {
     throw serialize::DeserializationError("Document type cannot be deserialized");
 });
 
