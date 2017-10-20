@@ -24,7 +24,7 @@
 
 namespace rainynite {
 
-std::ostream& operator<<(std::ostream& s, Nothing) {
+inline std::ostream& operator<<(std::ostream& s, Nothing) {
     return s << "Nothing";
 }
 
