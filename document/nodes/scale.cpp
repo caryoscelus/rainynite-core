@@ -1,5 +1,4 @@
-/*
- *  scale.cpp - Scale transformation render node
+/*  scale.cpp - Scale transformation node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,27 +15,35 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 #include <core/node_info.h>
 
-#include <2geom/point.h>
+#include <2geom/transforms.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
-class Scale : public RenderableNode {
+class Scale : public Node<Geom::Affine> {
+    DOC_STRING(
+        "Scale transformation."
+    )
 public:
     Scale() {
-        init<Renderable>(source, {});
+        init<Geom::Affine>(source, {});
         init<Geom::Point>(scale, {});
     }
 
+    Geom::Affine get(shared_ptr<Context> ctx) const override {
+        return
+            get_source()->value(ctx) *
+            Geom::Scale(get_scale()->value(ctx));
+    }
+
 private:
-    NODE_PROPERTY(source, Renderable);
+    NODE_PROPERTY(source, Geom::Affine);
     NODE_PROPERTY(scale, Geom::Point);
 };
 
 REGISTER_NODE(Scale);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

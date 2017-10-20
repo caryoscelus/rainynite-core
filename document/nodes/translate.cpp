@@ -1,5 +1,4 @@
-/*
- *  rotate.cpp - Rotate transformation render node
+/*  translate.cpp - Translate transformation node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,29 +15,35 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
+#include <core/node/node.h>
+#include <core/node/property.h>
 #include <core/node_info.h>
 
-#include <2geom/point.h>
+#include <2geom/transforms.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
-class Rotate : public RenderableNode {
+class Translate : public Node<Geom::Affine> {
+    DOC_STRING(
+        "Construct Translate transformation."
+    )
 public:
-    Rotate() {
-        init<Renderable>(source, {});
-        init<Geom::Point>(origin, {});
-        init<double>(angle, {});
+    Translate() {
+        init<Geom::Affine>(source, {});
+        init<Geom::Point>(offset, {});
+    }
+
+    Geom::Affine get(shared_ptr<Context> ctx) const override {
+        return
+            get_source()->value(ctx) *
+            Geom::Translate(get_offset()->value(ctx));
     }
 
 private:
-    NODE_PROPERTY(source, Renderable);
-    NODE_PROPERTY(origin, Geom::Point);
-    NODE_PROPERTY(angle, double);
+    NODE_PROPERTY(source, Geom::Affine);
+    NODE_PROPERTY(offset, Geom::Point);
 };
 
-REGISTER_NODE(Rotate);
+REGISTER_NODE(Translate);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

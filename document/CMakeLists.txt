@@ -49,12 +49,12 @@ set(ALL_NODES
     nodes/split_string.cpp
     nodes/random.cpp
     nodes/audio.cpp
+    nodes/translate.cpp
+    nodes/scale.cpp
+    nodes/rotate.cpp
     nodes/renderable/empty.cpp
     nodes/renderable/composite.cpp
     nodes/renderable/image.cpp
-    nodes/renderable/translate.cpp
-    nodes/renderable/scale.cpp
-    nodes/renderable/rotate.cpp
     nodes/renderable/transform.cpp
     nodes/renderable/text.cpp
     nodes/renderable/render_shape.cpp
