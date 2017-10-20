@@ -1,5 +1,4 @@
-/*
- *  transform.cpp - SvgRenderer transform renderer
+/*  transform.cpp - SvgRenderer transform renderer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,20 +15,35 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/std/string.h>
-
 #include <fmt/format.h>
 
+#include <2geom/affine.h>
+
+#include <core/serialize/node_writer.h>
 #include "svg_module.h"
 
 using namespace fmt::literals;
 
-namespace rainynite::core {
-namespace renderers {
+namespace rainynite::core::renderers {
 
 const string svg_translate = R"svg(<g transform="translate({}, {})">{}</g>)svg";
 const string svg_scale = R"svg(<g transform="scale({x}, {y})">{source}</g>)svg";
 const string svg_rotate = R"svg(<g transform="rotate({angle}, {x}, {y})">{source}</g>)svg";
+const string svg_matrix = R"svg(<g transform="{matrix_2x3}">{source}</g>)svg";
+
+class TransformSvgRenderer : SVG_RENDERER_MODULE_CLASS(TransformSvgRenderer) {
+    SVG_RENDERER_MODULE_NAME("Transform");
+public:
+    string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
+        auto source = node.get_property("source");
+        auto matrix = node.get_property_as<Geom::Affine>("transform")->value(ctx);
+        return fmt::format(
+            svg_matrix,
+            "matrix_2x3"_a=serialize::value_to_string(matrix),
+            "source"_a=node_to_svg({source, ctx}, settings)
+        );
+    }
+};
 
 class TranslateSvgRenderer : SVG_RENDERER_MODULE_CLASS(TranslateSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Translate");
@@ -73,5 +87,4 @@ public:
     }
 };
 
-} // namespace renderers
-} // namespace rainynite::core
+} // namespace rainynite::core::renderers
