@@ -30,17 +30,22 @@ class Scale : public Node<Geom::Affine> {
 public:
     Scale() {
         init<Geom::Affine>(source, {});
+        init<Geom::Point>(origin, {});
         init<Geom::Point>(scale, {});
     }
 
     Geom::Affine get(shared_ptr<Context> ctx) const override {
+        auto offset = get_origin()->value(ctx);
         return
             get_source()->value(ctx) *
-            Geom::Scale(get_scale()->value(ctx));
+            Geom::Translate(-offset) *
+            Geom::Scale(get_scale()->value(ctx)) *
+            Geom::Translate(offset);
     }
 
 private:
     NODE_PROPERTY(source, Geom::Affine);
+    NODE_PROPERTY(origin, Geom::Point);
     NODE_PROPERTY(scale, Geom::Point);
 };
 
