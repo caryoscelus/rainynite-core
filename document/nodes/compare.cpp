@@ -64,7 +64,7 @@ private:
     NODE_PROPERTY(b, T);
 };
 
-NODE_INFO_TEMPLATE(Equal, Equal<T>, T);
+NODE_INFO_TEMPLATE(Equal, Equal<T>, bool);
 TYPE_INSTANCES(EqualNodeInfo)
 
 
