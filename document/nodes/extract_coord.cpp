@@ -1,5 +1,4 @@
-/*
- *  extract_coord.cpp - extract x or y coord from Point
+/*  extract_coord.cpp - extract x or y coord from Point
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -22,22 +21,24 @@
 
 #include <2geom/point.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 using Geom::X;
 using Geom::Y;
 
 template<Geom::Dim2 dimension>
 class ExtractCoord : public Node<double> {
+    DOC_STRING(
+        "Extract X or Y coordinate component from Point."
+    )
 public:
     ExtractCoord() {
         init<Geom::Point>(point, {});
     }
-public:
+
     double get(shared_ptr<Context> ctx) const override {
         try {
-            auto p = get_point()->get(ctx);
+            auto p = get_point()->value(ctx);
             return p[dimension];
         } catch (...) {
             return {};
@@ -51,6 +52,4 @@ private:
 REGISTER_NODE_NAMED(ExtractCoord<X>, ExtractCoordXNodeInfo, "ExtractCoord/X");
 REGISTER_NODE_NAMED(ExtractCoord<Y>, ExtractCoordYNodeInfo, "ExtractCoord/Y");
 
-
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
