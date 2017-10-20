@@ -15,6 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <fmt/format.h>
+
 #include <core/node_info.h>
 #include <core/node/list.h>
 #include <core/type_info.h>
@@ -154,6 +156,23 @@ REGISTER_NODE(UntypedListValue);
 namespace serialize {
 
 TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(AutoValueToString)
+
+struct AffineValueToString :
+    public ValueToString,
+    private class_init::Registered<
+        AffineValueToString,
+        Geom::Affine,
+        ValueToString
+    >
+{
+    string operator()(any const& object) const override {
+        using namespace fmt::literals;
+        auto v = any_cast<Geom::Affine>(object);
+        return "matrix({}, {}, {}, {}, {}, {})"_format(
+            v[0], v[1], v[2], v[3], v[4], v[5]
+        );
+    }
+};
 
 } // namespace serialize
 
