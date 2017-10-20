@@ -55,6 +55,7 @@ set(ALL_NODES
     nodes/renderable/translate.cpp
     nodes/renderable/scale.cpp
     nodes/renderable/rotate.cpp
+    nodes/renderable/transform.cpp
     nodes/renderable/text.cpp
     nodes/renderable/render_shape.cpp
 )
