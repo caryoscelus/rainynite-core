@@ -48,8 +48,8 @@ private:
     NODE_PROPERTY(point, Geom::Point);
 };
 
-REGISTER_NODE_NAMED(ExtractCoord<X>, ExtractCoordXNodeInfo, "ExtractCoord#X");
-REGISTER_NODE_NAMED(ExtractCoord<Y>, ExtractCoordYNodeInfo, "ExtractCoord#Y");
+REGISTER_NODE_NAMED(ExtractCoord<X>, ExtractCoordXNodeInfo, "ExtractCoord/X");
+REGISTER_NODE_NAMED(ExtractCoord<Y>, ExtractCoordYNodeInfo, "ExtractCoord/Y");
 
 
 } // namespace nodes

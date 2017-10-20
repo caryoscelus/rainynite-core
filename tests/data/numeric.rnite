@@ -1,11 +1,11 @@
 --- !Document
-_tests: !List#Boolean
+_tests: !List/Boolean
 
   - !FuzzyEqual
-    a: !Value#Real 0.1
-    b: !Value#Real 0.10000000000000001
+    a: !Value/Real 0.1
+    b: !Value/Real 0.10000000000000001
 
   - !FuzzyEqual
     a: !Sin
-      turns: !Value#Real 0.125
-    b: !Value#Real 0.7071067811865475
+      turns: !Value/Real 0.125
+    b: !Value/Real 0.7071067811865475

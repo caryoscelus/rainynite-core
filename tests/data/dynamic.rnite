@@ -1,10 +1,10 @@
 --- !Document
-_tests: !List#Boolean
+_tests: !List/Boolean
 
-  - !Equal#Real
-    a: !DynamicNode#Real
-      node_type: !Value#String Add
+  - !Equal/Real
+    a: !DynamicNode/Real
+      node_type: !Value/String Add
       arguments: !UntypedListValue
-        - !Value#Real 1.0
-        - !Value#Real 3.0
-    b: !Value#Real 4.0
+        - !Value/Real 1.0
+        - !Value/Real 3.0
+    b: !Value/Real 4.0

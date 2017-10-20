@@ -1,36 +1,36 @@
 --- !Document
-_value: &c3ae2365-1d75-4252-8ba0-1782060efbc6 !Interpolate#Real
-  interpolate_with: !Value#String WeightedAverage#Real
-  keyframes: !List#Frame#Real
-    - !Frame#Real
-      value: !Value#Real 0
-      time: !Value#Time 0f@1
-    - !Frame#Real
-      value: !Value#Real 8
-      time: !Value#Time 2f@1
+_value: &c3ae2365-1d75-4252-8ba0-1782060efbc6 !Interpolate/Real
+  interpolate_with: !Value/String WeightedAverage/Real
+  keyframes: !List/Frame/Real
+    - !Frame/Real
+      value: !Value/Real 0
+      time: !Value/Time 0f@1
+    - !Frame/Real
+      value: !Value/Real 8
+      time: !Value/Time 2f@1
   smoothing: !Sin
     turns: !Linear
-      speed: !Value#Real 0.125
+      speed: !Value/Real 0.125
 
-_tests: !List#Boolean
+_tests: !List/Boolean
 
-  - !Equal#Real
-    a: !AtTime#Real
+  - !Equal/Real
+    a: !AtTime/Real
       source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
-      time: !Value#Time 0f@1
-    b: !Value#Real 0
+      time: !Value/Time 0f@1
+    b: !Value/Real 0
 
-  - !Equal#Real
-    a: !AtTime#Real
+  - !Equal/Real
+    a: !AtTime/Real
       source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
-      time: !Value#Time 2f@1
-    b: !Value#Real 8
+      time: !Value/Time 2f@1
+    b: !Value/Real 8
 
   - !FuzzyEqual
-    a: !AtTime#Real
+    a: !AtTime/Real
       source: *c3ae2365-1d75-4252-8ba0-1782060efbc6
-      time: !Value#Time 1f@1
+      time: !Value/Time 1f@1
     b: !Multiply
       a: !Sin
-        turns: !Value#Real 0.125
-      b: !Value#Real 8
+        turns: !Value/Real 0.125
+      b: !Value/Real 8

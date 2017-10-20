@@ -27,7 +27,7 @@ using namespace rainynite;
 using namespace rainynite::core;
 
 TEST_CASE("Test TimeMap node", "[node]") {
-    auto tmap = make_node_with_name<Node<double>>("TimeMap#Real");
+    auto tmap = make_node_with_name<Node<double>>("TimeMap/Real");
     tmap->set_property("source", make_node_with_name<AbstractValue>("Linear"));
     CHECK(tmap->value(zero_context()) == 0.0);
     tmap->get_property("offset")->set_any(Time(1.0));
@@ -46,7 +46,7 @@ TEST_CASE("Test TimeMap node", "[node]") {
 }
 
 TEST_CASE("Test TimeList node", "[node]") {
-    auto time_list = make_node_with_name<Node<vector<double>>>("TimeList#Real");
+    auto time_list = make_node_with_name<Node<vector<double>>>("TimeList/Real");
     time_list->get_property("step")->set_any(Time(1.0));
     time_list->get_property("period")->set_any(TimePeriod(Time(0.0), Time(2.0)));
     time_list->get_property("source")->set_any(0.0);

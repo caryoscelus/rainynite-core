@@ -30,7 +30,7 @@ shared_ptr<Context> zero_context() {
 }
 
 AbstractReference make_time_list_0_1() {
-    auto time_list = make_node_with_name<Node<vector<double>>>("TimeList#Real");
+    auto time_list = make_node_with_name<Node<vector<double>>>("TimeList/Real");
     time_list->get_property("step")->set_any(Time(1.0));
     time_list->get_property("period")->set_any(TimePeriod(Time(0.0), Time(2.0)));
     time_list->set_property("source", make_node_with_name<AbstractValue>("Linear"));
@@ -40,7 +40,7 @@ AbstractReference make_time_list_0_1() {
 }
 
 TEST_CASE("Test ApplyToList node", "[node]") {
-    auto apply = make_node_with_name<Node<vector<double>>>("ApplyToList#Real");
+    auto apply = make_node_with_name<Node<vector<double>>>("ApplyToList/Real");
     auto add = make_node_with_name<Node<double>>("Add");
     add->get_property("a")->set_any(0.5);
     apply->set_property("source", add);
@@ -58,7 +58,7 @@ TEST_CASE("Test ApplyToList node", "[node]") {
     }
     SECTION("More complex") {
         // This isn't really required..
-        auto time_map = make_node_with_name<Node<double>>("TimeMap#Real");
+        auto time_map = make_node_with_name<Node<double>>("TimeMap/Real");
         time_map->get_property("offset")->set_any(Time(1.0));
         time_map->set_property("source", make_node_with_name<AbstractValue>("Linear"));
         REQUIRE(time_map->value(zero_context()) == 1.0);
@@ -74,7 +74,7 @@ TEST_CASE("Test ApplyToList node", "[node]") {
 }
 
 TEST_CASE("Test DynamicListZip node", "[node]") {
-    auto zip = make_node_with_name<Node<vector<double>>>("DynamicListZip#Real");
+    auto zip = make_node_with_name<Node<vector<double>>>("DynamicListZip/Real");
     zip->get_property("node_type")->set_any(string("Add"));
     auto args = zip->get_property("arguments_list");
     auto list_of_lists = dynamic_cast<UntypedListValue*>(args.get());
