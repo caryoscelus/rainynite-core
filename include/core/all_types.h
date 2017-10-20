@@ -30,7 +30,7 @@
 #include <core/time_point.h>
 #include <core/nothing.h>
 
-#define TYPE_INSTANCES_WO_RENDERABLE(Template) \
+#define TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \
     template class Template<Nothing>; \
     template class Template<bool>; \
     template class Template<double>; \
@@ -43,9 +43,12 @@
     template class Template<Geom::Rectangle>; \
     template class Template<Geom::Circle>; \
     template class Template<Geom::Knot>; \
-    template class Template<Geom::Affine>; \
     template class Template<colors::Color>; \
     template class Template<Shading>;
+
+#define TYPE_INSTANCES_WO_RENDERABLE(Template) \
+    TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \
+    template class Template<Geom::Affine>;
 
 #define TYPE_INSTANCES(Template) \
     TYPE_INSTANCES_WO_RENDERABLE(Template) \

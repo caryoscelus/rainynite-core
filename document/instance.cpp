@@ -153,7 +153,7 @@ REGISTER_NODE(UntypedListValue);
 
 namespace serialize {
 
-TYPE_INSTANCES_WO_RENDERABLE(AutoValueToString)
+TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(AutoValueToString)
 
 } // namespace serialize
 
