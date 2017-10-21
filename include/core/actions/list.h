@@ -41,6 +41,30 @@ private:
     shared_ptr<AbstractListLinked> const node;
 };
 
+/**
+ * Push existing node to list.
+ */
+class ListPush : public AtomicAction {
+public:
+    ListPush(shared_ptr<AbstractListLinked> node_, AbstractReference value_) :
+        node(node_),
+        value(value_)
+    {}
+
+    void redo_action() override {
+        node->push_back(value);
+    }
+    void undo_action() override {
+        // TODO: make pop return last link?
+        value = node->get_link(node->link_count());
+        node->pop();
+    }
+
+private:
+    shared_ptr<AbstractListLinked> const node;
+    AbstractReference value;
+};
+
 class ListInsertElement : public AtomicAction {
 public:
     ListInsertElement(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference value_) :
