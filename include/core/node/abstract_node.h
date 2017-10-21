@@ -57,6 +57,12 @@ public:
     string get_name_at(size_t id) {
         return names_list[id];
     }
+
+    /// Get id of property name (throws on error)
+    size_t get_name_id(string const& name) {
+        return named_storage[name];
+    }
+
 public:
     vector<AbstractReference> get_links() const override {
         return numbered_storage;
