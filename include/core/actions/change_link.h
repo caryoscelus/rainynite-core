@@ -46,6 +46,19 @@ private:
     AbstractReference old_value;
 };
 
+/**
+ * Set node's named property.
+ *
+ * This is essentially same as ChangeLink except that it takes AbstractNode
+ * pointer and string as arguments.
+ */
+class SetProperty : public ChangeLink {
+public:
+    SetProperty(shared_ptr<AbstractNode> node, string const& name, AbstractReference new_value) :
+        ChangeLink(node, node->get_name_id(name), new_value)
+    {}
+};
+
 } // namespace rainynite::core::actions
 
 #endif
