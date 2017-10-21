@@ -1,5 +1,4 @@
-/*
- *  composite.cpp - Simple composite render node
+/*  composite.cpp - Simple composite render node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,17 +18,21 @@
 #include <core/renderable.h>
 #include <core/node_info.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class Composite : public RenderableNode {
+    DOC_STRING(
+        "Composite list of renderables on top of each other.\n"
+        "\n"
+        "Note that this node may be deprecated in favor of more flexible"
+        "approach where each \"Layer\" uses its own composite mode."
+    )
+
 public:
     Composite() {
         init_list<Renderable>(layers);
-        get_layers()->new_id();
     }
 
-public:
     bool can_set_source(shared_ptr<AbstractValue> src) const override {
         return src->get_type() == this->get_type();
     }
@@ -43,5 +46,4 @@ private:
 
 REGISTER_NODE(Composite);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
