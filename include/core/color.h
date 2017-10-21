@@ -46,11 +46,11 @@ class RGBA : public AbstractColor {
 public:
     using Lim = std::numeric_limits<T>;
 public:
-    RGBA(T r_, T g_, T b_, T a_ = 0) :
+    RGBA(T r_, T g_, T b_, T a_ = Lim::max()) :
         r(r_), g(g_), b(b_), a(a_)
     {}
     RGBA() :
-        RGBA(0, 0, 0, 0)
+        RGBA(0, 0, 0, Lim::max())
     {}
 public:
     static RGBA<T> from_rgba(double r, double g, double b, double a) {
