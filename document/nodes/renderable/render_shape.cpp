@@ -31,7 +31,10 @@ class RenderShape : public RenderableNode {
 public:
     RenderShape() {
         init_property("shape", {}, make_value<Geom::NullShape>());
+        // this isn't very beautiful, but will be fixed along with
+        // new node api
         init<Shading>(shading, {});
+        set_shading(make_node_with_name<BaseValue<Shading>>("ShadingStyle"));
     }
 
 private:
