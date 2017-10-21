@@ -33,7 +33,7 @@ const string svg_path = R"(path d="{path}")";
 
 const string svg_rectangle = R"(rect x="{x}" y="{y}" width="{width}" height="{height}")";
 
-const string svg_circle = R"(<circle cx="{x}" cy="{y}" r="{radius}")";
+const string svg_circle = R"(circle cx="{x}" cy="{y}" r="{radius}")";
 
 class NullShapeSvgSubRenderer : SVG_SHAPE_RENDERER(NullShapeSvgSubRenderer, Geom::NullShape) {
 public:
