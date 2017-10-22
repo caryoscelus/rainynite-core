@@ -39,7 +39,7 @@ public:
         this->template init<double>(smoothing, {});
         this->template init<T>(default_value, {});
     }
-public:
+
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto frames = get_keyframes()->get(ctx);
         if (frames.empty()) {
@@ -85,6 +85,16 @@ public:
         interpolate->set_property("progress", progress);
         return {interpolate, ctx};
     }
+
+    bool can_set_source(shared_ptr<AbstractValue> src) const override {
+        return src->get_type() == this->get_type();
+    }
+
+    void set_source(shared_ptr<AbstractValue> src) override {
+        if (auto value = dynamic_pointer_cast<BaseValue<T>>(std::move(src)))
+            set_default_value(value);
+    }
+
 private:
     NODE_PROPERTY(interpolate_with, string);
     NODE_LIST_PROPERTY(keyframes, TimePoint<T>);
