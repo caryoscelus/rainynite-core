@@ -49,7 +49,12 @@ private:
 // TODO: use generic registering mechanism
 
 template <typename T>
-using TPList = ListValue<TimePoint<T>>;
+class TPList : public ListValue<TimePoint<T>> {
+public:
+    void push_new() override {
+        this->push_back(make_node<Frame<T>>());
+    }
+};
 
 template <typename T>
 class TimePointListNodeInfo : NODE_INFO_PARENTS(TimePointListNodeInfo<T>, TPList<T>) {
