@@ -36,6 +36,7 @@ using std::const_pointer_cast;
 using std::enable_shared_from_this;
 using std::make_unique;
 using std::make_shared;
+using std::experimental::make_observer;
 
 } // namespace rainynite
 
