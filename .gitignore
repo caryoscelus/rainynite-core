@@ -1,6 +1,5 @@
-build/
+build*/
 *~
 
 # ide files
 *.kdev4
-
