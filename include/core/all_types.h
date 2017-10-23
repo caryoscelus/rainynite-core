@@ -35,16 +35,16 @@
     template class Template<bool>; \
     template class Template<double>; \
     template class Template<string>; \
-    template class Template<Time>; \
-    template class Template<TimePeriod>; \
+    template class Template<core::Time>; \
+    template class Template<core::TimePeriod>; \
     template class Template<Geom::Point>; \
     template class Template<Geom::NullShape>; \
     template class Template<Geom::BezierKnots>; \
     template class Template<Geom::Rectangle>; \
     template class Template<Geom::Circle>; \
     template class Template<Geom::Knot>; \
-    template class Template<colors::Color>; \
-    template class Template<Shading>;
+    template class Template<core::colors::Color>; \
+    template class Template<core::Shading>;
 
 #define TYPE_INSTANCES_WO_RENDERABLE(Template) \
     TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \
@@ -52,7 +52,7 @@
 
 #define TYPE_INSTANCES(Template) \
     TYPE_INSTANCES_WO_RENDERABLE(Template) \
-    template class Template<Renderable>; \
-    template class Template<Audio>;
+    template class Template<core::Renderable>; \
+    template class Template<core::Audio>;
 
 #endif
