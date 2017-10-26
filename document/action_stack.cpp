@@ -26,7 +26,12 @@ bool ActionStack::append(AbstractAction const& action) {
 }
 
 void ActionStack::push(unique_ptr<AbstractAction> action) {
-    action->redo();
+    try {
+        action->redo();
+    } catch (...) {
+        // TODO: report exception
+        return;
+    }
     redo_stack.clear();
     if (!append(*action)) {
         close();
