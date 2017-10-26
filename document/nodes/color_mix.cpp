@@ -1,5 +1,4 @@
-/*
- *  color_mix.cpp - color mixing node
+/*  color_mix.cpp - color mixing node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -21,10 +20,16 @@
 #include <core/node/property.h>
 #include <core/color.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class ColorMix : public Node<colors::Color> {
+    DOC_STRING(
+        "Mix two colors.\n"
+        "\n"
+        "Can be used as average node for Interpolate.\n"
+        "\n"
+        "NOTE: can be deprecated in favor of generic average node."
+    )
 public:
     ColorMix() {
         init<colors::Color>(a, {});
@@ -47,5 +52,4 @@ private:
 
 REGISTER_NODE(ColorMix);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
