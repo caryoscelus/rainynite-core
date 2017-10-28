@@ -97,7 +97,13 @@ public:
     virtual void object_value_end() = 0;
     virtual void list_start() = 0;
     virtual void list_end() = 0;
+
+    /// Write current node type (called after object_start)
     virtual void type(string const& s) = 0;
+
+    /// Infer type from key name or list type or throw if it's impossible
+    virtual void auto_type() = 0;
+
     virtual void value_string(string const& s) = 0;
     virtual void key(string const& s) = 0;
     virtual void number(double x) = 0;

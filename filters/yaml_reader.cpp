@@ -135,12 +135,14 @@ public:
 
 protected:
     void new_object(string const& tag) {
-        if (tag[0] != '!')
-            throw DeserializationError("Got unknown tag {}"_format(tag));
-        auto type = tag.substr(1);
         auto id = anchor.empty() ? random_id() : s_to_id(anchor);
         writer.object_start(id);
-        writer.type(type);
+        if (tag[0] == '!') {
+            auto type = tag.substr(1);
+            writer.type(type);
+        } else {
+            writer.auto_type();
+        }
         anchor.clear();
     }
     void update_map_state() {

@@ -86,6 +86,9 @@ public:
         emitter << YAML::LocalTag(s);
         set_state(State::TypedObject);
     }
+    void auto_type() override {
+        throw SerializationError("Not supported at the moment");
+    }
     void value_string(string const& s) override {
         expect_state(State::AwaitValue);
         emitter << YAML::Value << s;
