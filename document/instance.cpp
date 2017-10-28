@@ -139,7 +139,7 @@ class ValueTypeInfo : public ValueTypeInfoBase, class_init::Registered<ValueType
 public:
     virtual string operator()(any const& object) const {
         auto value = any_cast<AbstractReference>(object);
-        return class_init::type_info<TypeInfo, string>(value->get_type());
+        return get_primitive_type_name(value->get_type());
     }
 };
 

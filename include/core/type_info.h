@@ -52,6 +52,15 @@ inline TypeInfo const& get_primitive_type(string const& name) {
     return get_primitive_type(type);
 }
 
+inline string get_primitive_type_name(std::type_index type) {
+    return class_init::type_info<TypeInfo,string>(type);
+}
+
+template <typename T>
+string get_primitive_type_name() {
+    return get_primitive_type_name(typeid(T));
+}
+
 template <typename T>
 any parse_primitive_type(T type, string const& str) {
     return get_primitive_type(type).parse_string(str);

@@ -80,6 +80,28 @@ public:
         current().object = make_node_with_name<AbstractValue>(s);
         objects.emplace(current().id, current().object);
     }
+    void auto_type() override {
+        if (context.size() < 2) {
+            throw DeserializationError("Not enough context to deduce type.");
+        } else if (auto value = current(1).object) {
+            if (auto list = dynamic_cast<AbstractListLinked*>(value.get())) {
+                size_t id;
+                if (auto node = dynamic_cast<AbstractNode*>(value.get())) {
+                    id = node->get_name_id(current(1).key);
+                } else {
+                    id = list->link_count();
+                }
+                auto link_type = list->get_link_type(id);
+                type("Value/"+get_primitive_type_name(link_type.only()));
+            } else {
+                throw DeserializationError("Cannot deduce type with non-list non-node parent.");
+            }
+        } else {
+            throw DeserializationError("Cannot deduce type without parent node available.");
+        }
+    }
+    void next_type_is_optional(bool /*opt*/) override {
+    }
     void value_string(string const& s) override {
         switch (current().awaiting) {
             case RecordType::Value: {
@@ -129,6 +151,9 @@ private:
     }
     NodeContext& current() {
         return context.back();
+    }
+    NodeContext& current(int x) {
+        return context[context.size()-x-1];
     }
 private:
     vector<NodeContext> context;

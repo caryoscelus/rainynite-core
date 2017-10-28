@@ -38,6 +38,14 @@ struct TypeConstraint {
     bool accept(Type type) const {
         return accepted.empty() || accepted.find(type) != accepted.end();
     }
+    bool is_only() const {
+        return accepted.size() == 1;
+    }
+    Type only() const {
+        if (!is_only())
+            throw std::runtime_error("This TypeConstraint doesn't have single type.");
+        return *accepted.begin();
+    }
     set<Type> accepted;
 };
 

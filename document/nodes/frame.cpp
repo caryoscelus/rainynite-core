@@ -60,7 +60,7 @@ template <typename T>
 class TimePointListNodeInfo : NODE_INFO_PARENTS(TimePointListNodeInfo<T>, TPList<T>) {
 public:
     string name() const override {
-        return "List/Frame/"+class_init::type_info<TypeInfo,string>(typeid(T));
+        return "List/Frame/"+get_primitive_type_name<T>();
     }
     AbstractReference new_empty() const override {
         return make_shared<TPList<T>>();
