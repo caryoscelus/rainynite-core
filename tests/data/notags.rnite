@@ -1,0 +1,11 @@
+--- !Document
+_tests: !List/Boolean
+
+  ## Check real serialization without tags
+  - !Equal/Real
+    a: !Value/Real 0.5
+    b: 0.5
+
+  - !Equal/String
+    a: !Value/String hello
+    b: hello
