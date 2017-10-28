@@ -83,11 +83,17 @@ public:
     }
     void type(string const& s) override {
         expect_state(State::ObjectStart);
-        emitter << YAML::LocalTag(s);
+        if (!(optional_type && s.find("Value/")==0)) {
+            emitter << YAML::LocalTag(s);
+        }
+        optional_type = false;
         set_state(State::TypedObject);
     }
     void auto_type() override {
         throw SerializationError("Not supported at the moment");
+    }
+    void next_type_is_optional(bool opt) override {
+        optional_type = opt;
     }
     void value_string(string const& s) override {
         expect_state(State::AwaitValue);
@@ -128,6 +134,7 @@ public:
 
 private:
     YAML::Emitter emitter;
+    bool optional_type = false;
 };
 
 } // namespace rainynite::core::serialize

@@ -100,6 +100,8 @@ public:
             throw DeserializationError("Cannot deduce type without parent node available.");
         }
     }
+    void next_type_is_optional(bool /*opt*/) override {
+    }
     void value_string(string const& s) override {
         switch (current().awaiting) {
             case RecordType::Value: {

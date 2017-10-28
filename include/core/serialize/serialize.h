@@ -104,6 +104,9 @@ public:
     /// Infer type from key name or list type or throw if it's impossible
     virtual void auto_type() = 0;
 
+    /// Marks whether next supplied type can be ignored
+    virtual void next_type_is_optional(bool opt) = 0;
+
     virtual void value_string(string const& s) = 0;
     virtual void key(string const& s) = 0;
     virtual void number(double x) = 0;

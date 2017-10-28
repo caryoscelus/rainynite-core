@@ -76,8 +76,12 @@ public:
     static void put_list(W& writer, AbstractReference const& object) {
         if (auto node = dynamic_cast<AbstractListLinked*>(object.get())) {
             writer.list_start();
+            size_t i = 0;
             for (auto const& e : node->get_links()) {
+                bool opt = node->get_link_type(i).is_only();
+                writer.next_type_is_optional(opt);
                 writer.object(e);
+                ++i;
             }
             writer.list_end();
         }
@@ -87,7 +91,10 @@ public:
     static void put_map(W& writer, AbstractReference const& object) {
         if (auto node = dynamic_pointer_cast<AbstractNode>(object)) {
             for (auto const& e : node->get_link_map()) {
-                writer.key(e.first);
+                auto name = e.first;
+                writer.key(name);
+                bool opt = node->get_link_type(node->get_name_id(name)).is_only();
+                writer.next_type_is_optional(opt);
                 writer.object(e.second);
             }
         }
