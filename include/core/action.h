@@ -46,6 +46,8 @@ enum class UndoRedo {
  */
 class AbstractAction {
 public:
+    virtual ~AbstractAction() = default;
+
     void redo();
     void undo();
 
