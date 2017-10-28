@@ -137,7 +137,7 @@ protected:
     void new_object(string const& tag) {
         auto id = anchor.empty() ? random_id() : s_to_id(anchor);
         writer.object_start(id);
-        if (tag[0] == '!') {
+        if (tag.size() > 1 && tag[0] == '!') {
             auto type = tag.substr(1);
             writer.type(type);
         } else {

@@ -9,3 +9,7 @@ _tests: !List/Boolean
   - !Equal/String
     a: !Value/String hello
     b: hello
+
+  - !Equal/String
+    a: !Value/String "Quoted string"
+    b: "Quoted string"
