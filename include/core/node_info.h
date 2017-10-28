@@ -123,7 +123,7 @@ template <typename T> \
 class Name##NodeInfo : NODE_INFO_PARENTS(Name##NodeInfo<T>, Node) { \
 public: \
     string name() const override { \
-        return #Name"/"+class_init::type_info<TypeInfo,string>(typeid(T)); \
+        return #Name"/"+get_primitive_type_name<T>(); \
     } \
     AbstractReference new_empty() const override { \
         return make_shared<Node>(); \
