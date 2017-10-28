@@ -52,6 +52,7 @@ public:
     RGBA() :
         RGBA(0, 0, 0, Lim::max())
     {}
+    virtual ~RGBA() {}
 public:
     static RGBA<T> from_rgba(double r, double g, double b, double a) {
         return RGBA<T>(
