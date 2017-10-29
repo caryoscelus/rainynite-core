@@ -17,7 +17,7 @@
 
 #include <catch.hpp>
 
-#include <core/node/link_storage.h>
+#include <core/node/named_link_storage.h>
 #include <core/node/make.h>
 #include "zero_context.h"
 
@@ -76,4 +76,31 @@ TEST_CASE("Link storage: any type", "[node]") {
     CHECK(links->get_link_as<double>(0)->value(zero_context()) == 0);
     links->set_link(0, hello);
     CHECK(links->get_link_as<string>(0)->value(zero_context()) == "hello");
+}
+
+class Named :
+    public NamedLinkStorage<
+        Named,
+        types::Only<double>,
+        types::Any
+    >
+{
+public:
+    static vector<string> const& link_names() {
+        static vector<string> instance { "real", "any" };
+        return instance;
+    }
+};
+
+TEST_CASE("Named link storage", "[node]") {
+    auto links = make_unique<Named>();
+    CHECK_THROWS_AS(links->get_property("invalid"), NodeAccessError);
+    links->set_property("real", make_value<double>(1));
+    CHECK(links->get_link_as<double>(0)->value(zero_context()) == 1);
+    CHECK(links->get_property_as<double>("real")->value(zero_context()) == 1);
+    links->set_property("any", make_value<double>(2));
+    CHECK(links->get_link_as<double>(1)->value(zero_context()) == 2);
+    CHECK(links->get_property_as<double>("any")->value(zero_context()) == 2);
+    links->set_property("any", make_value<string>("hello"));
+    CHECK(links->get_property_as<string>("any")->value(zero_context()) == "hello");
 }
