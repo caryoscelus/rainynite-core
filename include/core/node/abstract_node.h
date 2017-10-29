@@ -26,14 +26,15 @@
 
 namespace rainynite::core {
 
-/**
- * Abstract node: entity with links to AbstractValues
- */
-class AbstractNode : public AbstractListLinked, public DocString {
+class AbstractNode : public AbstractListLinked {
 public:
-    virtual ~AbstractNode();
-public:
-    AbstractReference get_property(string const& name) const;
+    virtual AbstractReference get_property(string const& name) const = 0;
+    virtual void set_property(string const& name, AbstractReference ref) = 0;
+    virtual bool remove_property(string const& name) = 0;
+    virtual string get_name_at(size_t id) const = 0;
+    virtual size_t get_name_id(string const& name) const = 0;
+    virtual map<string, AbstractReference> get_link_map() const = 0;
+
     template <typename T>
     shared_ptr<BaseValue<T>> get_property_as(string const& name) const {
         return dynamic_pointer_cast<BaseValue<T>>(get_property(name));
@@ -50,17 +51,29 @@ public:
             return {};
         }
     }
-    void set_property(string const& name, AbstractReference ref);
-    bool remove_property(string const& name);
+};
+
+/**
+ * Abstract node: entity with links to AbstractValues
+ */
+class BaseOldNode : public AbstractNode, public DocString {
+public:
+    virtual ~BaseOldNode();
+public:
+    AbstractReference get_property(string const& name) const override;
+    void set_property(string const& name, AbstractReference ref) override;
+    bool remove_property(string const& name) override;
+
     size_t init_property(string const& name, TypeConstraint type, AbstractReference value);
-    map<string, AbstractReference> get_link_map() const;
-    string get_name_at(size_t id) {
+    map<string, AbstractReference> get_link_map() const override;
+
+    string get_name_at(size_t id) const override {
         return names_list[id];
     }
 
     /// Get id of property name (throws on error)
-    size_t get_name_id(string const& name) {
-        return named_storage[name];
+    size_t get_name_id(string const& name) const override {
+        return named_storage.at(name);
     }
 
 public:
