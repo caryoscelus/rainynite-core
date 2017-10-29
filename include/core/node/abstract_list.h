@@ -30,6 +30,8 @@ namespace rainynite::core {
  */
 class AbstractListLinked {
 public:
+    virtual ~AbstractListLinked() {}
+
     virtual size_t link_count() const = 0;
     virtual vector<AbstractReference> get_links() const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
