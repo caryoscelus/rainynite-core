@@ -21,6 +21,7 @@
 #include <core/std/array.h>
 #include "abstract_list.h"
 #include "abstract_value.h"
+#include "make.h"
 
 namespace rainynite::core {
 
@@ -55,6 +56,18 @@ public:
         if (!(t.accept(value->get_type())))
             throw NodeAccessError("Node property type mis-match");
         storage[i] = value;
+    }
+
+    template <typename... Is>
+    void init_values(Is&&... values) {
+        static_assert(sizeof...(Is) == sizeof...(Ts));
+        storage = {make_value<Is>(std::forward<Is>(values))...};
+        size_t i = 0;
+        for (auto t : {std::type_index(typeid(Is))...}) {
+            if (!types()[i].accept(t))
+                throw NodeAccessError("Invalid type in init");
+            ++i;
+        }
     }
 
 private:

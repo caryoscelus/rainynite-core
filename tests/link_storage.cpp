@@ -30,10 +30,16 @@ class RealOnly :
         types::Only<double>
     >
 {
+public:
+    RealOnly() {
+        init_values(0.0, 0.0);
+    }
 };
 
 TEST_CASE("Link storage: only", "[node]") {
     auto real = make_unique<RealOnly>();
+    CHECK(real->get_link_as<double>(0)->value(zero_context()) == 0);
+    CHECK(real->get_link_as<double>(1)->value(zero_context()) == 0);
     auto zero = make_value<double>(0);
     auto one = make_value<double>(1);
     real->set_link(0, zero);
