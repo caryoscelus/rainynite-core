@@ -20,6 +20,7 @@
 
 #include <core/std/map.h>
 #include "link_storage.h"
+#include "abstract_node.h"
 
 namespace rainynite::core {
 
@@ -36,10 +37,11 @@ inline map<string, size_t> get_name_map(vector<string> const& names) {
 
 template <class Self, typename... Ts>
 class NamedLinkStorage :
-    public LinkStorage<Ts...>
+    public LinkStorage<Ts...>,
+    public AbstractNodeInterface
 {
 public:
-    static size_t get_name_id(string const& name) {
+    static size_t get_name_id_s(string const& name) {
         auto const& names = name_map();
         auto it = names.find(name);
         if (it != names.end())
@@ -47,17 +49,38 @@ public:
         throw NodeAccessError("Property doesn't exist");
     }
 
-    AbstractReference get_property(string const& name) const {
-        return this->get_link(get_name_id(name));
+    size_t get_name_id(string const& name) const override {
+        return get_name_id_s(name);
     }
 
-    template <typename T>
-    shared_ptr<BaseValue<T>> get_property_as(string const& name) const {
-        return dynamic_pointer_cast<BaseValue<T>>(get_property(name));
+    AbstractReference get_property(string const& name) const override {
+        return this->get_link(get_name_id_s(name));
     }
 
-    void set_property(string const& name, AbstractReference ref) {
-        this->set_link(get_name_id(name), ref);
+    void set_property(string const& name, AbstractReference ref) override {
+        this->set_link(get_name_id_s(name), ref);
+    }
+
+    map<string, AbstractReference> get_link_map() const override {
+        map<string, AbstractReference> result;
+        auto const& names = Self::link_names();
+        std::transform(
+            names.begin(),
+            names.end(),
+            std::inserter(result, result.end()),
+            [this](auto const& name) -> decltype(result)::value_type {
+                return { name, get_property(name) };
+            }
+        );
+        return result;
+    }
+
+    string get_name_at(size_t id) const override {
+        return Self::link_names().at(id);
+    }
+
+protected:
+    void node_changed() override {
     }
 
 private:
@@ -66,6 +89,13 @@ private:
         return instance;
     }
 };
+
+#define NODE_PROPERTIES(...) \
+public: \
+    static vector<string> const& link_names() { \
+        static vector<string> instance { __VA_ARGS__ }; \
+        return instance; \
+    }
 
 } // namespace rainynite::core
 

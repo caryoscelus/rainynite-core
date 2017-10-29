@@ -26,15 +26,27 @@
 
 namespace rainynite::core {
 
-class AbstractNode : public AbstractListLinked {
+class AbstractNodeInterface {
 public:
     virtual AbstractReference get_property(string const& name) const = 0;
     virtual void set_property(string const& name, AbstractReference ref) = 0;
-    virtual bool remove_property(string const& name) = 0;
+    virtual bool remove_property(string const& /*name*/) {
+        return false;
+    }
     virtual string get_name_at(size_t id) const = 0;
     virtual size_t get_name_id(string const& name) const = 0;
     virtual map<string, AbstractReference> get_link_map() const = 0;
 
+protected:
+    /**
+     * This function should be called when node has changed.
+     *
+     * In practice, it exists solely due to class hierarchy and lack of
+     * AbstractValue inheritance in AbstractNode.
+     */
+    virtual void node_changed() = 0;
+
+public:
     template <typename T>
     shared_ptr<BaseValue<T>> get_property_as(string const& name) const {
         return dynamic_pointer_cast<BaseValue<T>>(get_property(name));
@@ -51,6 +63,9 @@ public:
             return {};
         }
     }
+};
+
+class AbstractNode : public AbstractListLinked, public AbstractNodeInterface {
 };
 
 /**
@@ -90,14 +105,6 @@ public:
     size_t link_count() const override {
         return numbered_storage.size();
     }
-protected:
-    /**
-     * This function should be called when node has changed.
-     *
-     * In practice, it exists solely due to class hierarchy and lack of
-     * AbstractValue inheritance in AbstractNode.
-     */
-    virtual void node_changed() = 0;
 private:
     AbstractReference const& get_by_id(size_t index) const {
         return numbered_storage[index];

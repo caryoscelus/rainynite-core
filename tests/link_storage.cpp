@@ -85,11 +85,7 @@ class Named :
         types::Any
     >
 {
-public:
-    static vector<string> const& link_names() {
-        static vector<string> instance { "real", "any" };
-        return instance;
-    }
+    NODE_PROPERTIES("real", "any")
 };
 
 TEST_CASE("Named link storage", "[node]") {
