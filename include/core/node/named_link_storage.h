@@ -38,7 +38,7 @@ inline map<string, size_t> get_name_map(vector<string> const& names) {
 template <class Self, typename... Ts>
 class NamedLinkStorage :
     public LinkStorage<Ts...>,
-    public AbstractNodeInterface
+    public AbstractNode
 {
 public:
     static size_t get_name_id_s(string const& name) {

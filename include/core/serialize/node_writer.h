@@ -93,7 +93,7 @@ public:
             for (auto const& e : node->get_link_map()) {
                 auto name = e.first;
                 writer.key(name);
-                bool opt = node->get_link_type(node->get_name_id(name)).is_only();
+                bool opt = dynamic_cast<AbstractListLinked*>(node.get())->get_link_type(node->get_name_id(name)).is_only();
                 writer.next_type_is_optional(opt);
                 writer.object(e.second);
             }

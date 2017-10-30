@@ -55,7 +55,7 @@ private:
 class SetProperty : public ChangeLink {
 public:
     SetProperty(shared_ptr<AbstractNode> node, string const& name, AbstractReference new_value) :
-        ChangeLink(node, node->get_name_id(name), new_value)
+        ChangeLink(dynamic_pointer_cast<AbstractListLinked>(node), node->get_name_id(name), new_value)
     {}
 };
 

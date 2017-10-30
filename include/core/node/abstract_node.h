@@ -26,7 +26,7 @@
 
 namespace rainynite::core {
 
-class AbstractNodeInterface {
+class AbstractNode {
 public:
     virtual AbstractReference get_property(string const& name) const = 0;
     virtual void set_property(string const& name, AbstractReference ref) = 0;
@@ -65,13 +65,13 @@ public:
     }
 };
 
-class AbstractNode : public AbstractListLinked, public AbstractNodeInterface {
+class AbstractNodeBase : public AbstractListLinked, public AbstractNode {
 };
 
 /**
  * Abstract node: entity with links to AbstractValues
  */
-class BaseOldNode : public AbstractNode, public DocString {
+class BaseOldNode : public AbstractNodeBase, public DocString {
 public:
     virtual ~BaseOldNode();
 public:
