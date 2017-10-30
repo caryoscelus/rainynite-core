@@ -56,7 +56,7 @@ public:
                     throw DeserializationError("Unexpected list element");
             } break;
             case RecordType::Map: {
-                if (auto object = dynamic_cast<AbstractNode*>(current().object.get()))
+                if (auto object = dynamic_cast<AbstractNodeInterface*>(current().object.get()))
                     object->set_property(current().key, last.object);
                 else
                     throw DeserializationError("Unexpected key");
