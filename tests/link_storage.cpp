@@ -84,6 +84,30 @@ TEST_CASE("Link storage: any type", "[node]") {
     CHECK(links->get_link_as<string>(0)->value(zero_context()) == "hello");
 }
 
+#define INIT_PROPERTY_VALUE(name, init_value) \
+public: \
+    static size_t name##_id() { \
+        static size_t id { get_name_id_s(#name) }; \
+        return id; \
+    } \
+    AbstractReference p_##name() { \
+        auto id = name##_id(); \
+        if (auto link = get_link(id)) \
+            return link; \
+        set_link(id, make_value<decltype(init_value)>(init_value)); \
+        return get_link(id); \
+    } \
+    template <typename T> \
+    T name##_value(shared_ptr<Context> ctx) { \
+        auto id = name##_id(); \
+        if (!types()[id].accept(typeid(T))) \
+            throw NodeAccessError("Property cannot contain requested type."); \
+        p_##name(); \
+        if (auto p = get_link_as<T>(id)) \
+            return p->value(ctx); \
+        throw NodeAccessError("Property doesn't contain value of requested type."); \
+    }
+
 class Named :
     public NamedLinkStorage<
         Named,
@@ -92,11 +116,14 @@ class Named :
     >
 {
     NODE_PROPERTIES("real", "any")
+    INIT_PROPERTY_VALUE(real, 0.0)
+    INIT_PROPERTY_VALUE(any, Nothing{})
 };
 
 TEST_CASE("Named link storage", "[node]") {
     auto links = make_unique<Named>();
     CHECK_THROWS_AS(links->get_property("invalid"), NodeAccessError);
+    CHECK(links->real_value<double>(zero_context()) == 0);
     links->set_property("real", make_value<double>(1));
     CHECK(links->get_link_as<double>(0)->value(zero_context()) == 1);
     CHECK(links->get_property_as<double>("real")->value(zero_context()) == 1);
