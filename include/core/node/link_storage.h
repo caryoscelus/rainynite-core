@@ -76,13 +76,14 @@ private:
             throw std::out_of_range("set_link out of range");
     }
 
-private:
+protected:
     using TypeArray = array<TypeConstraint, sizeof...(Ts)>;
     static TypeArray const& types() {
         static TypeArray instance { TypeConstraint(Ts())... };
         return instance;
     }
 
+private:
     array<shared_ptr<AbstractValue>, sizeof...(Ts)> storage;
 };
 
