@@ -39,6 +39,10 @@ class Add :
     )
 
 public:
+    Add() {
+        init_values(0.0, 0.0);
+    }
+
     double get(shared_ptr<Context> ctx) const override {
         return *get_property_value<double>("a", ctx) + *get_property_value<double>("b", ctx);
     }
@@ -46,7 +50,9 @@ public:
 
 TEST_CASE("New node system: simple Add node", "[node]") {
     auto add = make_shared<Add>();
+    CHECK(add->value(zero_context()) == 0);
     add->set_property("a", make_value<double>(1));
+    CHECK(add->value(zero_context()) == 1);
     add->set_property("b", make_value<double>(2));
     CHECK(add->value(zero_context()) == 3);
 }
