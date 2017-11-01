@@ -28,6 +28,7 @@ class NewNode :
     public DocString,
     public BaseValue<Result>
 {
+    using Storage = NamedLinkStorage<Self, Ts...>;
 public:
     bool can_set_source(shared_ptr<AbstractValue> src) const override {
         if (this->link_count() == 0)
@@ -37,10 +38,63 @@ public:
     void set_source(shared_ptr<AbstractValue> src) override {
         this->set_link(0, src);
     }
+    AbstractReference get_property(string const& name) const override {
+        if (is_custom_property(name))
+            return get_custom_property(name);
+        return Storage::get_property(name);
+    }
+    void set_property(string const& name, AbstractReference ref) override {
+        if (is_custom_property(name))
+            set_custom_property(name, ref);
+        else
+            Storage::set_property(name, ref);
+    }
+    bool remove_property(string const& name) override {
+        if (is_custom_property(name))
+            return remove_custom_property(name);
+        else
+            return Storage::remove_property(name);
+    }
+
 protected:
     void node_changed() override {
         this->changed();
     }
+
+    bool is_custom_property(string const& name) const {
+        return !name.empty() && name[0] == '_';
+    }
+
+    AbstractReference get_custom_property(string const& name) const {
+        auto it = cp_names.find(name);
+        if (it != cp_names.end())
+            return cp_storage[it->second];
+        throw NodeAccessError("Custom property '"+name+"' not found");
+    }
+
+    void set_custom_property(string const& name, AbstractReference ref) {
+        auto it = cp_names.find(name);
+        if (it != cp_names.end()) {
+            cp_storage[it->second] = ref;
+        } else {
+            cp_names.emplace(name, cp_storage.size());
+            cp_storage.push_back(ref);
+        }
+    }
+
+    bool remove_custom_property(string const& name) {
+        auto it = cp_names.find(name);
+        if (it != cp_names.end()) {
+            cp_storage.erase(cp_storage.begin()+it->second);
+            cp_names.erase(it);
+            return true;
+        }
+        return false;
+    }
+
+private:
+    vector<AbstractReference> cp_storage;
+    map<string, size_t> cp_names;
 };
 
 } // namespace rainynite::core
