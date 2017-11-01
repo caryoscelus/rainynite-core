@@ -38,7 +38,7 @@ public:
     LinkStorage() {
         size_t i = 0;
         for (auto const& v : Self::default_values()) {
-            storage[i] = shallow_copy(*v);
+            set_link_without_checks(i, shallow_copy(*v));
             ++i;
         }
     }
@@ -71,9 +71,20 @@ public:
         auto const& t = types()[i];
         if (!(t.accept(value->get_type())))
             throw NodeAccessError("Node property type mis-match");
-        storage[i] = value;
+        set_link_without_checks(i, value);
+        links_changed();
     }
 
+private:
+    void set_link_without_checks(size_t i, AbstractReference value) {
+        signal_connections[i].disconnect();
+        storage[i] = value;
+        signal_connections[i] = value->subscribe([this](){
+            links_changed();
+        });
+    }
+
+public:
     template <typename... Is>
     void init_values(Is&&... values) {
         static_assert(sizeof...(Is) == sizeof...(Ts));
@@ -84,6 +95,16 @@ public:
                 throw NodeAccessError("Invalid type in init");
             ++i;
         }
+    }
+
+protected:
+    /**
+     * Called when links are changed.
+     *
+     * Mostly a hack to notify nodes of changes without inheriting it from here.
+     * Used solely to call changed
+     */
+    virtual void links_changed() {
     }
 
 private:
@@ -101,6 +122,7 @@ protected:
 
 private:
     array<shared_ptr<AbstractValue>, sizeof...(Ts)> storage;
+    array<boost::signals2::connection, sizeof...(Ts)> signal_connections;
 };
 
 template <typename... Ts>

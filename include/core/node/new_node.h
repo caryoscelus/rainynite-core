@@ -61,6 +61,11 @@ protected:
         this->changed();
     }
 
+    void links_changed() override {
+        this->changed();
+    }
+
+private:
     bool is_custom_property(string const& name) const {
         return !name.empty() && name[0] == '_';
     }
