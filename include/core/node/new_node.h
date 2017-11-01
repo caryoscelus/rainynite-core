@@ -55,6 +55,38 @@ public:
         else
             return Storage::remove_property(name);
     }
+    size_t link_count() const override {
+        return Storage::link_count()+cp_storage.size();
+    }
+    vector<AbstractReference> get_links() const override {
+        auto result = Storage::get_links();
+        if (!has_custom_properties())
+            return result;
+        result.insert(result.end(), cp_storage.begin(), cp_storage.end());
+        return result;
+    }
+    AbstractReference get_link(size_t i) const override {
+        return apply_for_normal_or_custom<AbstractReference>(
+            i,
+            [this](auto i) {
+                return Storage::get_link(i);
+            },
+            [this](auto i) {
+                return cp_storage[i];
+            }
+        );
+    }
+    TypeConstraint get_link_type(size_t i) const override {
+        return apply_for_normal_or_custom<TypeConstraint>(
+            i,
+            [this](auto i) {
+                return Storage::get_link_type(i);
+            },
+            [](auto /*i*/) {
+                return types::Any();
+            }
+        );
+    }
 
 protected:
     void node_changed() override {
@@ -66,6 +98,17 @@ protected:
     }
 
 private:
+    template <typename T, class F, class G>
+    T apply_for_normal_or_custom(size_t i, F normal, G custom) const {
+        auto cp_id = (ptrdiff_t)i - (ptrdiff_t)Storage::link_count();
+        if (cp_id < 0)
+            return normal(i);
+        size_t id = cp_id;
+        if (id >= cp_storage.size())
+            throw std::out_of_range("Link id out of range");
+        return custom(id);
+    }
+
     bool is_custom_property(string const& name) const {
         return !name.empty() && name[0] == '_';
     }
@@ -100,6 +143,10 @@ private:
             return true;
         }
         return false;
+    }
+
+    bool has_custom_properties() const {
+        return cp_storage.size() != 0;
     }
 
 private:
