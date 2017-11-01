@@ -90,8 +90,13 @@ private:
     bool remove_custom_property(string const& name) {
         auto it = cp_names.find(name);
         if (it != cp_names.end()) {
+            auto id = it->second;
             cp_storage.erase(cp_storage.begin()+it->second);
             cp_names.erase(it);
+            for (auto& e : cp_names) {
+                if (e.second > id)
+                    --e.second;
+            }
             return true;
         }
         return false;
