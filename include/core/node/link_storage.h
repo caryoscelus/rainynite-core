@@ -19,6 +19,9 @@
 #define CORE_NODE_LINK_STORAGE_H_56A4E74C_E276_5ADA_A9E9_06154E870892
 
 #include <core/std/array.h>
+#include <core/class_init.h>
+#include <core/node_info.h>
+#include <core/exceptions.h>
 #include "abstract_list.h"
 #include "abstract_value.h"
 #include "make.h"
@@ -28,10 +31,21 @@ namespace rainynite::core {
 /**
  * Typed storage of value node links.
  */
-template <typename... Ts>
+template <class Self, typename... Ts>
 class LinkStorage : public AbstractListLinked
 {
 public:
+    LinkStorage() {
+        size_t i = 0;
+        for (auto const& v : Self::default_values()) {
+            storage[i] = shallow_copy(*v);
+            ++i;
+        }
+    }
+
+    virtual ~LinkStorage() {
+    }
+
     size_t link_count() const override {
         return sizeof...(Ts);
     }
@@ -42,7 +56,9 @@ public:
 
     AbstractReference get_link(size_t i) const override {
         check_range(i);
-        return storage[i];
+        if (auto link = storage[i])
+            return link;
+        throw NullPointerException("Null link");
     }
 
     TypeConstraint get_link_type(size_t i) const override {
@@ -86,6 +102,22 @@ protected:
 private:
     array<shared_ptr<AbstractValue>, sizeof...(Ts)> storage;
 };
+
+template <typename... Ts>
+vector<AbstractReference> generate_value_vector(Ts&&... values) {
+    return {
+        make_value<Ts>(std::forward<Ts>(values))...
+    };
+}
+
+#define DEFAULT_VALUES(...) \
+public: \
+    static vector<AbstractReference> const& default_values() { \
+        static vector<AbstractReference> instance { \
+            generate_value_vector(__VA_ARGS__) \
+        }; \
+        return instance; \
+    }
 
 } // namespace rainynite::core
 

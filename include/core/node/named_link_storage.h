@@ -37,7 +37,7 @@ inline map<string, size_t> get_name_map(vector<string> const& names) {
 
 template <class Self, typename... Ts>
 class NamedLinkStorage :
-    public LinkStorage<Ts...>,
+    public LinkStorage<Self, Ts...>,
     public AbstractNode
 {
 public:
@@ -95,6 +95,27 @@ public: \
     static vector<string> const& link_names() { \
         static vector<string> instance { __VA_ARGS__ }; \
         return instance; \
+    }
+
+#define PROPERTY(name) \
+public: \
+    static size_t name##_id() { \
+        static size_t id { get_name_id_s(#name) }; \
+        return id; \
+    } \
+    AbstractReference p_##name() const { \
+        auto id = name##_id(); \
+        return get_link(id); \
+    } \
+    template <typename T> \
+    T name##_value(shared_ptr<Context> ctx) const { \
+        auto id = name##_id(); \
+        if (!types()[id].accept(typeid(T))) \
+            throw NodeAccessError("Property cannot contain requested type."); \
+        p_##name(); \
+        if (auto p = get_link_as<T>(id)) \
+            return p->value(ctx); \
+        throw NodeAccessError("Property doesn't contain value of requested type."); \
     }
 
 } // namespace rainynite::core

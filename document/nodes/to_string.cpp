@@ -29,18 +29,16 @@ class ToString :
     >
 {
     NODE_PROPERTIES("source")
+    DEFAULT_VALUES(string{})
+    PROPERTY(source)
 
     DOC_STRING(
         "Convert any type to string..."
     )
 
 public:
-    ToString() {
-        init_values(string(""));
-    }
-
     string get(shared_ptr<Context> ctx) const override {
-        auto v = get_property("source")->get_any(ctx);
+        auto v = p_source()->get_any(ctx);
         return serialize::value_to_string(v);
     }
 };

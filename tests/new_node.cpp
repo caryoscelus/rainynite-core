@@ -33,18 +33,16 @@ class Add :
     >
 {
     NODE_PROPERTIES("a", "b")
+    DEFAULT_VALUES(0.0, 0.0)
+    PROPERTY(a)
+    PROPERTY(b)
 
     DOC_STRING(
         "Simple Add node for testing..."
     )
 
-public:
-    Add() {
-        init_values(0.0, 0.0);
-    }
-
     double get(shared_ptr<Context> ctx) const override {
-        return *get_property_value<double>("a", ctx) + *get_property_value<double>("b", ctx);
+        return a_value<double>(ctx) + b_value<double>(ctx);
     }
 };
 

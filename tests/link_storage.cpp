@@ -26,52 +26,51 @@ using namespace rainynite::core;
 
 class RealOnly :
     public LinkStorage<
+        RealOnly,
         types::Only<double>,
         types::Only<double>
     >
 {
-public:
-    RealOnly() {
-        init_values(0.0, 0.0);
-    }
+    DEFAULT_VALUES(0.0, 1.0)
 };
 
 TEST_CASE("Link storage: only", "[node]") {
     auto real = make_unique<RealOnly>();
     CHECK(real->get_link_as<double>(0)->value(zero_context()) == 0);
-    CHECK(real->get_link_as<double>(1)->value(zero_context()) == 0);
-    auto zero = make_value<double>(0);
-    auto one = make_value<double>(1);
-    real->set_link(0, zero);
-    real->set_link(1, one);
-    CHECK(real->get_link_as<double>(0)->value(zero_context()) == 0);
     CHECK(real->get_link_as<double>(1)->value(zero_context()) == 1);
+    real->set_link(0, make_value<double>(1));
+    real->set_link(1, make_value<double>(2));
+    CHECK(real->get_link_as<double>(0)->value(zero_context()) == 1);
+    CHECK(real->get_link_as<double>(1)->value(zero_context()) == 2);
     CHECK_THROWS_AS((real->set_link(0, make_value<string>())), NodeAccessError);
 }
 
 class RealOrString :
     public LinkStorage<
+        RealOrString,
         types::AnyOf<double, string>
     >
 {
+    DEFAULT_VALUES(0.0)
 };
 
 TEST_CASE("Link storage: any of", "[node]") {
     auto links = make_unique<RealOrString>();
-    auto zero = make_value<double>(0);
-    auto hello = make_value<string>("hello");
-    links->set_link(0, zero);
     CHECK(links->get_link_as<double>(0)->value(zero_context()) == 0);
-    links->set_link(0, hello);
+    links->set_link(0, make_value<double>(1.5));
+    CHECK(links->get_link_as<double>(0)->value(zero_context()) == 1.5);
+    links->set_link(0, make_value<string>("hello"));
     CHECK(links->get_link_as<string>(0)->value(zero_context()) == "hello");
     CHECK_THROWS_AS((links->set_link(0, make_value<int>())), NodeAccessError);
 }
 
 class AnyLink :
     public LinkStorage<
+        AnyLink,
         types::Any
     >
 {
+    DEFAULT_VALUES(0.0)
 };
 
 TEST_CASE("Link storage: any type", "[node]") {
@@ -84,30 +83,6 @@ TEST_CASE("Link storage: any type", "[node]") {
     CHECK(links->get_link_as<string>(0)->value(zero_context()) == "hello");
 }
 
-#define INIT_PROPERTY_VALUE(name, init_value) \
-public: \
-    static size_t name##_id() { \
-        static size_t id { get_name_id_s(#name) }; \
-        return id; \
-    } \
-    AbstractReference p_##name() { \
-        auto id = name##_id(); \
-        if (auto link = get_link(id)) \
-            return link; \
-        set_link(id, make_value<decltype(init_value)>(init_value)); \
-        return get_link(id); \
-    } \
-    template <typename T> \
-    T name##_value(shared_ptr<Context> ctx) { \
-        auto id = name##_id(); \
-        if (!types()[id].accept(typeid(T))) \
-            throw NodeAccessError("Property cannot contain requested type."); \
-        p_##name(); \
-        if (auto p = get_link_as<T>(id)) \
-            return p->value(ctx); \
-        throw NodeAccessError("Property doesn't contain value of requested type."); \
-    }
-
 class Named :
     public NamedLinkStorage<
         Named,
@@ -116,14 +91,16 @@ class Named :
     >
 {
     NODE_PROPERTIES("real", "any")
-    INIT_PROPERTY_VALUE(real, 0.0)
-    INIT_PROPERTY_VALUE(any, Nothing{})
+    DEFAULT_VALUES(0.0, Nothing{})
+    PROPERTY(real)
+    PROPERTY(any)
 };
 
 TEST_CASE("Named link storage", "[node]") {
     auto links = make_unique<Named>();
     CHECK_THROWS_AS(links->get_property("invalid"), NodeAccessError);
     CHECK(links->real_value<double>(zero_context()) == 0);
+    CHECK(links->get_property_value<Nothing>("any", zero_context()));
     links->set_property("real", make_value<double>(1));
     CHECK(links->get_link_as<double>(0)->value(zero_context()) == 1);
     CHECK(links->get_property_as<double>("real")->value(zero_context()) == 1);
