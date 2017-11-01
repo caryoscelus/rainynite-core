@@ -98,22 +98,23 @@ public: \
     }
 
 #define PROPERTY(name) \
-public: \
-    static size_t name##_id() { \
-        static size_t id { get_name_id_s(#name) }; \
+private: \
+    size_t name##_id() const { \
+        static size_t id { this->get_name_id(#name) }; \
         return id; \
     } \
+public: \
     AbstractReference p_##name() const { \
         auto id = name##_id(); \
-        return get_link(id); \
+        return this->get_link(id); \
     } \
-    template <typename T> \
-    T name##_value(shared_ptr<Context> ctx) const { \
+    template <typename PROPERTY_T> \
+    PROPERTY_T name##_value(shared_ptr<Context> ctx) const { \
         auto id = name##_id(); \
-        if (!types()[id].accept(typeid(T))) \
+        if (!this->types()[id].accept(typeid(PROPERTY_T))) \
             throw NodeAccessError("Property cannot contain requested type."); \
         p_##name(); \
-        if (auto p = get_link_as<T>(id)) \
+        if (auto p = this->template get_link_as<PROPERTY_T>(id)) \
             return p->value(ctx); \
         throw NodeAccessError("Property doesn't contain value of requested type."); \
     }
