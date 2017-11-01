@@ -182,27 +182,23 @@ TEST_CASE("Shallow node copy", "[node]") {
     }
     SECTION("Complex") {
         auto one = make_value<Real>(1.0);
-        auto add = make_node_with_name<AbstractNodeBase>("Add");
+        auto add = make_node_with_name<AbstractNode>("Add/Real");
         add->set_property("a", one);
         add->set_property("b", one);
-        auto add_again = shallow_copy_as<AbstractNodeBase>(dynamic_cast<AbstractValue const&>(*add));
+        auto add_again = shallow_copy_as<AbstractNode>(dynamic_cast<AbstractValue const&>(*add));
         add->set_property("a", shallow_copy(*one));
         add->get_property_as<double>("a")->set(2.0);
         CHECK(add->get_property_as<double>("a")->mod() == 2.0);
-        CHECK(add->get_link_as<double>(0)->mod() == 2.0);
         CHECK(add->get_property_as<double>("b")->mod() == 1.0);
-        CHECK(add->get_link_as<double>(1)->mod() == 1.0);
         CHECK(add_again->get_property_as<double>("a")->mod() == 1.0);
-        CHECK(add_again->get_link_as<double>(0)->mod() == 1.0);
         CHECK(add_again->get_property_as<double>("b")->mod() == 1.0);
-        CHECK(add_again->get_link_as<double>(1)->mod() == 1.0);
     }
 }
 
 TEST_CASE("Node children change notify", "[node]") {
-    auto add = make_node_with_name<Node<double>>("Add");
+    auto add = make_node_with_name<AbstractNode>("Add/Real");
     bool changed = false;
-    add->subscribe([&changed](){
+    dynamic_cast<AbstractValue*>(add.get())->subscribe([&changed](){
         changed = true;
     });
     auto one = make_value<double>(1.0);
@@ -230,15 +226,16 @@ TEST_CASE("List node children change notify", "[node]") {
 }
 
 TEST_CASE("Removing custom properties", "[node]") {
-    auto add = make_node_with_name<AbstractNodeBase>("Add");
-    CHECK(add->link_count() == 2);
+    auto add = make_node_with_name<AbstractNode>("Add/Real");
+    auto add_links = dynamic_pointer_cast<AbstractListLinked>(add);
+    CHECK(add_links->link_count() == 2);
     add->set_property("_custom_0", make_value<double>(0.0));
-    CHECK(add->link_count() == 3);
+    CHECK(add_links->link_count() == 3);
     add->set_property("_custom_1", make_value<double>(1.0));
-    CHECK(add->link_count() == 4);
+    CHECK(add_links->link_count() == 4);
     CHECK(add->get_property_as<double>("_custom_0")->value(zero_context()) == 0);
     CHECK(add->get_property_as<double>("_custom_1")->value(zero_context()) == 1);
     add->remove_property("_custom_0");
-    CHECK(add->link_count() == 3);
+    CHECK(add_links->link_count() == 3);
     CHECK(add->get_property_as<double>("_custom_1")->value(zero_context()) == 1);
 }

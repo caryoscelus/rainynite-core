@@ -66,7 +66,7 @@ TEST_CASE("Deserialize", "[serialize,node]") {
     auto uuid_gen = boost::uuids::random_generator();
     serialize::NodeDeserializer<DummyReader> s;
     s.object_start(uuid_gen());
-    s.type("Add");
+    s.type("Add/Real");
     s.key("a");
     s.object_start(uuid_gen());
     s.type("Value/Real");

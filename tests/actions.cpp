@@ -68,11 +68,12 @@ TEST_CASE("Undo/redo value change", "[action,node]") {
 
 TEST_CASE("Change link", "[action,node]") {
     ActionStack action_stack;
-    auto add = make_node_with_name<Node<double>>("Add");
+    auto add = make_node_with_name<BaseValue<double>>("Add/Real");
+    auto add_node = dynamic_pointer_cast<AbstractListLinked>(add);
     REQUIRE(add->value(zero_context()) == 0);
-    action_stack.emplace<actions::ChangeLink>(add, 0, make_value<double>(1));
+    action_stack.emplace<actions::ChangeLink>(add_node, 0, make_value<double>(1));
     CHECK(add->value(zero_context()) == 1);
-    action_stack.emplace<actions::ChangeLink>(add, 1, make_value<double>(2));
+    action_stack.emplace<actions::ChangeLink>(add_node, 1, make_value<double>(2));
     CHECK(add->value(zero_context()) == 3);
     action_stack.undo();
     CHECK(add->value(zero_context()) == 1);
@@ -82,9 +83,9 @@ TEST_CASE("Change link", "[action,node]") {
 
 TEST_CASE("Custom property", "[action,node]") {
     ActionStack action_stack;
-    auto add = make_node_with_name<Node<double>>("Add");
+    auto add = make_node_with_name<AbstractNode>("Add/Real");
     auto other_node = make_value<double>(1);
-    REQUIRE_THROWS_AS(add->get_property("_something"), NodeAccessError);
+    CHECK_THROWS_AS(add->get_property("_something"), NodeAccessError);
     action_stack.emplace<actions::AddCustomProperty>(add, "_something", other_node);
     CHECK(add->get_property("_something") == other_node);
     action_stack.emplace<actions::RemoveCustomProperty>(add, "_something");
