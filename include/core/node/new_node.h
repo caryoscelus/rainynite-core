@@ -38,6 +38,11 @@ public:
     void set_source(shared_ptr<AbstractValue> src) override {
         this->set_link(0, src);
     }
+    size_t get_name_id(string const& name) const override {
+        if (is_custom_property(name))
+            return get_custom_property_id(name);
+        return Storage::get_name_id(name);
+    }
     AbstractReference get_property(string const& name) const override {
         if (is_custom_property(name))
             return get_custom_property(name);
@@ -58,12 +63,32 @@ public:
     size_t link_count() const override {
         return Storage::link_count()+cp_storage.size();
     }
+    map<string, AbstractReference> get_link_map() const override {
+        auto result = Storage::get_link_map();
+        if (!has_custom_properties())
+            return result;
+        for (auto const& e : cp_names) {
+            result.emplace(e.first, cp_storage[e.second]);
+        }
+        return result;
+    }
     vector<AbstractReference> get_links() const override {
         auto result = Storage::get_links();
         if (!has_custom_properties())
             return result;
         result.insert(result.end(), cp_storage.begin(), cp_storage.end());
         return result;
+    }
+    string get_name_at(size_t id) const override {
+        return apply_for_normal_or_custom<string>(
+            id,
+            [this](auto i) {
+                return Storage::get_name_at(i);
+            },
+            [this](auto i) {
+                return cp_name_list[i];
+            }
+        );
     }
     AbstractReference get_link(size_t i) const override {
         return apply_for_normal_or_custom<AbstractReference>(
@@ -113,6 +138,10 @@ private:
         return !name.empty() && name[0] == '_';
     }
 
+    size_t get_custom_property_id(string const& name) const {
+        return Storage::link_count()+cp_names.at(name);
+    }
+
     AbstractReference get_custom_property(string const& name) const {
         auto it = cp_names.find(name);
         if (it != cp_names.end())
@@ -126,6 +155,7 @@ private:
             cp_storage[it->second] = ref;
         } else {
             cp_names.emplace(name, cp_storage.size());
+            cp_name_list.push_back(name);
             cp_storage.push_back(ref);
         }
     }
@@ -134,7 +164,8 @@ private:
         auto it = cp_names.find(name);
         if (it != cp_names.end()) {
             auto id = it->second;
-            cp_storage.erase(cp_storage.begin()+it->second);
+            cp_storage.erase(cp_storage.begin() + id);
+            cp_name_list.erase(cp_name_list.begin() + id);
             cp_names.erase(it);
             for (auto& e : cp_names) {
                 if (e.second > id)
@@ -152,6 +183,7 @@ private:
 private:
     vector<AbstractReference> cp_storage;
     map<string, size_t> cp_names;
+    vector<string> cp_name_list;
 };
 
 } // namespace rainynite::core

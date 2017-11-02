@@ -229,8 +229,12 @@ TEST_CASE("Removing custom properties", "[node]") {
     auto add = make_node_with_name<AbstractNode>("Add/Real");
     auto add_links = dynamic_pointer_cast<AbstractListLinked>(add);
     CHECK(add_links->link_count() == 2);
-    add->set_property("_custom_0", make_value<double>(0.0));
+    auto zero = make_value<double>(0.0);
+    add->set_property("_custom_0", zero);
     CHECK(add_links->link_count() == 3);
+    CHECK(add->get_name_id("_custom_0") == 2);
+    CHECK(add->get_name_at(2) == "_custom_0");
+    CHECK(add->get_link_map()["_custom_0"] == zero);
     add->set_property("_custom_1", make_value<double>(1.0));
     CHECK(add_links->link_count() == 4);
     CHECK(add->get_property_as<double>("_custom_0")->value(zero_context()) == 0);
