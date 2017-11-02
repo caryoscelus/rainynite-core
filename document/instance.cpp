@@ -26,7 +26,7 @@
 #include <core/time/format.h>
 #include <core/renderable.h>
 #include <core/document.h>
-#include <core/color.h>
+#include <core/color/color.h>
 #include <core/nothing_io.h>
 
 #include <geom_helpers/knots_io.h>

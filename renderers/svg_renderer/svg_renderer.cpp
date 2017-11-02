@@ -29,7 +29,7 @@
 
 #include <core/renderers/svg_renderer.h>
 #include <core/document.h>
-#include <core/color.h>
+#include <core/color/color.h>
 #include <core/renderable.h>
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
