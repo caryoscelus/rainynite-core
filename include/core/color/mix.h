@@ -23,14 +23,15 @@
 namespace rainynite::core::colors {
 
 template <typename T>
-RGBA<T> mix(RGBA<T> const& a, RGBA<T> const& b, double amount) {
+RGBA<T> mix(RGBA<T> const& a, RGBA<T> const& b, double amount, ConversionStyle style=ConversionStyle::Default) {
     auto ax = 1.0-amount;
     auto bx = amount;
     return RGBA<T>::from_rgba(
         a.red()*ax+b.red()*bx,
         a.green()*ax+b.green()*bx,
         a.blue()*ax+b.blue()*bx,
-        a.alpha()*ax+b.alpha()*bx
+        a.alpha()*ax+b.alpha()*bx,
+        style
     );
 }
 

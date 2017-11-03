@@ -20,13 +20,21 @@
 
 #include <cstdint>
 #include <limits>
-#include <core/std/string.h>
 
 #include <fmt/format.h>
+
+#include <core/std/string.h>
+#include <core/std/algorithm.h>
 
 using namespace fmt::literals;
 
 namespace rainynite::core::colors {
+
+enum class ConversionStyle {
+    NonStrict,
+    Strict,
+    Default = Strict
+};
 
 /**
  * Abstract color type
@@ -45,6 +53,7 @@ template <typename T>
 class RGBA : public AbstractColor {
 public:
     using Lim = std::numeric_limits<T>;
+
 public:
     RGBA(T r_, T g_, T b_, T a_ = Lim::max()) :
         r(r_), g(g_), b(b_), a(a_)
@@ -54,12 +63,19 @@ public:
     {}
     virtual ~RGBA() {}
 public:
-    static RGBA<T> from_rgba(double r, double g, double b, double a) {
+    static RGBA<T> from_rgba(double r, double g, double b, double a=1.0, ConversionStyle conv=ConversionStyle::Default) {
+        bool strict = conv == ConversionStyle::Strict;
+        auto c = [strict](auto x) {
+            if (strict)
+                return clamp(x, 0.0, 1.0);
+            else
+                return x;
+        };
         return RGBA<T>(
-            r*Lim::max(),
-            g*Lim::max(),
-            b*Lim::max(),
-            a*Lim::max()
+            c(r)*Lim::max(),
+            c(g)*Lim::max(),
+            c(b)*Lim::max(),
+            c(a)*Lim::max()
         );
     }
 public:
