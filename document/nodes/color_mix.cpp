@@ -16,38 +16,48 @@
  */
 
 #include <core/node_info.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/color/mix.h>
 
 namespace rainynite::core::nodes {
 
-class ColorMix : public Node<colors::Color> {
+class ColorMix :
+    public NewNode<
+        ColorMix,
+        colors::Color,
+        types::Only<colors::Color>,
+        types::Only<colors::Color>,
+        types::Only<double>,
+        types::Only<bool>
+    >
+{
     DOC_STRING(
         "Mix two colors.\n"
         "\n"
         "Can be used as average node for Interpolate.\n"
-        "\n"
-        "NOTE: can be deprecated in favor of generic average node."
     )
-public:
-    ColorMix() {
-        init<colors::Color>(a, {});
-        init<colors::Color>(b, {});
-        init<double>(progress, 0);
-    }
+
+    NODE_PROPERTIES("a", "b", "progress", "strict")
+    DEFAULT_VALUES(colors::Color{}, colors::Color{}, 0.0, false);
+
+    PROPERTY(a)
+    PROPERTY(b)
+    PROPERTY(progress)
+    PROPERTY(strict)
+
 public:
     colors::Color get(shared_ptr<Context> ctx) const override {
-        auto a = get_a()->get(ctx);
-        auto b = get_b()->get(ctx);
-        auto t = get_progress()->get(ctx);
-        return colors::mix(a, b, t);
+        using namespace colors;
+        auto a = a_value<Color>(ctx);
+        auto b = b_value<Color>(ctx);
+        auto t = progress_value<double>(ctx);
+        auto style =
+            strict_value<bool>(ctx) ?
+                ConversionStyle::Strict :
+                ConversionStyle::NonStrict;
+        return mix(a, b, t, style);
     }
 
-private:
-    NODE_PROPERTY(a, colors::Color);
-    NODE_PROPERTY(b, colors::Color);
-    NODE_PROPERTY(progress, double);
 };
 
 REGISTER_NODE(ColorMix);
