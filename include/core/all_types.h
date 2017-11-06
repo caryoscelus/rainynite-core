@@ -18,6 +18,7 @@
 #ifndef CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
 #define CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
 
+#include <core/node_info.h>
 #include <core/time/period.h>
 #include <geom_helpers/null_shape.h>
 #include <geom_helpers/rectangle.h>
@@ -54,5 +55,9 @@
     TYPE_INSTANCES_WO_RENDERABLE(Template) \
     template class Template<core::Renderable>; \
     template class Template<core::Audio>;
+
+#define NODE_INFO_INSTANCES(Name, Node, NodeType) \
+    NODE_INFO_TEMPLATE(Name, Node, NodeType); \
+    TYPE_INSTANCES(Name##NodeInfo)
 
 #endif

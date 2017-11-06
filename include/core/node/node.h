@@ -28,7 +28,7 @@ namespace rainynite::core {
  * Basic representation of any time-changeable Node
  */
 template <typename T>
-class Node : public BaseValue<T>, public AbstractNode {
+class Node : public BaseValue<T>, public BaseOldNode {
 public:
     template <typename U>
     void init(string const& name, U value) {

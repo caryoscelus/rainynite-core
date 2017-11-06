@@ -38,6 +38,11 @@ target_link_libraries(test_dynamic_node document time)
 
 add_catch_test(type_constraint)
 
+add_catch_test(link_storage)
+target_link_libraries(test_link_storage document time)
+
+add_catch_test(new_node)
+target_link_libraries(test_new_node document time)
 
 ## New node tests
 add_executable(node_tester node_tester.cpp)
@@ -53,3 +58,4 @@ add_node_test(numeric)
 add_node_test(frames)
 add_node_test(interpolate)
 add_node_test(notags)
+add_node_test(to_string)

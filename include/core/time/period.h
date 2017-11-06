@@ -68,7 +68,7 @@ private:
  *
  * Can be iterated over using for-loop.
  */
-class TimePeriod : boost::operators<TimePeriod> {
+class TimePeriod : boost::equality_comparable<TimePeriod> {
 public:
     TimePeriod() :
         first(0, 1), last(0, 1), fps(1)

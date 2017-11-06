@@ -41,9 +41,9 @@ AbstractReference make_time_list_0_1() {
 
 TEST_CASE("Test ApplyToList node", "[node]") {
     auto apply = make_node_with_name<Node<vector<double>>>("ApplyToList/Real");
-    auto add = make_node_with_name<Node<double>>("Add");
+    auto add = make_node_with_name<AbstractNode>("Add/Real");
     add->get_property("a")->set_any(0.5);
-    apply->set_property("source", add);
+    apply->set_property("source", dynamic_pointer_cast<AbstractValue>(std::move(add)));
     apply->get_property("property_name")->set_any(string("b"));
     auto args = apply->get_property("dynamic_arguments");
     REQUIRE(args != nullptr);
@@ -75,7 +75,7 @@ TEST_CASE("Test ApplyToList node", "[node]") {
 
 TEST_CASE("Test DynamicListZip node", "[node]") {
     auto zip = make_node_with_name<Node<vector<double>>>("DynamicListZip/Real");
-    zip->get_property("node_type")->set_any(string("Add"));
+    zip->get_property("node_type")->set_any(string("Add/Real"));
     auto args = zip->get_property("arguments_list");
     auto list_of_lists = dynamic_cast<UntypedListValue*>(args.get());
     SECTION("Simple") {

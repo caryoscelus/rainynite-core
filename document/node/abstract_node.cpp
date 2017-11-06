@@ -1,5 +1,4 @@
-/*
- *  abstract_node.cpp - abstract Node
+/*  abstract_node.cpp - abstract Node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -21,20 +20,20 @@
 
 namespace rainynite::core {
 
-AbstractNode::~AbstractNode() {
+BaseOldNode::~BaseOldNode() {
     for (auto const& connection : signal_connections) {
         connection.disconnect();
     }
 }
 
-AbstractReference AbstractNode::get_property(string const& name) const {
+AbstractReference BaseOldNode::get_property(string const& name) const {
     auto result = named_storage.find(name);
     if (result == named_storage.end())
         throw NodeAccessError("Unknown property "+name);
     return get_by_id(result->second);
 }
 
-void AbstractNode::set_property(string const& name, AbstractReference ref) {
+void BaseOldNode::set_property(string const& name, AbstractReference ref) {
     if (named_storage.count(name) == 0) {
         if (name[0] == '_') {
             // accept as custom attribute
@@ -45,7 +44,7 @@ void AbstractNode::set_property(string const& name, AbstractReference ref) {
     set_link(named_storage[name], ref);
 }
 
-bool AbstractNode::remove_property(string const& name) {
+bool BaseOldNode::remove_property(string const& name) {
     if (name[0] != '_')
         return false; // can only remove custom props
     auto iter = named_storage.find(name);
@@ -64,7 +63,7 @@ bool AbstractNode::remove_property(string const& name) {
     return true;
 }
 
-size_t AbstractNode::init_property(string const& name, TypeConstraint type, AbstractReference value) {
+size_t BaseOldNode::init_property(string const& name, TypeConstraint type, AbstractReference value) {
     size_t id = link_count();
     numbered_storage.push_back(value);
     names_list.push_back(name);
@@ -79,7 +78,7 @@ size_t AbstractNode::init_property(string const& name, TypeConstraint type, Abst
     return id;
 }
 
-map<string, AbstractReference> AbstractNode::get_link_map() const {
+map<string, AbstractReference> BaseOldNode::get_link_map() const {
     map<string, AbstractReference> result;
     // TODO: use generic conversion function
     for (auto const& e : named_storage) {
@@ -88,7 +87,7 @@ map<string, AbstractReference> AbstractNode::get_link_map() const {
     return result;
 }
 
-void AbstractNode::set_link(size_t i, AbstractReference value) {
+void BaseOldNode::set_link(size_t i, AbstractReference value) {
     if (!get_link_type(i).accept(value->get_type()))
         throw NodeAccessError("Node property type mis-match");
     signal_connections[i].disconnect();

@@ -1,5 +1,4 @@
-/*
- *  to_string.cpp - node converting any value to string
+/*  to_string.cpp - node converting any value to string
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -17,30 +16,33 @@
  */
 
 #include <core/node_info.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/serialize/node_writer.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
-class ToString : public Node<string> {
-public:
-    ToString() {
-        init_property("source", {}, make_value<string>(""));
-    }
+class ToString :
+    public NewNode<
+        ToString,
+        string,
+        types::Any
+    >
+{
+    NODE_PROPERTIES("source")
+    DEFAULT_VALUES(string{})
+    PROPERTY(source)
+
+    DOC_STRING(
+        "Convert any type to string..."
+    )
+
 public:
     string get(shared_ptr<Context> ctx) const override {
-        try {
-            auto v = get_property("source")->get_any(ctx);
-            return serialize::value_to_string(v);
-        } catch (...) {
-            return {};
-        }
+        auto v = p_source()->get_any(ctx);
+        return serialize::value_to_string(v);
     }
 };
 
 REGISTER_NODE(ToString);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

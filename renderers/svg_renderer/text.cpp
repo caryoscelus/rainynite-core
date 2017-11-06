@@ -20,7 +20,7 @@
 
 #include <fmt/format.h>
 
-#include <core/color.h>
+#include <core/color/color.h>
 #include "svg_module.h"
 
 namespace rainynite::core {

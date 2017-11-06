@@ -3,7 +3,7 @@ _tests: !List/Boolean
 
   - !Equal/Real
     a: !DynamicNode/Real
-      node_type: !Value/String Add
+      node_type: !Value/String Add/Real
       arguments: !UntypedListValue
         - !Value/Real 1.0
         - !Value/Real 3.0

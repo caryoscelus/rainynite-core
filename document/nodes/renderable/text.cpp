@@ -18,7 +18,7 @@
 
 #include <core/renderable.h>
 #include <core/node_info.h>
-#include <core/color.h>
+#include <core/color/color.h>
 
 namespace rainynite::core {
 namespace nodes {
