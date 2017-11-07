@@ -31,23 +31,7 @@ public:
         init<string>(source, "");
         init<string>(split, "\n");
     }
-public:
-    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
-        vector<NodeInContext> result;
-        try {
-            auto list = get(ctx);
-            std::transform(
-                std::begin(list),
-                std::end(list),
-                std::back_inserter(result),
-                [ctx](auto&& s) -> NodeInContext {
-                    return { make_value<string>(s), ctx };
-                }
-            );
-        } catch (...) {
-        }
-        return result;
-    }
+
     vector<string> get(shared_ptr<Context> ctx) const override {
         try {
             vector<string> result;
@@ -58,6 +42,21 @@ public:
         } catch (...) {
             return {};
         }
+    }
+
+protected:
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        vector<NodeInContext> result;
+        auto list = get(ctx);
+        std::transform(
+            std::begin(list),
+            std::end(list),
+            std::back_inserter(result),
+            [ctx](auto&& s) -> NodeInContext {
+                return { make_value<string>(s), ctx };
+            }
+        );
+        return result;
     }
 
 private:

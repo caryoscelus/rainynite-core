@@ -84,6 +84,19 @@ public:
      * NodeInContext in order to support dynamic list nodes that change context
      * for their children.
      */
+    vector<NodeInContext> list_links(shared_ptr<Context> ctx) const noexcept {
+        if (!enabled())
+            return {};
+        try {
+            return get_list_links(ctx);
+        } catch (...) {
+            // TODO: report
+            return {};
+        }
+    }
+
+protected:
+    /// list_links virtual implementation.
     virtual vector<NodeInContext> get_list_links(shared_ptr<Context> /*ctx*/) const {
         throw NodeAccessError("This node is not a list");
     }
@@ -134,7 +147,7 @@ public:
         if constexpr (is_vector<T>) {
             using E = typename T::value_type;
             T result;
-            auto links = get_list_links(context);
+            auto links = list_links(context);
             bool error = false;
             std::transform(
                 links.begin(),

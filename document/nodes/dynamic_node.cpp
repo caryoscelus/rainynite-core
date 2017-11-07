@@ -44,7 +44,7 @@ public:
             size_t i = 0;
             auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
             if (auto args = this->get_property("arguments")) {
-                for (auto const& arg : args->get_list_links(ctx)) {
+                for (auto const& arg : args->list_links(ctx)) {
                     // TODO: context
                     node_list->set_link(i, arg.node);
                     ++i;
@@ -109,13 +109,14 @@ public:
             this->template init_property(dynamic_arguments, Type(typeid(Nothing)), std::move(args));
         }
     }
-public:
+
+protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         vector<NodeInContext> result;
         try {
             auto property = get_property_name()->get(ctx);
             auto base_node = get_source();
-            auto dy_args = this->get_property(dynamic_arguments)->get_list_links(ctx);
+            auto dy_args = this->get_property(dynamic_arguments)->list_links(ctx);
             std::transform(
                 std::begin(dy_args),
                 std::end(dy_args),
@@ -154,14 +155,15 @@ public:
         args->new_id();
         this->template init_property(arguments_list, Type(typeid(Nothing)), std::move(args));
     }
-public:
+
+protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         using List = vector<NodeInContext>;
         using Iter = List::const_iterator;
         auto args = this->get_property("arguments_list");
         if (!args)
             throw NodeAccessError("arguments list is null");
-        auto list_of_lists = args->get_list_links(ctx);
+        auto list_of_lists = args->list_links(ctx);
         if (list_of_lists.size() == 0)
             return {};
         vector<List> links;
@@ -173,7 +175,7 @@ public:
             std::back_inserter(links),
             [&fail](auto e) {
                 try {
-                    return e.node->get_list_links(e.context);
+                    return e.node->list_links(e.context);
                 } catch (...) {
                 }
                 fail = true;

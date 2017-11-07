@@ -51,6 +51,8 @@ public:
         );
         return result;
     }
+
+protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> context) const override {
         vector<NodeInContext> result;
         std::transform(
@@ -63,6 +65,8 @@ public:
         );
         return result;
     }
+
+public:
     AbstractReference get_link(size_t i) const override {
         return values.at(i);
     }

@@ -28,13 +28,15 @@ public:
     ToUntypedList() {
         init_property("source", {}, make_value<Nothing>());
     }
-public:
-    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
-        if (auto list = get_property("source"))
-            return list->get_list_links(ctx);
+
+    Nothing get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
-    Nothing get(shared_ptr<Context> /*ctx*/) const override {
+
+protected:
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        if (auto list = get_property("source"))
+            return list->list_links(ctx);
         return {};
     }
 };
@@ -56,9 +58,10 @@ public:
         this->template init_property("source", Type(typeid(Nothing)), std::move(src));
     }
 
+protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         if (auto list = this->get_property("source"))
-            return list->get_list_links(ctx);
+            return list->list_links(ctx);
         return {};
     }
 };
@@ -76,7 +79,7 @@ public:
     }
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto list = this->get_property("source");
-        auto l = list->get_list_links(ctx);
+        auto l = list->list_links(ctx);
         if (l.size() == 0)
             throw NodeAccessError("Requested element of empty list");
         size_t n = clamp(get_n()->get(ctx), 0.0, l.size()-1.0);

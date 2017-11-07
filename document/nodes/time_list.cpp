@@ -37,7 +37,8 @@ public:
         this->template init<TimePeriod>(period, {});
         this->template init<Time>(step, {});
     }
-public:
+
+protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         auto source = get_source();
         auto period = get_period()->get(ctx);

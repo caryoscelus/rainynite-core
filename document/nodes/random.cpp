@@ -48,7 +48,7 @@ public:
         init<double>(seed, 0);
         init<double>(max, 1);
     }
-public:
+protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         vector<NodeInContext> result;
         random_sequence(ctx, [&result, ctx](auto r) {
@@ -56,6 +56,7 @@ public:
         });
         return result;
     }
+public:
     vector<double> get(shared_ptr<Context> ctx) const override {
         vector<double> result;
         random_sequence(ctx, [&result](auto r) {
