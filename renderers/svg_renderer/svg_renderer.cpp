@@ -210,8 +210,8 @@ string get_extra_style(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context>
 }
 
 string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
-    auto node_ptr = nic.node;
-    auto context = nic.context;
+    auto const& node_ptr = nic.node;
+    auto const& context = nic.context;
     if (!node_ptr)
         return "";
     if (node_ptr->get_type() != typeid(Renderable)) {
@@ -219,6 +219,8 @@ string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
         // throw
         return "";
     }
+    if (!node_ptr->enabled())
+        return "";
     auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
     auto name = node_name(*node_ptr);
     try {
