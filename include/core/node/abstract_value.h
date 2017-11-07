@@ -33,7 +33,27 @@ namespace rainynite::core {
 using NodeId = boost::uuids::uuid;
 using NodeIdGenerator = boost::uuids::random_generator;
 
-class AbstractValue : public AbstractNotify, public HasId<NodeId, NodeIdGenerator> {
+class Enabled {
+public:
+    explicit Enabled(bool value=true) :
+        is_enabled(value)
+    {}
+
+    void set_enabled(bool value) {
+        is_enabled = value;
+    }
+    bool enabled() const {
+        return is_enabled;
+    }
+private:
+    bool is_enabled;
+};
+
+class AbstractValue :
+    public AbstractNotify,
+    public HasId<NodeId, NodeIdGenerator>,
+    public Enabled
+{
 public:
     virtual bool is_const() const {
         return false;
@@ -95,6 +115,8 @@ public:
      * recorded in log (TODO; not yet implemented).
      */
     T value(shared_ptr<Context> context) const noexcept {
+        if (!enabled())
+            return default_value(context);
         try {
             return get(context);
         } catch (std::exception const& ex) {
@@ -129,6 +151,12 @@ public:
             throw NodeAccessError("Get not implemented in node");
         }
     }
+
+    /// Value to return when node is disabled
+    virtual T default_value(shared_ptr<Context> /*ctx*/) const noexcept {
+        return {};
+    }
+
     virtual void set(T /*value*/) {
         throw NodeAccessError("Cannot set");
     }
