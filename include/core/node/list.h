@@ -63,11 +63,6 @@ public:
         );
         return result;
     }
-    void step_into_list(shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
-        for (auto&& child : values) {
-            f(NodeInContext(child, context));
-        }
-    }
     AbstractReference get_link(size_t i) const override {
         return values.at(i);
     }

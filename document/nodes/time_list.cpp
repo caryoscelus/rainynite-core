@@ -30,7 +30,7 @@ namespace rainynite::core::nodes {
  * TODO: use List<Time> instead of TimePeriod and Time parameters
  */
 template <typename T>
-class TimeList : public ProxyListNode<T> {
+class TimeList : public Node<vector<T>> {
 public:
     TimeList() {
         this->template init<T>(source, {});
@@ -38,18 +38,17 @@ public:
         this->template init<Time>(step, {});
     }
 public:
-    void step_into_list(shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
-        try {
-            auto source = get_source();
-            auto period = get_period()->get(ctx);
-            auto step = get_step()->get(ctx);
-            for (auto t = period.get_first(); t < period.get_last(); t += step) {
-                auto nctx = make_shared<Context>(*ctx);
-                nctx->set_time(t);
-                f({source, nctx});
-            }
-        } catch (...) {
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        auto source = get_source();
+        auto period = get_period()->get(ctx);
+        auto step = get_step()->get(ctx);
+        vector<NodeInContext> result;
+        for (auto t = period.get_first(); t < period.get_last(); t += step) {
+            auto nctx = make_shared<Context>(*ctx);
+            nctx->set_time(t);
+            result.emplace_back(source, nctx);
         }
+        return result;
     }
 
 private:

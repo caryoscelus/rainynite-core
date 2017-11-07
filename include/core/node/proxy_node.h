@@ -45,26 +45,6 @@ public:
     }
 };
 
-/**
- * Similar to ProxyNode, but for dynamic lists
- */
-template <typename T>
-class ProxyListNode : public Node<vector<T>> {
-public:
-    vector<T> get(shared_ptr<Context> ctx) const override {
-        try {
-            vector<T> result;
-            this->step_into_list(ctx, [&result](NodeInContext nic) {
-                if (auto vnode = dynamic_cast<BaseValue<T>*>(nic.node.get()))
-                    result.push_back(vnode->get(nic.context));
-            });
-            return result;
-        } catch (...) {
-            return {};
-        }
-    }
-};
-
 } // namespace rainynite::core
 
 #endif

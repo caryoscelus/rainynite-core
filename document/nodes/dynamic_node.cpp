@@ -91,7 +91,7 @@ private:
 };
 
 template <typename T>
-class ApplyToList : public ProxyListNode<T> {
+class ApplyToList : public Node<vector<T>> {
     DOC_STRING(
         "Convert list by applying node to each element.\n"
         "\n"
@@ -140,7 +140,7 @@ NODE_INFO_TEMPLATE(ApplyToList, ApplyToList<T>, vector<T>);
 TYPE_INSTANCES(ApplyToListNodeInfo)
 
 template <typename T>
-class DynamicListZip : public ProxyListNode<T> {
+class DynamicListZip : public Node<vector<T>> {
     DOC_STRING(
         "Zip lists of lists into a list of nodes with args.\n"
         "\n"
@@ -155,7 +155,7 @@ public:
         this->template init_property(arguments_list, Type(typeid(Nothing)), std::move(args));
     }
 public:
-    void step_into_list(shared_ptr<Context> ctx, std::function<void(NodeInContext)> f) const override {
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         using List = vector<NodeInContext>;
         using Iter = List::const_iterator;
         auto args = this->get_property("arguments_list");
@@ -163,7 +163,7 @@ public:
             throw NodeAccessError("arguments list is null");
         auto list_of_lists = args->get_list_links(ctx);
         if (list_of_lists.size() == 0)
-            return;
+            return {};
         vector<List> links;
         vector<pair<Iter, Iter>> iterators;
         bool fail = false;
@@ -181,7 +181,7 @@ public:
             }
         );
         if (fail) {
-            return;
+            return {};
             // throw
         }
         std::transform(
@@ -192,21 +192,22 @@ public:
                 return { std::begin(list), std::end(list) };
             }
         );
+        vector<NodeInContext> result;
         auto type = get_node_type()->get(ctx);
         while (true) {
             auto node = make_node_with_name<AbstractValue>(type);
             auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
             if (!list_node)
-                return;
+                return result;
             size_t i = 0;
             for (auto& e : iterators) {
                 if (e.first == e.second)
-                    return;
+                    return result;
                 list_node->set_link(i, make_shared<ReplaceContextNode<T>>(*e.first));
                 ++e.first;
                 ++i;
             }
-            f({node, ctx});
+            result.emplace_back(node, ctx);
         }
     }
 private:

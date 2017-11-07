@@ -31,12 +31,9 @@ public:
     string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
         auto list_node = node.get_property("layers");
         string s;
-        list_node->step_into_list(
-            ctx,
-            [&s, &settings](NodeInContext e) {
-                s += node_to_svg(e, settings);
-            }
-        );
+        for (auto const& e : list_node->get_list_links(ctx)) {
+            s += node_to_svg(e, settings);
+        }
         return s;
     }
 };

@@ -75,20 +75,17 @@ public:
     virtual bool can_set_source(shared_ptr<AbstractValue> /*source*/) const {
         return false;
     }
+
     /**
-     * Call arbitrary function with all dynamic list member nodes in context.
+     * Get list of NodeInContext links if this node is a list.
      *
-     * If this node is not a list, throws NodeAccessError
+     * This method exists to allow nodes performing operations on lists without
+     * necessarily calculating each list element value. It returns list of
+     * NodeInContext in order to support dynamic list nodes that change context
+     * for their children.
      */
-    virtual void step_into_list(shared_ptr<Context> /*context*/, std::function<void(NodeInContext)> /*f*/) const {
+    virtual vector<NodeInContext> get_list_links(shared_ptr<Context> /*ctx*/) const {
         throw NodeAccessError("This node is not a list");
-    }
-    virtual vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const {
-        vector<NodeInContext> result;
-        step_into_list(ctx, [&result](auto e) {
-            result.push_back(std::move(e));
-        });
-        return result;
     }
 };
 
@@ -137,14 +134,21 @@ public:
         if constexpr (is_vector<T>) {
             using E = typename T::value_type;
             T result;
-            step_into_list(
-                context,
-                [&result](NodeInContext nic) {
-                    if (auto value = dynamic_cast<BaseValue<E>*>(nic.node.get())) {
-                        result.push_back(value->get(nic.context));
-                    }
+            auto links = get_list_links(context);
+            bool error = false;
+            std::transform(
+                links.begin(),
+                links.end(),
+                std::back_inserter(result),
+                [&error](NodeInContext e) {
+                    if (auto node = dynamic_pointer_cast<BaseValue<E>>(std::move(e.node)))
+                        return node->value(e.context);
+                    error = true;
+                    return E{};
                 }
             );
+            if (error)
+                throw NodeAccessError("Got wrong element type");
             return result;
         } else {
             (void) context;
@@ -178,14 +182,6 @@ public:
     }
     bool can_set_any(any const& value_) const override {
         return can_set() && value_.type() == typeid(T);
-    }
-    void step_into_list(shared_ptr<Context> context, std::function<void(NodeInContext)> f) const override {
-        if constexpr (is_vector<T>) {
-            for (auto&& e : get_list_links(context))
-                f(e);
-        } else {
-            AbstractValue::step_into_list(context, f);
-        }
     }
 public:
     static Type static_type() {
