@@ -47,7 +47,7 @@ T traverse_once(AbstractReference root, std::function<optional<T>(AbstractRefere
             return *result;
 
         if (traversed.count(node) == 0) {
-            if (auto linked_node = dynamic_pointer_cast<AbstractListLinked>(node)) {
+            if (auto linked_node = list_cast(node)) {
                 auto links = linked_node->get_links();
                 std::copy_if(
                     links.begin(),

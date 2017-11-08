@@ -22,6 +22,7 @@
 #include "type_constraint.h"
 #include "common.h"
 #include "node_in_context.h"
+#include "cast.h"
 
 namespace rainynite::core {
 
@@ -58,7 +59,7 @@ public:
 public:
     template <class T>
     shared_ptr<BaseValue<T>> get_link_as(size_t i) const {
-        return dynamic_pointer_cast<BaseValue<T>>(get_link(i));
+        return base_value_cast<T>(get_link(i));
     }
 };
 

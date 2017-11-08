@@ -27,6 +27,7 @@
 #include "notify.h"
 #include "has_id.h"
 #include "abstract_list.h"
+#include "cast.h"
 
 namespace rainynite::core {
 
@@ -154,7 +155,7 @@ public:
                 links.end(),
                 std::back_inserter(result),
                 [&error](NodeInContext e) {
-                    if (auto node = dynamic_pointer_cast<BaseValue<E>>(std::move(e.node)))
+                    if (auto node = base_value_cast<E>(std::move(e.node)))
                         return node->value(e.context);
                     error = true;
                     return E{};

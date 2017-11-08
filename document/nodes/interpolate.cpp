@@ -17,6 +17,7 @@
 
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
+#include <core/node/cast.h>
 #include <core/all_types.h>
 #include <core/context.h>
 
@@ -91,7 +92,7 @@ public:
     }
 
     void set_source(shared_ptr<AbstractValue> src) override {
-        if (auto value = dynamic_pointer_cast<BaseValue<T>>(std::move(src)))
+        if (auto value = base_value_cast<T>(std::move(src)))
             set_default_value(value);
     }
 
