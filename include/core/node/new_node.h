@@ -38,6 +38,14 @@ public:
     void set_source(shared_ptr<AbstractValue> src) override {
         this->set_link(0, src);
     }
+    Result default_value(shared_ptr<Context> ctx) const noexcept override {
+        if (this->link_count() == 0)
+            return {};
+        if (auto link = this->template get_link_as<Result>(0)) {
+            return link->value(ctx);
+        }
+        return {};
+    }
     size_t get_name_id(string const& name) const override {
         if (is_custom_property(name))
             return get_custom_property_id(name);
