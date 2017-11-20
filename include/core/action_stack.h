@@ -50,6 +50,13 @@ public:
     /// Clear undo&redo stack
     void clear();
 
+    Stack const& get_undo_stack() const {
+        return undo_stack;
+    }
+    Stack const& get_redo_stack() const {
+        return redo_stack;
+    }
+
     boost::signals2::signal<void()> action_closed;
     boost::signals2::signal<void()> undone_or_redone;
 
