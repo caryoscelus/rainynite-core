@@ -68,4 +68,9 @@ void ActionStack::close() {
     }
 }
 
+void ActionStack::clear() {
+    undo_stack.clear();
+    redo_stack.clear();
+}
+
 } // namespace rainynite::core

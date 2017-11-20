@@ -47,6 +47,9 @@ public:
     bool undo();
     bool redo();
 
+    /// Clear undo&redo stack
+    void clear();
+
     boost::signals2::signal<void()> action_closed;
     boost::signals2::signal<void()> undone_or_redone;
 
