@@ -80,11 +80,17 @@ public:
         auto progress = make_value<double>((here_smoothing - left_smoothing)/(right_smoothing - left_smoothing));
 
         // TODO: cache interpolate node
-        auto interpolate = make_node_with_name<Node<T>>(get_interpolate_with()->get(ctx));
+        auto node_name = get_interpolate_with()->get(ctx);
+        auto interpolate = make_node_with_name<AbstractNode>(node_name);
+        auto interpolate_value = abstract_value_cast(interpolate);
+        if (interpolate == nullptr)
+            throw std::invalid_argument("Cannot make node named "+node_name);
+        if (interpolate_value->get_type() != typeid(T))
+            throw std::invalid_argument("Node type mismatch");
         interpolate->set_property("a", left->value);
         interpolate->set_property("b", right->value);
         interpolate->set_property("progress", progress);
-        return {interpolate, ctx};
+        return {interpolate_value, ctx};
     }
 
     bool can_set_source(shared_ptr<AbstractValue> src) const override {
