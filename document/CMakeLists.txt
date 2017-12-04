@@ -14,6 +14,7 @@ target_sources(document
         shading.cpp
         action.cpp
         action_stack.cpp
+        node_tree.cpp
         node/abstract_node.cpp
 )
 
