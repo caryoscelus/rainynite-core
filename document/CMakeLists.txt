@@ -28,6 +28,7 @@ set(ALL_NODES
     nodes/time_period.cpp
     nodes/dynamic_node.cpp
     nodes/morph.cpp
+    nodes/string.cpp
     nodes/format_string.cpp
     nodes/format_number.cpp
     nodes/color.cpp

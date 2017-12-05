@@ -1,0 +1,32 @@
+--- !Document
+_tests: !List/Boolean
+  - !Equal/String
+    a: !SubString
+      source: &645f6759-421e-4881-9137-346c0ea3ca37 "abcdef"
+      first: 0
+      count: 3
+    b: "abc"
+  - !Equal/String
+    a: !SubString
+      source: *645f6759-421e-4881-9137-346c0ea3ca37
+      first: -3
+      count: 3
+    b: "def"
+  - !Equal/String
+    a: !SubString
+      source: *645f6759-421e-4881-9137-346c0ea3ca37
+      first: -1
+      count: 3
+    b: "f"
+  - !Equal/String
+    a: !SubString
+      source: *645f6759-421e-4881-9137-346c0ea3ca37
+      first: -9
+      count: 3
+    b: ""
+  - !Equal/String
+    a: !SubString
+      source: *645f6759-421e-4881-9137-346c0ea3ca37
+      first: 0
+      count: -5
+    b: ""
