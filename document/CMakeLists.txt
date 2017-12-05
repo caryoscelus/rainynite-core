@@ -57,6 +57,7 @@ set(ALL_NODES
     nodes/translate.cpp
     nodes/scale.cpp
     nodes/rotate.cpp
+    nodes/transform_path.cpp
     nodes/renderable/empty.cpp
     nodes/renderable/composite.cpp
     nodes/renderable/image.cpp
