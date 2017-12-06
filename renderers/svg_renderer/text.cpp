@@ -1,5 +1,4 @@
-/*
- *  text.cpp - SvgRenderer text renderer
+/*  text.cpp - SvgRenderer text renderer
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -23,21 +22,24 @@
 #include <core/color/color.h>
 #include "svg_module.h"
 
-namespace rainynite::core {
-namespace renderers {
-
-const string svg_text = R"(<text x="0" y="0" font-size="{}px" fill="{}">{}</text>)";
+namespace rainynite::core::renderers {
 
 class TextSvgRenderer : SVG_RENDERER_MODULE_CLASS(TextSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Text");
 public:
-    string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& /*settings*/) const override {
-        auto text = node.get_property_as<string>("text")->get(ctx);
-        auto size = node.get_property_as<double>("size")->get(ctx);
-        auto color = node.get_property_as<colors::Color>("color")->get(ctx);
-        return fmt::format(svg_text, size, to_hex24(color), text);
+    string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) const override {
+        auto text = node.get_property_as<string>("text")->value(ctx);
+        auto size = node.get_property_as<double>("size")->value(ctx);
+        auto color = node.get_property_as<colors::Color>("color")->value(ctx);
+        auto extra_style = get_extra_style(node, ctx, settings);
+        return fmt::format(
+            R"(<text x="0" y="0" font-size="{size}px" fill="{fill}" style="{svg_style}">{text}</text>)",
+            "size"_a=size,
+            "fill"_a=to_hex24(color),
+            "svg_style"_a=extra_style,
+            "text"_a=text
+        );
     }
 };
 
-} // namespace renderers
-} // namespace rainynite::core
+} // namespace rainynite::core::renderers
