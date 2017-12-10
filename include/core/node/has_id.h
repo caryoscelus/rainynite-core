@@ -1,5 +1,4 @@
-/*
- *  has_id.h - template for entities with Id
+/*  has_id.h - template for entities with Id
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,23 +18,33 @@
 #ifndef CORE_NODE_HAS_ID_H_85A247EB_F007_5E20_80F3_8F1BA2F3FB36
 #define CORE_NODE_HAS_ID_H_85A247EB_F007_5E20_80F3_8F1BA2F3FB36
 
+#include <core/std/string.h>
+
 namespace rainynite::core {
 
 template <typename Id, typename Generator>
 class HasId {
 public:
-    Id get_id() {
+    Id get_id() const {
         return id;
     }
+
     void set_id(Id id_) {
         id = id_;
     }
+
     void new_id() {
         id = Generator()();
     }
+
 private:
     Id id;
 };
+
+template <typename Id, typename G>
+string id_to_string(HasId<Id, G> const& has_id) {
+    return to_string(has_id.get_id());
+}
 
 } // namespace rainynite::core
 
