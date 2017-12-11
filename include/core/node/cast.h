@@ -29,6 +29,8 @@ class BaseValue;
 
 class AbstractListLinked;
 
+class AbstractNode;
+
 template <class From>
 shared_ptr<AbstractValue> abstract_value_cast(From&& pointer) {
     return dynamic_pointer_cast<AbstractValue>(std::forward<From>(pointer));
@@ -42,6 +44,11 @@ shared_ptr<BaseValue<T>> base_value_cast(From&& pointer) {
 template <class From>
 shared_ptr<AbstractListLinked> list_cast(From&& pointer) {
     return dynamic_pointer_cast<AbstractListLinked>(std::forward<From>(pointer));
+}
+
+template <class From>
+shared_ptr<AbstractNode> abstract_node_cast(From&& pointer) {
+    return dynamic_pointer_cast<AbstractNode>(std::forward<From>(pointer));
 }
 
 } // namespace rainynite::core
