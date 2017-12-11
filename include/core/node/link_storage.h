@@ -44,6 +44,9 @@ public:
     }
 
     virtual ~LinkStorage() {
+        for (auto& connection : signal_connections) {
+            connection.disconnect();
+        }
     }
 
     size_t link_count() const override {
