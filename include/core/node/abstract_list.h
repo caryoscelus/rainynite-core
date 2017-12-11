@@ -36,13 +36,17 @@ public:
     virtual size_t link_count() const = 0;
     virtual vector<AbstractReference> get_links() const = 0;
     virtual AbstractReference get_link(size_t i) const = 0;
+
+    /// Returns link type constraint
     virtual TypeConstraint get_link_type(size_t i) const = 0;
+
     virtual void set_link(size_t i, AbstractReference value) = 0;
+
     virtual void push_back(AbstractReference) {
         throw NodeAccessError("cannot push back");
     }
     virtual void push_new() {
-        throw NodeAccessError("cannot push back");
+        throw NodeAccessError("cannot push new");
     }
     virtual void insert(size_t /*i*/, AbstractReference /*value*/) {
         throw NodeAccessError("cannot insert");
@@ -53,9 +57,12 @@ public:
     virtual void pop() {
         throw NodeAccessError("cannot pop");
     }
+
+    /// Returns true if this is "normal list", i.e. its value consists of its links
     virtual bool is_editable_list() const {
         return false;
     }
+
 public:
     template <class T>
     shared_ptr<BaseValue<T>> get_link_as(size_t i) const {
