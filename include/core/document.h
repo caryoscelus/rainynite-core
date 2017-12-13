@@ -32,6 +32,7 @@ namespace rainynite::core {
 
 class Context;
 class ActionStack;
+class NodeTree;
 
 class DocumentType {
 };
@@ -45,16 +46,18 @@ public:
     explicit Document(shared_ptr<BaseValue<Renderable>> root_=nullptr);
     virtual ~Document();
     shared_ptr<Context> get_default_context();
-    inline shared_ptr<ActionStack> get_action_stack() {
+    shared_ptr<ActionStack> get_action_stack() {
         return action_stack;
     }
 
-public:
     DocumentType get(shared_ptr<Context> context) const override;
+
+    shared_ptr<NodeTree> get_tree();
 
 private:
     shared_ptr<Context> default_context;
     shared_ptr<ActionStack> const action_stack;
+    shared_ptr<NodeTree> tree;
 
     NODE_PROPERTY(root, Renderable);
     NODE_PROPERTY(size, Geom::Point);

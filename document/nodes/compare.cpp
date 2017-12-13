@@ -23,6 +23,7 @@
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/all_types.h>
 
 namespace rainynite::core::nodes {
@@ -74,7 +75,7 @@ class FuzzyEqual : public Node<bool> {
     )
 
 private:
-    static constexpr const double DEFAULT_EPS = std::numeric_limits<double>::min()*32;
+    static constexpr const double DEFAULT_EPS = std::numeric_limits<double>::epsilon()*16;
 
 public:
     FuzzyEqual() {
@@ -96,5 +97,35 @@ private:
 };
 
 REGISTER_NODE(FuzzyEqual);
+
+
+class TestLinksAreEqual :
+    public NewNode<
+        TestLinksAreEqual,
+        bool,
+        types::Any,
+        types::Any
+    >
+{
+    DOC_STRING(
+        "Checks whether it's children are same node.\n"
+        "\n"
+        "This is really only useful for testing serialization."
+    )
+
+    NODE_PROPERTIES("a", "b")
+    DEFAULT_VALUES(Nothing{}, Nothing{});
+
+    PROPERTY(a)
+    PROPERTY(b)
+
+public:
+    bool get(shared_ptr<Context> /*ctx*/) const override {
+        return p_a() == p_b();
+    }
+};
+
+REGISTER_NODE(TestLinksAreEqual);
+
 
 } // namespace rainynite::core::nodes

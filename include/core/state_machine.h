@@ -26,7 +26,7 @@ protected:
     State state() const {
         return state_stack.back();
     }
-    State state(unsigned n) {
+    State state(unsigned n) const {
         return state_stack[state_stack.size()-(n+1)];
     }
     void push_state(State s) {
@@ -37,8 +37,16 @@ protected:
             state_mismatch_error(s);
         state_stack.pop_back();
     }
+    void pop_state() {
+        state_stack.pop_back();
+    }
     void set_state(State s) {
         state_stack.back() = s;
+    }
+    void expect_state(State s) const {
+        if (s != state()) {
+            state_mismatch_error(s);
+        }
     }
     virtual void state_mismatch_error(State s) const = 0;
 private:

@@ -14,6 +14,7 @@ target_sources(document
         shading.cpp
         action.cpp
         action_stack.cpp
+        node_tree.cpp
         node/abstract_node.cpp
 )
 
@@ -47,6 +48,7 @@ set(ALL_NODES
     nodes/file_string.cpp
     nodes/average.cpp
     nodes/math.cpp
+    nodes/boolean.cpp
     nodes/rectangle.cpp
     nodes/circle.cpp
     nodes/list.cpp

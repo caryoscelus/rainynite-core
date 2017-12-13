@@ -33,8 +33,6 @@
 
 #define TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \
     template class Template<Nothing>; \
-    template class Template<bool>; \
-    template class Template<double>; \
     template class Template<string>; \
     template class Template<core::Time>; \
     template class Template<core::TimePeriod>; \
@@ -49,6 +47,8 @@
 
 #define TYPE_INSTANCES_WO_RENDERABLE(Template) \
     TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \
+    template class Template<bool>; \
+    template class Template<double>; \
     template class Template<Geom::Affine>;
 
 #define TYPE_INSTANCES(Template) \

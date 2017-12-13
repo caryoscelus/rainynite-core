@@ -155,7 +155,53 @@ REGISTER_NODE(UntypedListValue);
 
 namespace serialize {
 
+template <class T>
+class AutoValueToString :
+    public ValueToString,
+    class_init::Registered<AutoValueToString<T>, T, ValueToString>
+{
+public:
+    string operator()(any const& object) const override {
+        auto value = any_cast<T>(object);
+        std::ostringstream stream;
+        stream << value;
+        return stream.str();
+    }
+};
+
+template <class T, char const* fmt_string>
+class FormatValueToString :
+    public ValueToString,
+    class_init::Registered<FormatValueToString<T, fmt_string>, T, ValueToString>
+{
+public:
+    string operator()(any const& object) const override {
+        auto value = any_cast<T>(object);
+        return fmt::format(fmt_string, value);
+    }
+};
+
 TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(AutoValueToString)
+
+#define FORMAT_VALUE_SERIALIZE(Type, fmt_string) \
+static char const Type##_format_string[] = fmt_string; \
+template class FormatValueToString<Type, Type##_format_string>;
+
+FORMAT_VALUE_SERIALIZE(bool, "{}")
+
+template <typename T>
+struct FloatingValueToString :
+    public ValueToString,
+    class_init::Registered<FloatingValueToString<T>, T, ValueToString>
+{
+    string operator()(any const& object) const override {
+        auto value = any_cast<T>(object);
+        if (value == 0)
+            return "0";
+        return "{0:.{1}g}"_format(value, std::numeric_limits<T>::digits10+(int)round(fabs(log10(fabs(value)))));
+    }
+};
+template struct FloatingValueToString<double>;
 
 struct AffineValueToString :
     public ValueToString,

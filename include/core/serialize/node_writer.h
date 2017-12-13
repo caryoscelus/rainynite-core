@@ -27,38 +27,11 @@
 #include <core/node/abstract_node.h>
 #include "serialize.h"
 
-namespace rainynite::core {
-namespace serialize {
+namespace rainynite::core::serialize {
 
 class ValueToString {
 public:
     virtual string operator()(any const& object) const = 0;
-};
-
-template <class T>
-class AutoValueToString :
-    public ValueToString,
-    class_init::Registered<AutoValueToString<T>, T, ValueToString>
-{
-public:
-    string operator()(any const& object) const override {
-        auto value = any_cast<T>(object);
-        std::ostringstream stream;
-        stream << std::boolalpha << value;
-        return stream.str();
-    }
-};
-
-template <class T>
-class NumericValueToString :
-    public ValueToString,
-    class_init::Registered<AutoValueToString<T>, T, ValueToString>
-{
-public:
-    string operator()(any const& object) const override {
-        auto value = any_cast<T>(object);
-        return std::to_string(value);
-    }
 };
 
 inline string value_to_string(any const& object) {
@@ -114,18 +87,17 @@ public:
         return node_name(*object);
     }
 
-    static serialize::RecordType classify(AbstractReference object) {
+    static RecordType classify(AbstractReference object) {
         if (object->is_const())
-            return serialize::RecordType::Value;
+            return RecordType::Value;
         if (dynamic_cast<AbstractNode*>(object.get()))
-            return serialize::RecordType::Map;
+            return RecordType::Map;
         if (dynamic_cast<AbstractListLinked*>(object.get()))
-            return serialize::RecordType::List;
+            return RecordType::List;
         throw SerializationError("Cannot classify object");
     }
 };
 
-} // namespace serialize
-} // namespace rainynite::core
+} // namespace rainynite::core::serialize
 
 #endif

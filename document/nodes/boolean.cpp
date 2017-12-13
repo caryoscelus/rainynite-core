@@ -1,4 +1,4 @@
-/*  new_node.cpp - test new node system
+/*  boolean.cpp - bool operation nodes
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,20 +15,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <catch.hpp>
+#include <core/node_info.h>
+#include <core/node/new_node.h>
 
-#include <core/node/make.h>
-#include "zero_context.h"
-#include "new_node.h"
+namespace rainynite::core::nodes {
 
-using namespace rainynite;
-using namespace rainynite::core;
+class Not :
+    public NewNode<
+        Not,
+        bool,
+        types::Only<bool>
+    >
+{
+    DOC_STRING(
+        "Negate boolean"
+    )
 
-TEST_CASE("New node system: simple Add node", "[node]") {
-    auto add = make_shared<Add>();
-    CHECK(add->value(zero_context()) == 0);
-    add->set_property("a", make_value<double>(1));
-    CHECK(add->value(zero_context()) == 1);
-    add->set_property("b", make_value<double>(2));
-    CHECK(add->value(zero_context()) == 3);
-}
+    NODE_PROPERTIES("source")
+    DEFAULT_VALUES(true);
+
+    PROPERTY(source)
+
+public:
+    bool get(shared_ptr<Context> ctx) const override {
+        return !source_value<bool>(ctx);
+    }
+};
+
+REGISTER_NODE(Not);
+
+} // namespace rainynite::core::nodes

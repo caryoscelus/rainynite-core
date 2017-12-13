@@ -23,6 +23,7 @@
 
 #include <core/std/string.h>
 #include <core/filters/yaml_reader.h>
+#include <core/filters/yaml_writer.h>
 #include <core/document.h>
 #include <core/node_info.h>
 #include "zero_context.h"
@@ -31,13 +32,7 @@ using namespace fmt::literals;
 
 namespace rainynite::core {
 
-bool load_and_test_file(string const& fname) {
-    std::ifstream in(fname);
-    using filters::YamlReader;
-    auto document = YamlReader().read_document(in);
-    if (document == nullptr)
-        throw std::runtime_error("Unknown parse failure");
-    in.close();
+bool load_and_test_stream(shared_ptr<Document> document) {
     bool failed = false;
     if (auto test_list = document->get_property("_tests")) {
         int i = 0;
@@ -52,12 +47,52 @@ bool load_and_test_file(string const& fname) {
                     );
                 }
             } else {
+                std::cerr << "Test #{} failed:\n  test node is not bool";
                 failed = true;
             }
             ++i;
         }
     }
     return !failed;
+}
+
+bool load_and_test_file(string const& fname) {
+    std::stringstream content;
+    {
+        std::ifstream in(fname);
+        content << in.rdbuf();
+    }
+
+    auto document = filters::YamlReader().read_document(content);
+    if (document == nullptr)
+        throw std::runtime_error("Unknown parse failure");
+
+    if (!load_and_test_stream(document))
+        return false;
+
+    std::cerr << "All tests ok, ";
+
+    std::stringstream saved_content;
+    filters::YamlWriter().write_document(saved_content, document);
+
+    if (content.str() == saved_content.str()) {
+        std::cerr << "saved content identical to source.\n";
+        return true;
+    }
+
+    std::cerr << "but saved content differs from source\n";
+    std::cerr << saved_content.str() << "\n\n";
+
+    if (document->get_property_value<bool>("_test_save_verbatim", zero_context()).value_or(false)) {
+        std::cerr << "This file is supposed to be saved verbatim => test failure.";
+        return false;
+    }
+
+    std::cerr << "Will try to check if saved version is semantically identical...\n";
+
+    auto saved_document = filters::YamlReader().read_document(saved_content);
+
+    return load_and_test_stream(saved_document);
 }
 
 } // namespace rainynite::core
