@@ -10,10 +10,13 @@ endfunction()
 add_catch_test(time)
 target_link_libraries(test_time time)
 
+add_catch_test(class_init)
+
 add_catch_test(node)
 target_link_libraries(test_node nodes time)
 
-add_catch_test(class_init)
+add_catch_test(node_tree)
+target_link_libraries(test_node_tree document time)
 
 add_catch_test(serialize)
 target_link_libraries(test_serialize nodes time)
