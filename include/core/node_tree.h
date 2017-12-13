@@ -34,7 +34,7 @@ struct NodeTreeIndex {
         Indexed
     };
 
-    NodeTreeIndex(State state_, observer_ptr<NodeTreeIndex> parent_=nullptr, size_t index_=0) :
+    NodeTreeIndex(State state_, observer_ptr<NodeTreeIndex const> parent_=nullptr, size_t index_=0) :
         state(state_),
         parent(parent_),
         index(index_)
@@ -49,7 +49,7 @@ struct NodeTreeIndex {
     }
 
     State state;
-    observer_ptr<NodeTreeIndex> parent;
+    observer_ptr<NodeTreeIndex const> parent;
     size_t index;
 };
 
@@ -64,17 +64,17 @@ struct NodeTreePath {
 
 class NodeTree {
 public:
-    using Index = observer_ptr<NodeTreeIndex>;
-    using IndexMap = map<size_t,unique_ptr<NodeTreeIndex>>;
+    using Index = observer_ptr<NodeTreeIndex const>;
+    using IndexMap = map<size_t,NodeTreeIndex>;
 
     explicit NodeTree(shared_ptr<AbstractValue> root_, shared_ptr<ActionStack> action_stack_);
     virtual ~NodeTree();
 
     Index get_root_index() const {
-        return make_observer(root_index.get());
+        return make_observer(&root_index);
     }
     Index get_null_index() const {
-        return make_observer(null_index.get());
+        return make_observer(&null_index);
     }
 
     Index index(Index parent, size_t i) const;
@@ -101,8 +101,8 @@ private:
 private:
     shared_ptr<AbstractValue> const root;
     shared_ptr<ActionStack> action_stack;
-    unique_ptr<NodeTreeIndex> null_index;
-    unique_ptr<NodeTreeIndex> root_index;
+    NodeTreeIndex null_index;
+    NodeTreeIndex root_index;
     mutable IndexMap root_indexes;
     mutable map<Index,IndexMap> indexes;
 };

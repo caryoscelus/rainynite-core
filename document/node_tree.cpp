@@ -27,8 +27,8 @@ namespace rainynite::core {
 NodeTree::NodeTree(shared_ptr<AbstractValue> root_, shared_ptr<ActionStack> action_stack_) :
     root(root_),
     action_stack(action_stack_),
-    null_index(make_unique<NodeTreeIndex>(NodeTreeIndex::Null)),
-    root_index(make_unique<NodeTreeIndex>(NodeTreeIndex::Root))
+    null_index(NodeTreeIndex::Null),
+    root_index(NodeTreeIndex::Root)
 {
     if (root == nullptr)
         throw NullPointerException("Root of node tree cannot be null");
@@ -54,16 +54,16 @@ NodeTree::Index NodeTree::index(Index parent, size_t i) const {
 NodeTree::Index NodeTree::get_index(IndexMap& indexes, Index parent, size_t i) const {
     auto iter = indexes.find(i);
     if (iter != indexes.end())
-        return make_observer(iter->second.get());
+        return make_observer(&iter->second);
     indexes.emplace(
         i,
-        make_unique<NodeTreeIndex>(
+        NodeTreeIndex{
             NodeTreeIndex::Indexed,
             parent,
             i
-        )
+        }
     );
-    return make_observer(indexes.at(i).get());
+    return make_observer(&indexes.at(i));
 }
 
 size_t NodeTree::children_count(Index parent) const {
