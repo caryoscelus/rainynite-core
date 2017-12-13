@@ -1,0 +1,5 @@
+--- !Document
+_tests: !List/Boolean
+  - !TestLinksAreEqual
+    a: &0663ceeb-2574-4587-9934-b2bee26c15a1 !Value/Nothing
+    b: *0663ceeb-2574-4587-9934-b2bee26c15a1

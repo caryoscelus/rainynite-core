@@ -55,6 +55,7 @@ function(add_node_test name)
 endfunction()
 
 add_node_test(sanity)
+add_node_test(serialize)
 add_node_test(boolean)
 add_node_test(dynamic)
 add_node_test(numeric)
