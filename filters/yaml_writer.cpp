@@ -61,11 +61,13 @@ public:
         }
 
         auto const& node = current().node;
-        if (current().count > 0) {
-            write_link(node);
-            return false;
+        if (tree.get_node_count().at(node) > 1) {
+            if (current().count > 0) {
+                write_link(node);
+                return false;
+            }
+            write_anchor(node);
         }
-        write_anchor(node);
 
         auto type_s = node_name(*node);
         if (!(current().type.is_only() && type_s.find("Value/")==0)) {
