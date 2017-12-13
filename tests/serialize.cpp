@@ -22,17 +22,12 @@
 #include <core/type_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
-#include <core/serialize/node_writer.h>
 #include <core/serialize/node_reader.h>
 
 using namespace rainynite;
 using namespace rainynite::core;
 
 namespace rainynite::core {
-
-namespace serialize {
-template class AutoValueToString<double>;
-}
 
 class Add : public Node<double> {
 public:
