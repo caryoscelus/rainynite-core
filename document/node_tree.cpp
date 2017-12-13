@@ -19,7 +19,8 @@
 #include <core/node/abstract_list.h>
 #include <core/node/abstract_value.h>
 #include <core/exceptions.h>
-#include <core/node_tree.h>
+#include <core/document.h>
+#include <core/node_tree_traverse.h>
 
 namespace rainynite::core {
 
@@ -93,6 +94,52 @@ shared_ptr<AbstractValue> NodeTree::get_node(Index index) const {
         indexes.pop_back();
     }
     return node;
+}
+
+
+void TreeTraverser::traverse_tree(shared_ptr<NodeTree> tree) {
+    path = NodeTreePath{};
+    status_stack.clear();
+
+    status_stack.emplace_back();
+    current().index = tree->get_root_index();
+    current().node = tree->root_node();
+    current().type = types::Any();
+
+    traverse_children = true;
+    object_start();
+
+    do {
+        size_t i;
+        if (traverse_children) {
+            path.indexes.emplace_back(0);
+            status_stack.emplace_back();
+            i = 0;
+        } else {
+            i = ++path.indexes.back();
+        }
+
+        assert(status_stack.size() > 1);
+
+        auto parent_list = list_cast(parent().node);
+        if (parent_list == nullptr || i >= parent_list->link_count()) {
+            path.indexes.pop_back();
+            status_stack.pop_back();
+            object_end();
+            traverse_children = false;
+        } else {
+            if (auto parent_node = abstract_node_cast(parent_list)) {
+                current().key = parent_node->get_name_at(i);
+            } else {
+                current().key.clear();
+            }
+            current().index = tree->index(parent().index, i);
+            current().node = parent_list->get_link(i);
+            current().type = parent_list->get_link_type(i);
+
+            traverse_children = object_start();
+        }
+    } while (!path.indexes.empty());
 }
 
 } // namespace rainynite::core
