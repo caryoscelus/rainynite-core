@@ -42,16 +42,17 @@ class YamlCppWriter :
 {
     using State = YamlCppWriterState;
 public:
-    YamlCppWriter(std::ostream& stream) :
+    YamlCppWriter(std::ostream& stream, shared_ptr<Document> document) :
+        TreeTraverser(*document->get_tree()),
         emitter(stream)
     {
     }
 
-    void serialize(shared_ptr<Document> document) {
+    void serialize() {
+        tree.rebuild_count();
         push_state(State::DocumentStart);
         emitter << YAML::BeginDoc;
-        tree = document->get_tree();
-        traverse_tree(tree);
+        traverse_tree(TreeTraverser::UseCount);
     }
 
     bool object_start() override {
@@ -126,13 +127,12 @@ private:
 
 private:
     YAML::Emitter emitter;
-    shared_ptr<NodeTree> tree;
 };
 
 
 void YamlWriter::write_document(std::ostream& output, shared_ptr<Document> document) {
-    auto writer = YamlCppWriter(output);
-    writer.serialize(document);
+    auto writer = YamlCppWriter(output, document);
+    writer.serialize();
     writer.flush();
 }
 

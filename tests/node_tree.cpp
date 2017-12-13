@@ -24,6 +24,10 @@ using namespace rainynite;
 using namespace rainynite::core;
 
 struct CountTraverser : public TreeTraverser {
+    CountTraverser(NodeTree& tree) :
+        TreeTraverser(tree)
+    {}
+
     bool object_start() override {
         add_count(started, current().node);
         return true;
@@ -50,11 +54,11 @@ struct CountTraverser : public TreeTraverser {
 TEST_CASE("Traverse node tree", "[node]") {
     auto root = make_shared<Add>();
 
-    auto tree = make_shared<NodeTree>(root, nullptr);
+    auto tree = NodeTree(root, nullptr);
 
     SECTION("Empty") {
-        CountTraverser traverser;
-        traverser.traverse_tree(tree);
+        CountTraverser traverser(tree);
+        traverser.traverse_tree();
 
         CHECK(traverser.started.size() == 3);
         CHECK(traverser.ended.size() == 3);
@@ -67,8 +71,8 @@ TEST_CASE("Traverse node tree", "[node]") {
     SECTION("Same link") {
         root->set_link(1, root->get_link(0));
 
-        CountTraverser traverser;
-        traverser.traverse_tree(tree);
+        CountTraverser traverser(tree);
+        traverser.traverse_tree();
 
         CHECK(traverser.started.size() == 2);
         CHECK(traverser.ended[root] == 1);
@@ -81,8 +85,8 @@ TEST_CASE("Traverse node tree", "[node]") {
         sub_add->set_link(0, root->get_link(0));
         root->set_link(1, sub_add);
 
-        CountTraverser traverser;
-        traverser.traverse_tree(tree);
+        CountTraverser traverser(tree);
+        traverser.traverse_tree();
 
         CHECK(traverser.started.size() == 4);
         CHECK(traverser.started[root->get_link(0)] == 2);

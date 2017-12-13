@@ -95,6 +95,16 @@ public:
         return dynamic_pointer_cast<T>(get_node(index));
     }
 
+    void rebuild_count();
+
+    map<AbstractReference, size_t> const& get_node_count() const {
+        return node_count;
+    }
+
+    map<AbstractReference, size_t>& mod_node_count() {
+        return node_count;
+    }
+
 private:
     Index get_index(IndexMap& indexes, Index parent, size_t i) const;
 
@@ -105,6 +115,7 @@ private:
     NodeTreeIndex root_index;
     mutable IndexMap root_indexes;
     mutable map<Index,IndexMap> indexes;
+    mutable map<AbstractReference, size_t> node_count;
 };
 
 } // namespace rainynite::core

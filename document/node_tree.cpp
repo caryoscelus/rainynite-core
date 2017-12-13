@@ -96,16 +96,44 @@ shared_ptr<AbstractValue> NodeTree::get_node(Index index) const {
     return node;
 }
 
+class CountTraverser : public TreeTraverser {
+public:
+    CountTraverser(NodeTree& tree) :
+        TreeTraverser(tree)
+    {}
 
-void TreeTraverser::traverse_tree(shared_ptr<NodeTree> tree, TraverseFlags flags) {
+    bool object_start() {
+        if (current().count > 0)
+            return false;
+        return true;
+    }
+    void object_end() {
+        if (path.indexes.empty()) {
+            tree.mod_node_count() = node_seen_count;
+            for (auto& e : tree.mod_node_count()) {
+                ++e.second;
+            }
+        }
+    }
+};
+
+void NodeTree::rebuild_count() {
+    CountTraverser traverser(*this);
+    traverser.traverse_tree(TreeTraverser::UseCount);
+}
+
+
+void TreeTraverser::traverse_tree(TraverseFlags flags) {
     path = NodeTreePath{};
     status_stack.clear();
 
     status_stack.emplace_back();
-    current().index = tree->get_root_index();
-    current().node = tree->root_node();
+    current().index = tree.get_root_index();
+    current().node = tree.root_node();
     current().type = types::Any();
     current().count = 0;
+
+    node_seen_count[current().node] = 0;
 
     traverse_children = true;
     object_start();
@@ -134,7 +162,7 @@ void TreeTraverser::traverse_tree(shared_ptr<NodeTree> tree, TraverseFlags flags
             } else {
                 current().key.clear();
             }
-            current().index = tree->index(parent().index, i);
+            current().index = tree.index(parent().index, i);
             current().node = parent_list->get_link(i);
             current().type = parent_list->get_link_type(i);
 

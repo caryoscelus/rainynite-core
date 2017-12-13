@@ -25,22 +25,14 @@
 
 namespace rainynite::core {
 
-enum class RecordType {
-    Nothing,
-    Value,
-    List,
-    Map
-};
-
+/**
+ * Traverse node tree.
+ */
 class TreeTraverser {
 public:
-    /**
-     * Called when traverser enters object.
-     *
-     * If this function returns true, object content is traversed, otherwise not.
-     */
-    virtual bool object_start() = 0;
-    virtual void object_end() = 0;
+    TreeTraverser(NodeTree& tree_) :
+        tree(tree_)
+    {}
 
     enum TraverseFlags {
         None                = 0x00,
@@ -48,9 +40,17 @@ public:
         Default             = UseCount,
     };
 
-    void traverse_tree(shared_ptr<NodeTree> tree, TraverseFlags flags=Default);
+    void traverse_tree(TraverseFlags flags=Default);
 
 protected:
+     /**
+     * Called when traverser enters object.
+     *
+     * If this function returns true, object content is traversed, otherwise not.
+     */
+    virtual bool object_start() = 0;
+    virtual void object_end() = 0;
+
     struct Status {
         NodeTree::Index index;
         AbstractReference node;
@@ -72,9 +72,10 @@ protected:
     vector<Status> status_stack;
     NodeTreePath path;
 
-private:
     map<AbstractReference,size_t> node_seen_count;
     bool traverse_children;
+
+    NodeTree& tree;
 };
 
 } // namespace rainynite::core
