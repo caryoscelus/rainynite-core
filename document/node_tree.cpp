@@ -39,13 +39,13 @@ NodeTree::~NodeTree() {
 NodeTree::Index NodeTree::index(Index parent, size_t i) const {
     switch (parent->state) {
         case NodeTreeIndex::Null:
-            return get_root();
+            return get_root_index();
         case NodeTreeIndex::Root:
             return get_index(root_indexes, parent, i);
         case NodeTreeIndex::Indexed:
             auto parent_iter = indexes.find(parent);
             if (parent_iter == indexes.end())
-                return get_null();
+                return get_null_index();
             return get_index(parent_iter->second, parent, i);
     }
 }

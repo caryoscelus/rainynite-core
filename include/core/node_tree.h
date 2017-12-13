@@ -20,6 +20,7 @@
 
 #include <core/std/memory.h>
 #include <core/std/map.h>
+#include <core/std/vector.h>
 
 namespace rainynite::core {
 
@@ -30,8 +31,7 @@ struct NodeTreeIndex {
     enum State {
         Null,
         Root,
-        Indexed //,
-//         Named
+        Indexed
     };
 
     NodeTreeIndex(State state_, observer_ptr<NodeTreeIndex> parent_=nullptr, size_t index_=0) :
@@ -53,6 +53,15 @@ struct NodeTreeIndex {
     size_t index;
 };
 
+struct NodeTreePath {
+    template <typename... Ts>
+    NodeTreePath(Ts&&... args) :
+        indexes(std::forward<Ts>(args)...)
+    {
+    }
+    vector<size_t> indexes;
+};
+
 class NodeTree {
 public:
     using Index = observer_ptr<NodeTreeIndex>;
@@ -61,10 +70,10 @@ public:
     explicit NodeTree(shared_ptr<AbstractValue> root_, shared_ptr<ActionStack> action_stack_);
     virtual ~NodeTree();
 
-    Index get_root() const {
+    Index get_root_index() const {
         return make_observer(root_index.get());
     }
-    Index get_null() const {
+    Index get_null_index() const {
         return make_observer(null_index.get());
     }
 
@@ -73,6 +82,10 @@ public:
         return index->parent;
     }
     size_t children_count(Index parent) const;
+
+    shared_ptr<AbstractValue> root_node() const {
+        return root;
+    }
 
     /// Get node that is pointed to by index
     shared_ptr<AbstractValue> get_node(Index index) const;
