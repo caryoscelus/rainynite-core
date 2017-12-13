@@ -27,8 +27,7 @@
 #include <core/node/abstract_node.h>
 #include "serialize.h"
 
-namespace rainynite::core {
-namespace serialize {
+namespace rainynite::core::serialize {
 
 class ValueToString {
 public:
@@ -114,18 +113,17 @@ public:
         return node_name(*object);
     }
 
-    static serialize::RecordType classify(AbstractReference object) {
+    static RecordType classify(AbstractReference object) {
         if (object->is_const())
-            return serialize::RecordType::Value;
+            return RecordType::Value;
         if (dynamic_cast<AbstractNode*>(object.get()))
-            return serialize::RecordType::Map;
+            return RecordType::Map;
         if (dynamic_cast<AbstractListLinked*>(object.get()))
-            return serialize::RecordType::List;
+            return RecordType::List;
         throw SerializationError("Cannot classify object");
     }
 };
 
-} // namespace serialize
-} // namespace rainynite::core
+} // namespace rainynite::core::serialize
 
 #endif
