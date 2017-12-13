@@ -37,6 +37,9 @@ protected:
             state_mismatch_error(s);
         state_stack.pop_back();
     }
+    void pop_state() {
+        state_stack.pop_back();
+    }
     void set_state(State s) {
         state_stack.back() = s;
     }
