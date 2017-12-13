@@ -42,7 +42,13 @@ public:
     virtual bool object_start() = 0;
     virtual void object_end() = 0;
 
-    void traverse_tree(shared_ptr<NodeTree> tree);
+    enum TraverseFlags {
+        None                = 0x00,
+        UseCount            = 0x01,
+        Default             = UseCount,
+    };
+
+    void traverse_tree(shared_ptr<NodeTree> tree, TraverseFlags flags=Default);
 
 protected:
     struct Status {
@@ -50,8 +56,7 @@ protected:
         AbstractReference node;
         TypeConstraint type;
         string key;
-//         size_t total_count;
-//         size_t current_count;
+        size_t count;
     };
 
     Status const& current() const {
@@ -68,7 +73,6 @@ protected:
     NodeTreePath path;
 
 private:
-    map<AbstractReference,size_t> node_count;
     map<AbstractReference,size_t> node_seen_count;
     bool traverse_children;
 };

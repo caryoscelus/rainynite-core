@@ -97,7 +97,7 @@ shared_ptr<AbstractValue> NodeTree::get_node(Index index) const {
 }
 
 
-void TreeTraverser::traverse_tree(shared_ptr<NodeTree> tree) {
+void TreeTraverser::traverse_tree(shared_ptr<NodeTree> tree, TraverseFlags flags) {
     path = NodeTreePath{};
     status_stack.clear();
 
@@ -105,6 +105,7 @@ void TreeTraverser::traverse_tree(shared_ptr<NodeTree> tree) {
     current().index = tree->get_root_index();
     current().node = tree->root_node();
     current().type = types::Any();
+    current().count = 0;
 
     traverse_children = true;
     object_start();
@@ -137,8 +138,19 @@ void TreeTraverser::traverse_tree(shared_ptr<NodeTree> tree) {
             current().node = parent_list->get_link(i);
             current().type = parent_list->get_link_type(i);
 
+            if (flags & UseCount) {
+                auto iter = node_seen_count.find(current().node);
+                if (iter == node_seen_count.end()) {
+                    node_seen_count.emplace(current().node, 0);
+                    current().count = 0;
+                } else {
+                    current().count = ++iter->second;
+                }
+            }
+
             traverse_children = object_start();
         }
+
     } while (!path.indexes.empty());
 }
 
