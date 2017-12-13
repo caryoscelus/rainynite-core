@@ -34,7 +34,7 @@ struct NodeTreeIndex {
         Indexed
     };
 
-    NodeTreeIndex(State state_, observer_ptr<NodeTreeIndex const> parent_=nullptr, size_t index_=0) :
+    NodeTreeIndex(State state_=Null, observer_ptr<NodeTreeIndex const> parent_=nullptr, size_t index_=0) :
         state(state_),
         parent(parent_),
         index(index_)

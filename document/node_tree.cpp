@@ -51,11 +51,11 @@ NodeTree::Index NodeTree::index(Index parent, size_t i) const {
     }
 }
 
-NodeTree::Index NodeTree::get_index(IndexMap& indexes, Index parent, size_t i) const {
-    auto iter = indexes.find(i);
-    if (iter != indexes.end())
+NodeTree::Index NodeTree::get_index(IndexMap& local_indexes, Index parent, size_t i) const {
+    auto iter = local_indexes.find(i);
+    if (iter != local_indexes.end())
         return make_observer(&iter->second);
-    indexes.emplace(
+    local_indexes.emplace(
         i,
         NodeTreeIndex{
             NodeTreeIndex::Indexed,
@@ -63,7 +63,12 @@ NodeTree::Index NodeTree::get_index(IndexMap& indexes, Index parent, size_t i) c
             i
         }
     );
-    return make_observer(&indexes.at(i));
+    auto index = make_observer(&local_indexes.at(i));
+    indexes.emplace(
+        index,
+        IndexMap{}
+    );
+    return index;
 }
 
 size_t NodeTree::children_count(Index parent) const {

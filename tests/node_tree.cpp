@@ -23,6 +23,24 @@
 using namespace rainynite;
 using namespace rainynite::core;
 
+TEST_CASE("Node tree index", "[node]") {
+    auto root = make_shared<Add>();
+    auto mid = make_shared<Add>();
+    auto leaf = mid->get_link(0);
+    root->set_link(0, mid);
+
+    auto tree = NodeTree(root, nullptr);
+
+    auto root_index = tree.get_root_index();
+    CHECK(tree.get_node(root_index) == root);
+
+    auto mid_index = tree.index(root_index, 0);
+    CHECK(tree.get_node(mid_index) == mid);
+
+    auto leaf_index = tree.index(mid_index, 0);
+    CHECK(tree.get_node(leaf_index) == leaf);
+}
+
 struct CountTraverser : public TreeTraverser {
     CountTraverser(NodeTree& tree) :
         TreeTraverser(tree)
