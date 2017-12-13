@@ -18,6 +18,7 @@
 #include <core/node_info.h>
 #include <core/document.h>
 #include <core/context.h>
+#include <core/node_tree.h>
 #include <core/action_stack.h>
 
 namespace rainynite::core {
@@ -41,6 +42,12 @@ Document::Document(shared_ptr<BaseValue<Renderable>> root_) :
 }
 
 Document::~Document() {
+}
+
+shared_ptr<NodeTree> Document::get_tree() {
+    if (tree == nullptr)
+        tree = make_shared<NodeTree>(static_pointer_cast<Document>(shared_from_this()), action_stack);
+    return tree;
 }
 
 DocumentType Document::get(shared_ptr<Context> /*context*/) const {
