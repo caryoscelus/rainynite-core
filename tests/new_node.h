@@ -1,4 +1,4 @@
-/*  new_node.cpp - test new node system
+/*  new_node.h - add node for testing
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,20 +15,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <catch.hpp>
+#ifndef CORE_TESTS_NEW_NODE_H_7503A372_0E70_58C3_8595_93D47E5089CE
+#define CORE_TESTS_NEW_NODE_H_7503A372_0E70_58C3_8595_93D47E5089CE
 
-#include <core/node/make.h>
-#include "zero_context.h"
-#include "new_node.h"
+#include <core/node/new_node.h>
 
 using namespace rainynite;
 using namespace rainynite::core;
 
-TEST_CASE("New node system: simple Add node", "[node]") {
-    auto add = make_shared<Add>();
-    CHECK(add->value(zero_context()) == 0);
-    add->set_property("a", make_value<double>(1));
-    CHECK(add->value(zero_context()) == 1);
-    add->set_property("b", make_value<double>(2));
-    CHECK(add->value(zero_context()) == 3);
-}
+class Add :
+    public NewNode<
+        Add,
+        double,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    NODE_PROPERTIES("a", "b")
+    DEFAULT_VALUES(0.0, 0.0)
+    PROPERTY(a)
+    PROPERTY(b)
+
+    DOC_STRING(
+        "Simple Add node for testing..."
+    )
+
+    double get(shared_ptr<Context> ctx) const override {
+        return a_value<double>(ctx) + b_value<double>(ctx);
+    }
+};
+
+#endif
