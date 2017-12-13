@@ -205,11 +205,7 @@ T& type_meta(Type type) {
 template <class T, class R, typename... Args>
 R type_info(Type type, Args&&... args) {
     auto const& t = type_meta<T>(type);
-    try {
-        return t(std::forward<Args>(args)...);
-    } catch (...) {
-        throw RuntimeTypeError(type);
-    }
+    return t(std::forward<Args>(args)...);
 }
 
 /**
