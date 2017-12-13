@@ -47,6 +47,7 @@ set(ALL_NODES
     nodes/file_string.cpp
     nodes/average.cpp
     nodes/math.cpp
+    nodes/boolean.cpp
     nodes/rectangle.cpp
     nodes/circle.cpp
     nodes/list.cpp
