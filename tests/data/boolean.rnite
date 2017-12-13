@@ -1,5 +1,16 @@
 --- !Document
 _tests: !List/Boolean
+
   - !Equal/Real
-    a: !Value/Real 3.5
-    b: !Value/Real 3.500
+    a: 3.5
+    b: 3.500
+
+  - !Equal/String
+    a: true
+    b: !ToString
+      source: !Value/Boolean true
+
+  - !Equal/String
+    a: false
+    b: !ToString
+      source: !Value/Boolean false
