@@ -74,7 +74,7 @@ class FuzzyEqual : public Node<bool> {
     )
 
 private:
-    static constexpr const double DEFAULT_EPS = std::numeric_limits<double>::min()*32;
+    static constexpr const double DEFAULT_EPS = std::numeric_limits<double>::epsilon()*16;
 
 public:
     FuzzyEqual() {
