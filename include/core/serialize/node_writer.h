@@ -34,32 +34,6 @@ public:
     virtual string operator()(any const& object) const = 0;
 };
 
-template <class T>
-class AutoValueToString :
-    public ValueToString,
-    class_init::Registered<AutoValueToString<T>, T, ValueToString>
-{
-public:
-    string operator()(any const& object) const override {
-        auto value = any_cast<T>(object);
-        std::ostringstream stream;
-        stream << std::boolalpha << value;
-        return stream.str();
-    }
-};
-
-template <class T>
-class NumericValueToString :
-    public ValueToString,
-    class_init::Registered<AutoValueToString<T>, T, ValueToString>
-{
-public:
-    string operator()(any const& object) const override {
-        auto value = any_cast<T>(object);
-        return std::to_string(value);
-    }
-};
-
 inline string value_to_string(any const& object) {
     return class_init::any_info<ValueToString, string>(object);
 }
