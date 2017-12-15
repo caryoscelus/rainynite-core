@@ -1,4 +1,4 @@
-/*  abstract_node.cpp - abstract Node
+/*  old_node.cpp - old Node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,8 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node/abstract_node.h>
-#include <core/node/abstract_value.h>
+#include <core/node/node.h>
 
 namespace rainynite::core {
 

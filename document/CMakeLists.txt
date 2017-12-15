@@ -15,7 +15,7 @@ target_sources(document
         action.cpp
         action_stack.cpp
         node_tree.cpp
-        node/abstract_node.cpp
+        node/old_node.cpp
 )
 
 set(ALL_NODES

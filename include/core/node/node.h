@@ -1,4 +1,4 @@
-/*  node.h - Node
+/*  node.h - old Node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,58 @@
 #include "list.h"
 
 namespace rainynite::core {
+
+/**
+ * Abstract node: entity with links to AbstractValues
+ */
+class BaseOldNode : public AbstractListLinked, public AbstractNode, public DocString {
+public:
+    virtual ~BaseOldNode();
+public:
+    AbstractReference get_property(string const& name) const override;
+    void set_property(string const& name, AbstractReference ref) override;
+    bool remove_property(string const& name) override;
+
+    size_t init_property(string const& name, TypeConstraint type, AbstractReference value);
+    map<string, AbstractReference> get_link_map() const override;
+
+    string get_name_at(size_t id) const override {
+        return names_list[id];
+    }
+
+    /// Get id of property name (throws on error)
+    size_t get_name_id(string const& name) const override {
+        return named_storage.at(name);
+    }
+
+public:
+    vector<AbstractReference> get_links() const override {
+        return numbered_storage;
+    }
+    AbstractReference get_link(size_t i) const override {
+        return get_by_id(i);
+    }
+    TypeConstraint get_link_type(size_t i) const override {
+        return types[i];
+    }
+    void set_link(size_t i, AbstractReference value) override;
+    size_t link_count() const override {
+        return numbered_storage.size();
+    }
+private:
+    AbstractReference const& get_by_id(size_t index) const {
+        return numbered_storage[index];
+    }
+    AbstractReference& get_by_id(size_t index) {
+        return numbered_storage[index];
+    }
+private:
+    map<string, size_t> named_storage;
+    vector<string> names_list;
+    vector<AbstractReference> numbered_storage;
+    vector<boost::signals2::connection> signal_connections;
+    vector<TypeConstraint> types;
+};
 
 /**
  * Basic representation of any time-changeable Node
