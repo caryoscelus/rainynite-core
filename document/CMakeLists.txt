@@ -67,6 +67,7 @@ set(ALL_NODES
     nodes/renderable/transform.cpp
     nodes/renderable/text.cpp
     nodes/renderable/render_shape.cpp
+    nodes/renderable/svg.cpp
 )
 
 function(make_single_compile_unit fname file_list)

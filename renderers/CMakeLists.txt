@@ -23,6 +23,7 @@ if (BUILD_SVG_RENDERER_MODULES)
             svg_renderer/composite.cpp
             svg_renderer/render_shape.cpp
             svg_renderer/shapes.cpp
+            svg_renderer/svg.cpp
     )
 endif()
 
