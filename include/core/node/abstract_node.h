@@ -21,8 +21,8 @@
 #include <boost/signals2/signal.hpp>
 
 #include <core/std/map.h>
+#include <core/util/doc_string.h>
 #include "abstract_list.h"
-#include "doc_string.h"
 
 namespace rainynite::core {
 

@@ -15,13 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_NODE_DOC_STRING_H_8C65081C_80FB_530C_8E03_3E23E09291D2
-#define CORE_NODE_DOC_STRING_H_8C65081C_80FB_530C_8E03_3E23E09291D2
+#ifndef CORE_UTIL_DOC_STRING_H_8C65081C_80FB_530C_8E03_3E23E09291D2
+#define CORE_UTIL_DOC_STRING_H_8C65081C_80FB_530C_8E03_3E23E09291D2
 
 #include <core/std/map.h>
 #include <core/std/string.h>
 
-namespace rainynite::core {
+namespace rainynite {
 
 class DocString {
 public:
@@ -42,7 +42,7 @@ public:
     }
 };
 
-} // namespace rainynite::core
+} // namespace rainynite
 
 #define DOC_STRING(s) \
 public: \
