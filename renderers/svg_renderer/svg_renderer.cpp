@@ -29,17 +29,12 @@
 
 #include <core/renderers/svg_renderer.h>
 #include <core/document.h>
-#include <core/color/color.h>
 #include <core/renderable.h>
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/class_init.h>
 #include <core/os/fork_pipe.h>
 #include "svg_module.h"
-
-#include <geom_helpers/knots.h>
-
-#include <morphing/morphing.h>
 
 using namespace fmt::literals;
 
@@ -72,7 +67,6 @@ struct SvgRenderer::Impl {
     void prepare_render();
     void render_frame(shared_ptr<Context> context);
     void finish_render();
-//     string definitions(shared_ptr<Context> context) const;
     string frame_to_svg(shared_ptr<Context> context) const;
     string node_to_svg(NodeInContext nic) const;
     void start_png(bool force=false);
