@@ -26,13 +26,19 @@
 
 namespace rainynite::core {
 
+/**
+ * Time type.
+ *
+ * TODO: consider storing only frame count; or otherwise store frames as fixed
+ * point number.
+ */
 class Time :
     boost::totally_ordered<Time>,
     boost::additive<Time>,
     boost::multiplicative<Time,double>
 {
 public:
-    using fps_type = unsigned;
+    using fps_type = unsigned short;
 public:
     Time() :
         Time(0)
@@ -53,11 +59,7 @@ public:
     static Time end_of_time() {
         return Time(std::numeric_limits<double>::infinity());
     }
-    Time(Time const& other) = default;
-    Time(Time&& other) = default;
-    Time& operator=(Time const& other) = default;
-    Time& operator=(Time&& other) = default;
-public:
+
     bool operator==(Time const& other) const;
     bool operator<(Time const& other) const;
     Time& operator++();
@@ -67,35 +69,49 @@ public:
     Time& operator*=(double other);
     Time& operator/=(double other);
     double operator/(Time const& other);
-public:
+
     void require_same_fps(Time const& other) const;
     fps_type common_fps(Time const& other) const;
     void to_common_fps(Time& other);
-public:
+
+    /// Get total second count
     double get_seconds() const {
         return seconds+frames/fps;
     }
-    inline int whole_seconds() const {
+
+    /// Get amount of whole seconds
+    int whole_seconds() const {
         return seconds;
     }
+
+    /// Get total frame count
     double get_frames() const {
         return 1.0*seconds*fps+frames;
     }
+
+    /// Get amount of frame reminder
+    double only_frames() const {
+        return frames;
+    }
+
     fps_type get_fps() const {
         return fps;
     }
-public:
+
     void set_frames(double frames_);
     void add_frames(double df);
     void set_seconds(double seconds_);
+
     /**
      * Change fps, preserving time in seconds
      */
     void set_fps(fps_type fps_);
+
     /**
      * Change fps, preserving frame count
      */
     void change_fps(fps_type fps_);
+
 private:
     int seconds;
     double frames;
