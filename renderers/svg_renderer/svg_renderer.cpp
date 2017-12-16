@@ -170,9 +170,14 @@ void SvgRenderer::Impl::prepare_render() {
         start_png();
 }
 
+string SvgRenderer::get_rendered_frame_path(Time time, string ext) {
+    auto after_point = "{:.3f}"_format(time.only_frames());
+    return "renders/{:04}{}{}"_format(time.whole_seconds(), &after_point.data()[1], ext);
+}
+
 void SvgRenderer::Impl::render_frame(shared_ptr<Context> context) {
     auto time = context->get_time();
-    auto base_name = "renders/{:.3f}"_format(time.get_seconds());
+    auto base_name = parent->get_rendered_frame_path(time);
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);

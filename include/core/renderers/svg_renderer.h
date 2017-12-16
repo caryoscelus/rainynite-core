@@ -38,10 +38,13 @@ class SvgRenderer : public Renderer {
 public:
     SvgRenderer();
     virtual ~SvgRenderer();
-public:
+
     void render(Context&& context) override;
     bool is_finished() const override;
     void stop() override;
+
+    static string get_rendered_frame_path(Time time, string ext="");
+
 private:
     struct Impl;
     unique_ptr<Impl> impl;
