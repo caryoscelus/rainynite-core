@@ -29,6 +29,7 @@ namespace rainynite::core::actions {
  * TODO: make action disappear if it does nothing
  */
 class SetEnabled : public AtomicAction {
+    DOC_STRING("Set enabled")
 public:
     SetEnabled(shared_ptr<AbstractValue> node_, bool value_) :
         node(node_),

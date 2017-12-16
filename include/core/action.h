@@ -21,6 +21,7 @@
 #include <stdexcept>
 
 #include <core/std/string.h>
+#include <core/util/doc_string.h>
 
 namespace rainynite::core {
 
@@ -44,7 +45,7 @@ enum class UndoRedo {
  * is left abstract. If your action is not appendable, inherit from AtomicAction
  * instead.
  */
-class AbstractAction {
+class AbstractAction : public DocString {
 public:
     virtual ~AbstractAction() = default;
 

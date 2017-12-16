@@ -24,12 +24,13 @@
 namespace rainynite::core::actions {
 
 class ChangeValue : public AbstractAction {
+    DOC_STRING("Change value")
 public:
     ChangeValue(AbstractReference node_, any new_value_) :
         node(node_),
         new_value(new_value_)
     {}
-public:
+
     void redo_action() override {
         old_value = node->static_any();
         node->set_any(new_value);

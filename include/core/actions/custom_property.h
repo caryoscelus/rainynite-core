@@ -25,13 +25,14 @@
 namespace rainynite::core::actions {
 
 class AddCustomProperty : public AtomicAction {
+    DOC_STRING("Add custom property")
 public:
     AddCustomProperty(shared_ptr<AbstractNode> node_, string const& prop_name_, AbstractReference value_) :
         node(node_),
         prop_name(prop_name_),
         value(value_)
     {}
-public:
+
     void redo_action() override {
         node->set_property(prop_name, value);
     }
@@ -46,6 +47,7 @@ private:
 };
 
 class RemoveCustomProperty : public ReverseAction<AddCustomProperty> {
+    DOC_STRING("Remove custom property")
 public:
     RemoveCustomProperty(shared_ptr<AbstractNode> node_, string const& prop_name_) :
         ReverseAction<AddCustomProperty>(node_, prop_name_, nullptr)

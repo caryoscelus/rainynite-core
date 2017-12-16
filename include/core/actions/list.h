@@ -25,6 +25,7 @@
 namespace rainynite::core::actions {
 
 class ListPushNew : public AtomicAction {
+    DOC_STRING("Push new list element")
 public:
     ListPushNew(shared_ptr<AbstractListLinked> node_) :
         node(node_)
@@ -45,6 +46,7 @@ private:
  * Push existing node to list.
  */
 class ListPush : public AtomicAction {
+    DOC_STRING("Push list element")
 public:
     ListPush(shared_ptr<AbstractListLinked> node_, AbstractReference value_) :
         node(node_),
@@ -66,13 +68,14 @@ private:
 };
 
 class ListInsertElement : public AtomicAction {
+    DOC_STRING("Insert list element")
 public:
     ListInsertElement(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference value_) :
         node(node_),
         index(index_),
         value(value_)
     {}
-public:
+
     void redo_action() override {
         node->insert(index, value);
     }
@@ -87,6 +90,7 @@ private:
 };
 
 class ListRemoveElement : public ReverseAction<ListInsertElement> {
+    DOC_STRING("Remove list element")
 public:
     ListRemoveElement(shared_ptr<AbstractListLinked> node_, size_t index_) :
         ReverseAction<ListInsertElement>(node_, index_, nullptr)

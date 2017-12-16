@@ -24,13 +24,14 @@
 namespace rainynite::core::actions {
 
 class ChangeLink : public AtomicAction {
+    DOC_STRING("Change link")
 public:
     ChangeLink(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference new_value_) :
         node(node_),
         index(index_),
         new_value(new_value_)
     {}
-public:
+
     void redo_action() override {
         old_value = node->get_link(index);
         node->set_link(index, new_value);
@@ -53,6 +54,7 @@ private:
  * pointer and string as arguments.
  */
 class SetProperty : public ChangeLink {
+    DOC_STRING("Set property")
 public:
     SetProperty(shared_ptr<AbstractNode> node, string const& name, AbstractReference new_value) :
         ChangeLink(dynamic_pointer_cast<AbstractListLinked>(node), node->get_name_id(name), new_value)
