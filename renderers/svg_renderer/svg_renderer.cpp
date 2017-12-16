@@ -58,7 +58,8 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 )";
 
 struct SvgRenderer::Impl {
-    Impl(SvgRenderer* parent_) :
+    Impl(SvgRenderer* parent_, string path) :
+        render_path(path),
         parent(parent_)
     {}
     ~Impl();
@@ -82,7 +83,7 @@ struct SvgRenderer::Impl {
 
     SvgRendererSettings settings;
 
-    boost::filesystem::path render_path { "renders/" };
+    boost::filesystem::path render_path;
     boost::filesystem::path base_path;
 
     FILE* png_renderer_pipe;
@@ -100,7 +101,7 @@ struct SvgRenderer::Impl {
 };
 
 SvgRenderer::SvgRenderer() :
-    impl(make_unique<Impl>(this))
+    impl(make_unique<Impl>(this, render_path_base))
 {
 }
 
@@ -171,8 +172,8 @@ void SvgRenderer::Impl::prepare_render() {
 }
 
 string SvgRenderer::get_rendered_frame_path(Time time, string ext) {
-    auto after_point = "{:.3f}"_format(time.only_frames());
-    return "renders/{:04}{}{}"_format(time.whole_seconds(), &after_point.data()[1], ext);
+    auto after_point = "{:.3f}"_format(time.only_frames()/time.get_fps());
+    return "{}/{:04}{:s}{}"_format(render_path_base, time.whole_seconds(), &after_point.data()[1], ext);
 }
 
 void SvgRenderer::Impl::render_frame(shared_ptr<Context> context) {

@@ -46,6 +46,8 @@ public:
     static string get_rendered_frame_path(Time time, string ext="");
 
 private:
+    constexpr static char const* const render_path_base = "renders";
+
     struct Impl;
     unique_ptr<Impl> impl;
 };
