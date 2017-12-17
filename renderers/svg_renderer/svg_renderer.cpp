@@ -77,6 +77,10 @@ struct SvgRenderer::Impl {
     void render_png(string const& svg, string const& png);
     void quit_png(bool force=false);
 
+    size_t frame_to_render_count() const {
+        return context.get_period().length().get_frames();
+    }
+
     bool finished = false;
     Context context;
     shared_ptr<Document> document;
@@ -85,6 +89,8 @@ struct SvgRenderer::Impl {
 
     boost::filesystem::path render_path;
     boost::filesystem::path base_path;
+
+    std::ofstream lst_file;
 
     FILE* png_renderer_pipe;
     FILE* png_renderer_pipe_output;
@@ -250,6 +256,9 @@ void SvgRenderer::Impl::finish_render() {
 }
 
 void SvgRenderer::Impl::start_png(bool force) {
+    if (frame_to_render_count() > 1)
+        lst_file.open((render_path/"rendered.lst").string(), std::ios::out | std::ios::trunc);
+
     if (read_thread.joinable())
         read_thread.join();
 
@@ -287,11 +296,16 @@ void SvgRenderer::Impl::start_png(bool force) {
 }
 
 void SvgRenderer::Impl::render_png(string const& svg, string const& png) {
+    if (lst_file)
+        lst_file << png << "\n";
     fputs("{} {} {}\n"_format(svg, "-e", png).c_str(), png_renderer_pipe);
     fflush(png_renderer_pipe);
 }
 
 void SvgRenderer::Impl::quit_png(bool force) {
+    if (lst_file)
+        lst_file.close();
+
     bool quit_inkscape = force || !settings.keep_alive || requested_to_stop;
     if (quit_inkscape) {
         subprocess_initialized = false;
