@@ -96,26 +96,29 @@ public:
         return TimePeriodIter(*this, last);
     }
 public:
-    inline bool contains(Time t) const {
+    bool contains(Time t) const {
         return t >= first
             && t < last;
     }
-    inline Time get_first() const {
+    Time get_first() const {
         return first;
     }
-    inline Time get_last() const {
+    Time get_last() const {
         return last;
     }
-    inline void set_first(Time t) {
+    Time length() const {
+        return last-first;
+    }
+    void set_first(Time t) {
         first = t;
     }
-    inline void set_last(Time t) {
+    void set_last(Time t) {
         last = t;
     }
-    inline Time::fps_type get_fps() const {
+    Time::fps_type get_fps() const {
         return first.get_fps();
     }
-    inline void set_fps(Time::fps_type fps_) {
+    void set_fps(Time::fps_type fps_) {
         fps = fps_;
         first.set_fps(fps);
         last.set_fps(fps);
