@@ -26,8 +26,13 @@
 
 namespace rainynite::core {
 
-template <typename T, typename P>
-void push_value(P list, T const& value) {
+template <typename T, typename L, typename... Args>
+void push_value(L list, Args&&... args) {
+    list->push_back(make_value<T>(std::forward<Args>(args)...));
+}
+
+template <typename T, typename L>
+void push_value(L list, T const& value) {
     list->push_back(make_value<T>(value));
 }
 
