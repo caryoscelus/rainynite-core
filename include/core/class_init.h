@@ -1,5 +1,4 @@
-/*
- *  class_init.h - helper templates for runtime type info
+/*  class_init.h - helper templates for runtime type info
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -22,6 +21,7 @@
 #include <core/std/map.h>
 #include <core/std/any.h>
 #include <core/std/string.h>
+#include <core/std/vector.h>
 #include <core/std/type.h>
 
 namespace class_init {
@@ -30,6 +30,7 @@ using rainynite::map;
 using rainynite::any;
 using rainynite::any_cast;
 using rainynite::string;
+using rainynite::vector;
 using rainynite::Type;
 
 /**
@@ -106,6 +107,12 @@ map<string, T*>& string_registry() {
     return instance;
 }
 
+template <class T>
+vector<T*>& class_list_registry() {
+    static vector<T*> instance;
+    return instance;
+}
+
 /**
  * Automatic class registration helper.
  *
@@ -153,6 +160,17 @@ struct StringRegistered : private Initialized<StringRegistered<S, R>> {
     using RegisteredInfo = R;
     static void init() {
         string_registry<R>()[S::name()] = new S();
+    }
+};
+
+/**
+ * Automatic register class list helper.
+ */
+template <class S, class R>
+struct ListRegistered : private Initialized<ListRegistered<S, R>> {
+    using Self = S;
+    static void init() {
+        class_list_registry<R>().push_back(new S());
     }
 };
 
