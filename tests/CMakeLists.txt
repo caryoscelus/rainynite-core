@@ -13,43 +13,43 @@ target_link_libraries(test_time time)
 add_catch_test(class_init)
 
 add_catch_test(node)
-target_link_libraries(test_node nodes time)
+target_link_libraries(test_node nodes)
 
 add_catch_test(node_tree)
-target_link_libraries(test_node_tree document time)
+target_link_libraries(test_node_tree document)
 
 add_catch_test(serialize)
-target_link_libraries(test_serialize nodes time)
+target_link_libraries(test_serialize nodes)
 
 add_catch_test(parse)
 target_link_libraries(test_parse time)
 
 add_catch_test(actions)
-target_link_libraries(test_actions nodes time)
+target_link_libraries(test_actions nodes)
 
 add_catch_test(notify)
-target_link_libraries(test_notify document time)
+target_link_libraries(test_notify document)
 
 add_catch_test(list_nodes)
-target_link_libraries(test_list_nodes nodes time)
+target_link_libraries(test_list_nodes nodes)
 
 add_catch_test(time_nodes)
-target_link_libraries(test_time_nodes nodes time)
+target_link_libraries(test_time_nodes nodes)
 
 add_catch_test(dynamic_node)
-target_link_libraries(test_dynamic_node nodes time)
+target_link_libraries(test_dynamic_node nodes)
 
 add_catch_test(type_constraint)
 
 add_catch_test(link_storage)
-target_link_libraries(test_link_storage document time)
+target_link_libraries(test_link_storage document)
 
 add_catch_test(new_node)
-target_link_libraries(test_new_node document time)
+target_link_libraries(test_new_node document)
 
 ## New node tests
 add_executable(node_tester node_tester.cpp)
-target_link_libraries(node_tester nodes time filters)
+target_link_libraries(node_tester nodes filters)
 function(add_node_test name)
     add_test(node_tester_${name} node_tester "${CMAKE_CURRENT_SOURCE_DIR}/data/${name}.rnite")
 endfunction()

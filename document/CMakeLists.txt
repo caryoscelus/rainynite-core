@@ -87,7 +87,7 @@ if (BUILD_NODES)
     endif()
 endif()
 
-target_link_libraries(document log morphing fmt)
+target_link_libraries(document log morphing fmt time)
 target_link_libraries(nodes document)
 
 install(
