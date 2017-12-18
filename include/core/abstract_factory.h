@@ -1,5 +1,4 @@
-/*
- *  abstract_factory.h - Abstract Factory interface template
+/*  abstract_factory.h - Abstract Factory interface template
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -23,10 +22,16 @@
 
 namespace rainynite {
 
-template <typename T>
-class AbstractFactory {
-public:
-    virtual unique_ptr<T> operator()() const = 0;
+template <class A>
+struct AbstractFactory {
+    virtual unique_ptr<A> operator()() const = 0;
+};
+
+template <class A, class C>
+struct AbstractFactoryImpl : public AbstractFactory<A> {
+    unique_ptr<A> operator()() const override {
+        return make_unique<C>();
+    }
 };
 
 } // namespace rainynite
