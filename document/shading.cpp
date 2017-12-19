@@ -25,6 +25,7 @@ Shading Shading::default_shading() {
     return {
         { 0xff, 0xff, 0xff, 0xff },
         { 0x00, 0x00, 0x00, 0xff },
+        1.0,
         ""
     };
 }

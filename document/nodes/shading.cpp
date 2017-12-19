@@ -31,12 +31,14 @@ public:
     ShadingStyle() {
         init<colors::Color>(fill_color, {});
         init<colors::Color>(line_color, {});
+        init<double>(line_width, 1.0);
     }
 
     Shading get(shared_ptr<Context> ctx) const override {
         return {
             get_fill_color()->value(ctx),
             get_line_color()->value(ctx),
+            get_line_width()->value(ctx),
             ""
         };
     }
@@ -44,6 +46,7 @@ public:
 private:
     NODE_PROPERTY(fill_color, colors::Color);
     NODE_PROPERTY(line_color, colors::Color);
+    NODE_PROPERTY(line_width, double);
 };
 
 REGISTER_NODE(ShadingStyle);

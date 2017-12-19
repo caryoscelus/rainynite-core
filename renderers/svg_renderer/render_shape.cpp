@@ -27,7 +27,7 @@ using namespace fmt::literals;
 
 namespace rainynite::core::renderers {
 
-const string styled_svg_element = R"(<{shape} style="fill:{fill_color};fill-opacity:{fill_opacity};stroke:{line_color};stroke-opacity:{line_opacity};{svg_style}" />)";
+const string styled_svg_element = R"(<{shape} style="fill:{fill_color};fill-opacity:{fill_opacity};stroke:{line_color};stroke-opacity:{line_opacity};stroke-width:{line_width};{svg_style}" />)";
 
 class ShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(ShapeSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("RenderShape");
@@ -44,6 +44,7 @@ public:
             "fill_opacity"_a=shading.fill_color.alpha(),
             "line_color"_a=colors::to_hex24(shading.line_color),
             "line_opacity"_a=shading.line_color.alpha(),
+            "line_width"_a=shading.line_width,
             "svg_style"_a=extra_style
         );
     }

@@ -32,6 +32,7 @@ struct Shading {
     using Color = colors::Color;
     Color fill_color;
     Color line_color;
+    double line_width;
     string custom_shading;
 
     static Shading default_shading();
