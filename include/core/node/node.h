@@ -39,7 +39,7 @@ public:
     map<string, AbstractReference> get_link_map() const override;
 
     string get_name_at(size_t id) const override {
-        return names_list[id];
+        return names_list.at(id);
     }
 
     /// Get id of property name (throws on error)
