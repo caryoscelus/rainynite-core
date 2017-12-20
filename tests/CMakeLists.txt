@@ -18,6 +18,9 @@ target_link_libraries(test_node nodes)
 add_catch_test(node_tree)
 target_link_libraries(test_node_tree document)
 
+add_catch_test(node_tree_modules)
+target_link_libraries(test_node_tree_modules document)
+
 add_catch_test(serialize)
 target_link_libraries(test_serialize nodes)
 
