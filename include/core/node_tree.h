@@ -21,11 +21,22 @@
 #include <core/std/memory.h>
 #include <core/std/map.h>
 #include <core/std/vector.h>
+#include <core/abstract_factory.h>
+#include <core/exceptions.h>
+#include <core/class_init.h>
 
 namespace rainynite::core {
 
 class AbstractValue;
 class ActionStack;
+
+class NodeTree;
+
+struct InvalidIndexError : public std::runtime_error {
+    InvalidIndexError(string const& msg) :
+        std::runtime_error(msg)
+    {}
+};
 
 struct NodeTreeIndex {
     enum State {
@@ -62,6 +73,40 @@ struct NodeTreePath {
     vector<size_t> indexes;
 };
 
+class TreeElement {
+public:
+    virtual ~TreeElement() {}
+    virtual void added(NodeTree const& tree, observer_ptr<NodeTreeIndex const> index) = 0;
+};
+
+#define TREE_ELEMENT(T) \
+    public TreeElement, \
+    private class_init::Registered< \
+        AbstractFactoryImpl<TreeElement,T>, \
+        T, \
+        AbstractFactory<TreeElement> \
+    >
+
+inline unique_ptr<TreeElement> create_tree_element(Type type) {
+    return class_init::type_info<AbstractFactory<TreeElement>, unique_ptr<TreeElement>>(type);
+}
+
+class NodeTreeContent {
+public:
+    NodeTreeContent(shared_ptr<AbstractValue> node_) :
+        node(node_)
+    {}
+
+    observer_ptr<TreeElement> add_element(Type type);
+    observer_ptr<TreeElement> get_element(Type type) const;
+    shared_ptr<AbstractValue> get_node() const {
+        return node;
+    }
+private:
+    shared_ptr<AbstractValue> node;
+    map<Type, unique_ptr<TreeElement>> elements;
+};
+
 class NodeTree {
 public:
     using Index = observer_ptr<NodeTreeIndex const>;
@@ -87,12 +132,25 @@ public:
         return root;
     }
 
+    NodeTreeContent& get_content(Index index) const;
+
     /// Get node that is pointed to by index
-    shared_ptr<AbstractValue> get_node(Index index) const;
+    shared_ptr<AbstractValue> get_node(Index index) const {
+        return get_content(index).get_node();
+    }
 
     template <class T>
     shared_ptr<T> get_node_as(Index index) const {
         return dynamic_pointer_cast<T>(get_node(index));
+    }
+
+    observer_ptr<TreeElement> get_element(Type type, Index index) const;
+
+    template <class T>
+    observer_ptr<T> get_element(Index index) const {
+        return observer_ptr<T>(
+            static_cast<T*>(get_element(typeid(T), index).get())
+        );
     }
 
     void rebuild_count();
@@ -114,7 +172,8 @@ private:
     NodeTreeIndex null_index;
     NodeTreeIndex root_index;
     mutable IndexMap root_indexes;
-    mutable map<Index,IndexMap> indexes;
+    mutable map<Index, IndexMap> indexes;
+    mutable map<Index, NodeTreeContent> content;
     mutable map<AbstractReference, size_t> node_count;
 };
 

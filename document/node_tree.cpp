@@ -24,14 +24,30 @@
 
 namespace rainynite::core {
 
+observer_ptr<TreeElement> NodeTreeContent::add_element(Type type) {
+    auto element = create_tree_element(type);
+    auto r = make_observer(element.get());
+    elements.emplace(type, std::move(element));
+    return r;
+}
+
+observer_ptr<TreeElement> NodeTreeContent::get_element(Type type) const {
+    auto result = elements.find(type);
+    if (result != elements.end())
+        return make_observer(result->second.get());
+    return nullptr;
+}
+
+
 NodeTree::NodeTree(shared_ptr<AbstractValue> root_, shared_ptr<ActionStack> action_stack_) :
     root(root_),
     action_stack(action_stack_),
     null_index(NodeTreeIndex::Null),
-    root_index(NodeTreeIndex::Root)
+    root_index(NodeTreeIndex::Root, get_null_index())
 {
     if (root == nullptr)
         throw NullPointerException("Root of node tree cannot be null");
+    content.emplace(get_root_index(), NodeTreeContent{root});
 }
 
 NodeTree::~NodeTree() {
@@ -68,6 +84,10 @@ NodeTree::Index NodeTree::get_index(IndexMap& local_indexes, Index parent, size_
         index,
         IndexMap{}
     );
+    content.emplace(
+        index,
+        NodeTreeContent{get_node_as<AbstractListLinked>(parent)->get_link(i)}
+    );
     return index;
 }
 
@@ -79,26 +99,24 @@ size_t NodeTree::children_count(Index parent) const {
     return 0;
 }
 
-shared_ptr<AbstractValue> NodeTree::get_node(Index index) const {
-    vector<size_t> indexes;
-    while (!index->root()) {
-        if (index->null())
-            return nullptr;
-        indexes.push_back(index->index);
-        index = index->parent;
+NodeTreeContent& NodeTree::get_content(Index index) const {
+    if (index == nullptr)
+        throw NullPointerException("Null index");
+    // TODO: check validity? or perhaps somewhere else..
+    auto const& result = content.find(index);
+    if (result == content.end())
+        throw InvalidIndexError("Cannot find content for the tree index");
+    return result->second;
+}
+
+observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
+    auto& c = get_content(index);
+    if (auto r = c.get_element(type)) {
+        return r;
     }
-    auto node = root;
-    while (!indexes.empty()) {
-        if (node == nullptr)
-            return nullptr;
-        size_t id = indexes.back();
-        auto list = dynamic_pointer_cast<AbstractListLinked>(node);
-        if (id >= list->link_count())
-            return nullptr;
-        node = list->get_link(id);
-        indexes.pop_back();
-    }
-    return node;
+    auto e = c.add_element(type);
+    e->added(*this, index);
+    return e;
 }
 
 class CountTraverser : public TreeTraverser {
