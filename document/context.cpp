@@ -1,5 +1,4 @@
-/*
- *  context.cpp - Context
+/*  context.cpp - Context
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify

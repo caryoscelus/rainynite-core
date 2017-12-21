@@ -27,6 +27,7 @@
 namespace rainynite::core {
 
 class Document;
+
 template <typename>
 class Value;
 
@@ -43,47 +44,48 @@ public:
     Context(Context&& context_) = default;
     Context& operator=(Context const& context_) = default;
     Context& operator=(Context&& context_) = default;
-    virtual ~Context() = default;
-public:
-    inline shared_ptr<Document> get_document() const {
+
+    shared_ptr<Document> get_document() const {
         return document.lock();
     }
-    inline Time get_time() const {
+    Time get_time() const {
         return time;
     }
-    inline void set_time(Time time_) {
+    void set_time(Time time_) {
         time = time_;
         changed_time(time);
     }
-    inline void set_frames(double frames) {
+    void set_frames(double frames) {
         time.set_frames(frames);
         changed_time(time);
     }
-    inline void set_seconds(double seconds) {
+    void set_seconds(double seconds) {
         time.set_seconds(seconds);
         changed_time(time);
     }
-    inline void to_start() {
+    void to_start() {
         set_time(get_period().get_first());
     }
-    inline void to_end() {
+    void to_end() {
         set_time(get_period().get_last());
     }
     void set_period(TimePeriod const& period);
     TimePeriod get_period() const;
-    inline any get_render_settings() const {
+    any get_render_settings() const {
         return render_settings;
     }
-    inline any& mod_render_settings() {
+    any& mod_render_settings() {
         return render_settings;
     }
-    inline Time::fps_type get_fps() {
+    Time::fps_type get_fps() {
         return fps;
     }
     void set_fps(Time::fps_type fps_);
+
 public:
     boost::signals2::signal<void(Time)> changed_time;
     boost::signals2::signal<void(Time::fps_type)> changed_fps;
+
 private:
     weak_ptr<Document> document;
     Time::fps_type fps = 1;
