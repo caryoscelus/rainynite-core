@@ -32,7 +32,7 @@ struct TypeConstraint {
     {}
     TypeConstraint()
     {}
-    bool operator==(TypeConstraint const& other) {
+    bool operator==(TypeConstraint const& other) const {
         return accepted == other.accepted;
     }
     bool accept(Type type) const {
@@ -53,14 +53,14 @@ namespace types {
 
 template <typename T>
 struct Only {
-    operator Type() {
+    operator Type() const {
         return typeid(T);
     }
 };
 
 template <typename... Ts>
 struct AnyOf {
-    operator TypeConstraint() {
+    operator TypeConstraint() const {
         return TypeConstraint(set {
             Type(typeid(Ts))...
         });
@@ -68,7 +68,7 @@ struct AnyOf {
 };
 
 struct Any {
-    operator TypeConstraint() {
+    operator TypeConstraint() const {
         return {};
     }
 };
