@@ -39,6 +39,12 @@ TEST_CASE("Node tree index", "[node]") {
 
     auto leaf_index = tree.index(mid_index, 0);
     CHECK(tree.get_node(leaf_index) == leaf);
+
+    SECTION("Invalid link") {
+        auto new_zero = make_value<double>(0);
+        root->set_link(0, new_zero);
+        CHECK_THROWS_AS(tree.get_node(leaf_index), InvalidIndexError);
+    }
 }
 
 struct CountTraverser : public TreeTraverser {
@@ -98,16 +104,30 @@ TEST_CASE("Traverse node tree", "[node]") {
         CHECK(traverser.ended[root->get_link(0)] == 2);
     }
 
-    SECTION("Deeper tree") {
+    SECTION("Deeper tree & removal") {
         auto sub_add = make_shared<Add>();
         sub_add->set_link(0, root->get_link(0));
         root->set_link(1, sub_add);
 
-        CountTraverser traverser(tree);
-        traverser.traverse_tree();
+        {
+            CountTraverser traverser(tree);
+            traverser.traverse_tree();
 
-        CHECK(traverser.started.size() == 4);
-        CHECK(traverser.started[root->get_link(0)] == 2);
-        CHECK(traverser.ended[sub_add] == 1);
+            CHECK(traverser.started.size() == 4);
+            CHECK(traverser.started[root->get_link(0)] == 2);
+            CHECK(traverser.ended[sub_add] == 1);
+        }
+
+        auto new_link = make_value<double>(0);
+        root->set_link(1, new_link);
+
+        {
+            CountTraverser traverser(tree);
+            traverser.traverse_tree();
+
+            CHECK(traverser.started.size() == 3);
+            CHECK(traverser.started[root->get_link(0)] == 1);
+            CHECK(traverser.ended.find(sub_add) == traverser.ended.end());
+        }
     }
 }

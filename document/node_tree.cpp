@@ -54,6 +54,13 @@ NodeTree::~NodeTree() {
 }
 
 NodeTree::Index NodeTree::index(Index parent, size_t i) const {
+    check_index_validity(parent);
+    auto idx = index_wo_check(parent, i);
+    check_index_validity(idx);
+    return idx;
+}
+
+NodeTree::Index NodeTree::index_wo_check(Index parent, size_t i) const {
     switch (parent->state) {
         case NodeTreeIndex::Null:
             return get_root_index();
@@ -69,31 +76,29 @@ NodeTree::Index NodeTree::index(Index parent, size_t i) const {
 
 NodeTree::Index NodeTree::get_index(IndexMap& local_indexes, Index parent, size_t i) const {
     auto iter = local_indexes.find(i);
-    if (iter != local_indexes.end())
-        return make_observer(&iter->second);
-    local_indexes.emplace(
-        i,
-        NodeTreeIndex{
-            NodeTreeIndex::Indexed,
-            parent,
-            i
+    if (iter != local_indexes.end()) {
+        auto r = make_observer(&iter->second);
+        try {
+            check_index_validity(r);
+            return r;
+        } catch (...) {
         }
-    );
+    }
+    local_indexes[i] = NodeTreeIndex{
+        NodeTreeIndex::Indexed,
+        parent,
+        i
+    };
     auto index = make_observer(&local_indexes.at(i));
-    indexes.emplace(
-        index,
-        IndexMap{}
-    );
-    content.emplace(
-        index,
-        NodeTreeContent{get_node_as<AbstractListLinked>(parent)->get_link(i)}
-    );
+    indexes[index] = IndexMap{};
+    content[index] = NodeTreeContent{get_node_as<AbstractListLinked>(parent)->get_link(i)};
     return index;
 }
 
 size_t NodeTree::children_count(Index parent) const {
     if (parent->null())
         return 1;
+    check_index_validity(parent);
     if (auto node = get_node_as<AbstractListLinked>(parent))
         return node->link_count();
     return 0;
@@ -102,7 +107,7 @@ size_t NodeTree::children_count(Index parent) const {
 NodeTreeContent& NodeTree::get_content(Index index) const {
     if (index == nullptr)
         throw NullPointerException("Null index");
-    // TODO: check validity? or perhaps somewhere else..
+    check_index_validity(index);
     auto const& result = content.find(index);
     if (result == content.end())
         throw InvalidIndexError("Cannot find content for the tree index");
@@ -118,6 +123,24 @@ observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
     e->added(*this, index);
     return e;
 }
+
+void NodeTree::check_index_validity(Index index) const {
+    if (auto p_idx = parent(index)) {
+        if (p_idx->null())
+            return;
+        check_index_validity(p_idx);
+        if (auto p_node = get_node_as<AbstractListLinked>(p_idx)) {
+            if (index->index < p_node->link_count()) {
+                if (content.at(index).get_node() != p_node->get_link(index->index))
+                    throw InvalidIndexError("Index node mis-match");
+                else
+                    return;
+            }
+        }
+        throw InvalidIndexError("Index out of range");
+    }
+}
+
 
 class CountTraverser : public TreeTraverser {
 public:

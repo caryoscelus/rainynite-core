@@ -93,7 +93,7 @@ inline unique_ptr<TreeElement> create_tree_element(Type type) {
 
 class NodeTreeContent {
 public:
-    NodeTreeContent(shared_ptr<AbstractValue> node_) :
+    NodeTreeContent(shared_ptr<AbstractValue> node_ = nullptr) :
         node(node_)
     {}
 
@@ -123,6 +123,7 @@ public:
     }
 
     Index index(Index parent, size_t i) const;
+    Index index_wo_check(Index parent, size_t i) const;
     Index parent(Index index) const {
         return index->parent;
     }
@@ -152,6 +153,8 @@ public:
             static_cast<T*>(get_element(typeid(T), index).get())
         );
     }
+
+    void check_index_validity(Index index) const;
 
     void rebuild_count();
 
