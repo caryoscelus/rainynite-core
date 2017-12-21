@@ -16,7 +16,7 @@
  */
 
 #include <core/node_info.h>
-#include <core/node/proxy_node.h>
+#include <core/node/new_node.h>
 #include <core/all_types.h>
 #include <core/context.h>
 
@@ -44,7 +44,15 @@ constexpr bool can_be_multiplied = is_detected_v<detail::can_be_multiplied_t, A,
 
 
 template <class T>
-class WeightedAverage : public Node<T> {
+class WeightedAverage :
+    public NewNode<
+        WeightedAverage<T>,
+        T,
+        types::Only<T>,
+        types::Only<T>,
+        types::Only<double>
+    >
+{
     DOC_STRING(
         "Weighted average value\n"
         "\n"
@@ -52,26 +60,21 @@ class WeightedAverage : public Node<T> {
         "and multiplied by Real."
     )
 
-public:
-    WeightedAverage() {
-        this->template init<T>(a, {});
-        this->template init<T>(b, {});
-        this->template init<double>(progress, {});
-    }
+    NODE_PROPERTIES("a", "b", "progress")
+    DEFAULT_VALUES(T{}, T{}, 0.0)
+    PROPERTY(a)
+    PROPERTY(b)
+    PROPERTY(progress)
 
+public:
     T get(shared_ptr<Context> ctx) const override {
         if constexpr (can_be_summed<T, T> && can_be_multiplied<T, double>) {
-            auto p = get_progress()->get(ctx);
-            return get_a()->get(ctx)*(1.0-p) + get_b()->get(ctx)*p;
+            auto p = progress_value<double>(ctx);
+            return a_value<T>(ctx)*(1.0-p) + b_value<T>(ctx)*p;
         } else {
             throw std::logic_error("WeightedAverage on unsupported type");
         }
     }
-
-private:
-    NODE_PROPERTY(a, T);
-    NODE_PROPERTY(b, T);
-    NODE_PROPERTY(progress, double);
 };
 
 NODE_INFO_TEMPLATE(WeightedAverage, WeightedAverage<T>, T);
