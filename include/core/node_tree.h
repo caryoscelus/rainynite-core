@@ -93,17 +93,17 @@ inline unique_ptr<TreeElement> create_tree_element(Type type) {
 
 class NodeTreeContent {
 public:
-    NodeTreeContent(shared_ptr<AbstractValue> node_ = nullptr) :
+    NodeTreeContent(weak_ptr<AbstractValue> node_ = {}) :
         node(node_)
     {}
 
     observer_ptr<TreeElement> add_element(Type type);
     observer_ptr<TreeElement> get_element(Type type) const;
     shared_ptr<AbstractValue> get_node() const {
-        return node;
+        return node.lock();
     }
 private:
-    shared_ptr<AbstractValue> node;
+    weak_ptr<AbstractValue> node;
     map<Type, unique_ptr<TreeElement>> elements;
 };
 
