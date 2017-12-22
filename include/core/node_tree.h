@@ -180,6 +180,8 @@ private:
     mutable map<AbstractReference, size_t> node_count;
 };
 
+NodeTree::Index tree_path_to_index(NodeTree const& tree, NodeTreePath const& path);
+
 } // namespace rainynite::core
 
 #endif

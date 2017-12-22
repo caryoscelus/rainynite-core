@@ -146,6 +146,15 @@ void NodeTree::check_index_validity(Index index) const {
 }
 
 
+NodeTree::Index tree_path_to_index(NodeTree const& tree, NodeTreePath const& path) {
+    auto idx = tree.get_root_index();
+    for (auto i : path.indexes) {
+        idx = tree.index(idx, i);
+    }
+    return idx;
+}
+
+
 class CountTraverser : public TreeTraverser {
 public:
     CountTraverser(NodeTree& tree) :
