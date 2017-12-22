@@ -1,0 +1,14 @@
+--- !Document
+root: !Transform
+  source: !Empty
+    {}
+  transform: &68bf95c9-22a7-4b60-8267-c6d61ba501c8 !Translate
+    offset: (1, 1)
+
+_tests: !List/Boolean
+  - !Equal/Affine
+    a: *68bf95c9-22a7-4b60-8267-c6d61ba501c8
+    b: !TestTransform
+      index: !List/Real
+        - 0
+        - 0
