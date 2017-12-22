@@ -1,4 +1,4 @@
-/*  translate.cpp - Translate transformation node
+/*  transform_composite.cpp - combine transforms from list
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,35 +15,44 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
+#include <core/node/list.h>
 #include <core/node_info.h>
 
-#include <2geom/transforms.h>
+#include <2geom/affine.h>
 
 namespace rainynite::core::nodes {
 
-class Translate : public Node<Geom::Affine> {
+class TransformComposite :
+    public NewNode<
+        TransformComposite,
+        Geom::Affine,
+        types::Only<vector<Geom::Affine>>
+    >
+{
     DOC_STRING(
-        "Construct Translate transformation."
+        "Combine transforms from list."
     )
+
+    NODE_PROPERTIES("transforms")
+    static vector<AbstractReference> const& default_values() {
+        static vector<AbstractReference> instance {
+            make_node<ListValue<Geom::Affine>>()
+        };
+        return instance;
+    }
+    PROPERTY(transforms)
+
 public:
-    Translate() {
-        init<Geom::Affine>(source, {});
-        init<Geom::Point>(offset, {});
-    }
-
     Geom::Affine get(shared_ptr<Context> ctx) const override {
-        return
-            get_source()->value(ctx) *
-            Geom::Translate(get_offset()->value(ctx));
+        Geom::Affine result;
+        for (auto const& t : transforms_value<vector<Geom::Affine>>(ctx)) {
+            result *= t;
+        }
+        return result;
     }
-
-private:
-    NODE_PROPERTY(source, Geom::Affine);
-    NODE_PROPERTY(offset, Geom::Point);
 };
 
-REGISTER_NODE(Translate);
+REGISTER_NODE(TransformComposite);
 
 } // namespace rainynite::core::nodes

@@ -1,3 +1,5 @@
+## TODO: move node-related stuff into subdir
+
 add_library(document SHARED)
 
 add_library(nodes SHARED)
@@ -57,9 +59,8 @@ set(ALL_NODES
     nodes/split_string.cpp
     nodes/random.cpp
     nodes/audio.cpp
-    nodes/translate.cpp
-    nodes/scale.cpp
-    nodes/rotate.cpp
+    nodes/affine.cpp
+    nodes/transform_composite.cpp
     nodes/transform_path.cpp
     nodes/renderable/empty.cpp
     nodes/renderable/composite.cpp
