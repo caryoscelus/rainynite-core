@@ -83,14 +83,18 @@ NodeTree::Index NodeTree::get_index(IndexMap& local_indexes, Index parent, size_
             return r;
         } catch (...) {
         }
+    } else {
+        local_indexes.emplace(
+            i,
+            NodeTreeIndex{
+                NodeTreeIndex::Indexed,
+                parent,
+                i
+            }
+        );
     }
-    local_indexes[i] = NodeTreeIndex{
-        NodeTreeIndex::Indexed,
-        parent,
-        i
-    };
     auto index = make_observer(&local_indexes.at(i));
-    indexes[index] = IndexMap{};
+    indexes.emplace(index, IndexMap{});
     content[index] = NodeTreeContent{get_node_as<AbstractListLinked>(parent)->get_link(i)};
     return index;
 }
