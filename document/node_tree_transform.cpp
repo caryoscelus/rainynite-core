@@ -52,8 +52,8 @@ NodeTree::Index TreeCalculateTransform::find_previous(NodeTree const& tree, Node
     // TODO: modularize?
     if (parent_value->get_type() == typeid(vector<Geom::Affine>)) {
         // assuming "transform composite"
-        if (index->index > 0)
-            return tree.index(parent, index->index-1);
+        if (index->index < tree.children_count(parent)-1)
+            return tree.index(parent, index->index+1);
         return parent;
     } else if (parent_value->get_type() == typeid(Geom::Affine)) {
         // no additional transform changes inside transform nodes
