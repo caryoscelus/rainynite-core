@@ -36,7 +36,7 @@ bool load_and_test_stream(shared_ptr<Document> document) {
     bool failed = false;
     if (auto test_list = document->get_property("_tests")) {
         int i = 0;
-        for (auto nic : test_list->list_links(zero_context())) {
+        for (auto nic : test_list->list_links(document->get_default_context())) {
             if (auto node = dynamic_cast<BaseValue<bool>*>(nic.node.get())) {
                 if (node->value(nic.context) != true) {
                     failed = true;
