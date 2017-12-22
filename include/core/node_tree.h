@@ -24,10 +24,10 @@
 #include <core/abstract_factory.h>
 #include <core/exceptions.h>
 #include <core/class_init.h>
+#include <core/node/common.h>
 
 namespace rainynite::core {
 
-class AbstractValue;
 class ActionStack;
 
 class NodeTree;
@@ -137,6 +137,8 @@ public:
 
     /// Get node that is pointed to by index
     shared_ptr<AbstractValue> get_node(Index index) const {
+        if (index == nullptr)
+            return nullptr;
         return get_content(index).get_node();
     }
 
