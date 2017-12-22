@@ -119,6 +119,8 @@ NodeTreeContent& NodeTree::get_content(Index index) const {
 }
 
 observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
+    if (index == nullptr)
+        return nullptr;
     auto& c = get_content(index);
     if (auto r = c.get_element(type)) {
         return r;
