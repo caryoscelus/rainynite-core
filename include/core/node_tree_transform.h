@@ -20,65 +20,25 @@
 
 #include <2geom/affine.h>
 
+#include <core/node/common.h>
 #include "node_tree.h"
 
 namespace rainynite::core {
 
+class Context;
+
 class TreeCalculateTransform : TREE_ELEMENT(TreeCalculateTransform) {
 public:
-    void added(NodeTree const& tree, NodeTree::Index index) override {
-        if (auto prev_index = find_previous(tree, index)) {
-            parent_element = tree.get_element<TreeCalculateTransform>(prev_index);
-        }
-        transform_node = tree.get_node_as<BaseValue<Geom::Affine>>(index);
-    }
+    void added(NodeTree const& tree, NodeTree::Index index) override;
 
-    Geom::Affine get_transform(shared_ptr<Context> ctx) const {
-        if (parent_element)
-            return parent_element->get_child_transform(ctx);
-        return {};
-    }
+    Geom::Affine get_transform(shared_ptr<Context> ctx) const;
 
-    Geom::Affine get_child_transform(shared_ptr<Context> ctx) const {
-        return get_transform(ctx) * get_transform_change(ctx);
-    }
+    Geom::Affine get_child_transform(shared_ptr<Context> ctx) const;
 
-    Geom::Affine get_transform_change(shared_ptr<Context> ctx) const {
-        if (transform_node)
-            return transform_node->value(ctx);
-        return {};
-    }
+    Geom::Affine get_transform_change(shared_ptr<Context> ctx) const;
 
 private:
-    NodeTree::Index find_previous(NodeTree const& tree, NodeTree::Index index) const {
-        if (index == nullptr || index->null() || index->root())
-            return nullptr;
-        auto parent = tree.parent(index);
-        auto parent_value = tree.get_node(parent);
-        // TODO: modularize?
-        if (parent_value->get_type() == typeid(vector<Geom::Affine>)) {
-            // assuming "transform composite"
-            if (index->index > 0)
-                return tree.index(parent, index->index-1);
-            return parent;
-        } else if (parent_value->get_type() == typeid(Geom::Affine)) {
-            // no additional transform changes inside transform nodes
-            return find_previous(tree, parent);
-        } else if (auto parent_node = abstract_node_cast(parent_value)) {
-            // TODO: check instead of try-catch
-            size_t i;
-            try {
-                i = parent_node->get_name_id("transform");
-            } catch (std::exception const& e) {
-                return parent;
-            }
-            if (i != index->index)
-                return tree.index(parent, i);
-        }
-        // parent isn't node or affine list - the only remaining possibility
-        // is that it's heterogeneous (untyped) list
-        return parent;
-    }
+    NodeTree::Index find_previous(NodeTree const& tree, NodeTree::Index index) const;
 
 private:
     observer_ptr<TreeCalculateTransform> parent_element;

@@ -17,6 +17,7 @@ target_sources(document
         action.cpp
         action_stack.cpp
         node_tree.cpp
+        node_tree_transform.cpp
         node/old_node.cpp
 )
 
