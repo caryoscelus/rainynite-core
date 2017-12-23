@@ -92,7 +92,7 @@ class Scale :
     )
 
     NODE_PROPERTIES("origin", "scale")
-    DEFAULT_VALUES(Geom::Point{}, Geom::Point{})
+    DEFAULT_VALUES(Geom::Point{}, Geom::Point{1, 1})
     PROPERTY(origin)
     PROPERTY(scale)
 
