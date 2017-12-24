@@ -1,5 +1,4 @@
-/*
- *  point_xy.cpp - combine x&y to Point (see ExtractCoord for reverse)
+/*  point_xy.cpp - combine x&y to Point (see ExtractCoord for reverse)
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -17,27 +16,32 @@
  */
 
 #include <core/node_info.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 #include <2geom/point.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
-class PointXY : public Node<Geom::Point> {
-public:
-    PointXY() {
-        init<double>(x, 0);
-        init<double>(y, 0);
-    }
+class PointXY :
+    public NewNode<
+        PointXY,
+        Geom::Point,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Create Point from coordinate pair"
+    )
+
+    NODE_PROPERTIES("x", "y")
+    DEFAULT_VALUES(0.0, 0.0)
+    PROPERTY(x)
+    PROPERTY(y)
+
 public:
     Geom::Point get(shared_ptr<Context> ctx) const override {
-        try {
-            return {get_x()->get(ctx), get_y()->get(ctx)};
-        } catch (...) {
-            return {};
-        }
+        return {x_value<double>(ctx), y_value<double>(ctx)};
     }
     bool can_set_any(any const& value) const override {
         return get_type() == value.type();
@@ -47,13 +51,8 @@ public:
         set_property("x", make_value<double>(point.x()));
         set_property("y", make_value<double>(point.y()));
     }
-
-private:
-    NODE_PROPERTY(x, double);
-    NODE_PROPERTY(y, double);
 };
 
 REGISTER_NODE(PointXY);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

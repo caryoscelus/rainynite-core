@@ -1,0 +1,7 @@
+--- !Document
+_tests: !List/Boolean
+  - !Equal/Point
+    a: (1, 2.5)
+    b: !PointXY
+      x: 1
+      y: 2.5
