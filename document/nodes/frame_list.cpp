@@ -22,6 +22,7 @@
 
 namespace rainynite::core::nodes {
 
+// TODO: rewrite to new node system
 template <class T>
 class FrameList : public ProxyNode<T> {
     DOC_STRING(
@@ -30,11 +31,10 @@ class FrameList : public ProxyNode<T> {
 
 public:
     FrameList() {
-        this->template init_list<TimePoint<T>>(frame_list);
         this->template init<T>(default_value, {});
 
-        // TODO: don't do this here?
-        this->get_frame_list()->new_id();
+        auto flist = make_node_with_name("List/Frame/"+get_primitive_type_name<T>());
+        this->init_property("frame_list", Type(typeid(vector<TimePoint<T>>)), std::move(flist));
     }
 
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
