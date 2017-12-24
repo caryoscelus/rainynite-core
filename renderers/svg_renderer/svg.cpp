@@ -47,7 +47,7 @@ public:
 
         std::stringstream result;
 
-        std::regex xml_svg_re(R"(<(\?xml.*\?|svg.*|/svg.*)>)");
+        std::regex xml_svg_re(R"(<(\?xml.*\?|svg[^>]*|/svg.*)>)");
         std::regex_replace(
             std::ostreambuf_iterator(result),
             buff.begin(),
