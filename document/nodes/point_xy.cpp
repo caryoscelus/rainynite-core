@@ -55,4 +55,29 @@ public:
 
 REGISTER_NODE(PointXY);
 
+
+class SymmetricPoint :
+    public NewNode<
+        SymmetricPoint,
+        Geom::Point,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Create Point with equal coordinates"
+    )
+
+    NODE_PROPERTIES("x")
+    DEFAULT_VALUES(0.0)
+    PROPERTY(x)
+
+public:
+    Geom::Point get(shared_ptr<Context> ctx) const override {
+        auto x = x_value<double>(ctx);
+        return {x, x};
+    }
+};
+
+REGISTER_NODE(SymmetricPoint);
+
 } // namespace rainynite::core::nodes
