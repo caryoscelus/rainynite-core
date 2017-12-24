@@ -16,6 +16,7 @@
  */
 
 #include <fstream>
+#include <regex>
 
 #include <core/std/string.h>
 
@@ -29,13 +30,33 @@ public:
     string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& /*settings*/) const override {
         auto fname = node.get_property_as<string>("file_path")->get(ctx);
         std::ifstream stream(fname);
+
         if (!stream) {
             std::cerr << "file '" << fname << "' not found" << std::endl;
             return "";
         }
-        std::stringstream buffer;
-        buffer << stream.rdbuf();
-        return buffer.str();
+
+        string buff;
+
+        {
+            std::stringstream buffer;
+            buffer << stream.rdbuf();
+            stream.close();
+            buff = buffer.str();
+        }
+
+        std::stringstream result;
+
+        std::regex xml_svg_re(R"(<(\?xml.*\?|svg.*|/svg.*)>)");
+        std::regex_replace(
+            std::ostreambuf_iterator(result),
+            buff.begin(),
+            buff.end(),
+            xml_svg_re,
+            ""
+        );
+
+        return result.str();
     }
 };
 
