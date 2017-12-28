@@ -1,5 +1,4 @@
-/*
- *  linear.cpp - seconds to real conversion
+/*  linear.cpp - seconds to real conversion
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -21,8 +20,7 @@
 #include <core/node/property.h>
 #include <core/context.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class Linear : public Node<double> {
 public:
@@ -32,13 +30,9 @@ public:
     }
 public:
     double get(shared_ptr<Context> ctx) const override {
-        try {
-            auto b = get_base()->get(ctx);
-            auto f = get_speed()->get(ctx);
-            return b+f*ctx->get_time().get_seconds();
-        } catch (...) {
-            return {};
-        }
+        auto b = get_base()->get(ctx);
+        auto f = get_speed()->get(ctx);
+        return b+f*ctx->get_time().get_seconds();
     }
 
 private:
@@ -48,5 +42,4 @@ private:
 
 REGISTER_NODE(Linear);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
