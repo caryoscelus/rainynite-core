@@ -1,5 +1,4 @@
-/*
- *  morph.cpp - bezier morph node
+/*  morph.cpp - bezier morph node
  *  Copyright (C) 2017 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -24,8 +23,7 @@
 
 #include <morphing/morphing.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class BezierMorph : public Node<Geom::BezierKnots> {
 public:
@@ -36,20 +34,15 @@ public:
     }
 public:
     Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
-        try {
-            auto a = get_a()->get(ctx);
-            auto b = get_b()->get(ctx);
-            if (a != cached_a || b != cached_b) {
-                morphing::prepare_average(a, b, avg_a, avg_b);
-                cached_a = a;
-                cached_b = b;
-            }
-            auto t = get_progress()->get(ctx);
-            return morphing::simple_average(avg_a, avg_b, t);
-        } catch (...) {
-            // TODO: DEBUG
-            return Geom::BezierKnots();
+        auto a = get_a()->get(ctx);
+        auto b = get_b()->get(ctx);
+        if (a != cached_a || b != cached_b) {
+            morphing::prepare_average(a, b, avg_a, avg_b);
+            cached_a = a;
+            cached_b = b;
         }
+        auto t = get_progress()->get(ctx);
+        return morphing::simple_average(avg_a, avg_b, t);
     }
 
 private:
@@ -65,5 +58,4 @@ private:
 
 REGISTER_NODE(BezierMorph);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes
