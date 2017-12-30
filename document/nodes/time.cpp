@@ -18,31 +18,37 @@
 #include <core/all_types.h>
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
-#include <core/node/property.h>
 #include <core/context.h>
 
 namespace rainynite::core::nodes {
 
 template <typename T>
-class TimeMap : public ProxyNode<T> {
-public:
-    TimeMap() {
-        this->template init<T>(source, {});
-        this->template init<double>(multiplier, 1);
-        this->template init<Time>(offset, {});
-    }
+class TimeMap :
+    public NewProxyNode<
+        TimeMap<T>,
+        T,
+        types::Only<T>,
+        types::Only<double>,
+        types::Only<Time>
+    >
+{
+    DOC_STRING(
+        "Time map"
+    )
+
+    NODE_PROPERTIES("source", "multiplier", "offset")
+    DEFAULT_VALUES(T{}, 1.0, Time{})
+    PROPERTY(source)
+    PROPERTY(multiplier)
+    PROPERTY(offset)
+
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto t = ctx->get_time() * get_multiplier()->get(ctx) + get_offset()->get(ctx);
+        auto t = ctx->get_time() * multiplier_value<double>(ctx) + offset_value<Time>(ctx);
         auto nctx = make_shared<Context>(*ctx);
         nctx->set_time(t);
-        return { get_source(), nctx };
+        return { p_source(), nctx };
     }
-
-private:
-    NODE_PROPERTY(source, T);
-    NODE_PROPERTY(multiplier, double);
-    NODE_PROPERTY(offset, Time);
 };
 
 NODE_INFO_TEMPLATE(TimeMap, TimeMap<T>, T);
@@ -50,35 +56,47 @@ TYPE_INSTANCES(TimeMapNodeInfo)
 
 
 template <typename T>
-class AtTime : public ProxyNode<T> {
+class AtTime :
+    public NewProxyNode<
+        AtTime<T>,
+        T,
+        types::Only<T>,
+        types::Only<Time>
+    >
+{
     DOC_STRING(
         "Get value of its child at given time."
     )
-public:
-    AtTime() {
-        this->template init<T>(source, {});
-        this->template init<Time>(time, {});
-    }
 
+    NODE_PROPERTIES("source", "time")
+    DEFAULT_VALUES(T{}, Time{});
+    PROPERTY(source)
+    PROPERTY(time)
+
+public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto nctx = make_shared<Context>(*ctx);
-        nctx->set_time(get_time()->get(ctx));
-        return { get_source(), nctx };
+        nctx->set_time(time_value<Time>(ctx));
+        return { p_source(), nctx };
     }
-
-private:
-    NODE_PROPERTY(source, T);
-    NODE_PROPERTY(time, Time);
 };
 
 NODE_INFO_TEMPLATE(AtTime, AtTime<T>, T);
 TYPE_INSTANCES(AtTimeNodeInfo)
 
 
-class Now : public Node<Time> {
-public:
-    Now() {
-    }
+class Now :
+    public NewNode<
+        Now,
+        Time
+    >
+{
+    DOC_STRING(
+        "Return current time"
+    )
+    NODE_PROPERTIES()
+    DEFAULT_VALUES()
+
 public:
     Time get(shared_ptr<Context> ctx) const override {
         return ctx->get_time();
@@ -88,17 +106,29 @@ public:
 REGISTER_NODE(Now);
 
 template <typename T>
-class TimeLoop : public ProxyNode<T> {
-public:
-    TimeLoop() {
-        this->template init<T>(source, {});
-        this->template init<Time>(period, {});
-        this->template init<Time>(offset, {});
-    }
+class TimeLoop :
+    public NewProxyNode<
+        TimeLoop<T>,
+        T,
+        types::Only<T>,
+        types::Only<Time>,
+        types::Only<Time>
+    >
+{
+    DOC_STRING(
+        "Time loop"
+    )
+
+    NODE_PROPERTIES("source", "period", "offset")
+    DEFAULT_VALUES(T{}, Time{}, Time{});
+    PROPERTY(source)
+    PROPERTY(period)
+    PROPERTY(offset)
+
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto period = get_period()->get(ctx);
-        auto t = ctx->get_time() + get_offset()->get(ctx);
+        auto period = period_value<Time>(ctx);
+        auto t = ctx->get_time() + offset_value<Time>(ctx);
         Time time;
         if (period <= Time()) {
             time = t;
@@ -107,12 +137,8 @@ public:
         }
         auto nctx = make_shared<Context>(*ctx);
         nctx->set_time(time);
-        return { get_source(), nctx };
+        return { p_source(), nctx };
     }
-private:
-    NODE_PROPERTY(source, T);
-    NODE_PROPERTY(period, Time);
-    NODE_PROPERTY(offset, Time);
 };
 
 NODE_INFO_TEMPLATE(TimeLoop, TimeLoop<T>, T);

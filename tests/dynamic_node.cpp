@@ -56,15 +56,6 @@ TEST_CASE("Test ApplyToList node", "[node]") {
         list->push_back(make_value<double>(3.0));
         CHECK((apply->value(zero_context()) == vector<double>{1.5, 3.5}));
     }
-    SECTION("More complex") {
-        // This isn't really required..
-        auto time_map = make_node_with_name<Node<double>>("TimeMap/Real");
-        time_map->get_property("offset")->set_any(Time(1.0));
-        time_map->set_property("source", make_node_with_name<AbstractValue>("Linear"));
-        REQUIRE(time_map->value(zero_context()) == 1.0);
-        list->push_back(time_map);
-        CHECK(apply->value(zero_context()) == vector<double>{1.5});
-    }
     SECTION("Preserve context") {
         auto time_list = make_time_list_0_1();
         apply->set_property("dynamic_arguments", time_list);

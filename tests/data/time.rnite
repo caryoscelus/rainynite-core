@@ -1,0 +1,19 @@
+--- !Document
+
+_tests: !List/Boolean
+
+  - !Equal/Real
+    a: 2.0
+    b: !TimeMap/Real
+      source: &9d29be97-75d2-4a41-9228-a5bf9164d51f !Linear
+        base: 0
+        speed: 1
+      offset: 1f@1
+      multiplier: 2.0
+
+  - !Equal/Real
+    a: 6.0
+    b: !TimeMap/Real
+      source: *9d29be97-75d2-4a41-9228-a5bf9164d51f
+      offset: 2f@1
+      multiplier: 3.0

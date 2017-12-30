@@ -26,25 +26,6 @@
 using namespace rainynite;
 using namespace rainynite::core;
 
-TEST_CASE("Test TimeMap node", "[node]") {
-    auto tmap = make_node_with_name<Node<double>>("TimeMap/Real");
-    tmap->set_property("source", make_node_with_name<AbstractValue>("Linear"));
-    CHECK(tmap->value(zero_context()) == 0.0);
-    tmap->get_property("offset")->set_any(Time(1.0));
-    CHECK(tmap->value(zero_context()) == 1.0);
-    tmap->get_property("multiplier")->set_any(2.0);
-    CHECK(tmap->value(zero_context()) == 1.0);
-    tmap->get_property("offset")->set_any(Time(2.0));
-    CHECK(tmap->value(zero_context()) == 2.0);
-    auto ctx = make_shared<Context>();
-    ctx->set_time(Time(0.5));
-    CHECK(tmap->value(ctx) == 3.0);
-    ctx->set_time(Time(1.0));
-    CHECK(tmap->value(ctx) == 4.0);
-    tmap->get_property("multiplier")->set_any(0.0);
-    CHECK(tmap->value(ctx) == 2.0);
-}
-
 TEST_CASE("Test TimeList node", "[node]") {
     auto time_list = make_node_with_name<Node<vector<double>>>("TimeList/Real");
     time_list->get_property("step")->set_any(Time(1.0));
