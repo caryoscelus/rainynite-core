@@ -31,15 +31,19 @@ namespace rainynite::core {
  * Examples include various switch (e.g. Animated) and time-manipulating nodes.
  */
 template <typename T>
-class ProxyNode : public Node<T> {
+class AbstractProxyNode {
 public:
     /**
      * Get proxied NodeInContext
      */
     virtual NodeInContext get_proxy(shared_ptr<Context> ctx) const = 0;
+};
+
+template <typename T>
+class ProxyNode : public Node<T>, public AbstractProxyNode<T> {
 public:
     T get(shared_ptr<Context> ctx) const override {
-        auto [node, nctx] = get_proxy(ctx);
+        auto [node, nctx] = this->get_proxy(ctx);
         if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
             return vnode->get(nctx);
         throw NodeAccessError("Proxied node is of different type");
@@ -52,13 +56,13 @@ public:
  * Examples include various switch (e.g. Animated) and time-manipulating nodes.
  */
 template <class Self, typename Result, typename... Ts>
-class NewProxyNode : public NewNode<Self, Result, Ts...> {
+class NewProxyNode :
+    public NewNode<Self, Result, Ts...>,
+    public AbstractProxyNode<Result>
+{
 public:
-    /// Get proxied NodeInContext
-    virtual NodeInContext get_proxy(shared_ptr<Context> ctx) const = 0;
-
     Result get(shared_ptr<Context> ctx) const override {
-        auto [node, nctx] = get_proxy(ctx);
+        auto [node, nctx] = this->get_proxy(ctx);
         if (auto vnode = dynamic_cast<BaseValue<Result>*>(node.get()))
             return vnode->get(nctx);
         throw NodeAccessError("Proxied node is of different type");

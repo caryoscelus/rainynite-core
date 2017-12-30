@@ -234,7 +234,7 @@ string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
     try {
         return class_init::name_info<SvgRendererModule>(name)(*node, context, settings);
     } catch (class_init::TypeLookupError const&) {
-        if (auto proxy = dynamic_cast<ProxyNode<Renderable>*>(node)) {
+        if (auto proxy = dynamic_cast<AbstractProxyNode<Renderable>*>(node)) {
             string result;
             result = node_to_svg(proxy->get_proxy(context), settings);
             return result;
