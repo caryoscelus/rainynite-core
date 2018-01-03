@@ -45,6 +45,8 @@ private:
     shared_ptr<BaseValue<Geom::Affine>> transform_node;
 };
 
+Geom::Affine get_transform(shared_ptr<Context> ctx, NodeTree const& tree, NodeTree::Index index);
+
 } // namespace rainynite::core
 
 #endif

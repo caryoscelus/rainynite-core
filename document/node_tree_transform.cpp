@@ -74,4 +74,10 @@ NodeTree::Index TreeCalculateTransform::find_previous(NodeTree const& tree, Node
     return parent;
 }
 
+Geom::Affine get_transform(shared_ptr<Context> ctx, NodeTree const& tree, NodeTree::Index index) {
+    if (auto calculate_tr = tree.get_element<TreeCalculateTransform>(index))
+        return calculate_tr->get_transform(ctx);
+    return {};
+}
+
 } // namespace rainynite::core
