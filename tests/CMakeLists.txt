@@ -7,6 +7,8 @@ function(add_catch_test name)
     )
 endfunction()
 
+add_catch_test(nullptr)
+
 add_catch_test(time)
 target_link_libraries(test_time time)
 
