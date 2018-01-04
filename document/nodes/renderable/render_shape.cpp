@@ -1,5 +1,5 @@
 /*  render_shape.cpp - Shape renderable node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,30 +15,39 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
+#include <core/node/new_node.h>
 #include <core/node_info.h>
+#include <core/renderable.h>
 #include <core/shading.h>
-
-#include <geom_helpers/null_shape.h>
+#include <core/shapes.h>
 
 namespace rainynite::core::nodes {
 
-class RenderShape : public RenderableNode {
+class RenderShape :
+    public NewNode<
+        RenderShape,
+        Renderable,
+        types::Shape,
+        types::Only<Shading>
+    >
+{
     DOC_STRING(
         "Render any supported vector shape."
     )
 
-public:
-    RenderShape() {
-        init_property("shape", {}, make_value<Geom::NullShape>());
-        // this isn't very beautiful, but will be fixed along with
-        // new node api
-        init<Shading>(shading, {});
-        set_shading(make_node_with_name<BaseValue<Shading>>("ShadingStyle"));
+    NODE_PROPERTIES("shape", "shading")
+    static vector<AbstractReference> const& default_values() {
+        static vector<AbstractReference> instance {
+            make_value<Geom::NullShape>(),
+            make_node_with_name("ShadingStyle")
+        };
+        return instance;
     }
 
-private:
-    NODE_PROPERTY(shading, Shading);
+public:
+    Renderable get(shared_ptr<Context> /*ctx*/) const override {
+        return {};
+    }
 };
 
 REGISTER_NODE(RenderShape);
