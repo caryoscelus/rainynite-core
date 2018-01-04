@@ -1,5 +1,5 @@
 /*  filters/yaml_writer.cpp - yaml serializer
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class YamlCppWriter :
 {
     using State = YamlCppWriterState;
 public:
-    YamlCppWriter(std::ostream& stream, shared_ptr<Document> document) :
+    YamlCppWriter(std::ostream& stream, shared_ptr<AbstractDocument> document) :
         TreeTraverser(*document->get_tree()),
         emitter(stream)
     {
@@ -132,7 +132,7 @@ private:
 };
 
 
-void YamlWriter::write_document(std::ostream& output, shared_ptr<Document> document) {
+void YamlWriter::write_document(std::ostream& output, shared_ptr<AbstractDocument> document) {
     auto writer = YamlCppWriter(output, document);
     writer.serialize();
     writer.flush();

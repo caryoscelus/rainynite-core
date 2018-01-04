@@ -1,5 +1,5 @@
 /*  node_tree.cpp - Node tree
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 #include <core/std/vector.h>
 #include <core/node/abstract_list.h>
 #include <core/node/abstract_value.h>
+#include <core/node/abstract_node.h>
 #include <core/exceptions.h>
 #include <core/document.h>
 #include <core/node_tree_traverse.h>

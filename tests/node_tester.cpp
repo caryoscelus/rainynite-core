@@ -1,5 +1,5 @@
 /*  node_tester.cpp - load .rnite file and test it
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  */
 
 #include <fstream>
+#include <iostream>
+#include <sstream>
 
 #include <boost/uuid/uuid_io.hpp>
 
@@ -25,6 +27,7 @@
 #include <core/filters/yaml_reader.h>
 #include <core/filters/yaml_writer.h>
 #include <core/document.h>
+#include <core/node/abstract_node.h>
 #include <core/node_info.h>
 #include "zero_context.h"
 
@@ -32,9 +35,9 @@ using namespace fmt::literals;
 
 namespace rainynite::core {
 
-bool load_and_test_stream(shared_ptr<Document> document) {
+bool load_and_test_stream(shared_ptr<AbstractDocument> document) {
     bool failed = false;
-    if (auto test_list = document->get_property("_tests")) {
+    if (auto test_list = abstract_node_cast(document)->get_property("_tests")) {
         int i = 0;
         for (auto nic : test_list->list_links(document->get_default_context())) {
             if (auto node = dynamic_cast<BaseValue<bool>*>(nic.node.get())) {
@@ -83,7 +86,7 @@ bool load_and_test_file(string const& fname) {
     std::cerr << "but saved content differs from source\n";
     std::cerr << saved_content.str() << "\n\n";
 
-    if (document->get_property_value<bool>("_test_save_verbatim", zero_context()).value_or(false)) {
+    if (abstract_node_cast(document)->get_property_value<bool>("_test_save_verbatim", zero_context()).value_or(false)) {
         std::cerr << "This file is supposed to be saved verbatim => test failure.";
         return false;
     }

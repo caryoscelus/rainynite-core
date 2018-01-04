@@ -1,5 +1,5 @@
 /*  filters/yaml_reader.h - YAML document reader
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ namespace rainynite::core::filters {
 
 class YamlReader : public DocumentReader {
 public:
-    shared_ptr<Document> read_document(std::istream& input) override;
+    shared_ptr<AbstractDocument> read_document(std::istream& input) override;
 };
 
 } // namespace rainynite::core::filters

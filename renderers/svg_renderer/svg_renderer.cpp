@@ -1,5 +1,5 @@
 /*  svg_renderer.cpp - SVG "renderer"
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,9 +38,7 @@
 
 using namespace fmt::literals;
 
-namespace rainynite::core {
-
-namespace renderers {
+namespace rainynite::core::renderers {
 
 const string svg_template =
 R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -85,7 +83,7 @@ struct SvgRenderer::Impl {
 
     bool finished = false;
     Context context;
-    shared_ptr<Document> document;
+    shared_ptr<AbstractNode> document;
 
     SvgRendererSettings settings;
 
@@ -140,7 +138,7 @@ void SvgRenderer::Impl::render(Context&& context_) {
     rendered_frames_count = 0;
     std::cout << "SvgRenderer start" << std::endl;
     context = std::move(context_);
-    document = context.get_document();
+    document = abstract_node_cast(context.get_document());
     if (!document) {
         throw RenderFailure("No document present");
     }
@@ -190,7 +188,7 @@ void SvgRenderer::Impl::render_frame(shared_ptr<Context> context) {
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
-    auto size = document->get_size()->get(context);
+    auto size = document->get_property_value<Geom::Point>("size", context).value_or(Geom::Point{}); // panic?
     auto viewport_size = document->get_property_value<Geom::Point>("_svg_viewport_size", context).value_or(size);
     auto definitions = document->get_property_value<string>("_svg_definitions", context).value_or("");
     fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(context));
@@ -201,7 +199,7 @@ void SvgRenderer::Impl::render_frame(shared_ptr<Context> context) {
 }
 
 string SvgRenderer::Impl::frame_to_svg(shared_ptr<Context> context) const {
-    return node_to_svg({document->get_root(), context});
+    return node_to_svg({document->get_property("root"), context});
 }
 
 string get_extra_style(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) {
@@ -326,6 +324,4 @@ void SvgRenderer::Impl::quit_png(bool force) {
     }
 }
 
-} // namespace filters
-
-} // namespace rainynite::core
+} // namespace rainynite::core::renderers

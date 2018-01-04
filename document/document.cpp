@@ -1,5 +1,5 @@
 /*  document.cpp - document
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,13 +15,64 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/node/new_node.h>
 #include <core/node_info.h>
-#include <core/document.h>
 #include <core/context.h>
 #include <core/node_tree.h>
 #include <core/action_stack.h>
+#include <core/time/period.h>
+#include <core/renderable.h>
+#include <core/audio.h>
+#include <core/document.h>
+
+#include <2geom/point.h>
 
 namespace rainynite::core {
+
+class Document :
+    public NewNode<
+        Document,
+        DocumentType,
+        types::Only<Renderable>,
+        types::Only<Geom::Point>,
+        types::Only<TimePeriod>,
+        types::Only<Audio>
+    >,
+    public AbstractDocument
+{
+    DOC_STRING(
+        "Document is the core node of any RainyNite document."
+    )
+
+    NODE_PROPERTIES("root", "size", "main_time_period", "soundtrack")
+    COMPLEX_DEFAULT_VALUES(
+        make_node_with_name("Composite"),
+        make_value<Geom::Point>(320, 240),
+        make_value<TimePeriod>(Time(0, 12), Time(5, 12)),
+        make_node_with_name("AudioFromFile")
+    )
+
+public:
+    explicit Document(shared_ptr<BaseValue<Renderable>> root_=nullptr);
+    virtual ~Document() {
+    }
+
+    shared_ptr<Context> get_default_context() override;
+    shared_ptr<ActionStack> get_action_stack() override {
+        return action_stack;
+    }
+
+    DocumentType get(shared_ptr<Context> /*ctx*/) const override {
+        return {};
+    }
+
+    shared_ptr<NodeTree> get_tree() override;
+
+private:
+    shared_ptr<Context> default_context;
+    shared_ptr<ActionStack> const action_stack;
+    shared_ptr<NodeTree> tree;
+};
 
 REGISTER_NODE(Document);
 
@@ -29,19 +80,9 @@ Document::Document(shared_ptr<BaseValue<Renderable>> root_) :
     default_context(nullptr),
     action_stack(make_shared<ActionStack>())
 {
-    init<Renderable>(root, {});
-    init<Geom::Point>(size, {320, 240});
-    init<TimePeriod>(main_time_period, {Time(0, 12), Time(5, 12)});
-    // TODO: use constraints
-    init_property(soundtrack, Type(typeid(Audio)), make_node_with_name("AudioFromFile"));
     if (root_)
-        set_root(root_);
-    else
-        set_root(make_node_with_name<BaseValue<Renderable>>("Composite"));
+        set_property("root", root_);
     new_id();
-}
-
-Document::~Document() {
 }
 
 shared_ptr<NodeTree> Document::get_tree() {
@@ -50,15 +91,15 @@ shared_ptr<NodeTree> Document::get_tree() {
     return tree;
 }
 
-DocumentType Document::get(shared_ptr<Context> /*context*/) const {
-    return {};
-}
-
 shared_ptr<Context> Document::get_default_context() {
     if (!default_context) {
         default_context = make_shared<Context>(static_pointer_cast<Document>(shared_from_this()));
     }
     return default_context;
+}
+
+shared_ptr<AbstractDocument> make_document() {
+    return make_shared<Document>();
 }
 
 } // namespace rainynite::core

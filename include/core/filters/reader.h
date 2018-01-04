@@ -1,5 +1,5 @@
 /*  serialize/reader.h - document reader interface
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 
 namespace rainynite::core {
 
-class Document;
+class AbstractDocument;
 
 /**
  * Minimalist document reader interface
@@ -32,7 +32,7 @@ class Document;
 class DocumentReader {
 public:
     virtual ~DocumentReader() = default;
-    virtual shared_ptr<Document> read_document(std::istream& input) = 0;
+    virtual shared_ptr<AbstractDocument> read_document(std::istream& input) = 0;
 };
 
 } // namespace rainynite::core

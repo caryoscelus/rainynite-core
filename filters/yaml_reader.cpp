@@ -1,6 +1,5 @@
-/*
- *  yaml_reader.cpp - YAML document reader
- *  Copyright (C) 2017 caryoscelus
+/*  yaml_reader.cpp - YAML document reader
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -162,11 +161,11 @@ namespace rainynite::core::filters {
 
 struct DummyReader {};
 
-shared_ptr<Document> YamlReader::read_document(std::istream& input) {
+shared_ptr<AbstractDocument> YamlReader::read_document(std::istream& input) {
     serialize::YamlCppWrapper<serialize::NodeDeserializer<DummyReader>> node_reader;
     YAML::Parser parser(input);
     parser.HandleNextDocument(node_reader);
-    return dynamic_pointer_cast<Document>(node_reader.get_node_reader().get_root());
+    return dynamic_pointer_cast<AbstractDocument>(node_reader.get_node_reader().get_root());
 }
 
 } // namespace rainynite::core::filters

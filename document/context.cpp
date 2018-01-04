@@ -1,5 +1,5 @@
 /*  context.cpp - Context
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,18 +15,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/context.h>
+#include <core/node/cast.h>
+#include <core/node/make.h>
+#include <core/node/abstract_node.h>
 #include <core/document.h>
+#include <core/context.h>
 
 namespace rainynite::core {
 
-Context::Context(weak_ptr<Document> document_) :
+Context::Context(weak_ptr<AbstractDocument> document_) :
     document(document_)
 {
     auto doc = get_document();
     if (!doc)
         return;
-    time_period = doc->get_main_time_period();
+    time_period = abstract_node_cast(doc)->get_property_as<TimePeriod>("main_time_period");
     fps = get_period().get_fps();
     time = Time(0, fps);
 }
@@ -54,6 +57,10 @@ void Context::set_fps(Time::fps_type fps_) {
     time_period->mod().set_fps(fps);
     time_period->changed();
     changed_fps(fps);
+}
+
+shared_ptr<AbstractNode> Context::get_document_node() const {
+    return abstract_node_cast(get_document());
 }
 
 } // namespace rainynite::core

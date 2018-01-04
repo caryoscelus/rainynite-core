@@ -1,5 +1,5 @@
 /*  writer.h - document writer interface
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@
 
 namespace rainynite::core {
 
-class Document;
+class AbstractDocument;
 
 /**
  * Minimal document writer/serializer interface.
  */
 class DocumentWriter {
 public:
-    virtual void write_document(std::ostream& output, shared_ptr<Document> document) = 0;
+    virtual void write_document(std::ostream& output, shared_ptr<AbstractDocument> document) = 0;
 };
 
 } // namespace rainynite::core

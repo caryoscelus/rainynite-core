@@ -1,5 +1,5 @@
 /*  serialize/node_reader.h - node reader implementation
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 #ifndef CORE_SERIALIZE_NODE_READER_H_9D80AEB0_2C37_58D3_AB90_7780A924327A
 #define CORE_SERIALIZE_NODE_READER_H_9D80AEB0_2C37_58D3_AB90_7780A924327A
 
+#include <core/node/cast.h>
+#include <core/node/abstract_node.h>
 #include <core/node_info.h>
 #include <core/type_info.h>
 
@@ -56,7 +58,7 @@ public:
                     throw DeserializationError("Unexpected list element");
             } break;
             case RecordType::Map: {
-                if (auto object = dynamic_cast<AbstractNode*>(current().object.get()))
+                if (auto object = abstract_node_cast(current().object))
                     object->set_property(current().key, last.object);
                 else
                     throw DeserializationError("Unexpected key");

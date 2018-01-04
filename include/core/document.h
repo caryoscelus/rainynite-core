@@ -1,5 +1,5 @@
 /*  document.h - document
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,51 +20,31 @@
 
 #include <core/std/memory.h>
 
-#include <geom_helpers/knots.h>
-
-#include <core/time/period.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
-#include <core/renderable.h>
-#include <core/audio.h>
-
 namespace rainynite::core {
 
 class Context;
 class ActionStack;
 class NodeTree;
 
-class DocumentType {
-};
+struct DocumentType final {};
 
-class Document : public Node<DocumentType>
-{
-    DOC_STRING(
-        "Document is the core node of any RainyNite document."
-    )
+class AbstractDocument {
 public:
-    explicit Document(shared_ptr<BaseValue<Renderable>> root_=nullptr);
-    virtual ~Document();
-    shared_ptr<Context> get_default_context();
-    shared_ptr<ActionStack> get_action_stack() {
-        return action_stack;
+    virtual ~AbstractDocument() {
     }
 
-    DocumentType get(shared_ptr<Context> context) const override;
-
-    shared_ptr<NodeTree> get_tree();
-
-private:
-    shared_ptr<Context> default_context;
-    shared_ptr<ActionStack> const action_stack;
-    shared_ptr<NodeTree> tree;
-
-    NODE_PROPERTY(root, Renderable);
-    NODE_PROPERTY(size, Geom::Point);
-    NODE_STATIC_PROPERTY(main_time_period, TimePeriod);
-    NODE_PROPERTY(soundtrack, Audio);
+    virtual shared_ptr<Context> get_default_context() = 0;
+    virtual shared_ptr<ActionStack> get_action_stack() = 0;
+    virtual shared_ptr<NodeTree> get_tree() = 0;
 };
 
+template <class From>
+shared_ptr<AbstractDocument> document_cast(From&& pointer) {
+    return dynamic_pointer_cast<AbstractDocument>(std::forward<From>(pointer));
 }
+
+shared_ptr<AbstractDocument> make_document();
+
+} // namespace rainynite::core
 
 #endif

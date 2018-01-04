@@ -1,5 +1,5 @@
 /*  context.h - Context
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,10 +26,11 @@
 
 namespace rainynite::core {
 
-class Document;
+class AbstractDocument;
+class AbstractNode;
 
 template <typename>
-class Value;
+class BaseValue;
 
 /**
  * Context for node calculation and rendering.
@@ -39,15 +40,16 @@ class Value;
 class Context {
 public:
     Context() = default;
-    explicit Context(weak_ptr<Document> document_);
+    explicit Context(weak_ptr<AbstractDocument> document_);
     Context(Context const& context_);
     Context(Context&& context_) = default;
     Context& operator=(Context const& context_) = default;
     Context& operator=(Context&& context_) = default;
 
-    shared_ptr<Document> get_document() const {
+    shared_ptr<AbstractDocument> get_document() const {
         return document.lock();
     }
+    shared_ptr<AbstractNode> get_document_node() const;
     Time get_time() const {
         return time;
     }
@@ -87,10 +89,10 @@ public:
     boost::signals2::signal<void(Time::fps_type)> changed_fps;
 
 private:
-    weak_ptr<Document> document;
+    weak_ptr<AbstractDocument> document;
     Time::fps_type fps = 1;
     Time time;
-    shared_ptr<Value<TimePeriod>> time_period;
+    shared_ptr<BaseValue<TimePeriod>> time_period;
     any render_settings;
 };
 
