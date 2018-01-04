@@ -1,5 +1,5 @@
 /*  state_machine.h - state machine template
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
 
 #ifndef CORE_STATE_MACHINE_H_F1A307CC_D2C3_5BC5_A034_8A79562E8FFF
 #define CORE_STATE_MACHINE_H_F1A307CC_D2C3_5BC5_A034_8A79562E8FFF
+
+#include <core/std/vector.h>
 
 namespace rainynite {
 
