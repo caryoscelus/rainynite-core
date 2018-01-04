@@ -1,5 +1,5 @@
 /*  link_storage.h - link storage
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -108,6 +108,7 @@ protected:
      * Used solely to call changed
      */
     virtual void links_changed() {
+        link_change_signal();
     }
 
 private:
@@ -140,6 +141,15 @@ public: \
     static vector<AbstractReference> const& default_values() { \
         static vector<AbstractReference> instance { \
             generate_value_vector(__VA_ARGS__) \
+        }; \
+        return instance; \
+    }
+
+#define COMPLEX_DEFAULT_VALUES(...) \
+public: \
+    static vector<AbstractReference> const& default_values() { \
+        static vector<AbstractReference> instance { \
+            __VA_ARGS__ \
         }; \
         return instance; \
     }

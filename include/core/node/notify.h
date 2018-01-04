@@ -1,5 +1,5 @@
 /*  notify.h - abstract class for things that notify about their changes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ namespace rainynite::core {
  *
  * TODO: move out of nodes
  */
-class AbstractNotify : public DestroyDetector {
+class AbstractNotify : public virtual DestroyDetector {
 public:
     AbstractNotify() :
         DestroyDetector(),
@@ -45,7 +45,7 @@ public:
     /**
      * Function to be called when object has changed.
      */
-    inline void changed() {
+    void changed() {
         changed_signal();
     }
 

@@ -1,5 +1,5 @@
 /*  abstract_list.h - abstract list
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,10 @@
 #ifndef CORE_NODE_ABSTRACT_LIST_H_CC2AFA00_E2FA_5559_A49F_9E4CCC696C5D
 #define CORE_NODE_ABSTRACT_LIST_H_CC2AFA00_E2FA_5559_A49F_9E4CCC696C5D
 
+#include <boost/signals2/signal.hpp>
+
 #include <core/std/vector.h>
+#include <core/destroy_detector.h>
 #include "type_constraint.h"
 #include "common.h"
 #include "node_in_context.h"
@@ -29,8 +32,14 @@ namespace rainynite::core {
 /**
  * Abstract sequence of links to nodes.
  */
-class AbstractListLinked {
+class AbstractListLinked : public virtual DestroyDetector {
 public:
+    AbstractListLinked() :
+        link_change_signal()
+    {}
+    AbstractListLinked(AbstractListLinked const&) :
+        link_change_signal()
+    {}
     virtual ~AbstractListLinked() {}
 
     virtual size_t link_count() const = 0;
@@ -63,11 +72,19 @@ public:
         return false;
     }
 
-public:
+
     template <class T>
     shared_ptr<BaseValue<T>> get_link_as(size_t i) const {
         return base_value_cast<T>(get_link(i));
     }
+
+    template <typename F>
+    auto subscribe_to_link_change(F&& f) {
+        return connect_boost(link_change_signal, std::forward<F>(f));
+    }
+
+protected:
+    boost::signals2::signal<void()> link_change_signal;
 };
 
 } // namespace rainynite::core
