@@ -120,6 +120,17 @@ public:
             }
         );
     }
+    void set_link(size_t i, AbstractReference value) override {
+        return apply_for_normal_or_custom<void>(
+            i,
+            [this, value](auto ii) {
+                Storage::set_link(ii, value);
+            },
+            [this, value](auto ii) {
+                cp_storage[ii] = value;
+            }
+        );
+    }
 
 protected:
     void node_changed() override {
