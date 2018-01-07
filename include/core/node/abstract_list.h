@@ -35,9 +35,11 @@ namespace rainynite::core {
 class AbstractListLinked : public virtual DestroyDetector {
 public:
     AbstractListLinked() :
+        DestroyDetector(),
         link_change_signal()
     {}
     AbstractListLinked(AbstractListLinked const&) :
+        DestroyDetector(),
         link_change_signal()
     {}
     virtual ~AbstractListLinked() {}
