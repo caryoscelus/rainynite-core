@@ -1,5 +1,5 @@
 /*  random.cpp - random-generating nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +22,7 @@
 #include <core/node/property.h>
 #include <core/context.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 // TODO: use generate_canonical instead
 template <typename R>
@@ -68,11 +67,11 @@ private:
     template <typename F>
     void random_sequence(shared_ptr<Context> ctx, F f) const {
         try {
-            int length = get_length()->get(ctx);
+            int length = get_length()->value(ctx);
             if (length < 1)
                 return;
-            auto seed = get_seed()->get(ctx);
-            auto max = get_max()->get(ctx);
+            auto seed = get_seed()->value(ctx);
+            auto max = get_max()->value(ctx);
             random_engine.seed(seed);
             // TODO: cache
             while (length--) {
@@ -99,12 +98,12 @@ public:
         init<double>(period, 1);
         init<double>(seed, 0);
     }
-public:
+protected:
     double get(shared_ptr<Context> ctx) const {
         try {
-            auto max = get_max()->get(ctx);
-            auto period = get_period()->get(ctx);
-            auto seed = get_seed()->get(ctx);
+            auto max = get_max()->value(ctx);
+            auto period = get_period()->value(ctx);
+            auto seed = get_seed()->value(ctx);
 
             random_engine.seed(seed);
             double p = ctx->get_time().get_seconds() / period;
@@ -127,5 +126,4 @@ private:
 
 REGISTER_NODE(MovingRandom);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

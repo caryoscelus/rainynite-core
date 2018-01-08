@@ -1,6 +1,5 @@
-/*
- *  path_xy.cpp - get path's y at given x
- *  Copyright (C) 2016-2017 caryoscelus
+/*  path_xy.cpp - get path's y at given x
+ *  Copyright (C) 2016-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,17 +20,15 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
-#include <core/all_types.h>
 #include <core/node_info.h>
-#include <core/node/proxy_node.h>
+#include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/time/format.h>
 #include <core/context.h>
 
 #include <geom_helpers/knots.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class PathXY : public Node<double> {
 public:
@@ -39,14 +36,16 @@ public:
         init<Geom::BezierKnots>(path, {});
         init<double>(x, 0);
     }
-public:
+protected:
     double get(shared_ptr<Context> ctx) const override {
-        auto path = Geom::knots_to_path(get_path()->get(ctx));
+        using namespace fmt::literals;
+
+        auto path = Geom::knots_to_path(get_path()->value(ctx));
         auto x = std::max(
             path.initialPoint().x(),
             std::min(
                 path.finalPoint().x(),
-                get_x()->get(ctx)
+                get_x()->value(ctx)
             )
         );
         auto path_roots = path.roots(x, Geom::X);
@@ -70,5 +69,4 @@ private:
 
 REGISTER_NODE(PathXY);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

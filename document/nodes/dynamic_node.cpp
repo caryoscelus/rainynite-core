@@ -1,5 +1,5 @@
 /*  dynamic_node.cpp - create node from argument list
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,7 @@
 #include <core/node/proxy_node.h>
 #include <core/all_types.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 template <typename T>
 class DynamicNode : public ProxyNode<T> {
@@ -36,7 +35,7 @@ public:
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         try {
-            auto type = get_node_type()->get(ctx);
+            auto type = get_node_type()->value(ctx);
             if (cached_type != type) {
                 node = make_node_with_name<AbstractValue>(type);
                 cached_type = type;
@@ -114,7 +113,7 @@ protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         vector<NodeInContext> result;
         try {
-            auto property = get_property_name()->get(ctx);
+            auto property = get_property_name()->value(ctx);
             auto base_node = get_source();
             auto dy_args = this->get_property(dynamic_arguments)->list_links(ctx);
             std::transform(
@@ -195,7 +194,7 @@ protected:
             }
         );
         vector<NodeInContext> result;
-        auto type = get_node_type()->get(ctx);
+        auto type = get_node_type()->value(ctx);
         while (true) {
             auto node = make_node_with_name<AbstractValue>(type);
             auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
@@ -220,5 +219,4 @@ private:
 NODE_INFO_TEMPLATE(DynamicListZip, DynamicListZip<T>, vector<T>);
 TYPE_INSTANCES(DynamicListZipNodeInfo)
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

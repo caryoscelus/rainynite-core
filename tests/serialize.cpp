@@ -1,5 +1,5 @@
 /*  serialize.cpp - serializing tests
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,31 +24,12 @@
 #include <core/node/property.h>
 #include <core/serialize/node_reader.h>
 
-using namespace rainynite;
-using namespace rainynite::core;
-
-namespace rainynite::core {
-
-class Add : public Node<double> {
-public:
-    Add() {
-        init<double>(a, 0);
-        init<double>(b, 0);
-    }
-public:
-    double get(shared_ptr<Context> context) const override {
-        auto a = get_a()->get(context);
-        auto b = get_b()->get(context);
-        return a+b;
-    }
-
-    NODE_PROPERTY(a, double);
-    NODE_PROPERTY(b, double);
-};
+#include "new_node.h"
 
 REGISTER_NODE(Add);
 
-}
+using namespace rainynite;
+using namespace rainynite::core;
 
 TEST_CASE("Read double", "[serialize]") {
     auto x = parse_primitive_type_to<double>("Real", "3.5");

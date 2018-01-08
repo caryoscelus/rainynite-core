@@ -1,5 +1,5 @@
 /*  animated.cpp - node that switches between its children in time
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         size_t i = 0;
         auto time = ctx->get_time();
-        for (auto period : get_periods()->get(ctx)) {
+        for (auto period : get_periods()->value(ctx)) {
             period.set_fps(time.get_fps());
             if (period.contains(time)) {
                 auto nctx = make_shared<Context>(*ctx);

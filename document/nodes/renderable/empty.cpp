@@ -1,6 +1,5 @@
-/*
- *  empty.cpp - Empty renderable node
- *  Copyright (C) 2017 caryoscelus
+/*  empty.cpp - Empty renderable node
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,15 +18,17 @@
 #include <core/renderable.h>
 #include <core/node_info.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class Empty : public RenderableNode {
+    DOC_STRING(
+        "Empty renderable"
+    )
+
 public:
     Empty() {}
 };
 
 REGISTER_NODE(Empty);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

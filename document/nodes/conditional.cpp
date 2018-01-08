@@ -1,5 +1,5 @@
 /*  conditional.cpp - conditional nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ public:
     }
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        if (get_condition()->get(ctx)) {
+        if (get_condition()->value(ctx)) {
             return { get_on_true(), ctx };
         } else {
             return { get_on_false(), ctx };

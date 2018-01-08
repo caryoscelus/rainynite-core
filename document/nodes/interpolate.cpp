@@ -1,5 +1,5 @@
 /*  interpolate.cpp - key-framed interpolate node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ public:
     }
 
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto frames = get_keyframes()->get(ctx);
+        auto frames = get_keyframes()->value(ctx);
         if (frames.empty()) {
             // cannae do nothing if you ain't got no frames!
             return {get_default_value(), ctx};
@@ -70,17 +70,17 @@ public:
 
         auto nctx = make_shared<Context>(*ctx);
         nctx->set_time(left->time);
-        auto left_smoothing = get_smoothing()->get(nctx);
+        auto left_smoothing = get_smoothing()->value(nctx);
         nctx->set_time(right->time);
-        auto right_smoothing = get_smoothing()->get(nctx);
-        auto here_smoothing = get_smoothing()->get(ctx);
+        auto right_smoothing = get_smoothing()->value(nctx);
+        auto here_smoothing = get_smoothing()->value(ctx);
 
         if (left_smoothing == right_smoothing)
             throw std::invalid_argument("Cannot calculate progress when smoothings are equal");
         auto progress = make_value<double>((here_smoothing - left_smoothing)/(right_smoothing - left_smoothing));
 
         // TODO: cache interpolate node
-        auto node_name = get_interpolate_with()->get(ctx);
+        auto node_name = get_interpolate_with()->value(ctx);
         auto interpolate = make_node_with_name<AbstractNode>(node_name);
         auto interpolate_value = abstract_value_cast(interpolate);
         if (interpolate == nullptr)

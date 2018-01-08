@@ -1,5 +1,5 @@
 /*  morph.cpp - bezier morph node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,16 +32,16 @@ public:
         init<Geom::BezierKnots>(b, {});
         init<double>(progress, 0);
     }
-public:
+protected:
     Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
-        auto a = get_a()->get(ctx);
-        auto b = get_b()->get(ctx);
+        auto a = get_a()->value(ctx);
+        auto b = get_b()->value(ctx);
         if (a != cached_a || b != cached_b) {
             morphing::prepare_average(a, b, avg_a, avg_b);
             cached_a = a;
             cached_b = b;
         }
-        auto t = get_progress()->get(ctx);
+        auto t = get_progress()->value(ctx);
         return morphing::simple_average(avg_a, avg_b, t);
     }
 

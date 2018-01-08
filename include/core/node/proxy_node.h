@@ -1,5 +1,5 @@
 /*  proxy_node.h - node redirecting to other nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,11 +41,11 @@ public:
 
 template <typename T>
 class ProxyNode : public Node<T>, public AbstractProxyNode<T> {
-public:
+protected:
     T get(shared_ptr<Context> ctx) const override {
         auto [node, nctx] = this->get_proxy(ctx);
         if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
-            return vnode->get(nctx);
+            return vnode->value(nctx);
         throw NodeAccessError("Proxied node is of different type");
     }
 };
@@ -60,11 +60,11 @@ class NewProxyNode :
     public NewNode<Self, Result, Ts...>,
     public AbstractProxyNode<Result>
 {
-public:
+protected:
     Result get(shared_ptr<Context> ctx) const override {
         auto [node, nctx] = this->get_proxy(ctx);
         if (auto vnode = dynamic_cast<BaseValue<Result>*>(node.get()))
-            return vnode->get(nctx);
+            return vnode->value(nctx);
         throw NodeAccessError("Proxied node is of different type");
     }
 };

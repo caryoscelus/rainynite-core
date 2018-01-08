@@ -1,6 +1,5 @@
-/*
- *  knot.cpp - knot <-> points conversion
- *  Copyright (C) 2017 caryoscelus
+/*  knot.cpp - knot <-> points conversion
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +21,7 @@
 
 #include <geom_helpers/knots.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class Knot : public Node<Geom::Knot> {
 public:
@@ -32,17 +30,13 @@ public:
         init<Geom::Point>(tg1, {});
         init<Geom::Point>(tg2, {});
     }
-public:
+protected:
     Geom::Knot get(shared_ptr<Context> ctx) const override {
-        try {
-            return Geom::Knot {
-                get_pos()->get(ctx),
-                get_tg1()->get(ctx),
-                get_tg2()->get(ctx)
-            };
-        } catch (...) {
-            return {};
-        }
+        return Geom::Knot {
+            get_pos()->value(ctx),
+            get_tg1()->value(ctx),
+            get_tg2()->value(ctx)
+        };
     }
 
 private:
@@ -53,5 +47,4 @@ private:
 
 REGISTER_NODE(Knot);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

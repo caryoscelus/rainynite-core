@@ -1,6 +1,5 @@
-/*
- *  truncate.cpp - truncate floating part
- *  Copyright (C) 2017 caryoscelus
+/*  truncate.cpp - truncate floating part
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,24 +21,19 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class Truncate : public Node<double> {
 public:
     Truncate() {
         init<double>(source, 0);
     }
-public:
+protected:
     double get(shared_ptr<Context> ctx) const override {
-        try {
-            auto v = get_source()->get(ctx);
-            double r;
-            std::modf(v, &r);
-            return r;
-        } catch (...) {
-            return {};
-        }
+        auto v = get_source()->value(ctx);
+        double r;
+        std::modf(v, &r);
+        return r;
     }
 
 private:
@@ -48,5 +42,4 @@ private:
 
 REGISTER_NODE(Truncate);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

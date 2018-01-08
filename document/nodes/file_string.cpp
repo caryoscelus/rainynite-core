@@ -1,6 +1,5 @@
-/*
- *  file_string.cpp - node reading file into string
- *  Copyright (C) 2017 caryoscelus
+/*  file_string.cpp - node reading file into string
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,18 +22,17 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class FileString : public Node<string> {
 public:
     FileString() {
         init<string>(file_name, "");
     }
-public:
+protected:
     string get(shared_ptr<Context> ctx) const override {
         try {
-            auto fname = get_file_name()->get(ctx);
+            auto fname = get_file_name()->value(ctx);
             std::ifstream stream(fname);
             std::stringstream buffer;
             buffer << stream.rdbuf();
@@ -50,5 +48,4 @@ private:
 
 REGISTER_NODE(FileString);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

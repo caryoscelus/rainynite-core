@@ -1,5 +1,5 @@
 /*  linear.cpp - seconds to real conversion
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ public:
         init<double>(base, 0);
         init<double>(speed, 1);
     }
-public:
+protected:
     double get(shared_ptr<Context> ctx) const override {
-        auto b = get_base()->get(ctx);
-        auto f = get_speed()->get(ctx);
+        auto b = get_base()->value(ctx);
+        auto f = get_speed()->value(ctx);
         return b+f*ctx->get_time().get_seconds();
     }
 

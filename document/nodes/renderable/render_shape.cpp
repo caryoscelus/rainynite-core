@@ -44,7 +44,7 @@ class RenderShape :
         return instance;
     }
 
-public:
+protected:
     Renderable get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }

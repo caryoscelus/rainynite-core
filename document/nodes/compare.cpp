@@ -1,5 +1,5 @@
 /*  nodes/compare.cpp - comparator nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ public:
         this->template init<T>(a, {});
         this->template init<T>(b, {});
     }
-public:
+protected:
     bool get(shared_ptr<Context> ctx) const override {
         if constexpr (detail::has_operator_eq<T>) {
             return get_a()->value(ctx) == get_b()->value(ctx);
@@ -86,8 +86,8 @@ public:
 
     bool get(shared_ptr<Context> ctx) const override {
         using boost::math::relative_difference;
-        auto diff = relative_difference(get_a()->get(ctx), get_b()->get(ctx));
-        return diff < get_relative_eps()->get(ctx);
+        auto diff = relative_difference(get_a()->value(ctx), get_b()->value(ctx));
+        return diff < get_relative_eps()->value(ctx);
     }
 
 private:
@@ -119,7 +119,7 @@ class TestLinksAreEqual :
     PROPERTY(a)
     PROPERTY(b)
 
-public:
+protected:
     bool get(shared_ptr<Context> /*ctx*/) const override {
         return p_a() == p_b();
     }

@@ -1,5 +1,5 @@
 /*  frame.cpp - TimePoint / Frame node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ public:
 
     TimePoint<T> get(shared_ptr<Context> ctx) const override {
         return {
-            get_time()->get(ctx),
+            get_time()->value(ctx),
             get_value()
         };
     }

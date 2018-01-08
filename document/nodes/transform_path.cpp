@@ -1,5 +1,5 @@
 /*  transform_path.cpp - node that applies transformation to bezier path points
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ class TransformPath :
     PROPERTY(transform)
     PROPERTY(weights)
 
-public:
+protected:
     Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
         using namespace Geom;
         auto knots = source_value<BezierKnots>(ctx);

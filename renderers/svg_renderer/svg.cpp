@@ -1,5 +1,5 @@
 /*  svg.cpp - SvgRenderer svg embed
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ class EmbedSvgRenderer : SVG_RENDERER_MODULE_CLASS(EmbedSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("EmbedSvg");
 public:
     string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& /*settings*/) const override {
-        auto fname = node.get_property_as<string>("file_path")->get(ctx);
+        auto fname = node.get_property_as<string>("file_path")->value(ctx);
         std::ifstream stream(fname);
 
         if (!stream) {

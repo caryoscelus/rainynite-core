@@ -1,5 +1,5 @@
 /*  frame_list.cpp - node that switches between its children in time
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public:
         auto flist = dynamic_pointer_cast<BaseValue<vector<TimePoint<T>>>>(list_frame_list());
         if (flist == nullptr)
             throw NodeAccessError("FrameList: invalid frame_list");
-        auto frames = flist->get(ctx);
+        auto frames = flist->value(ctx);
         std::sort(
             std::begin(frames),
             std::end(frames),

@@ -1,5 +1,5 @@
 /*  abstract_value.h - Node abstract Value
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -118,12 +118,12 @@ public:
     BaseValue() :
         HasExceptionLogger(make_shared<GlobalLog<SimpleExceptionLogger>>())
     {}
-public:
+
     /**
      * Get value of this node in given context
      *
-     * Any exceptions that are thrown during node calculation should be
-     * recorded in log (TODO; not yet implemented).
+     * Any exceptions that are thrown during node calculation
+     * are recorded in log.
      */
     T value(shared_ptr<Context> context) const noexcept {
         if (!enabled())
@@ -138,11 +138,37 @@ public:
             return {};
         }
     }
-public:
+
+    virtual void set(T /*value*/) {
+        throw NodeAccessError("Cannot set");
+    }
+    virtual T& mod() {
+        throw NodeAccessError("Cannot set");
+    }
+    virtual bool can_set() const {
+        return false;
+    }
+
+    Type get_type() const override {
+        return typeid(T);
+    }
+    any get_any(shared_ptr<Context> context) const noexcept override {
+        return value(context);
+    }
+    void set_any(any const& value_) override {
+        set(any_cast<T>(value_));
+    }
+    bool can_set_any(any const& value_) const override {
+        return can_set() && value_.type() == typeid(T);
+    }
+
+    static Type static_type() {
+        return typeid(T);
+    }
+
+protected:
     /**
      * Get value of this node in given context - may throw
-     *
-     * TODO: make protected
      */
     virtual T get(shared_ptr<Context> context) const {
         if constexpr (is_vector<T>) {
@@ -173,33 +199,6 @@ public:
     /// Value to return when node is disabled
     virtual T default_value(shared_ptr<Context> /*ctx*/) const noexcept {
         return {};
-    }
-
-    virtual void set(T /*value*/) {
-        throw NodeAccessError("Cannot set");
-    }
-    virtual T& mod() {
-        throw NodeAccessError("Cannot set");
-    }
-    virtual bool can_set() const {
-        return false;
-    }
-public:
-    Type get_type() const override {
-        return typeid(T);
-    }
-    any get_any(shared_ptr<Context> context) const noexcept override {
-        return value(context);
-    }
-    void set_any(any const& value_) override {
-        set(any_cast<T>(value_));
-    }
-    bool can_set_any(any const& value_) const override {
-        return can_set() && value_.type() == typeid(T);
-    }
-public:
-    static Type static_type() {
-        return typeid(T);
     }
 };
 

@@ -1,5 +1,5 @@
 /*  time.cpp - time-related nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ class Now :
     NODE_PROPERTIES()
     DEFAULT_VALUES()
 
-public:
+protected:
     Time get(shared_ptr<Context> ctx) const override {
         return ctx->get_time();
     }

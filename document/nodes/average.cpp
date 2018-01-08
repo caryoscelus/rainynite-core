@@ -1,5 +1,5 @@
 /*  average.cpp - universal average node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ class WeightedAverage :
     PROPERTY(b)
     PROPERTY(progress)
 
-public:
+protected:
     T get(shared_ptr<Context> ctx) const override {
         if constexpr (can_be_summed<T, T> && can_be_multiplied<T, double>) {
             auto p = progress_value<double>(ctx);

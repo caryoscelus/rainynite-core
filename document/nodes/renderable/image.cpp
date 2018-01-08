@@ -1,6 +1,5 @@
-/*
- *  image.cpp - Image import render node
- *  Copyright (C) 2017 caryoscelus
+/*  image.cpp - Image import render node
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +20,7 @@
 
 #include <2geom/point.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class Image : public RenderableNode {
 public:
@@ -38,5 +36,4 @@ private:
 
 REGISTER_NODE(Image);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

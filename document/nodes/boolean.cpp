@@ -1,5 +1,5 @@
 /*  boolean.cpp - bool operation nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ class Not :
 
     PROPERTY(source)
 
-public:
+protected:
     bool get(shared_ptr<Context> ctx) const override {
         return !source_value<bool>(ctx);
     }

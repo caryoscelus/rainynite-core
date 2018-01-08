@@ -1,5 +1,5 @@
 /*  renderable.h - renderable type
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ struct Renderable final {
  * is to provide empty get() override.
  */
 class RenderableNode : public Node<Renderable> {
-public:
+protected:
     Renderable get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }

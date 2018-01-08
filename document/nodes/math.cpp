@@ -1,5 +1,5 @@
 /*  math.cpp - math operations nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,13 +33,9 @@ public:
         init<double>(a, 0);
         init<double>(b, 0);
     }
-public:
+protected:
     double get(shared_ptr<Context> ctx) const override {
-        try {
-            return get_a()->get(ctx) * get_b()->get(ctx);
-        } catch (...) {
-            return {};
-        }
+        return get_a()->value(ctx) * get_b()->value(ctx);
     }
 
 private:
@@ -53,13 +49,9 @@ public:
     Sin() {
         init<double>(turns, 0);
     }
-public:
+protected:
     double get(shared_ptr<Context> ctx) const override {
-        try {
-            return std::sin(get_turns()->get(ctx) * pi * 2);
-        } catch (...) {
-            return {};
-        }
+        return std::sin(get_turns()->value(ctx) * pi * 2);
     }
 
 private:

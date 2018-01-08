@@ -38,7 +38,7 @@ class BoneP :
     PROPERTY(a)
     PROPERTY(b)
 
-public:
+protected:
     Geom::bones::Bone get(shared_ptr<Context> ctx) const override {
         using Geom::Point;
         auto a = a_value<Point>(ctx);
@@ -66,7 +66,7 @@ class BoneTransform :
     PROPERTY(a)
     PROPERTY(b)
 
-public:
+protected:
     Geom::Affine get(shared_ptr<Context> ctx) const override {
         using namespace Geom::bones;
         return bone_diff(a_value<Bone>(ctx), b_value<Bone>(ctx));

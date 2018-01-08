@@ -1,5 +1,5 @@
 /*  node.cpp - node tests
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,9 @@
 #include <core/node/traverse.h>
 #include <core/context.h>
 
+#include "new_node.h"
+#include "zero_context.h"
+
 using namespace rainynite;
 using namespace rainynite::core;
 
@@ -34,49 +37,14 @@ using Real = double;
 template <typename T>
 using List = vector<T>;
 
-class Add : public Node<Real> {
-public:
-    Add() {
-        init<Real>(a, 0);
-        init<Real>(b, 0);
-    }
-public:
-    Real get(shared_ptr<Context> context) const override {
-        auto a = get_a()->get(context);
-        auto b = get_b()->get(context);
-        return a+b;
-    }
-
-    NODE_PROPERTY(a, Real);
-    NODE_PROPERTY(b, Real);
-};
-
-shared_ptr<Context> zero_context() {
-    static auto instance = make_shared<Context>();
-    return instance;
-}
-
-TEST_CASE("Test Add node", "[node]") {
-    auto add = make_shared<Add>();
-    auto one = make_value<Real>(1.0);
-    auto two = make_value<Real>(2.0);
-    CHECK(add->value(zero_context()) == 0.0);
-    add->set_property("a", one);
-    CHECK(add->value(zero_context()) == 1.0);
-    add->set_property("b", two);
-    CHECK(add->value(zero_context()) == 3.0);
-    one->set(4.0);
-    CHECK(add->value(zero_context()) == 6.0);
-}
-
 class Sum : public Node<Real> {
 public:
     Sum() {
         init<List<Real>>(list, {});
     }
-public:
+protected:
     Real get(shared_ptr<Context> context) const override {
-        auto list = get_list()->get(context);
+        auto list = get_list()->value(context);
         Real result = 0;
         for (auto const& x : list)
             result += x;
@@ -103,12 +71,12 @@ public:
     SumNode() {
         init<List<shared_ptr<BaseValue<Real>>>>(list, {});
     }
-public:
+protected:
     Real get(shared_ptr<Context> context) const override {
-        auto list = get_list()->get(context);
+        auto list = get_list()->value(context);
         Real result = 0;
         for (auto x : list)
-            result += x->get(context);
+            result += x->value(context);
         return result;
     }
 
@@ -152,7 +120,7 @@ TEST_CASE("Traverse node tree", "[node]") {
     CHECK(count_nodes(one) == 1);
     auto add = make_shared<Add>();
     CHECK(count_nodes(add) == 3);
-    add->set_a(one);
+    add->set_property("a", one);
     CHECK(count_nodes(add) == 3);
     add->set_property("b", one);
     CHECK(count_nodes(add) == 2);

@@ -1,6 +1,5 @@
-/*
- *  color_string.cpp - convert color to string
- *  Copyright (C) 2017 caryoscelus
+/*  color_string.cpp - convert color to string
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,18 +20,18 @@
 #include <core/node/property.h>
 #include <core/color/color.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class ColorString : public Node<string> {
 public:
     ColorString() {
         init<colors::Color>(color, {});
     }
-public:
+
+protected:
     string get(shared_ptr<Context> ctx) const override {
         try {
-            auto c = get_color()->get(ctx);
+            auto c = get_color()->value(ctx);
             return colors::to_hex24(c);
         } catch (...) {
             return {};
@@ -45,5 +44,4 @@ private:
 
 REGISTER_NODE(ColorString);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

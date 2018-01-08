@@ -1,5 +1,5 @@
 /*  list.cpp - list utils
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ public:
         auto l = list->list_links(ctx);
         if (l.size() == 0)
             throw NodeAccessError("Requested element of empty list");
-        size_t n = clamp(get_n()->get(ctx), 0.0, l.size()-1.0);
+        size_t n = clamp(get_n()->value(ctx), 0.0, l.size()-1.0);
         return l[n];
     }
 private:

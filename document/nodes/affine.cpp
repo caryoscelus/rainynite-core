@@ -1,5 +1,5 @@
 /*  affine.cpp - affine transformations
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ class Translate :
     DEFAULT_VALUES(Geom::Point{})
     PROPERTY(offset)
 
-public:
+protected:
     Geom::Affine get(shared_ptr<Context> ctx) const override {
         return Geom::Translate(offset_value<Geom::Point>(ctx));
     }
@@ -65,7 +65,7 @@ class Rotate :
     PROPERTY(origin)
     PROPERTY(angle)
 
-public:
+protected:
     Geom::Affine get(shared_ptr<Context> ctx) const override {
         using boost::math::double_constants::pi;
         auto offset = origin_value<Geom::Point>(ctx);
@@ -96,7 +96,7 @@ class Scale :
     PROPERTY(origin)
     PROPERTY(scale)
 
-public:
+protected:
     Geom::Affine get(shared_ptr<Context> ctx) const override {
         auto offset = origin_value<Geom::Point>(ctx);
         return

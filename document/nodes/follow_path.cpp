@@ -1,6 +1,5 @@
-/*
- *  follow_path.cpp - follow path node
- *  Copyright (C) 2017 caryoscelus
+/*  follow_path.cpp - follow path node
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +22,7 @@
 
 #include <geom_helpers/knots.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class FollowPath : public Node<Geom::Point> {
 public:
@@ -32,15 +30,11 @@ public:
         init<Geom::BezierKnots>(path, {});
         init<double>(position, 0);
     }
-public:
+protected:
     Geom::Point get(shared_ptr<Context> ctx) const override {
-        try {
-            auto path = get_path()->get(ctx);
-            auto position = get_position()->get(ctx);
-            return Geom::knots_to_path(path).pointAt(position);
-        } catch (...) {
-            return {};
-        }
+        auto path = get_path()->value(ctx);
+        auto position = get_position()->value(ctx);
+        return Geom::knots_to_path(path).pointAt(position);
     }
 
 private:
@@ -50,5 +44,4 @@ private:
 
 REGISTER_NODE(FollowPath);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

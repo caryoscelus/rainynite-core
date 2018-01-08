@@ -1,6 +1,5 @@
-/*
- *  rectangle.cpp - rectangle constructing nodes
- *  Copyright (C) 2017 caryoscelus
+/*  rectangle.cpp - rectangle constructing nodes
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +21,7 @@
 
 #include <geom_helpers/rectangle.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class RectangleWH : public Node<Geom::Rectangle> {
 public:
@@ -31,13 +29,9 @@ public:
         init<Geom::Point>(position, {});
         init<Geom::Point>(size, {});
     }
-public:
+protected:
     Geom::Rectangle get(shared_ptr<Context> ctx) const override {
-        try {
-            return {get_position()->get(ctx), get_size()->get(ctx)};
-        } catch (...) {
-            return {};
-        }
+        return {get_position()->value(ctx), get_size()->value(ctx)};
     }
 
 private:
@@ -54,13 +48,9 @@ public:
         init<Geom::Point>(a, {});
         init<Geom::Point>(b, {});
     }
-public:
+protected:
     Geom::Rectangle get(shared_ptr<Context> ctx) const override {
-        try {
-            return Geom::Rectangle::fromTwoPoints(get_a()->get(ctx), get_b()->get(ctx));
-        } catch (...) {
-            return {};
-        }
+        return Geom::Rectangle::fromTwoPoints(get_a()->value(ctx), get_b()->value(ctx));
     }
 
 private:
@@ -70,5 +60,4 @@ private:
 
 REGISTER_NODE(RectangleAB);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

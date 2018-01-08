@@ -1,6 +1,5 @@
-/*
- *  knot_list.cpp - knot list <-> path conversion
- *  Copyright (C) 2017 caryoscelus
+/*  knot_list.cpp - knot list <-> path conversion
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +21,7 @@
 
 #include <geom_helpers/knots.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class KnotList : public Node<vector<Geom::Knot>> {
 public:
@@ -33,7 +31,7 @@ public:
 public:
     vector<Geom::Knot> get(shared_ptr<Context> ctx) const override {
         try {
-            auto path = get_path()->get(ctx);
+            auto path = get_path()->value(ctx);
             return path.knots;
         } catch (...) {
             return {};
@@ -52,15 +50,11 @@ public:
         init_list<Geom::Knot>(knots);
         init<bool>(closed, false);
     }
-public:
+protected:
     Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
-        try {
-            auto knots = get_knots()->get(ctx);
-            auto closed = get_closed()->get(ctx);
-            return Geom::BezierKnots(knots, closed);
-        } catch (...) {
-            return {};
-        }
+        auto knots = get_knots()->value(ctx);
+        auto closed = get_closed()->value(ctx);
+        return Geom::BezierKnots(knots, closed);
     }
 
 private:
@@ -70,5 +64,4 @@ private:
 
 REGISTER_NODE(KnotsPath);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

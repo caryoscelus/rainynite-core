@@ -1,6 +1,5 @@
-/*
- *  format_number.cpp - number format node
- *  Copyright (C) 2017 caryoscelus
+/*  format_number.cpp - number format node
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,7 +30,7 @@ public:
         init<string>(format, {});
         init<double>(number, 0);
     }
-public:
+protected:
     string get(shared_ptr<Context> ctx) const override {
         auto str = get_format()->value(ctx);
         auto num = static_cast<N>(get_number()->value(ctx));

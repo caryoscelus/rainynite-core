@@ -1,6 +1,5 @@
-/*
- *  text.cpp - Text render node
- *  Copyright (C) 2017 caryoscelus
+/*  text.cpp - Text render node
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,8 +19,7 @@
 #include <core/node_info.h>
 #include <core/color/color.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class Text : public RenderableNode {
 public:
@@ -39,5 +37,4 @@ private:
 
 REGISTER_NODE(Text);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

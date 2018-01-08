@@ -1,5 +1,5 @@
 /*  time_list.cpp - TimeList node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ public:
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         auto source = get_source();
-        auto period = get_period()->get(ctx);
-        auto step = get_step()->get(ctx);
+        auto period = get_period()->value(ctx);
+        auto step = get_step()->value(ctx);
         vector<NodeInContext> result;
         for (auto t = period.get_first(); t < period.get_last(); t += step) {
             auto nctx = make_shared<Context>(*ctx);

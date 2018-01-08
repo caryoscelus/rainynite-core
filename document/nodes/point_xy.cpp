@@ -1,5 +1,5 @@
 /*  point_xy.cpp - combine x&y to Point (see ExtractCoord for reverse)
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ class PointXY :
     PROPERTY(x)
     PROPERTY(y)
 
-public:
+protected:
     Geom::Point get(shared_ptr<Context> ctx) const override {
         return {x_value<double>(ctx), y_value<double>(ctx)};
     }
@@ -71,7 +71,7 @@ class SymmetricPoint :
     DEFAULT_VALUES(0.0)
     PROPERTY(x)
 
-public:
+protected:
     Geom::Point get(shared_ptr<Context> ctx) const override {
         auto x = x_value<double>(ctx);
         return {x, x};

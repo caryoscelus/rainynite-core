@@ -1,6 +1,5 @@
-/*
- *  image.cpp - SvgRenderer image renderer
- *  Copyright (C) 2017 caryoscelus
+/*  image.cpp - SvgRenderer image renderer
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +21,7 @@
 
 #include "svg_module.h"
 
-namespace rainynite::core {
-namespace renderers {
+namespace rainynite::core::renderers {
 
 const string svg_image = R"(<image xlink:href="{}" width="{}" height="{}" x="0" y="0" preserveAspectRatio="none"/>)";
 
@@ -31,11 +29,10 @@ class ImageSvgRenderer : SVG_RENDERER_MODULE_CLASS(ImageSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("Image");
 public:
     string operator()(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& /*settings*/) const override {
-        auto fname = node.get_property_as<string>("file_path")->get(ctx);
-        auto size = node.get_property_as<Geom::Point>("size")->get(ctx);
+        auto fname = node.get_property_as<string>("file_path")->value(ctx);
+        auto size = node.get_property_as<Geom::Point>("size")->value(ctx);
         return fmt::format(svg_image, fname, size.x(), size.y());
     }
 };
 
-} // namespace renderers
-} // namespace rainynite::core
+} // namespace rainynite::core::renderers

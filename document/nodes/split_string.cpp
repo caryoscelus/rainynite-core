@@ -1,6 +1,5 @@
-/*
- *  split_string.cpp - node to split string into string list
- *  Copyright (C) 2017 caryoscelus
+/*  split_string.cpp - node to split string into string list
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +21,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class SplitString : public Node<vector<string>> {
 public:
@@ -33,21 +31,17 @@ public:
     }
 
     vector<string> get(shared_ptr<Context> ctx) const override {
-        try {
-            vector<string> result;
-            auto s = get_source()->get(ctx);
-            auto split = get_split()->get(ctx);
-            boost::split(result, s, boost::is_any_of(split));
-            return result;
-        } catch (...) {
-            return {};
-        }
+        vector<string> result;
+        auto s = get_source()->value(ctx);
+        auto split = get_split()->value(ctx);
+        boost::split(result, s, boost::is_any_of(split));
+        return result;
     }
 
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         vector<NodeInContext> result;
-        auto list = get(ctx);
+        auto list = value(ctx);
         std::transform(
             std::begin(list),
             std::end(list),
@@ -66,5 +60,4 @@ private:
 
 REGISTER_NODE(SplitString);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

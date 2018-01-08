@@ -1,5 +1,5 @@
 /*  nodes/test/transform.cpp - node to test transform at index
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ class TestTransform :
 
     PROPERTY(index)
 
-public:
+protected:
     Geom::Affine get(shared_ptr<Context> ctx) const override {
         auto document = ctx->get_document();
         if (document == nullptr)

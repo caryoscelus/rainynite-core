@@ -1,5 +1,5 @@
 /*  to_string.cpp - node converting any value to string
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ class ToString :
         "Convert any type to string..."
     )
 
-public:
+protected:
     string get(shared_ptr<Context> ctx) const override {
         auto v = p_source()->get_any(ctx);
         return serialize::value_to_string(v);

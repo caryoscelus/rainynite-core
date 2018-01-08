@@ -1,5 +1,5 @@
 /*  color.cpp - color operations
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,8 +32,9 @@ public:
         init<colors::Color>(source, {});
     }
 
+protected:
     colors::Color get(shared_ptr<Context> ctx) const override {
-        auto c = get_source()->get(ctx);
+        auto c = get_source()->value(ctx);
         // TODO: make it lib function
         return colors::Color::from_rgba(
             1.0-c.red(),

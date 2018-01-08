@@ -1,6 +1,5 @@
-/*
- *  format_string.cpp - string format node
- *  Copyright (C) 2017 caryoscelus
+/*  format_string.cpp - string format node
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +21,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 static const size_t FORMAT_ARGS = 16;
 
@@ -38,11 +36,11 @@ public:
         init(format, string());
         init_list<string>(arguments);
     }
-public:
+protected:
     string get(shared_ptr<Context> ctx) const override {
         try {
-            auto str = get_format()->get(ctx);
-            auto args = get_arguments()->get(ctx);
+            auto str = get_format()->value(ctx);
+            auto args = get_arguments()->value(ctx);
             if (args.size() > FORMAT_ARGS)
                 throw std::runtime_error("FormatString: too much arguments");
             while (args.size() < FORMAT_ARGS) {
@@ -62,5 +60,4 @@ private:
 
 REGISTER_NODE(FormatString);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

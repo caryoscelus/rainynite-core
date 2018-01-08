@@ -1,5 +1,5 @@
 /*  circle.cpp - circle constructing nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,7 @@
 
 #include <geom_helpers/circle.h>
 
-namespace rainynite::core {
-namespace nodes {
+namespace rainynite::core::nodes {
 
 class CirclePR : public Node<Geom::Circle> {
     DOC_STRING(
@@ -33,13 +32,10 @@ public:
         init<Geom::Point>(position, {});
         init<double>(radius, {});
     }
-public:
+
+protected:
     Geom::Circle get(shared_ptr<Context> ctx) const override {
-        try {
-            return {get_position()->get(ctx), get_radius()->get(ctx)};
-        } catch (...) {
-            return {};
-        }
+        return {get_position()->value(ctx), get_radius()->value(ctx)};
     }
 
 private:
@@ -49,5 +45,4 @@ private:
 
 REGISTER_NODE(CirclePR);
 
-} // namespace nodes
-} // namespace rainynite::core
+} // namespace rainynite::core::nodes

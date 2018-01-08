@@ -1,5 +1,5 @@
 /*  svg.cpp - svg import node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ class EmbedSvg :
 
     PROPERTY(file_path)
 
-public:
+protected:
     Renderable get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
