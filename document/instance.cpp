@@ -1,5 +1,5 @@
 /*  instance.cpp - explicit template instantiation
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,11 +31,13 @@
 
 #include <geom_helpers/knots_io.h>
 #include <geom_helpers/point_io.h>
-#include <geom_helpers/null_shape.h>
-#include <geom_helpers/rectangle.h>
-#include <geom_helpers/circle.h>
 
 #include <2geom/affine.h>
+
+namespace Geom::bones {
+std::ostream& operator<<(std::ostream& stream, Bone const& bone);
+}
+
 
 namespace Geom {
 
@@ -69,6 +71,12 @@ TYPE_INFO(Affine, "Affine", [](auto&& s) {
     // TODO
     return Affine::identity();
 });
+
+namespace bones {
+TYPE_INFO(Bone, "Bone", [](auto&& s) {
+    return Bone {};
+});
+} // namespace bones
 
 } // namespace Geom
 

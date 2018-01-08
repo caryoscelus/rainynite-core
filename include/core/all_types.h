@@ -1,5 +1,5 @@
 /*  all_types.h - macros for instancing templates with registered types
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <geom_helpers/rectangle.h>
 #include <geom_helpers/circle.h>
 #include <geom_helpers/knots.h>
+#include <geom_helpers/bones.h>
 #include <2geom/affine.h>
 #include <core/shading.h>
 #include <core/renderable.h>
@@ -37,6 +38,7 @@
     template class Template<core::Time>; \
     template class Template<core::TimePeriod>; \
     template class Template<Geom::Point>; \
+    template class Template<Geom::bones::Bone>; \
     template class Template<Geom::NullShape>; \
     template class Template<Geom::BezierKnots>; \
     template class Template<Geom::Rectangle>; \
