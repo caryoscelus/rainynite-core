@@ -1,5 +1,5 @@
-/*  empty.cpp - Empty renderable node
- *  Copyright (C) 2017-2018 caryoscelus
+/*  default_nodes.cpp - default nodes list
+ *  Copyright (C) 2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,20 +15,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/node_info/default_node.h>
+#include <core/node/value.h>
+#include <core/all_types.h>
+#include <core/audio.h>
 #include <core/renderable.h>
-#include <core/node_info/macros.h>
 
-namespace rainynite::core::nodes {
+namespace rainynite::core {
 
-class Empty : public RenderableNode {
-    DOC_STRING(
-        "Empty renderable"
-    )
-
-public:
-    Empty() {}
+template <typename T>
+class DefaultNodeInfoValue : public DefaultNodeInfoImpl<T, Value<T>> {
 };
 
-REGISTER_NODE(Empty);
+TYPE_INSTANCES_WO_RENDERABLE(DefaultNodeInfoValue)
 
-} // namespace rainynite::core::nodes
+template struct DefaultNodeInfoImpl<Renderable, Empty>;
+template struct DefaultNodeInfoImpl<Audio, EmptyAudio>;
+
+} // namespace rainynite::core

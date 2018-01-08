@@ -12,6 +12,8 @@ target_sources(document
         context.cpp
         document.cpp
         instance.cpp
+        default_nodes.cpp
+        empty.cpp
         color.cpp
         shading.cpp
         action.cpp
@@ -66,7 +68,6 @@ set(ALL_NODES
     nodes/affine.cpp
     nodes/transform_composite.cpp
     nodes/transform_path.cpp
-    nodes/renderable/empty.cpp
     nodes/renderable/composite.cpp
     nodes/renderable/image.cpp
     nodes/renderable/transform.cpp

@@ -1,5 +1,5 @@
-/*  audio.h - abstract audio type
- *  Copyright (C) 2017-2018 caryoscelus
+/*  empty.cpp - empty nodes registry
+ *  Copyright (C) 2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,34 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_AUDIO_H_6CA600AC_1164_59FE_970D_71C6FFA80A22
-#define CORE_AUDIO_H_6CA600AC_1164_59FE_970D_71C6FFA80A22
+#include <core/node_info/macros.h>
+#include <core/renderable.h>
+#include <core/audio.h>
 
-#include <core/node/node.h>
+namespace rainynite::core::nodes {
 
-namespace rainynite::core {
+REGISTER_NODE(EmptyAudio);
+REGISTER_NODE(Empty);
 
-/**
- * Abstract audio tag type.
- */
-struct Audio final {};
-
-class AudioNode : public Node<Audio> {
-protected:
-    Audio get(shared_ptr<Context> /*ctx*/) const override {
-        return {};
-    }
-};
-
-class EmptyAudio : public AudioNode {
-    DOC_STRING(
-        "Empty audio node"
-    )
-public:
-    EmptyAudio() {
-    }
-};
-
-} // namespace rainynite::core
-
-#endif
+} // namespace rainynite::core::nodes

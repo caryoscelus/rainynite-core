@@ -16,6 +16,7 @@
  */
 
 #include <core/node_info/node_info.h>
+#include <core/node_info/default_node.h>
 
 namespace rainynite::core {
 
@@ -52,6 +53,12 @@ set<NodeInfo const*> all_node_infos() {
         result.insert(e.second.begin(), e.second.end());
     }
     return result;
+}
+
+AbstractReference make_default_node(Type type) {
+    auto node = get_default_node_info(type).new_empty();
+    node->new_id(); // TODO
+    return node;
 }
 
 } // namespace rainynite::core

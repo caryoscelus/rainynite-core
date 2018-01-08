@@ -30,8 +30,7 @@ namespace rainynite::core {
  * some real render result object they simply hold info that can be used
  * by renderer.
  */
-struct Renderable final {
-};
+struct Renderable final {};
 
 /**
  * Base class for all renderable nodes.
@@ -44,6 +43,15 @@ protected:
     Renderable get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
+};
+
+class Empty : public RenderableNode {
+    DOC_STRING(
+        "Empty renderable"
+    )
+
+public:
+    Empty() {}
 };
 
 } // namespace rainynite::core
