@@ -17,6 +17,7 @@
 
 #include <core/all_types.h>
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
 #include <core/context.h>
 
@@ -37,7 +38,7 @@ class TimeMap :
     )
 
     NODE_PROPERTIES("source", "multiplier", "offset")
-    DEFAULT_VALUES(T{}, 1.0, Time{})
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_value<double>(1.0), make_value<Time>())
     PROPERTY(source)
     PROPERTY(multiplier)
     PROPERTY(offset)
@@ -69,7 +70,7 @@ class AtTime :
     )
 
     NODE_PROPERTIES("source", "time")
-    DEFAULT_VALUES(T{}, Time{});
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_value<Time>())
     PROPERTY(source)
     PROPERTY(time)
 
@@ -120,7 +121,7 @@ class TimeLoop :
     )
 
     NODE_PROPERTIES("source", "period", "offset")
-    DEFAULT_VALUES(T{}, Time{}, Time{});
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_value<Time>(), make_value<Time>())
     PROPERTY(source)
     PROPERTY(period)
     PROPERTY(offset)
