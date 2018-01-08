@@ -17,7 +17,7 @@
 
 #include <chrono>
 
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node/new_node.h>
 #include <core/context.h>
 #include <core/document.h>

@@ -19,7 +19,7 @@
 
 #include <boost/math/constants/constants.hpp>
 
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 

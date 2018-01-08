@@ -22,6 +22,7 @@
 #include <core/util/type_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
+#include <core/node_info/macros.h>
 #include <core/serialize/node_reader.h>
 
 #include "new_node.h"

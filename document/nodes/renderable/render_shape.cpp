@@ -16,7 +16,7 @@
  */
 
 #include <core/node/new_node.h>
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/renderable.h>
 #include <core/shading.h>
 #include <core/shapes.h>

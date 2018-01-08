@@ -16,7 +16,7 @@
  */
 
 #include <core/node/new_node.h>
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/context.h>
 #include <core/node_tree.h>
 #include <core/action_stack.h>

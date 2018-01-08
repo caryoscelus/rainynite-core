@@ -28,7 +28,7 @@
 #include <core/filters/yaml_writer.h>
 #include <core/document.h>
 #include <core/node/abstract_node.h>
-#include <core/node_info.h>
+#include <core/node_info/node_info.h>
 #include "zero_context.h"
 
 using namespace fmt::literals;

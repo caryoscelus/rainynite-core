@@ -18,7 +18,7 @@
 #include <boost/math/constants/constants.hpp>
 
 #include <core/node/new_node.h>
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 
 #include <2geom/transforms.h>
 

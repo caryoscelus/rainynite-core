@@ -17,7 +17,7 @@
 
 #include <random>
 
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/context.h>

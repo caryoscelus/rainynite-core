@@ -20,7 +20,7 @@
 
 #include <boost/math/special_functions/relative_difference.hpp>
 
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
 #include <core/node/new_node.h>

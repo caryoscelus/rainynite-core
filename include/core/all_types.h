@@ -18,7 +18,6 @@
 #ifndef CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
 #define CORE_ALL_TYPES_H_4CC9FF4B_9D09_58CD_A7F7_AD5A35DF55EF
 
-#include <core/node_info.h>
 #include <core/time/period.h>
 #include <geom_helpers/null_shape.h>
 #include <geom_helpers/rectangle.h>

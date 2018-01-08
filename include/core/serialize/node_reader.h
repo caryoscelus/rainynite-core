@@ -20,7 +20,7 @@
 
 #include <core/node/cast.h>
 #include <core/node/abstract_node.h>
-#include <core/node_info.h>
+#include <core/node_info/node_info.h>
 #include <core/util/type_info.h>
 
 #include "serialize.h"

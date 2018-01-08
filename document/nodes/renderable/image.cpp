@@ -16,7 +16,7 @@
  */
 
 #include <core/renderable.h>
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 
 #include <2geom/point.h>
 

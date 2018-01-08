@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node/proxy_node.h>
 #include <core/node/cast.h>
 #include <core/all_types.h>

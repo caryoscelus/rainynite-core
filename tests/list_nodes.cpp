@@ -17,7 +17,7 @@
 
 #include <catch.hpp>
 
-#include <core/node_info.h>
+#include <core/node_info/node_info.h>
 #include <core/node/node.h>
 #include <core/context.h>
 

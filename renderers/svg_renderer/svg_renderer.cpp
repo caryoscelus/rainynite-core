@@ -30,7 +30,7 @@
 #include <core/renderers/svg_renderer.h>
 #include <core/document.h>
 #include <core/renderable.h>
-#include <core/node_info.h>
+#include <core/node_info/node_info.h>
 #include <core/node/proxy_node.h>
 #include <core/util/class_init.h>
 #include <core/os/fork_pipe.h>

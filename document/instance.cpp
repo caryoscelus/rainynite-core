@@ -17,7 +17,7 @@
 
 #include <fmt/format.h>
 
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node/list.h>
 #include <core/util/type_info.h>
 #include <core/all_types.h>

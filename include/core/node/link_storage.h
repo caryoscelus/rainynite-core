@@ -21,7 +21,7 @@
 #include <core/std/array.h>
 #include <core/util/class_init.h>
 #include <core/util/exceptions.h>
-#include <core/node_info.h>
+#include <core/node_info/node_info.h>
 #include "abstract_list.h"
 #include "abstract_value.h"
 #include "make.h"

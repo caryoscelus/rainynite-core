@@ -18,7 +18,7 @@
 #include <functional>
 
 #include <core/std/traits.h>
-#include <core/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node/new_node.h>
 #include <core/all_types.h>
 #include <core/context.h>

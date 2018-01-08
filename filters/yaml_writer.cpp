@@ -22,7 +22,7 @@
 #include <core/document.h>
 #include <core/util/state_machine.h>
 #include <core/serialize/node_writer.h>
-#include <core/node_info.h>
+#include <core/node_info/node_info.h>
 #include <core/node_tree_traverse.h>
 #include <core/filters/yaml_writer.h>
 
