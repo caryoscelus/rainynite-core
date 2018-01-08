@@ -23,6 +23,7 @@ target_sources(document
 
 set(ALL_NODES
     nodes/frame.cpp
+    nodes/bones.cpp
     nodes/animated.cpp
     nodes/frame_list.cpp
     nodes/interpolate.cpp
