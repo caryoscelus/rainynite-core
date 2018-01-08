@@ -23,6 +23,7 @@ target_sources(document
 )
 
 set(ALL_NODES
+    nodes/any_proxy.cpp
     nodes/frame.cpp
     nodes/bones.cpp
     nodes/animated.cpp
