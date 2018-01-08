@@ -39,12 +39,15 @@ public:
     virtual Type type() const = 0;
 };
 
-inline NodeInfo const& get_node_info(std::type_index type) {
-    return class_init::type_meta<NodeInfo>(type);
+/**
+ * Get node info for given node class
+ */
+inline NodeInfo const& get_node_info(std::type_index node_type) {
+    return class_init::type_meta<NodeInfo>(node_type);
 }
 
 /// Get node name for given type if it's a type of registered node
-string node_type_name(std::type_index type);
+string node_type_name(std::type_index node_type);
 
 /// Get node name
 inline string node_name(AbstractValue const& node) {
@@ -55,10 +58,15 @@ inline NodeInfo const& get_node_type(string const& name) {
     return get_node_info(class_init::find_type(name));
 }
 
+/**
+ * Make node with given name, optionally using source & context to initialize it.
+ *
+ * TODO: rename to make_node_with_name & that to make_node_with_name_as
+ */
 AbstractReference make_node_with_name_base(string const& name, AbstractReference source=nullptr, shared_ptr<Context> context=nullptr);
 
 /**
- * Make node with given name, optionally using source & context to initialize it.
+ * Same as make_node_with_name_base, but optionally cast to desired type.
  *
  * TODO: throw instead of returning nullptr?
  */
@@ -88,7 +96,6 @@ struct RegisterNodeByType : class_init::Initialized<RegisterNodeByType<I>> {
         node_types()[info->type()].insert(info);
     }
 };
-
 
 } // namespace rainynite::core
 
