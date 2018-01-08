@@ -225,9 +225,20 @@ string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings) {
         // throw
         return "";
     }
-    if (!node_ptr->enabled())
-        return "";
+
     auto node = dynamic_cast<AbstractNode*>(node_ptr.get());
+    auto list = dynamic_cast<AbstractListLinked*>(node_ptr.get());
+
+    if (!node_ptr->enabled()) {
+        if (list->link_count() > 0) {
+            if (auto child = list->get_link(0)) {
+                if (child->get_type() == typeid(Renderable))
+                    return node_to_svg({child, context}, settings);
+            }
+        }
+        return "";
+    }
+
     auto name = node_name(*node_ptr);
     try {
         return class_init::name_info<SvgRendererModule>(name)(*node, context, settings);
