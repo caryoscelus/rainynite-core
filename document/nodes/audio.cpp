@@ -22,17 +22,6 @@
 
 namespace rainynite::core::nodes {
 
-class EmptyAudio : public AudioNode {
-    DOC_STRING(
-        "Empty audio node"
-    )
-public:
-    EmptyAudio() {
-    }
-};
-
-REGISTER_NODE(EmptyAudio);
-
 class AudioFromFile : public AudioNode {
     DOC_STRING(
         "Play audio from file.\n"
