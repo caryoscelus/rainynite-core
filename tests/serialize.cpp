@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-#include <core/type_info.h>
+#include <core/util/type_info.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/serialize/node_reader.h>

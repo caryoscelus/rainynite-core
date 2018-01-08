@@ -20,7 +20,7 @@
 #include <yaml-cpp/emitter.h>
 
 #include <core/document.h>
-#include <core/state_machine.h>
+#include <core/util/state_machine.h>
 #include <core/serialize/node_writer.h>
 #include <core/node_info.h>
 #include <core/node_tree_traverse.h>

@@ -18,7 +18,7 @@
 #ifndef SVG_MODULE_H_F8EAFC94_D988_533E_B534_D3C49F9B27D0
 #define SVG_MODULE_H_F8EAFC94_D988_533E_B534_D3C49F9B27D0
 
-#include <core/class_init.h>
+#include <core/util/class_init.h>
 #include <core/node/abstract_node.h>
 #include <core/node/abstract_value.h>
 #include <core/time/time.h>

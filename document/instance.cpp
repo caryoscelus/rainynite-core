@@ -19,7 +19,7 @@
 
 #include <core/node_info.h>
 #include <core/node/list.h>
-#include <core/type_info.h>
+#include <core/util/type_info.h>
 #include <core/all_types.h>
 #include <core/serialize/node_writer.h>
 #include <core/time/parse.h>
@@ -27,7 +27,7 @@
 #include <core/renderable.h>
 #include <core/document.h>
 #include <core/color/color.h>
-#include <core/nothing_io.h>
+#include <core/util/nothing_io.h>
 
 #include <geom_helpers/knots_io.h>
 #include <geom_helpers/point_io.h>

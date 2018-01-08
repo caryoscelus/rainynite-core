@@ -1,6 +1,5 @@
-/*
- *  clsas_init.cpp - class init tests
- *  Copyright (C) 2017 caryoscelus
+/*  clsas_init.cpp - class init tests
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +17,7 @@
 
 #include <catch.hpp>
 
-#include <core/class_init.h>
+#include <core/util/class_init.h>
 
 using namespace class_init;
 

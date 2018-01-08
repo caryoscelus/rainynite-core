@@ -21,7 +21,7 @@
 #include <boost/signals2/signal.hpp>
 
 #include <core/std/memory.h>
-#include <core/destroy_detector.h>
+#include <core/util/destroy_detector.h>
 
 namespace rainynite::core {
 

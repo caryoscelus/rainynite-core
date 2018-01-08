@@ -21,7 +21,7 @@
 #include <core/node/new_node.h>
 #include <core/context.h>
 #include <core/document.h>
-#include <core/exceptions.h>
+#include <core/util/exceptions.h>
 
 namespace rainynite::core::nodes {
 

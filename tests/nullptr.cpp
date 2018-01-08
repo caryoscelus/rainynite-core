@@ -1,4 +1,4 @@
-/*  nullptr.cpp - nullptr helpers tests
+/*  nullptr.cpp - util/nullptr.helpers tests
  *  Copyright (C) 2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 #include <catch.hpp>
 
 #include <core/std/memory.h>
-#include <core/nullptr.h>
+#include <core/util/nullptr.h>
 
 using namespace rainynite;
 

@@ -1,4 +1,4 @@
-/*  destroy_detector.h - report object destruction for boost signal system
+/*  util/destroy_detector.h - report object destruction for boost signal system
  *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 #define CORE_DESTROY_DETECTOR_H_DD71BC27_C341_5CF3_8E0B_71C19AE585A2
 
 #include <core/std/memory.h>
-#include <core/nothing.h>
+#include "nothing.h"
 
 namespace rainynite {
 

@@ -19,9 +19,9 @@
 #define CORE_NODE_LINK_STORAGE_H_56A4E74C_E276_5ADA_A9E9_06154E870892
 
 #include <core/std/array.h>
-#include <core/class_init.h>
+#include <core/util/class_init.h>
+#include <core/util/exceptions.h>
 #include <core/node_info.h>
-#include <core/exceptions.h>
 #include "abstract_list.h"
 #include "abstract_value.h"
 #include "make.h"

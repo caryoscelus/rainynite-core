@@ -19,8 +19,8 @@
 #define CORE_NODE_INFO_H_E59BD832_E858_5D6E_83EC_79AF65B01A25
 
 #include <core/std/set.h>
-#include <core/class_init.h>
-#include <core/type_info.h>
+#include <core/util/class_init.h>
+#include <core/util/type_info.h>
 #include <core/node/abstract_value.h>
 
 namespace rainynite::core {

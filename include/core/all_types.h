@@ -30,7 +30,7 @@
 #include <core/renderable.h>
 #include <core/audio.h>
 #include <core/time_point.h>
-#include <core/nothing.h>
+#include <core/util/nothing.h>
 
 #define TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \
     template class Template<Nothing>; \

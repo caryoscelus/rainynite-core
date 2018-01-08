@@ -1,5 +1,5 @@
 /*  parse.cpp - parse testing
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 #include <catch.hpp>
 
-#include <core/exceptions.h>
+#include <core/util/exceptions.h>
 #include <core/time/parse.h>
 
 using namespace rainynite;

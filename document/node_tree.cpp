@@ -19,7 +19,7 @@
 #include <core/node/abstract_list.h>
 #include <core/node/abstract_value.h>
 #include <core/node/abstract_node.h>
-#include <core/exceptions.h>
+#include <core/util/exceptions.h>
 #include <core/document.h>
 #include <core/node_tree_traverse.h>
 

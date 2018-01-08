@@ -19,7 +19,7 @@
 
 #include <core/node_info.h>
 #include <core/node/proxy_node.h>
-#include <core/type_info.h>
+#include <core/util/type_info.h>
 #include <core/all_types.h>
 #include <core/context.h>
 

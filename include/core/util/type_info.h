@@ -1,5 +1,5 @@
-/*  type_info.h - runtime primitive type information
- *  Copyright (C) 2017 caryoscelus
+/*  util/type_info.h - runtime primitive type information
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef CORE_TYPES_H_9E3A32A1_A9D0_52CB_AA5B_25CABBDD7A32
 #define CORE_TYPES_H_9E3A32A1_A9D0_52CB_AA5B_25CABBDD7A32
 
-#include <core/class_init.h>
+#include <core/util/class_init.h>
 
 namespace rainynite::core {
 

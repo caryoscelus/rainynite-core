@@ -27,7 +27,7 @@
 
 #include <core/document.h>
 #include <core/node_info.h>
-#include <core/state_machine.h>
+#include <core/util/state_machine.h>
 #include <core/filters/yaml_reader.h>
 #include <core/serialize/node_reader.h>
 

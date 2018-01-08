@@ -1,4 +1,4 @@
-/*  state_machine.h - state machine template
+/*  util/state_machine.h - state machine template
  *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify

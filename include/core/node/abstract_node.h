@@ -20,7 +20,7 @@
 
 #include <core/std/map.h>
 #include <core/util/doc_string.h>
-#include <core/destroy_detector.h>
+#include <core/util/destroy_detector.h>
 #include "abstract_list.h"
 
 namespace rainynite::core {

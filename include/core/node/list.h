@@ -19,7 +19,7 @@
 #define CORE_NODE_LIST_H_12D92F7F_8F30_5447_9F54_AFB006578F3D
 
 #include <core/std/traits.h>
-#include <core/nothing.h>
+#include <core/util/nothing.h>
 #include "abstract_list.h"
 #include "abstract_value.h"
 #include "make.h"

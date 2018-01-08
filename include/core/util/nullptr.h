@@ -1,4 +1,4 @@
-/*  nullptr.h - nullptr helpers
+/*  util/nullptr.h - nullptr helpers
  *  Copyright (C) 2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
