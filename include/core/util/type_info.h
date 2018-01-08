@@ -73,6 +73,16 @@ T parse_primitive_type_to(Args&&... args) {
     );
 }
 
+/**
+ * Returns all registered types.
+ *
+ * NOTE: if this is called during initialization, there is no way to ensure that
+ * all types will be returned by this function.
+ */
+inline map<Type, TypeInfo*> const& all_types() {
+    return class_init::class_registry<TypeInfo>();
+}
+
 } // namespace rainynite::core
 
 #endif
