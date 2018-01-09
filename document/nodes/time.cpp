@@ -106,6 +106,37 @@ protected:
 
 REGISTER_NODE(Now);
 
+
+class Frames :
+    public NewNode<
+        Frames,
+        Time,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Return current time"
+    )
+
+    NODE_PROPERTIES("frames", "fps")
+    DEFAULT_VALUES(0.0, 1.0)
+
+    PROPERTY(frames)
+    PROPERTY(fps)
+
+protected:
+    Time get(shared_ptr<Context> ctx) const override {
+        auto fps = fps_value<double>(ctx);
+        if (fps == 0)
+            return {};
+        return Time(0, fps, frames_value<double>(ctx));
+    }
+};
+
+REGISTER_NODE(Frames);
+
+
 template <typename T>
 class TimeLoop :
     public NewProxyNode<
