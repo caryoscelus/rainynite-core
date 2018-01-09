@@ -1,5 +1,5 @@
 /*  node_tree.h - Node tree
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -111,6 +111,10 @@ class NodeTree {
 public:
     using Index = observer_ptr<NodeTreeIndex const>;
     using IndexMap = map<size_t,NodeTreeIndex>;
+
+    /// Disable checking indexes because it leads to huge performance drop
+    static const bool DISABLE_INDEX_CHECKS = true;
+
 
     explicit NodeTree(shared_ptr<AbstractValue> root_, shared_ptr<ActionStack> action_stack_);
     virtual ~NodeTree();

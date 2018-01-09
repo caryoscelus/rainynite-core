@@ -132,7 +132,9 @@ observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
 }
 
 void NodeTree::check_index_validity(Index index) const {
-    if (auto p_idx = parent(index)) {
+    if constexpr (DISABLE_INDEX_CHECKS) {
+        return;
+    } else if (auto p_idx = parent(index)) {
         if (p_idx->null())
             return;
         check_index_validity(p_idx);

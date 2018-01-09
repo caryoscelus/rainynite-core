@@ -1,5 +1,5 @@
 /*  node_tree.cpp - node tree tests
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,10 @@ TEST_CASE("Node tree index", "[node]") {
     SECTION("Invalid link") {
         auto new_zero = make_value<double>(0);
         root->set_link(0, new_zero);
-        CHECK_THROWS_AS(tree.get_node(leaf_index), InvalidIndexError);
+        // NOTE: this is temporarily disabled because checks lead to huge
+        // performance hit.
+        if (!NodeTree::DISABLE_INDEX_CHECKS)
+            CHECK_THROWS_AS(tree.get_node(leaf_index), InvalidIndexError);
     }
 }
 
