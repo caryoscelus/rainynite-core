@@ -19,6 +19,7 @@
 #include <core/node_info/macros.h>
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/all_types.h>
 
 namespace rainynite::core {
@@ -31,6 +32,12 @@ public:
 
     Nothing get(shared_ptr<Context> /*ctx*/) const override {
         return {};
+    }
+
+    size_t list_links_count(shared_ptr<Context> ctx) const override {
+        if (auto list = this->get_property("source"))
+            return list->list_links_count(ctx);
+        return 0;
     }
 
 protected:
@@ -56,6 +63,12 @@ public:
         auto src = make_shared<UntypedListValue>();
         src->new_id();
         this->template init_property("source", Type(typeid(Nothing)), std::move(src));
+    }
+
+    size_t list_links_count(shared_ptr<Context> ctx) const override {
+        if (auto list = this->get_property("source"))
+            return list->list_links_count(ctx);
+        return 0;
     }
 
 protected:
@@ -91,5 +104,33 @@ private:
 
 NODE_INFO_TEMPLATE(ListElement, ListElement<T>, T);
 TYPE_INSTANCES(ListElementNodeInfo)
+
+
+class ListLinkCount :
+    public NewNode<
+        ListLinkCount,
+        double,
+        types::Any
+    >
+{
+    DOC_STRING(
+        "Return number of list elements in its child\n"
+        "\n"
+        "Returns 0 for non-lists"
+    )
+
+    NODE_PROPERTIES("source")
+    DEFAULT_VALUES(Nothing{})
+
+    PROPERTY(source)
+
+protected:
+    double get(shared_ptr<Context> ctx) const override {
+        return p_source()->list_links_count(ctx);
+    }
+};
+
+REGISTER_NODE(ListLinkCount);
+
 
 } // namespace rainynite::core
