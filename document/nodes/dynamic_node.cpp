@@ -86,6 +86,27 @@ private:
     NodeInContext const nic;
 };
 
+struct ReplaceContextNodeFactory {
+    virtual shared_ptr<AbstractValue> operator()(NodeInContext nic) const = 0;
+};
+
+shared_ptr<AbstractValue> make_replace_context_node(Type type, NodeInContext nic) {
+    return class_init::type_info<ReplaceContextNodeFactory, shared_ptr<AbstractValue>>(type, nic);
+}
+
+template <typename T>
+struct ReplaceContextNodeFactoryImpl :
+    public ReplaceContextNodeFactory,
+    class_init::Registered<ReplaceContextNodeFactoryImpl<T>, T, ReplaceContextNodeFactory>
+{
+    shared_ptr<AbstractValue> operator()(NodeInContext nic) const override {
+        return make_shared<ReplaceContextNode<T>>(nic);
+    }
+};
+
+TYPE_INSTANCES(ReplaceContextNodeFactoryImpl)
+
+
 template <typename T>
 class ApplyToList : public Node<vector<T>> {
     DOC_STRING(
@@ -217,7 +238,7 @@ protected:
             for (auto& e : iterators) {
                 if (e.first == e.second)
                     return result;
-                list_node->set_link(i, make_shared<ReplaceContextNode<T>>(*e.first));
+                list_node->set_link(i, make_replace_context_node(e.first->node->get_type(), *e.first));
                 ++e.first;
                 ++i;
             }

@@ -27,3 +27,34 @@ _tests: !List/Boolean
               - 0.5
               - 0.7
     b: 3
+
+  - !Equal/Real
+    a: !ListLinkCount
+      source: &429c1caa-eda8-4573-bde8-bba96acbc316 !DynamicListZip/String
+        node_type: SubString
+        arguments_list: !UntypedListValue
+          - !ToUntypedList
+            source: !List/String
+              - "Hello, world"
+              - "abcd"
+              - "gg"
+          - !ToUntypedList
+            source: !List/Real
+              - 0
+              - 1
+              - 2
+              - 3
+          - !ToUntypedList
+            source: !List/Real
+              - 5
+              - 1
+              - 4
+              - 7
+              - 9
+    b: 3
+
+  - !Equal/String
+    a: !ListElement/String
+      source: *429c1caa-eda8-4573-bde8-bba96acbc316
+      n: 0
+    b: "Hello"
