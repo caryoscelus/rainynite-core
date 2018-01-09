@@ -21,6 +21,7 @@
 
 #include <core/node_info/macros.h>
 #include <core/node/node.h>
+#include <core/node/new_node.h>
 #include <core/node/property.h>
 
 using boost::math::double_constants::pi;
@@ -43,6 +44,37 @@ private:
     NODE_PROPERTY(b, double);
 };
 REGISTER_NODE(Multiply);
+
+
+class Mod :
+    public NewNode<
+        Mod,
+        double,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Take modulus"
+    )
+
+    NODE_PROPERTIES("a", "b")
+    DEFAULT_VALUES(0.0, 1.0)
+
+    PROPERTY(a)
+    PROPERTY(b)
+
+protected:
+    double get(shared_ptr<Context> ctx) const override {
+        auto a = a_value<double>(ctx);
+        if (auto b = b_value<double>(ctx))
+            return std::fmod(a, b);
+        return a;
+    }
+};
+
+REGISTER_NODE(Mod);
+
 
 class Sin : public Node<double> {
 public:
