@@ -125,6 +125,7 @@ public:
             args->new_id();
             this->template init_property(dynamic_arguments, Type(typeid(Nothing)), std::move(args));
         }
+        this->template init<bool>(use_dynamic_context, true);
     }
 
     size_t list_links_count(shared_ptr<Context> ctx) const override {
@@ -139,14 +140,17 @@ protected:
         auto property = get_property_name()->value(ctx);
         auto base_node = get_source();
         auto dy_args = this->get_property(dynamic_arguments)->list_links(ctx);
+        bool using_dynamic_context = get_use_dynamic_context()->value(ctx);
         std::transform(
             std::begin(dy_args),
             std::end(dy_args),
             std::back_inserter(result),
-            [base_node, property](NodeInContext e) -> NodeInContext {
+            [base_node, property, ctx, using_dynamic_context](NodeInContext e) -> NodeInContext {
                 auto node = shallow_copy(*base_node);
-                dynamic_cast<AbstractNode*>(node.get())->set_property(property, e.node);
-                return { node, e.context };
+                auto prop = using_dynamic_context ? e.node : make_replace_context_node(e.node->get_type(), e);
+                abstract_node_cast(node)->set_property(property, prop);
+                auto context = using_dynamic_context ? e.context : ctx;
+                return { node, context };
             }
         );
         return result;
@@ -155,6 +159,7 @@ private:
     NODE_PROPERTY(source, T);
     NODE_PROPERTY(property_name, string);
     NODE_LIST_PROPERTY(dynamic_arguments, Nothing);
+    NODE_PROPERTY(use_dynamic_context, bool);
 };
 
 NODE_INFO_TEMPLATE(ApplyToList, ApplyToList<T>, vector<T>);
