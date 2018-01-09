@@ -3,8 +3,27 @@ _tests: !List/Boolean
 
   - !Equal/Real
     a: !DynamicNode/Real
-      node_type: !Value/String Add/Real
+      node_type: Add/Real
       arguments: !UntypedListValue
         - !Value/Real 1.0
         - !Value/Real 3.0
-    b: !Value/Real 4.0
+    b: 4.0
+
+  ## TODO: list content check
+  - !Equal/Real
+    a: !ListLinkCount
+      source: !DynamicListZip/Real
+        node_type: Add/Real
+        arguments_list: !UntypedListValue
+          - !ToUntypedList
+            source: !List/Real
+              - 0.4
+              - 0.2
+              - 0.0
+          - !ToUntypedList
+            source: !List/Real
+              - 0.1
+              - 0.3
+              - 0.5
+              - 0.7
+    b: 3

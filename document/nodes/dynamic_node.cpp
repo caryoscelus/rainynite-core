@@ -15,6 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/util/nullptr.h>
 #include <core/node_info/macros.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
@@ -34,26 +35,22 @@ public:
     }
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        try {
-            auto type = get_node_type()->value(ctx);
-            if (cached_type != type) {
-                node = make_node_with_name<AbstractValue>(type);
-                cached_type = type;
+        auto type = get_node_type()->value(ctx);
+        if (cached_type != type) {
+            node = make_node_with_name<AbstractValue>(type);
+            cached_type = type;
+        }
+        size_t i = 0;
+        auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
+        if (auto args = this->get_property("arguments")) {
+            for (auto const& arg : args->list_links(ctx)) {
+                // TODO: context
+                node_list->set_link(i, arg.node);
+                ++i;
             }
-            size_t i = 0;
-            auto node_list = dynamic_cast<AbstractListLinked*>(node.get());
-            if (auto args = this->get_property("arguments")) {
-                for (auto const& arg : args->list_links(ctx)) {
-                    // TODO: context
-                    node_list->set_link(i, arg.node);
-                    ++i;
-                }
-                return {node, ctx};
-            } else {
-                throw NodeAccessError("DynamicNode: arguments property is null");
-            }
-        } catch (...) {
-            return { make_value<T>(), ctx };
+            return {node, ctx};
+        } else {
+            throw NodeAccessError("DynamicNode: arguments property is null");
         }
     }
 
@@ -109,25 +106,28 @@ public:
         }
     }
 
+    size_t list_links_count(shared_ptr<Context> ctx) const override {
+        if (auto list = this->get_property(dynamic_arguments))
+            return list->list_links_count(ctx);
+        return 0;
+    }
+
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         vector<NodeInContext> result;
-        try {
-            auto property = get_property_name()->value(ctx);
-            auto base_node = get_source();
-            auto dy_args = this->get_property(dynamic_arguments)->list_links(ctx);
-            std::transform(
-                std::begin(dy_args),
-                std::end(dy_args),
-                std::back_inserter(result),
-                [base_node, property](NodeInContext e) -> NodeInContext {
-                    auto node = shallow_copy(*base_node);
-                    dynamic_cast<AbstractNode*>(node.get())->set_property(property, e.node);
-                    return { node, e.context };
-                }
-            );
-        } catch (...) {
-        }
+        auto property = get_property_name()->value(ctx);
+        auto base_node = get_source();
+        auto dy_args = this->get_property(dynamic_arguments)->list_links(ctx);
+        std::transform(
+            std::begin(dy_args),
+            std::end(dy_args),
+            std::back_inserter(result),
+            [base_node, property](NodeInContext e) -> NodeInContext {
+                auto node = shallow_copy(*base_node);
+                dynamic_cast<AbstractNode*>(node.get())->set_property(property, e.node);
+                return { node, e.context };
+            }
+        );
         return result;
     }
 private:
@@ -153,6 +153,19 @@ public:
         auto args = make_shared<UntypedListValue>();
         args->new_id();
         this->template init_property(arguments_list, Type(typeid(Nothing)), std::move(args));
+    }
+
+    size_t list_links_count(shared_ptr<Context> ctx) const override {
+        auto args = no_null(this->get_property("arguments_list"));
+        auto list_of_lists = args->list_links(ctx);
+        if (list_of_lists.size() == 0)
+            return 0;
+        auto iter = list_of_lists.begin();
+        size_t result = iter->node->list_links_count(iter->context);
+        while (++iter != list_of_lists.end() && result != 0) {
+            result = std::min(result, iter->node->list_links_count(iter->context));
+        }
+        return result;
     }
 
 protected:
