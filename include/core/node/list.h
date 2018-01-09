@@ -57,6 +57,10 @@ public:
         return result;
     }
 
+    size_t list_links_count(shared_ptr<Context> /*ctx*/) const override {
+        return values.size();
+    }
+
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> context) const override {
         vector<NodeInContext> result;

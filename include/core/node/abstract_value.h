@@ -96,6 +96,15 @@ public:
         }
     }
 
+    /**
+     * Get size of represented list.
+     *
+     * Returns 0 by default.
+     */
+    virtual size_t list_links_count(shared_ptr<Context> /*ctx*/) const {
+        return 0;
+    }
+
 protected:
     /// list_links virtual implementation.
     virtual vector<NodeInContext> get_list_links(shared_ptr<Context> /*ctx*/) const {
