@@ -82,6 +82,12 @@ public:
         return nic;
     }
 
+    AbstractReference get_property(string const& name) const override {
+        if (auto node = abstract_node_cast(nic.node))
+            return node->get_property(name);
+        throw NodeAccessError("no proxied property");
+    }
+
 private:
     NodeInContext const nic;
 };
