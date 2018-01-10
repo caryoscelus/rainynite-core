@@ -1,0 +1,43 @@
+--- !Document
+
+_tests: !List/Boolean
+  - !Equal/Real
+    a: !ListLinkCount
+      source: &eb50ed4d-5021-45cc-b78b-0a31d1334824 !NumericSequence
+        first: 0
+        count: 5
+        step: 1
+    b: 5
+
+  - !Equal/Real
+    a: !ListElement/Real
+      source: *eb50ed4d-5021-45cc-b78b-0a31d1334824
+      n: 3
+    b: 3
+
+  - !Equal/Real
+    a: !ListElement/Real
+      source: *eb50ed4d-5021-45cc-b78b-0a31d1334824
+      n: 4
+    b: 4
+
+
+  - !Equal/Real
+    a: !ListLinkCount
+      source: &97413a12-0b5a-4963-8157-efba390d942e !NumericPeriodSequence
+        first: 3
+        last: 5
+        step: 0.5
+    b: 4
+
+  - !Equal/Real
+    a: !ListElement/Real
+      source: *97413a12-0b5a-4963-8157-efba390d942e
+      n: 0
+    b: 3
+
+  - !Equal/Real
+    a: !ListElement/Real
+      source: *97413a12-0b5a-4963-8157-efba390d942e
+      n: 3
+    b: 4.5

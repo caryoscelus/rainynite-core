@@ -16,6 +16,7 @@
  */
 
 #include <core/std/algorithm.h>
+#include <core/util/crtp.h>
 #include <core/node_info/macros.h>
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
@@ -131,6 +132,189 @@ protected:
 };
 
 REGISTER_NODE(ListLinkCount);
+
+
+/**
+ * Helper class for numeric sequence generator nodes
+ */
+template <class Self, class Base>
+class AbstractNumericSequence :
+    public crtp::Crtp<
+        AbstractNumericSequence<Self,Base>,
+        Self
+    >,
+    public Base
+{
+protected:
+     vector<double> get(shared_ptr<Context> ctx) const override {
+        vector<double> result;
+        this->self()->do_the_job(ctx, [ctx, &result](auto n) {
+            result.push_back(n);
+        });
+        return result;
+    }
+
+    vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
+        vector<NodeInContext> result;
+        this->self()->do_the_job(ctx, [ctx, &result](auto n) {
+            result.emplace_back(make_value<double>(n), ctx);
+        });
+        return result;
+    }
+
+public:
+    size_t list_links_count(shared_ptr<Context> ctx) const noexcept override {
+        size_t result = 0;
+        this->self()->do_the_job(ctx, [&result](auto) {
+            ++result;
+        });
+        return result;
+    }
+};
+
+
+class NumericSequence :
+    public AbstractNumericSequence<
+        NumericSequence,
+        NewNode<
+            NumericSequence,
+            vector<double>,
+            types::Only<double>,
+            types::Only<double>,
+            types::Only<double>
+        >
+    >
+{
+    DOC_STRING(
+        "Generate number sequence"
+    )
+
+    NODE_PROPERTIES("first", "count", "step")
+    DEFAULT_VALUES(0.0, 0.0, 1.0)
+
+    PROPERTY(first)
+    PROPERTY(count)
+    PROPERTY(step)
+
+public:
+    template <typename F>
+    void do_the_job(shared_ptr<Context> ctx, F f) const {
+        auto first = first_value<double>(ctx);
+        auto count = count_value<double>(ctx);
+        auto step = step_value<double>(ctx);
+
+        for (double i = 0; i < count; ++i) {
+            f(first+i*step);
+        }
+    }
+
+    size_t list_links_count(shared_ptr<Context> ctx) const noexcept override {
+        return (size_t)std::max(count_value<double>(ctx), 0.0);
+    }
+};
+
+REGISTER_NODE(NumericSequence);
+
+
+class NumericSplitSequence :
+    public AbstractNumericSequence<
+        NumericSplitSequence,
+        NewNode<
+            NumericSplitSequence,
+            vector<double>,
+            types::Only<double>,
+            types::Only<double>,
+            types::Only<double>
+        >
+    >
+{
+    DOC_STRING(
+        "Generate number sequence"
+    )
+
+    NODE_PROPERTIES("first", "last", "count")
+    DEFAULT_VALUES(0.0, 0.0, 1.0)
+
+    PROPERTY(first)
+    PROPERTY(last)
+    PROPERTY(count)
+
+public:
+    template <typename F>
+    void do_the_job(shared_ptr<Context> ctx, F f) const {
+        auto first = first_value<double>(ctx);
+        auto last = last_value<double>(ctx);
+        auto count = count_value<double>(ctx);
+
+        for (double i = 0; i < count; ++i) {
+            f(first + (last-first)*i/count);
+        }
+    }
+
+    size_t list_links_count(shared_ptr<Context> ctx) const noexcept override {
+        return (size_t)std::max(count_value<double>(ctx), 0.0);
+    }
+};
+
+REGISTER_NODE(NumericSplitSequence);
+
+
+class NumericPeriodSequence :
+    public AbstractNumericSequence<
+        NumericPeriodSequence,
+        NewNode<
+            NumericPeriodSequence,
+            vector<double>,
+            types::Only<double>,
+            types::Only<double>,
+            types::Only<double>
+        >
+    >
+{
+    DOC_STRING(
+        "Generate number sequence"
+    )
+
+    NODE_PROPERTIES("first", "last", "step")
+    DEFAULT_VALUES(0.0, 0.0, 1.0)
+
+    PROPERTY(first)
+    PROPERTY(last)
+    PROPERTY(step)
+
+public:
+    template <typename F>
+    void do_the_job(shared_ptr<Context> ctx, F f) const {
+        auto first = first_value<double>(ctx);
+        auto last = last_value<double>(ctx);
+        auto step = step_value<double>(ctx);
+
+        if (step == 0 || std::signbit(last-first) != std::signbit(step))
+            return;
+
+        auto in_range = [first, last](auto n) {
+            if (last > first)
+                return first <= n && n < last;
+            else
+                return first >= n && n > last;
+        };
+
+        for (double i = first; in_range(i); i += step) {
+            f(i);
+        }
+    }
+
+    size_t list_links_count(shared_ptr<Context> ctx) const noexcept override {
+        auto step = step_value<double>(ctx);
+        if (step == 0)
+            return 0;
+        auto first = first_value<double>(ctx);
+        auto last = last_value<double>(ctx);
+        return (size_t)std::max((last-first)/step, 0.0);
+    }
+};
+
+REGISTER_NODE(NumericPeriodSequence);
 
 
 } // namespace rainynite::core
