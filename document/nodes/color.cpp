@@ -16,6 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
+#include <core/node/new_node.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/color/color.h>
@@ -49,5 +50,42 @@ private:
 };
 
 REGISTER_NODE(InvertColor);
+
+
+class HsvColor :
+    public NewNode<
+        HsvColor,
+        colors::Color,
+        types::Only<double>,
+        types::Only<double>,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Color composed from hue, saturation, value (and alpha)"
+    )
+
+    NODE_PROPERTIES("hue", "saturation", "value", "alpha")
+    DEFAULT_VALUES(0.0, 0.0, 0.0, 1.0)
+
+    PROPERTY(hue)
+    PROPERTY(saturation)
+    PROPERTY(value)
+    PROPERTY(alpha)
+
+protected:
+    colors::Color get(shared_ptr<Context> ctx) const override {
+        return colors::Color::from_hsv(
+            hue_value<double>(ctx),
+            saturation_value<double>(ctx),
+            value_value<double>(ctx),
+            alpha_value<double>(ctx)
+        );
+    }
+};
+
+REGISTER_NODE(HsvColor);
+
 
 } // namespace rainynite::core::nodes

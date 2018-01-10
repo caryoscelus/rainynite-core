@@ -1,5 +1,5 @@
 /*  color.h - Color types
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -76,6 +76,36 @@ public:
             c(g)*Lim::max(),
             c(b)*Lim::max(),
             c(a)*Lim::max()
+        );
+    }
+    static RGBA<T> from_hsv(double h, double s, double v, double a=1.0) {
+        double t;
+        h = std::modf(h, &t);
+        if (h < 0)
+            h += 1;
+        auto main = v*s;
+        auto base = v*(1-s);
+        auto other = main*(1 - std::fmod(h*6+1, 2));
+        double r, g, b;
+        if (h*6 < 1) {
+            r = main; g = other; b = 0;
+        } else if (h*6 < 2) {
+            r = other; g = main; b = 0;
+        } else if (h*6 < 3) {
+            r = 0; g = main; b = other;
+        } else if (h*6 < 4) {
+            r = 0; g = other; b = main;
+        } else if (h*6 < 5) {
+            r = other; g = 0; b = main;
+        } else {
+            r = main; g = 0; b = other;
+        }
+        return from_rgba(
+            v*(r+base),
+            v*(g+base),
+            v*(b+base),
+            a,
+            ConversionStyle::Strict
         );
     }
 public:
