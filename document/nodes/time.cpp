@@ -116,7 +116,7 @@ class Frames :
     >
 {
     DOC_STRING(
-        "Return current time"
+        "Convert Real (number of frames) into Time"
     )
 
     NODE_PROPERTIES("frames", "fps")
