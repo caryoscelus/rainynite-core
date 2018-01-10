@@ -9,10 +9,12 @@ endfunction()
 
 add_catch_test(nullptr)
 
-add_catch_test(time)
-target_link_libraries(test_time time)
+add_catch_test(crtp)
 
 add_catch_test(class_init)
+
+add_catch_test(time)
+target_link_libraries(test_time time)
 
 add_catch_test(node)
 target_link_libraries(test_node nodes)
