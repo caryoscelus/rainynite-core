@@ -17,25 +17,29 @@
 
 #include <core/node_info/macros.h>
 #include <core/node/new_node.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
 #include <core/color/color.h>
 
 namespace rainynite::core::nodes {
 
-class InvertColor : public Node<colors::Color> {
+class InvertColor :
+    public NewNode<
+        InvertColor,
+        colors::Color,
+        types::Only<colors::Color>
+    >
+{
     DOC_STRING(
         "Invert color. Doesn't touch opacity."
     )
 
-public:
-    InvertColor() {
-        init<colors::Color>(source, {});
-    }
+    NODE_PROPERTIES("source")
+    DEFAULT_VALUES(colors::Color{})
+
+    PROPERTY(source)
 
 protected:
     colors::Color get(shared_ptr<Context> ctx) const override {
-        auto c = get_source()->value(ctx);
+        auto c = source_value<colors::Color>(ctx);
         // TODO: make it lib function
         return colors::Color::from_rgba(
             1.0-c.red(),
@@ -44,9 +48,6 @@ protected:
             c.alpha()
         );
     }
-
-private:
-    NODE_PROPERTY(source, colors::Color);
 };
 
 REGISTER_NODE(InvertColor);
@@ -86,6 +87,42 @@ protected:
 };
 
 REGISTER_NODE(HsvColor);
+
+
+class RgbColor :
+    public NewNode<
+        RgbColor,
+        colors::Color,
+        types::Only<double>,
+        types::Only<double>,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Color composed from red, green, blue (and alpha)"
+    )
+
+    NODE_PROPERTIES("red", "green", "blue", "alpha")
+    DEFAULT_VALUES(0.0, 0.0, 0.0, 1.0)
+
+    PROPERTY(red)
+    PROPERTY(green)
+    PROPERTY(blue)
+    PROPERTY(alpha)
+
+protected:
+    colors::Color get(shared_ptr<Context> ctx) const override {
+        return colors::Color::from_rgba(
+            red_value<double>(ctx),
+            green_value<double>(ctx),
+            blue_value<double>(ctx),
+            alpha_value<double>(ctx)
+        );
+    }
+};
+
+REGISTER_NODE(RgbColor);
 
 
 } // namespace rainynite::core::nodes
