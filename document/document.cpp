@@ -18,7 +18,7 @@
 #include <core/node/new_node.h>
 #include <core/node_info/macros.h>
 #include <core/context.h>
-#include <core/node_tree.h>
+#include <core/node_tree/node_tree.h>
 #include <core/action_stack.h>
 #include <core/time/period.h>
 #include <core/renderable.h>
@@ -87,7 +87,7 @@ Document::Document(shared_ptr<BaseValue<Renderable>> root_) :
 
 shared_ptr<NodeTree> Document::get_tree() {
     if (tree == nullptr)
-        tree = make_shared<NodeTree>(static_pointer_cast<Document>(shared_from_this()), action_stack);
+        tree = make_shared<NodeTree>(static_pointer_cast<Document>(shared_from_this()));
     return tree;
 }
 

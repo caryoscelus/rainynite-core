@@ -53,8 +53,8 @@ namespace types {
 
 template <typename T>
 struct Only {
-    operator Type() const {
-        return typeid(T);
+    operator TypeConstraint() const {
+        return {typeid(T)};
     }
 };
 

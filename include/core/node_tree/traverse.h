@@ -1,4 +1,4 @@
-/*  node_tree_traverse.h - node tree traverse
+/*  node_tree/traverse.h - node tree traverse
  *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -34,13 +34,8 @@ public:
         tree(tree_)
     {}
 
-    enum TraverseFlags {
-        None                = 0x00,
-        UseCount            = 0x01,
-        Default             = UseCount,
-    };
-
-    void traverse_tree(TraverseFlags flags=Default);
+    void traverse_tree();
+    void traverse_tree_from(NodeTree::Index index);
 
 protected:
      /**
@@ -48,32 +43,8 @@ protected:
      *
      * If this function returns true, object content is traversed, otherwise not.
      */
-    virtual bool object_start() = 0;
-    virtual void object_end() = 0;
-
-    struct Status {
-        NodeTree::Index index;
-        AbstractReference node;
-        TypeConstraint type;
-        string key;
-        size_t count;
-    };
-
-    Status const& current() const {
-        return status_stack.back();
-    }
-    Status& current() {
-        return status_stack.back();
-    }
-    Status const& parent() const {
-        return status_stack.rbegin()[1];
-    }
-
-    vector<Status> status_stack;
-    NodeTreePath path;
-
-    map<AbstractReference,size_t> node_seen_count;
-    bool traverse_children;
+    virtual bool object_start(NodeTree::Index index) = 0;
+    virtual void object_end(NodeTree::Index index) = 0;
 
     NodeTree& tree;
 };

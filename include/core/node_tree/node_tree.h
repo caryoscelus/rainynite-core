@@ -1,4 +1,4 @@
-/*  node_tree.h - Node tree
+/*  node_tree/node_tree.h - Node tree
  *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,8 @@
 #ifndef CORE_NODE_TREE_H_7E24CFE0_81EC_5F4F_836F_2CC477F61BB4
 #define CORE_NODE_TREE_H_7E24CFE0_81EC_5F4F_836F_2CC477F61BB4
 
+#include <boost/operators.hpp>
+
 #include <core/std/memory.h>
 #include <core/std/map.h>
 #include <core/std/vector.h>
@@ -25,43 +27,31 @@
 #include <core/util/exceptions.h>
 #include <core/util/class_init.h>
 #include <core/node/common.h>
+#include <core/node/type_constraint.h>
 
 namespace rainynite::core {
 
-class ActionStack;
-
 class NodeTree;
 
-struct InvalidIndexError : public std::runtime_error {
-    InvalidIndexError(string const& msg) :
-        std::runtime_error(msg)
+struct NodeTreeError : public std::runtime_error {
+    template <typename... Args>
+    NodeTreeError(Args&&... args) :
+        std::runtime_error(std::forward<Args>(args)...)
     {}
 };
 
-struct NodeTreeIndex {
-    enum State {
-        Null,
-        Root,
-        Indexed
-    };
+struct InvalidIndexError : public NodeTreeError {
+    template <typename... Args>
+    InvalidIndexError(Args&&... args) :
+        NodeTreeError(std::forward<Args>(args)...)
+    {}
+};
 
-    NodeTreeIndex(State state_=Null, observer_ptr<NodeTreeIndex const> parent_=nullptr, size_t index_=0) :
-        state(state_),
-        parent(parent_),
-        index(index_)
-    {
-    }
-
-    bool null() const {
-        return state == Null;
-    }
-    bool root() const {
-        return state == Root;
-    }
-
-    State state;
-    observer_ptr<NodeTreeIndex const> parent;
-    size_t index;
+struct TreeCorruptedError : public NodeTreeError {
+    template <typename... Args>
+    TreeCorruptedError(Args&&... args) :
+        NodeTreeError(std::forward<Args>(args)...)
+    {}
 };
 
 struct NodeTreePath {
@@ -73,10 +63,37 @@ struct NodeTreePath {
     vector<size_t> indexes;
 };
 
+struct NodeTreeIndex : boost::totally_ordered<NodeTreeIndex> {
+    NodeTreeIndex(size_t value_=0) :
+        value(value_)
+    {}
+    bool operator==(NodeTreeIndex const& other) const {
+        return value == other.value;
+    }
+    bool operator<(NodeTreeIndex const& other) const {
+        return value < other.value;
+    }
+    NodeTreeIndex& operator++() {
+        ++value;
+        return *this;
+    }
+    NodeTreeIndex& operator--() {
+        --value;
+        return *this;
+    }
+    operator bool() const {
+        return value;
+    }
+    operator size_t() const {
+        return value;
+    }
+    size_t value;
+};
+
 class TreeElement {
 public:
     virtual ~TreeElement() {}
-    virtual void added(NodeTree const& tree, observer_ptr<NodeTreeIndex const> index) = 0;
+    virtual void added(NodeTree const& tree, NodeTreeIndex index) = 0;
 };
 
 #define TREE_ELEMENT(T) \
@@ -91,60 +108,36 @@ inline unique_ptr<TreeElement> create_tree_element(Type type) {
     return class_init::type_info<AbstractFactory<TreeElement>, unique_ptr<TreeElement>>(type);
 }
 
-class NodeTreeContent {
-public:
-    NodeTreeContent(weak_ptr<AbstractValue> node_ = {}) :
-        node(node_)
-    {}
-
-    observer_ptr<TreeElement> add_element(Type type);
-    observer_ptr<TreeElement> get_element(Type type) const;
-    shared_ptr<AbstractValue> get_node() const {
-        return node.lock();
-    }
-private:
-    weak_ptr<AbstractValue> node;
-    map<Type, unique_ptr<TreeElement>> elements;
-};
-
 class NodeTree {
 public:
-    using Index = observer_ptr<NodeTreeIndex const>;
-    using IndexMap = map<size_t,NodeTreeIndex>;
+    using Index = NodeTreeIndex;
 
-    /// Disable checking indexes because it leads to huge performance drop
-    static const bool DISABLE_INDEX_CHECKS = true;
-
-
-    explicit NodeTree(shared_ptr<AbstractValue> root_, shared_ptr<ActionStack> action_stack_);
+    explicit NodeTree(shared_ptr<AbstractValue> root_);
     virtual ~NodeTree();
 
     Index get_root_index() const {
-        return make_observer(&root_index);
+        return 1;
     }
     Index get_null_index() const {
-        return make_observer(&null_index);
+        return 0;
+    }
+    bool is_root(Index idx) const {
+        return idx == get_root_index();
     }
 
     Index index(Index parent, size_t i) const;
-    Index index_wo_check(Index parent, size_t i) const;
-    Index parent(Index index) const {
-        return index->parent;
-    }
+    Index parent(Index index) const;
+    size_t link_index(Index index) const;
+    string link_key(Index index) const;
+    TypeConstraint type_of(Index index) const;
     size_t children_count(Index parent) const;
 
     shared_ptr<AbstractValue> root_node() const {
         return root;
     }
 
-    NodeTreeContent& get_content(Index index) const;
-
     /// Get node that is pointed to by index
-    shared_ptr<AbstractValue> get_node(Index index) const {
-        if (index == nullptr)
-            return nullptr;
-        return get_content(index).get_node();
-    }
+    shared_ptr<AbstractValue> get_node(Index index) const;
 
     template <class T>
     shared_ptr<T> get_node_as(Index index) const {
@@ -160,30 +153,33 @@ public:
         );
     }
 
-    void check_index_validity(Index index) const;
-
-    void rebuild_count();
-
-    map<AbstractReference, size_t> const& get_node_count() const {
+    using NodeMap = map<weak_ptr<AbstractValue>, size_t, std::owner_less<weak_ptr<AbstractValue>>>;
+    NodeMap const& get_node_count() const {
         return node_count;
     }
 
-    map<AbstractReference, size_t>& mod_node_count() {
-        return node_count;
-    }
+    void replace_index(Index index, shared_ptr<AbstractValue> node);
+
+    struct Content;
+    Content& get_content(Index index) const;
 
 private:
-    Index get_index(IndexMap& indexes, Index parent, size_t i) const;
+    Index new_index();
+    void create_index(Index index, Index parent, size_t link_index, string link_key, TypeConstraint tye, shared_ptr<AbstractValue> node);
+    void reload_children(Index index);
+    void invalidate_index(Index index);
+    void invalidate_children(Index index);
+
+    void load_children(Index index, Content& element);
 
 private:
     shared_ptr<AbstractValue> const root;
-    shared_ptr<ActionStack> action_stack;
-    NodeTreeIndex null_index;
-    NodeTreeIndex root_index;
-    mutable IndexMap root_indexes;
-    mutable map<Index, IndexMap> indexes;
-    mutable map<Index, NodeTreeContent> content;
-    mutable map<AbstractReference, size_t> node_count;
+
+    Index last_index;
+
+    mutable map<Index, Content> content;
+
+    mutable NodeMap node_count;
 };
 
 NodeTree::Index tree_path_to_index(NodeTree const& tree, NodeTreePath const& path);
