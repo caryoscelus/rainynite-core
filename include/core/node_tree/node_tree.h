@@ -126,6 +126,7 @@ public:
     }
 
     Index index(Index parent, size_t i) const;
+    Index index_of_property(Index parent, string const& name) const;
     Index parent(Index index) const;
     size_t link_index(Index index) const;
     string link_key(Index index) const;
@@ -159,6 +160,8 @@ public:
     }
 
     void replace_index(Index index, shared_ptr<AbstractValue> node);
+    Index add_custom_property(Index index, string const& name, shared_ptr<AbstractValue> value);
+    void remove_index(Index index);
 
     struct Content;
     Content& get_content(Index index) const;

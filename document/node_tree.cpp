@@ -113,6 +113,15 @@ NodeTree::Index NodeTree::index(Index parent, size_t i) const {
     throw InvalidIndexError("Parent index is invalid");
 }
 
+NodeTree::Index NodeTree::index_of_property(Index parent, string const& name) const {
+    if (!parent)
+        throw InvalidIndexError("Null index has no named children");
+    if (auto node = get_node_as<AbstractNode>(parent)) {
+        return index(parent, node->get_name_id(name));
+    }
+    throw InvalidIndexError("Trying to get index of property on value without properties");
+}
+
 NodeTree::Index NodeTree::parent(Index idx) const {
     if (!idx || is_root(idx))
         return get_null_index();
@@ -171,6 +180,26 @@ void NodeTree::replace_index(Index index, shared_ptr<AbstractValue> node) {
     get_content(index).node = node;
 
     reload_children(index);
+}
+
+NodeTree::Index NodeTree::add_custom_property(Index parent, string const& name, shared_ptr<AbstractValue> value) {
+    if (auto node = get_node_as<AbstractNode>(parent)) {
+        node->set_property(name, value);
+        auto idx = new_index();
+        get_content(parent).children_indexes.push_back(idx);
+        create_index(idx, parent, node->get_name_id(name), name, types::Any(), value);
+        return idx;
+    } else {
+        throw InvalidIndexError("Non-node values cannot have custom properties");
+    }
+}
+
+void NodeTree::remove_index(Index index) {
+    if (auto node = get_node_as<AbstractListLinked>(parent(index))) {
+        node->remove(get_content(index).link_index);
+        // TODO
+        reload_children(parent(index));
+    }
 }
 
 void NodeTree::reload_children(Index index) {
