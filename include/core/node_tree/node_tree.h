@@ -33,27 +33,6 @@ namespace rainynite::core {
 
 class NodeTree;
 
-struct NodeTreeError : public std::runtime_error {
-    template <typename... Args>
-    NodeTreeError(Args&&... args) :
-        std::runtime_error(std::forward<Args>(args)...)
-    {}
-};
-
-struct InvalidIndexError : public NodeTreeError {
-    template <typename... Args>
-    InvalidIndexError(Args&&... args) :
-        NodeTreeError(std::forward<Args>(args)...)
-    {}
-};
-
-struct TreeCorruptedError : public NodeTreeError {
-    template <typename... Args>
-    TreeCorruptedError(Args&&... args) :
-        NodeTreeError(std::forward<Args>(args)...)
-    {}
-};
-
 struct NodeTreePath {
     template <typename... Ts>
     NodeTreePath(Ts&&... args) :

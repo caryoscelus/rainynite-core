@@ -23,6 +23,7 @@
 #include <core/util/nullptr.h>
 #include <core/document.h>
 #include <core/node_tree/traverse.h>
+#include <core/node_tree/exceptions.h>
 
 namespace rainynite::core {
 
