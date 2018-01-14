@@ -1,5 +1,5 @@
-/*  node_tree_transform.h - calculate transform
- *  Copyright (C) 2017 caryoscelus
+/*  node_tree/transform.h - calculate transform of node tree elements
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

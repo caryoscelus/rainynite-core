@@ -18,7 +18,7 @@
 #include <core/node_info/macros.h>
 #include <core/node/new_node.h>
 #include <core/node/list.h>
-#include <core/node_tree_transform.h>
+#include <core/node_tree/transform.h>
 #include <core/context.h>
 #include <core/document.h>
 #include <core/util/exceptions.h>

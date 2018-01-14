@@ -68,6 +68,13 @@ public:
         else
             return Storage::remove_property(name);
     }
+    void remove(size_t i) override {
+        auto name = get_name_at(i);
+        if (is_custom_property(name))
+            remove_custom_property(name);
+        else
+            Storage::remove(i);
+    }
     size_t link_count() const override {
         return Storage::link_count()+cp_storage.size();
     }

@@ -1,5 +1,5 @@
 /*  change_link.h - change child link action
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,29 +20,31 @@
 
 #include <core/action.h>
 #include <core/node/abstract_node.h>
+#include <core/node_tree/node_tree.h>
+#include <core/node_tree/has_tree.h>
 
 namespace rainynite::core::actions {
 
-class ChangeLink : public AtomicAction {
+class ChangeLink : public AtomicAction, private HasTree {
     DOC_STRING("Change link")
 public:
-    ChangeLink(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference new_value_) :
-        node(node_),
+    ChangeLink(weak_ptr<NodeTree> tree_, NodeTree::Index index_, AbstractReference new_value_) :
+        HasTree(tree_),
         index(index_),
         new_value(new_value_)
     {}
 
     void redo_action() override {
-        old_value = node->get_link(index);
-        node->set_link(index, new_value);
+        old_value = tree()->get_node(index);
+        tree()->replace_index(index, new_value);
     }
     void undo_action() override {
-        new_value = node->get_link(index);
-        node->set_link(index, old_value);
+        new_value = tree()->get_node(index);
+        tree()->replace_index(index, old_value);
     }
+
 private:
-    shared_ptr<AbstractListLinked> node;
-    size_t index;
+    NodeTree::Index index;
     AbstractReference new_value;
     AbstractReference old_value;
 };
@@ -56,8 +58,8 @@ private:
 class SetProperty : public ChangeLink {
     DOC_STRING("Set property")
 public:
-    SetProperty(shared_ptr<AbstractNode> node, string const& name, AbstractReference new_value) :
-        ChangeLink(dynamic_pointer_cast<AbstractListLinked>(node), node->get_name_id(name), new_value)
+    SetProperty(weak_ptr<NodeTree> tree_, NodeTree::Index parent, string const& name, AbstractReference new_value) :
+        ChangeLink(tree_, no_null(tree_.lock())->index_of_property(parent, name), new_value)
     {}
 };
 

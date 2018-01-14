@@ -1,5 +1,5 @@
 /*  node_tree_module.cpp - node tree adding module tests
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 #include <catch.hpp>
 
-#include <core/node_tree_traverse.h>
+#include <core/node_tree/traverse.h>
 #include "new_node.h"
 
 using namespace rainynite;
@@ -27,7 +27,7 @@ class CountDepth : TREE_ELEMENT(CountDepth) {
 public:
     void added(NodeTree const& tree, NodeTree::Index index) override {
         auto p_idx = tree.parent(index);
-        if (!p_idx->null()) {
+        if (p_idx) {
             auto p_d = tree.get_element<CountDepth>(p_idx)->depth();
             depth_ = p_d + 1;
         } else {
@@ -49,7 +49,7 @@ TEST_CASE("Traverse node tree", "[node]") {
     auto leaf = mid->get_link(0);
     root->set_link(0, mid);
 
-    auto tree = NodeTree(root, nullptr);
+    auto tree = NodeTree(root);
 
     auto root_index = tree.get_root_index();
     auto mid_index = tree.index(root_index, 0);

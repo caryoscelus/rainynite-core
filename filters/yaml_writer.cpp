@@ -23,7 +23,7 @@
 #include <core/util/state_machine.h>
 #include <core/serialize/node_writer.h>
 #include <core/node_info/node_info.h>
-#include <core/node_tree_traverse.h>
+#include <core/node_tree/traverse.h>
 #include <core/filters/yaml_writer.h>
 
 using namespace fmt::literals;
@@ -49,28 +49,29 @@ public:
     }
 
     void serialize() {
-        tree.rebuild_count();
         push_state(State::DocumentStart);
         emitter << YAML::BeginDoc;
-        traverse_tree(TreeTraverser::UseCount);
+        traverse_tree();
     }
 
-    bool object_start() override {
+    bool object_start(NodeTree::Index index) override {
         if (state() == State::Map) {
-            emitter << YAML::Key << current().key;
+            emitter << YAML::Key << tree.link_key(index);
         }
 
-        auto const& node = current().node;
+        auto node = tree.get_node(index);
         if (tree.get_node_count().at(node) > 1) {
-            if (current().count > 0) {
+            local_count.emplace(node, 0);
+            if (local_count.at(node) > 0) {
                 write_link(node);
                 return false;
             }
             write_anchor(node);
+            ++local_count[node];
         }
 
         auto type_s = node_name(*node);
-        if (!(current().type.is_only() && type_s.find("Value/")==0)) {
+        if (!(tree.type_of(index).is_only() && type_s.find("Value/")==0)) {
             emitter << YAML::LocalTag(type_s);
         }
 
@@ -94,7 +95,7 @@ public:
         }
     }
 
-    void object_end() override {
+    void object_end(NodeTree::Index) override {
         switch (state()) {
             case State::List: {
                 emitter << YAML::EndSeq;
@@ -128,6 +129,8 @@ private:
     }
 
 private:
+    using NodeMap = map<weak_ptr<AbstractValue>, size_t, std::owner_less<weak_ptr<AbstractValue>>>;
+    NodeMap local_count;
     YAML::Emitter emitter;
 };
 

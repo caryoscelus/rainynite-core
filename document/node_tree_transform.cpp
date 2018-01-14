@@ -17,7 +17,7 @@
 
 #include <core/node/value.h>
 #include <core/node/abstract_node.h>
-#include <core/node_tree_transform.h>
+#include <core/node_tree/transform.h>
 
 namespace rainynite::core {
 
@@ -45,15 +45,17 @@ Geom::Affine TreeCalculateTransform::get_transform_change(shared_ptr<Context> ct
 }
 
 NodeTree::Index TreeCalculateTransform::find_previous(NodeTree const& tree, NodeTree::Index index) const {
-    if (index == nullptr || index->null() || index->root())
-        return nullptr;
     auto parent = tree.parent(index);
+    if (!parent)
+        return parent;
     auto parent_value = tree.get_node(parent);
+    auto link_index = tree.link_index(index);
+
     // TODO: modularize?
     if (parent_value->get_type() == typeid(vector<Geom::Affine>)) {
         // assuming "transform composite"
-        if (index->index < tree.children_count(parent)-1)
-            return tree.index(parent, index->index+1);
+        if (link_index < tree.children_count(parent)-1)
+            return tree.index(parent, link_index+1);
         return parent;
     } else if (parent_value->get_type() == typeid(Geom::Affine)) {
         // no additional transform changes inside transform nodes
@@ -66,7 +68,7 @@ NodeTree::Index TreeCalculateTransform::find_previous(NodeTree const& tree, Node
         } catch (std::exception const& e) {
             return parent;
         }
-        if (i != index->index)
+        if (i != link_index)
             return tree.index(parent, i);
     }
     // parent isn't node or affine list - the only remaining possibility
