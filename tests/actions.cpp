@@ -71,9 +71,11 @@ TEST_CASE("Change link", "[action,node]") {
     auto add = make_node_with_name<BaseValue<double>>("Add/Real");
     auto add_node = dynamic_pointer_cast<AbstractListLinked>(add);
     REQUIRE(add->value(zero_context()) == 0);
-    action_stack.emplace<actions::ChangeLink>(add_node, 0, make_value<double>(1));
+
+    auto tree = make_shared<NodeTree>(add);
+    action_stack.emplace<actions::ChangeLink>(tree, tree->index(tree->get_root_index(), 0), make_value<double>(1));
     CHECK(add->value(zero_context()) == 1);
-    action_stack.emplace<actions::ChangeLink>(add_node, 1, make_value<double>(2));
+    action_stack.emplace<actions::ChangeLink>(tree, tree->index(tree->get_root_index(), 1), make_value<double>(2));
     CHECK(add->value(zero_context()) == 3);
     action_stack.undo();
     CHECK(add->value(zero_context()) == 1);
@@ -86,9 +88,10 @@ TEST_CASE("Custom property", "[action,node]") {
     auto add = make_node_with_name<AbstractNode>("Add/Real");
     auto other_node = make_value<double>(1);
     CHECK_THROWS_AS(add->get_property("_something"), NodeAccessError);
-    action_stack.emplace<actions::AddCustomProperty>(add, "_something", other_node);
+    auto tree = make_shared<NodeTree>(abstract_value_cast(add));
+    action_stack.emplace<actions::AddCustomProperty>(tree, tree->get_root_index(), "_something", other_node);
     CHECK(add->get_property("_something") == other_node);
-    action_stack.emplace<actions::RemoveCustomProperty>(add, "_something");
+    action_stack.emplace<actions::RemoveCustomProperty>(tree, tree->get_root_index(), "_something");
     CHECK_THROWS_AS(add->get_property("_something"), NodeAccessError);
     action_stack.undo();
     CHECK(add->get_property("_something") == other_node);

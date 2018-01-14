@@ -24,24 +24,26 @@
 
 namespace rainynite::core::actions {
 
-class AddCustomProperty : public AtomicAction {
+class AddCustomProperty : public AtomicAction, private HasTree {
     DOC_STRING("Add custom property")
 public:
-    AddCustomProperty(shared_ptr<AbstractNode> node_, string const& prop_name_, AbstractReference value_) :
-        node(node_),
+    AddCustomProperty(weak_ptr<NodeTree> tree_, NodeTree::Index parent_, string const& prop_name_, AbstractReference value_) :
+        HasTree(tree_),
+        parent(parent_),
         prop_name(prop_name_),
         value(value_)
     {}
 
     void redo_action() override {
-        node->set_property(prop_name, value);
+        tree()->add_custom_property(parent, prop_name, value);
     }
     void undo_action() override {
-        value = node->get_property(prop_name);
-        node->remove_property(prop_name);
+        auto index = tree()->index_of_property(parent, prop_name);
+        value = tree()->get_node(index);
+        tree()->remove_index(index);
     }
 private:
-    shared_ptr<AbstractNode> node;
+    NodeTree::Index parent;
     string prop_name;
     AbstractReference value;
 };
@@ -49,8 +51,8 @@ private:
 class RemoveCustomProperty : public ReverseAction<AddCustomProperty> {
     DOC_STRING("Remove custom property")
 public:
-    RemoveCustomProperty(shared_ptr<AbstractNode> node_, string const& prop_name_) :
-        ReverseAction<AddCustomProperty>(node_, prop_name_, nullptr)
+    RemoveCustomProperty(weak_ptr<NodeTree> tree_, NodeTree::Index parent_, string const& prop_name_) :
+        ReverseAction<AddCustomProperty>(tree_, parent_, prop_name_, nullptr)
     {}
 };
 
