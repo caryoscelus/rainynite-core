@@ -163,6 +163,7 @@ observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
 
 void NodeTree::set_node_at_index(Index index, AbstractReference value) {
     get_content(index).node = value;
+    increase_node_count(value);
 }
 
 NodeTree::Index NodeTree::insert_index_at(Index parent, size_t position, string const& name, AbstractReference value) {
@@ -202,8 +203,7 @@ void NodeTree::create_index(Index index, Index parent, size_t link_index, string
     auto [iter, added] = content.try_emplace(index, parent, link_index, link_key, type, node);
     if (!added)
         throw TreeCorruptedError("Trying to create index in place of old");
-    auto [count_iter, _] = node_count.emplace(node, 0);
-    ++count_iter->second;
+    increase_node_count(node);
     load_children(index, iter->second);
 }
 
@@ -220,6 +220,11 @@ void NodeTree::load_children(Index parent, Content& element) {
             create_index(index, parent, i, key, list->get_link_type(i), list->get_link(i));
         }
     }
+}
+
+void NodeTree::increase_node_count(weak_ptr<AbstractValue> node) {
+    auto [count_iter, _] = node_count.emplace(node, 0);
+    ++count_iter->second;
 }
 
 
