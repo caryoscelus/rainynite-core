@@ -25,9 +25,16 @@ namespace rainynite::core {
 
 class NodeTree;
 
+/**
+ * NodeTree (weak) holder
+ */
 class HasTree {
 public:
-    HasTree(weak_ptr<NodeTree> tree_) :
+    /// Pointer to node tree that we use to store tree
+    using TreePtr = weak_ptr<NodeTree>;
+    using Index = NodeTree::Index;
+
+    HasTree(TreePtr tree_) :
         m_tree(tree_)
     {}
 protected:
@@ -35,7 +42,7 @@ protected:
         return no_null(m_tree.lock());
     }
 private:
-    weak_ptr<NodeTree> m_tree;
+    TreePtr m_tree;
 };
 
 } // namespace rainynite::core
