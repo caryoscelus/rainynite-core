@@ -20,80 +20,84 @@
 
 #include <core/action.h>
 #include <core/node/abstract_list.h>
+#include <core/node_tree/actions.h>
+#include <core/node_tree/has_tree.h>
 #include "reverse.h"
 
 namespace rainynite::core::actions {
 
-class ListPushNew : public AtomicAction {
+class ListPushNew : public AtomicAction, private HasTree {
     DOC_STRING("Push new list element")
 public:
-    ListPushNew(shared_ptr<AbstractListLinked> node_) :
-        node(node_)
+    ListPushNew(TreePtr tree_, NodeTree::Index index_) :
+        HasTree(tree_),
+        index(index_)
     {}
 
     void redo_action() override {
-        node->push_new();
+        push_new_to(*tree(), index);
     }
     void undo_action() override {
-        node->pop();
+        pop_from(*tree(), index);
     }
 
 private:
-    shared_ptr<AbstractListLinked> const node;
+    Index index;
 };
 
 /**
  * Push existing node to list.
  */
-class ListPush : public AtomicAction {
+class ListPush : public AtomicAction, private HasTree {
     DOC_STRING("Push list element")
 public:
-    ListPush(shared_ptr<AbstractListLinked> node_, AbstractReference value_) :
-        node(node_),
-        value(value_)
-    {}
-
-    void redo_action() override {
-        node->push_back(value);
-    }
-    void undo_action() override {
-        // TODO: make pop return last link?
-        value = node->get_link(node->link_count());
-        node->pop();
-    }
-
-private:
-    shared_ptr<AbstractListLinked> const node;
-    AbstractReference value;
-};
-
-class ListInsertElement : public AtomicAction {
-    DOC_STRING("Insert list element")
-public:
-    ListInsertElement(shared_ptr<AbstractListLinked> node_, size_t index_, AbstractReference value_) :
-        node(node_),
+    ListPush(TreePtr tree_, NodeTree::Index index_, AbstractReference value_) :
+        HasTree(tree_),
         index(index_),
         value(value_)
     {}
 
     void redo_action() override {
-        node->insert(index, value);
+        push_to(*tree(), index, value);
     }
     void undo_action() override {
-        value = node->get_link(index);
-        node->remove(index);
+        value = pop_from(*tree(), index);
+    }
+
+private:
+    NodeTree::Index index;
+    AbstractReference value;
+};
+
+class ListInsertElement : public AtomicAction, protected HasTree {
+    DOC_STRING("Insert list element")
+public:
+    ListInsertElement(TreePtr tree_, Index index_, size_t link_index_, AbstractReference value_) :
+        HasTree(tree_),
+        index(index_),
+        link_index(link_index_),
+        value(value_)
+    {}
+
+    void redo_action() override {
+        insert_to(*tree(), index, link_index, value);
+    }
+    void undo_action() override {
+        auto child = tree()->index(index, link_index);
+        value = tree()->get_node(child);
+        remove_index(*tree(), child);
     }
 private:
-    shared_ptr<AbstractListLinked> const node;
-    size_t index;
+    Index index;
+    size_t link_index;
     AbstractReference value;
 };
 
 class ListRemoveElement : public ReverseAction<ListInsertElement> {
     DOC_STRING("Remove list element")
 public:
-    ListRemoveElement(shared_ptr<AbstractListLinked> node_, size_t index_) :
-        ReverseAction<ListInsertElement>(node_, index_, nullptr)
+    ListRemoveElement(TreePtr tree_, Index index_, size_t link_index_) :
+        ReverseAction<ListInsertElement>(tree_, index_, link_index_, nullptr)
     {}
 };
 

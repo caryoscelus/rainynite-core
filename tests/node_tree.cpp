@@ -18,6 +18,8 @@
 #include <catch.hpp>
 
 #include <core/node_tree/traverse.h>
+#include <core/node_tree/actions.h>
+#include <core/node_tree/exceptions.h>
 #include "new_node.h"
 
 using namespace rainynite;
@@ -42,7 +44,7 @@ TEST_CASE("Node tree index", "[node]") {
 
     SECTION("Invalid link") {
         auto new_zero = make_value<double>(0);
-        tree.replace_index(mid_index, new_zero);
+        replace_index(tree, mid_index, new_zero);
         CHECK_THROWS_AS(tree.get_node(leaf_index), InvalidIndexError);
     }
 }
@@ -93,7 +95,7 @@ TEST_CASE("Traverse node tree", "[node]") {
     }
 
     SECTION("Same link") {
-        tree.replace_index(tree.index(tree.get_root_index(), 1), root->get_link(0));
+        replace_index(tree, tree.index(tree.get_root_index(), 1), root->get_link(0));
 
         CountTraverser traverser(tree);
         traverser.traverse_tree();
@@ -107,7 +109,7 @@ TEST_CASE("Traverse node tree", "[node]") {
     SECTION("Deeper tree & removal") {
         auto sub_add = make_shared<Add>();
         sub_add->set_link(0, root->get_link(0));
-        tree.replace_index(tree.index(tree.get_root_index(), 1), sub_add);
+        replace_index(tree, tree.index(tree.get_root_index(), 1), sub_add);
 
         {
             CountTraverser traverser(tree);
@@ -119,7 +121,7 @@ TEST_CASE("Traverse node tree", "[node]") {
         }
 
         auto new_link = make_value<double>(0);
-        tree.replace_index(tree.index(tree.get_root_index(), 1), new_link);
+        replace_index(tree, tree.index(tree.get_root_index(), 1), new_link);
 
         {
             CountTraverser traverser(tree);

@@ -20,7 +20,7 @@
 
 #include <core/action.h>
 #include <core/node/abstract_node.h>
-#include <core/node_tree/node_tree.h>
+#include <core/node_tree/actions.h>
 #include <core/node_tree/has_tree.h>
 
 namespace rainynite::core::actions {
@@ -36,11 +36,11 @@ public:
 
     void redo_action() override {
         old_value = tree()->get_node(index);
-        tree()->replace_index(index, new_value);
+        replace_index(*tree(), index, new_value);
     }
     void undo_action() override {
         new_value = tree()->get_node(index);
-        tree()->replace_index(index, old_value);
+        replace_index(*tree(), index, old_value);
     }
 
 private:
@@ -59,7 +59,11 @@ class SetProperty : public ChangeLink {
     DOC_STRING("Set property")
 public:
     SetProperty(weak_ptr<NodeTree> tree_, NodeTree::Index parent, string const& name, AbstractReference new_value) :
-        ChangeLink(tree_, no_null(tree_.lock())->index_of_property(parent, name), new_value)
+        ChangeLink(
+            tree_,
+            index_of_property(*no_null(tree_.lock()), parent, name),
+            new_value
+        )
     {}
 };
 

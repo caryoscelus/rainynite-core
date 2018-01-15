@@ -1,5 +1,5 @@
 /*  actions.cpp - test actions
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -104,13 +104,16 @@ TEST_CASE("List", "[action,node]") {
     auto list = make_shared<ListValue<double>>();
     REQUIRE(list->value(zero_context()) == vector<double>{});
 
-    action_stack.emplace<actions::ListPushNew>(list);
+    auto tree = make_shared<NodeTree>(list);
+    auto list_index = tree->get_root_index();
+
+    action_stack.emplace<actions::ListPushNew>(tree, list_index);
     CHECK(list->value(zero_context()) == vector<double>{0});
 
-    action_stack.emplace<actions::ListInsertElement>(list, 1, make_value<double>(1));
+    action_stack.emplace<actions::ListInsertElement>(tree, list_index, 1, make_value<double>(1));
     CHECK(list->value(zero_context()) == (vector<double>{0, 1}));
 
-    action_stack.emplace<actions::ListRemoveElement>(list, 0);
+    action_stack.emplace<actions::ListRemoveElement>(tree, list_index, 0);
     CHECK(list->value(zero_context()) == vector<double>{1});
 
     action_stack.undo();

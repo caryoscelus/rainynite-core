@@ -105,7 +105,6 @@ public:
     }
 
     Index index(Index parent, size_t i) const;
-    Index index_of_property(Index parent, string const& name) const;
     Index parent(Index index) const;
     size_t link_index(Index index) const;
     string link_key(Index index) const;
@@ -138,19 +137,19 @@ public:
         return node_count;
     }
 
-    void replace_index(Index index, shared_ptr<AbstractValue> node);
-    Index add_custom_property(Index index, string const& name, shared_ptr<AbstractValue> value);
-    void remove_index(Index index);
-
     struct Content;
     Content& get_content(Index index) const;
+
+    void set_node_at_index(Index index, AbstractReference value);
+    Index insert_index_at(Index parent, size_t position, string const& name, AbstractReference value);
+
+    void reload_children(Index index);
+    void invalidate_index(Index index);
+    void invalidate_children(Index index);
 
 private:
     Index new_index();
     void create_index(Index index, Index parent, size_t link_index, string link_key, TypeConstraint tye, shared_ptr<AbstractValue> node);
-    void reload_children(Index index);
-    void invalidate_index(Index index);
-    void invalidate_children(Index index);
 
     void load_children(Index index, Content& element);
 

@@ -20,6 +20,7 @@
 
 #include <core/action.h>
 #include <core/node/abstract_node.h>
+#include <core/node_tree/actions.h>
 #include "reverse.h"
 
 namespace rainynite::core::actions {
@@ -35,12 +36,12 @@ public:
     {}
 
     void redo_action() override {
-        tree()->add_custom_property(parent, prop_name, value);
+        add_custom_property(*tree(), parent, prop_name, value);
     }
     void undo_action() override {
-        auto index = tree()->index_of_property(parent, prop_name);
+        auto index = index_of_property(*tree(), parent, prop_name);
         value = tree()->get_node(index);
-        tree()->remove_index(index);
+        remove_index(*tree(), index);
     }
 private:
     NodeTree::Index parent;
