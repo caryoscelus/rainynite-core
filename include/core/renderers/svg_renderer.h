@@ -28,6 +28,7 @@ struct SvgRendererSettings {
     bool render_pngs = false;
     bool keep_alive = false;
     bool extra_style = true;
+    double output_scale = 1.0;
     string path;
 };
 

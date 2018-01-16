@@ -49,11 +49,11 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      version="1.1"
-     width="{}px"
-     height="{}px"
-     viewBox="0 0 {} {}">
-  {}
-  {}
+     width="{target_width}px"
+     height="{target_height}px"
+     viewBox="0 0 {width} {height}">
+  {definitions}
+  {content}
 </svg>
 )";
 
@@ -188,10 +188,19 @@ void SvgRenderer::Impl::render_frame(shared_ptr<Context> context) {
     auto svg_name = base_name+".svg";
     std::cout << svg_name << std::endl;
     std::ofstream f(svg_name);
-    auto size = document->get_property_value<Geom::Point>("size", context).value_or(Geom::Point{}); // panic?
-    auto viewport_size = document->get_property_value<Geom::Point>("_svg_viewport_size", context).value_or(size);
+    auto size = document->get_property_value<Geom::Point>("size", context).value_or(Geom::Point{});
+    auto target_size = size * settings.output_scale;
     auto definitions = document->get_property_value<string>("_svg_definitions", context).value_or("");
-    fmt::print(f, svg_template, size.x(), size.y(), viewport_size.x(), viewport_size.y(), definitions, frame_to_svg(context));
+    fmt::print(
+        f,
+        svg_template,
+        "target_width"_a=target_size.x(),
+        "target_height"_a=target_size.y(),
+        "width"_a=size.x(),
+        "height"_a=size.y(),
+        "definitions"_a=definitions,
+        "content"_a=frame_to_svg(context)
+    );
     f.close();
     if (settings.render_pngs)
         render_png(svg_name, (base_path / (base_name+".png")).string());
