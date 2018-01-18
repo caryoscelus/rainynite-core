@@ -59,6 +59,9 @@ public:
     virtual bool is_const() const {
         return false;
     }
+    virtual bool can_set() const {
+        return false;
+    }
     virtual Type get_type() const = 0;
     virtual any get_any(shared_ptr<Context> context) const noexcept = 0;
     virtual void set_any(any const& /*value*/) {
@@ -153,9 +156,6 @@ public:
     }
     virtual T& mod() {
         throw NodeAccessError("Cannot set");
-    }
-    virtual bool can_set() const {
-        return false;
     }
 
     Type get_type() const override {
