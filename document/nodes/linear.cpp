@@ -46,6 +46,17 @@ protected:
         auto f = speed_value<double>(ctx);
         return b + f*ctx->get_time().get_seconds();
     }
+
+public:
+    bool can_set_any_at() const override {
+        return p_base()->can_set_any_at();
+    }
+
+    void set_any_at(any const& value, shared_ptr<Context> ctx) override {
+        auto target_value = any_cast<double>(value);
+        auto target_base = target_value - speed_value<double>(ctx) * ctx->get_time().get_seconds();
+        p_base()->set_any_at(target_base, ctx);
+    }
 };
 
 REGISTER_NODE(Linear);

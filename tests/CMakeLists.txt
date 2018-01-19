@@ -52,7 +52,7 @@ add_catch_test(link_storage)
 target_link_libraries(test_link_storage document)
 
 add_catch_test(new_node)
-target_link_libraries(test_new_node document)
+target_link_libraries(test_new_node nodes)
 
 ## New node tests
 add_executable(node_tester node_tester.cpp)

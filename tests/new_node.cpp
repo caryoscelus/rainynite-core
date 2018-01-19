@@ -43,3 +43,20 @@ TEST_CASE("New node system: custom properties", "[node]") {
     add->remove(add->link_count()-1);
     CHECK_THROWS_AS(add->get_property("_custom"), NodeAccessError);
 }
+
+TEST_CASE("New node system: test set_any_at (Linear)", "[node]") {
+    auto one_context = make_shared<Context>(*zero_context());
+    one_context->set_time(Time{1});
+
+    auto linear = make_node_with_name<BaseValue<double>>("Linear");
+    CHECK(linear->value(zero_context()) == 0);
+    CHECK(linear->value(one_context) == 1);
+
+    linear->set_any_at(5.0, zero_context());
+    CHECK(linear->value(zero_context()) == 5);
+    CHECK(linear->value(one_context) == 6);
+
+    linear->set_any_at(5.0, one_context);
+    CHECK(linear->value(zero_context()) == 4);
+    CHECK(linear->value(one_context) == 5);
+}
