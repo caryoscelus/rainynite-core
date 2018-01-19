@@ -39,17 +39,23 @@ class PointXY :
     PROPERTY(x)
     PROPERTY(y)
 
+public:
+    bool can_set() const override {
+        return p_x()->can_set() && p_y()->can_set();
+    }
+    void set(Geom::Point point) override {
+        p_x()->set_any(point.x());
+        p_y()->set_any(point.y());
+    }
+    any static_any() const override {
+        auto x = any_cast<double>(p_x()->static_any());
+        auto y = any_cast<double>(p_y()->static_any());
+        return Geom::Point{x, y};
+    }
+
 protected:
     Geom::Point get(shared_ptr<Context> ctx) const override {
         return {x_value<double>(ctx), y_value<double>(ctx)};
-    }
-    bool can_set_any(any const& value) const override {
-        return get_type() == value.type();
-    }
-    void set_any(any const& value) override {
-        auto point = any_cast<Geom::Point>(value);
-        set_property("x", make_value<double>(point.x()));
-        set_property("y", make_value<double>(point.y()));
     }
 };
 
