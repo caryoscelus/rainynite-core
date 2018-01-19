@@ -1,14 +1,23 @@
 --- !Document
+
 _tests: !List/Boolean
+
   - !Equal/String
     a: "Hello, world"
     b: !ToString
       source: !Value/String "Hello, world"
+
   - !Equal/String
     a: true
     b: !ToString
       source: !Value/Boolean true
+
   - !Equal/String
     a: 5
     b: !ToString
       source: !Value/Real 5
+
+  - !Equal/String
+    a: "#ffbbcc"
+    b: !ColorString
+      color: "#ffbbccff"
