@@ -49,7 +49,7 @@ TEST_CASE("Undo/redo value change", "[action,node]") {
         CHECK(one->mod() == 1.0);
         action_stack.redo();
         CHECK(one->mod() == 2.0);
-        action_stack.emplace<actions::ChangeValue>(one, 4.0);
+        action_stack.emplace<actions::ChangeValueAt>(one, 4.0, zero_context());
         CHECK(one->mod() == 4.0);
         CHECK(!action_stack.redo());
         CHECK(one->mod() == 4.0);

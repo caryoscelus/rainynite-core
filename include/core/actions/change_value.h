@@ -53,6 +53,38 @@ private:
     any old_value;
 };
 
+class ChangeValueAt : public AbstractAction {
+    DOC_STRING("Change value at")
+public:
+    ChangeValueAt(AbstractReference node_, any new_value_, shared_ptr<Context> ctx_) :
+        node(node_),
+        new_value(new_value_),
+        ctx(ctx_)
+    {}
+
+    void redo_action() override {
+        old_value = node->get_any(ctx);
+        node->set_any_at(new_value, ctx);
+    }
+    void undo_action() override {
+        new_value = node->get_any(ctx);
+        node->set_any_at(old_value, ctx);
+    }
+protected:
+    bool append_action(AbstractAction const& action) override {
+        if (auto cv_action = dynamic_cast<ChangeValueAt const*>(&action)) {
+            new_value = cv_action->new_value;
+            return true;
+        }
+        return false;
+    }
+private:
+    AbstractReference node;
+    any new_value;
+    any old_value;
+    shared_ptr<Context> ctx;
+};
+
 } // namespace rainynite::core::actions
 
 #endif
