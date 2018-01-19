@@ -112,7 +112,7 @@ public:
 
     /// Returns whether this node supports set_any_at
     virtual bool can_set_any_at() const {
-        return false;
+        return can_set();
     }
 
     /// Returns whether this node ignores context (i.e. holds static value)
