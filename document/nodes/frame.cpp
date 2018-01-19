@@ -16,6 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
 #include <core/all_types.h>
 #include <core/context.h>
@@ -76,5 +77,17 @@ public:
 NODE_INFO_TEMPLATE(Frame, Frame<T>, TimePoint<T>);
 TYPE_INSTANCES(FrameNodeInfo)
 TYPE_INSTANCES(TimePointListNodeInfo)
+
+template <typename T>
+class DefaultNodeInfoTimePoint : public DefaultNodeInfoImpl<TimePoint<T>, Frame<T>> {
+};
+
+TYPE_INSTANCES(DefaultNodeInfoTimePoint)
+
+template <typename T>
+class DefaultNodeInfoTimePointList : public DefaultNodeInfoImpl<vector<TimePoint<T>>, TPList<T>> {
+};
+
+TYPE_INSTANCES(DefaultNodeInfoTimePointList)
 
 } // namespace rainynite::core::nodes
