@@ -77,6 +77,18 @@ class SymmetricPoint :
     DEFAULT_VALUES(0.0)
     PROPERTY(x)
 
+public:
+    bool can_set() const override {
+        return p_x()->can_set();
+    }
+    void set(Geom::Point point) override {
+        p_x()->set_any(point.x()); // discarding y coord..
+    }
+    any static_any() const override {
+        auto x = any_cast<double>(p_x()->static_any());
+        return Geom::Point{x, x};
+    }
+
 protected:
     Geom::Point get(shared_ptr<Context> ctx) const override {
         auto x = x_value<double>(ctx);
