@@ -16,31 +16,36 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 #include <geom_helpers/circle.h>
 
 namespace rainynite::core::nodes {
 
-class CirclePR : public Node<Geom::Circle> {
+class CirclePR :
+    public NewNode<
+        CirclePR,
+        Geom::Circle,
+        types::Only<Geom::Point>,
+        types::Only<double>
+    >
+{
     DOC_STRING(
         "Construct circle from center position and radius."
     )
-public:
-    CirclePR() {
-        init<Geom::Point>(position, {});
-        init<double>(radius, {});
-    }
+
+    NODE_PROPERTIES("position", "radius")
+    DEFAULT_VALUES(Geom::Point{}, 0.0)
+    PROPERTY(position)
+    PROPERTY(radius)
 
 protected:
     Geom::Circle get(shared_ptr<Context> ctx) const override {
-        return {get_position()->value(ctx), get_radius()->value(ctx)};
+        return {
+            position_value<Geom::Point>(ctx),
+            radius_value<double>(ctx)
+        };
     }
-
-private:
-    NODE_PROPERTY(position, Geom::Point);
-    NODE_PROPERTY(radius, double);
 };
 
 REGISTER_NODE(CirclePR);
