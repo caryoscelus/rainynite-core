@@ -16,6 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
 #include <core/node/cast.h>
 #include <core/all_types.h>
@@ -24,33 +25,44 @@
 namespace rainynite::core::nodes {
 
 template <class T>
-class Interpolate : public ProxyNode<T> {
+class Interpolate :
+    public NewProxyNode<
+        Interpolate<T>,
+        T,
+        types::Only<T>,
+        types::Only<string>,
+        types::Only<vector<TimePoint<T>>>,
+        types::Only<double>
+    >
+{
     DOC_STRING(
         "Key-frames + interpolation between them.\n"
         "\n"
-        "Interpolation node should have properties a and b of type T"
-        "and property progress of type double that should accept values"
+        "Interpolation node should have properties a and b of type T\n"
+        "and property progress of type double that should accept values\n"
         "in [0; 1] range."
     )
 
-public:
-    Interpolate() {
-        this->template init<string>(interpolate_with, {});
-        this->template init_list<TimePoint<T>>(keyframes);
-        this->template init<double>(smoothing, {});
-        this->template init<T>(default_value, {});
-    }
+    NODE_PROPERTIES("default_value", "interpolate_with", "keyframes", "smoothing")
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_value<string>(), make_default_node<vector<TimePoint<T>>>(), make_node_with_name("Linear"))
 
+    PROPERTY(default_value)
+    PROPERTY(interpolate_with)
+    PROPERTY(keyframes)
+    PROPERTY(smoothing)
+
+public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto frames = get_keyframes()->value(ctx);
+        auto frames = keyframes_value<vector<TimePoint<T>>>(ctx);
         if (frames.empty()) {
             // cannae do nothing if you ain't got no frames!
-            return {get_default_value(), ctx};
+            return {p_default_value(), ctx};
         }
 
         auto time = ctx->get_time();
         observer_ptr<TimePoint<T> const> left;
         observer_ptr<TimePoint<T> const> right;
+
         for (auto const& frame : frames) {
             if (frame.time == time) {
                 // exact hit: no interpolation needed
@@ -70,17 +82,17 @@ public:
 
         auto nctx = make_shared<Context>(*ctx);
         nctx->set_time(left->time);
-        auto left_smoothing = get_smoothing()->value(nctx);
+        auto left_smoothing = smoothing_value<double>(nctx);
         nctx->set_time(right->time);
-        auto right_smoothing = get_smoothing()->value(nctx);
-        auto here_smoothing = get_smoothing()->value(ctx);
+        auto right_smoothing = smoothing_value<double>(nctx);
+        auto here_smoothing = smoothing_value<double>(ctx);
 
         if (left_smoothing == right_smoothing)
             throw std::invalid_argument("Cannot calculate progress when smoothings are equal");
         auto progress = make_value<double>((here_smoothing - left_smoothing)/(right_smoothing - left_smoothing));
 
         // TODO: cache interpolate node
-        auto node_name = get_interpolate_with()->value(ctx);
+        auto node_name = interpolate_with_value<string>(ctx);
         auto interpolate = make_node_with_name<AbstractNode>(node_name);
         auto interpolate_value = abstract_value_cast(interpolate);
         if (interpolate == nullptr)
@@ -92,21 +104,6 @@ public:
         interpolate->set_property("progress", progress);
         return {interpolate_value, ctx};
     }
-
-    bool can_set_source(shared_ptr<AbstractValue> src) const override {
-        return src->get_type() == this->get_type();
-    }
-
-    void set_source(shared_ptr<AbstractValue> src) override {
-        if (auto value = base_value_cast<T>(std::move(src)))
-            set_default_value(value);
-    }
-
-private:
-    NODE_PROPERTY(interpolate_with, string);
-    NODE_LIST_PROPERTY(keyframes, TimePoint<T>);
-    NODE_PROPERTY(smoothing, double);
-    NODE_PROPERTY(default_value, T);
 };
 
 NODE_INFO_TEMPLATE(Interpolate, Interpolate<T>, T);
