@@ -50,32 +50,91 @@ private:
     bool is_enabled;
 };
 
+/**
+ * Base class for node system.
+ *
+ * All nodes must inherit this class.
+ */
 class AbstractValue :
     public AbstractNotify,
     public HasId<NodeId, NodeIdGenerator>,
     public Enabled
 {
 public:
-    virtual bool is_const() const {
-        return false;
-    }
+    /// Returns whether this node accepts values to be set with set_any/set/etc
     virtual bool can_set() const {
         return false;
     }
+
+    /**
+     * Returns type of this node.
+     *
+     * Currently most nodes has only one type at all times. However, alternative
+     * approach is being considered (see AnyProxy node).
+     */
     virtual Type get_type() const = 0;
+
+    /**
+     * Returns value of this node in context.
+     *
+     * This is generic version, returning any value. As most nodes has only
+     * single type and derive from BaseValue, they don't have to have custom
+     * implementation of this function.
+     */
     virtual any get_any(shared_ptr<Context> context) const noexcept = 0;
+
+    /// Set any value, if supported; throw error otherwise
     virtual void set_any(any const& /*value*/) {
         throw NodeAccessError("Cannot set");
     }
+
+    /**
+     * Returns whether this node can accept the value.
+     *
+     * For nodes derived from BaseValue, this shouldn't be overriden.
+     *
+     * See also: can_set
+     */
     virtual bool can_set_any(any const& /*value*/) const {
         return false;
     }
+
+    /**
+     * Similar to set_any, but sets value with respect to context.
+     *
+     * Unlike set_any, can be implemented on dynamic nodes. Exact effect may
+     * vary on node, but if this operation succeeds, `get_any(ctx) == value`
+     * should be true.
+     */
+    virtual void set_any_at(any const& value, shared_ptr<Context> /*ctx*/) {
+        set_any(value);
+    }
+
+    /// Returns whether this node supports set_any_at
+    virtual bool can_set_any_at() const {
+        return false;
+    }
+
+    /// Returns whether this node ignores context (i.e. holds static value)
+    virtual bool is_static() const {
+        return false;
+    }
+
+    /// If is_static(), returns static value, otherwise throws
     virtual any static_any() const {
         throw NodeAccessError("No static value");
     }
+
+    /**
+     * If supported, sets `source` node as a source for its value.
+     *
+     * This is usually the first property of filter-style nodes.
+     */
     virtual void set_source(shared_ptr<AbstractValue> /*source*/) {
         throw NodeAccessError("Cannot set source node");
     }
+
+    /// Returns whether `source` can be passed to set_source
     virtual bool can_set_source(shared_ptr<AbstractValue> /*source*/) const {
         return false;
     }
@@ -121,6 +180,13 @@ constexpr bool is_vector = false;
 template <typename U>
 constexpr bool is_vector<vector<U>> = true;
 
+/**
+ * Base template for nodes with static type.
+ *
+ * Currently all nodes are supposed to derive from this, however this can be
+ * changed eventually, so if possible, do not rely on BaseValue casts and use
+ * get_type() & any-based operations instead.
+ */
 template <typename T>
 class BaseValue :
     public AbstractValue,

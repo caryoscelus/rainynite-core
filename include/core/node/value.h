@@ -25,7 +25,7 @@ namespace rainynite::core {
 template <typename T>
 class Value : public BaseValue<T> {
 public:
-    bool is_const() const override {
+    bool is_static() const override {
         return true;
     }
     T get(shared_ptr<Context> /*context*/) const override {

@@ -88,7 +88,7 @@ public:
     }
 
     static RecordType classify(AbstractReference object) {
-        if (object->is_const())
+        if (object->is_static())
             return RecordType::Value;
         if (dynamic_cast<AbstractNode*>(object.get()))
             return RecordType::Map;
