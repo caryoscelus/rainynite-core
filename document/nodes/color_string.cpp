@@ -16,30 +16,33 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/color/color.h>
 
 namespace rainynite::core::nodes {
 
-class ColorString : public Node<string> {
-public:
-    ColorString() {
-        init<colors::Color>(color, {});
-    }
+class ColorString :
+    public NewNode<
+        ColorString,
+        string,
+        types::Only<colors::Color>
+    >
+{
+    DOC_STRING(
+        "Converts color to hex24 string.\n"
+        "\n"
+        "TODO: add more output options"
+    )
+
+    // TODO: rename color to source?
+    NODE_PROPERTIES("color")
+    DEFAULT_VALUES(colors::Color{})
+    PROPERTY(color)
 
 protected:
     string get(shared_ptr<Context> ctx) const override {
-        try {
-            auto c = get_color()->value(ctx);
-            return colors::to_hex24(c);
-        } catch (...) {
-            return {};
-        }
+        return colors::to_hex24(color_value<colors::Color>(ctx));
     }
-
-private:
-    NODE_PROPERTY(color, colors::Color);
 };
 
 REGISTER_NODE(ColorString);
