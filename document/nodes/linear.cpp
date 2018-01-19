@@ -16,28 +16,36 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/context.h>
 
 namespace rainynite::core::nodes {
 
-class Linear : public Node<double> {
-public:
-    Linear() {
-        init<double>(base, 0);
-        init<double>(speed, 1);
-    }
+class Linear :
+    public NewNode<
+        Linear,
+        double,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Linear function\n"
+        "\n"
+        "In other words, convert Time in seconds to Real value"
+    )
+
+    NODE_PROPERTIES("base", "speed")
+    DEFAULT_VALUES(0.0, 1.0)
+    PROPERTY(base)
+    PROPERTY(speed)
+
 protected:
     double get(shared_ptr<Context> ctx) const override {
-        auto b = get_base()->value(ctx);
-        auto f = get_speed()->value(ctx);
-        return b+f*ctx->get_time().get_seconds();
+        auto b = base_value<double>(ctx);
+        auto f = speed_value<double>(ctx);
+        return b + f*ctx->get_time().get_seconds();
     }
-
-private:
-    NODE_PROPERTY(base, double);
-    NODE_PROPERTY(speed, double);
 };
 
 REGISTER_NODE(Linear);
