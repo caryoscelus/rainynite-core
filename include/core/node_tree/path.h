@@ -32,6 +32,9 @@ struct NodeTreePath {
 };
 
 NodeTree::Index tree_path_to_index(NodeTree const& tree, NodeTreePath const& path);
+NodeTreePath tree_index_to_path(NodeTree const& tree, NodeTree::Index index);
+
+AbstractReference get_node_by_path(NodeTree const& tree, NodeTreePath const& path);
 
 } // namespace rainynite::core
 

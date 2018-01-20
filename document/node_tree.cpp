@@ -237,6 +237,22 @@ NodeTree::Index tree_path_to_index(NodeTree const& tree, NodeTreePath const& pat
     return idx;
 }
 
+NodeTreePath tree_index_to_path(NodeTree const& tree, NodeTree::Index index) {
+    if (!index)
+        throw NodeTreeError("empty index does not correspond to any path");
+    vector<size_t> indexes;
+    while (index != tree.get_root_index()) {
+        indexes.push_back(tree.link_index(index));
+        index = tree.parent(index);
+    }
+    std::reverse(indexes.begin(), indexes.end());
+    return {indexes};
+}
+
+AbstractReference get_node_by_path(NodeTree const& tree, NodeTreePath const& path) {
+    return tree.get_node(tree_path_to_index(tree, path));
+}
+
 
 NodeTree::Index index_of_property(NodeTree const& self, NodeTree::Index parent, string const& name) {
     if (!parent)

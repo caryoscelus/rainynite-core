@@ -22,6 +22,7 @@
 #include <core/node/abstract_node.h>
 #include <core/node_tree/actions.h>
 #include <core/node_tree/has_tree.h>
+#include <core/node_tree/path.h>
 
 namespace rainynite::core::actions {
 
@@ -30,21 +31,21 @@ class ChangeLink : public AtomicAction, private HasTree {
 public:
     ChangeLink(weak_ptr<NodeTree> tree_, NodeTree::Index index_, AbstractReference new_value_) :
         HasTree(tree_),
-        index(index_),
+        path(tree_index_to_path(*no_null(tree_.lock()), index_)),
         new_value(new_value_)
     {}
 
     void redo_action() override {
-        old_value = tree()->get_node(index);
-        replace_index(*tree(), index, new_value);
+        old_value = get_node_by_path(*tree(), path);
+        replace_index(*tree(), path_to_index(path), new_value);
     }
     void undo_action() override {
-        new_value = tree()->get_node(index);
-        replace_index(*tree(), index, old_value);
+        new_value = get_node_by_path(*tree(), path);
+        replace_index(*tree(), path_to_index(path), old_value);
     }
 
 private:
-    NodeTree::Index index;
+    NodeTreePath path;
     AbstractReference new_value;
     AbstractReference old_value;
 };

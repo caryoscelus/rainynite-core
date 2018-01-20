@@ -22,6 +22,7 @@
 #include <core/node/abstract_list.h>
 #include <core/node_tree/actions.h>
 #include <core/node_tree/has_tree.h>
+#include <core/node_tree/path.h>
 #include "reverse.h"
 
 namespace rainynite::core::actions {
@@ -31,18 +32,18 @@ class ListPushNew : public AtomicAction, private HasTree {
 public:
     ListPushNew(TreePtr tree_, NodeTree::Index index_) :
         HasTree(tree_),
-        index(index_)
+        path(tree_index_to_path(*no_null(tree_.lock()), index_))
     {}
 
     void redo_action() override {
-        push_new_to(*tree(), index);
+        push_new_to(*tree(), path_to_index(path));
     }
     void undo_action() override {
-        pop_from(*tree(), index);
+        pop_from(*tree(), path_to_index(path));
     }
 
 private:
-    Index index;
+    NodeTreePath path;
 };
 
 /**
@@ -53,19 +54,19 @@ class ListPush : public AtomicAction, private HasTree {
 public:
     ListPush(TreePtr tree_, NodeTree::Index index_, AbstractReference value_) :
         HasTree(tree_),
-        index(index_),
+        path(tree_index_to_path(*no_null(tree_.lock()), index_)),
         value(value_)
     {}
 
     void redo_action() override {
-        push_to(*tree(), index, value);
+        push_to(*tree(), path_to_index(path), value);
     }
     void undo_action() override {
-        value = pop_from(*tree(), index);
+        value = pop_from(*tree(), path_to_index(path));
     }
 
 private:
-    NodeTree::Index index;
+    NodeTreePath path;
     AbstractReference value;
 };
 
@@ -74,21 +75,21 @@ class ListInsertElement : public AtomicAction, protected HasTree {
 public:
     ListInsertElement(TreePtr tree_, Index index_, size_t link_index_, AbstractReference value_) :
         HasTree(tree_),
-        index(index_),
+        path(tree_index_to_path(*no_null(tree_.lock()), index_)),
         link_index(link_index_),
         value(value_)
     {}
 
     void redo_action() override {
-        insert_to(*tree(), index, link_index, value);
+        insert_to(*tree(), path_to_index(path), link_index, value);
     }
     void undo_action() override {
-        auto child = tree()->index(index, link_index);
+        auto child = tree()->index(path_to_index(path), link_index);
         value = tree()->get_node(child);
         remove_index(*tree(), child);
     }
 private:
-    Index index;
+    NodeTreePath path;
     size_t link_index;
     AbstractReference value;
 };

@@ -21,6 +21,7 @@
 #include <core/action.h>
 #include <core/node/abstract_node.h>
 #include <core/node_tree/actions.h>
+#include <core/node_tree/path.h>
 #include "reverse.h"
 
 namespace rainynite::core::actions {
@@ -30,21 +31,21 @@ class AddCustomProperty : public AtomicAction, private HasTree {
 public:
     AddCustomProperty(weak_ptr<NodeTree> tree_, NodeTree::Index parent_, string const& prop_name_, AbstractReference value_) :
         HasTree(tree_),
-        parent(parent_),
+        parent(tree_index_to_path(*no_null(tree_.lock()), parent_)),
         prop_name(prop_name_),
         value(value_)
     {}
 
     void redo_action() override {
-        add_custom_property(*tree(), parent, prop_name, value);
+        add_custom_property(*tree(), tree_path_to_index(*tree(), parent), prop_name, value);
     }
     void undo_action() override {
-        auto index = index_of_property(*tree(), parent, prop_name);
+        auto index = index_of_property(*tree(), tree_path_to_index(*tree(), parent), prop_name);
         value = tree()->get_node(index);
         remove_index(*tree(), index);
     }
 private:
-    NodeTree::Index parent;
+    NodeTreePath parent;
     string prop_name;
     AbstractReference value;
 };

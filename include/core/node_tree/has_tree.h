@@ -20,6 +20,7 @@
 
 #include <core/std/memory.h>
 #include <core/util/nullptr.h>
+#include "path.h"
 
 namespace rainynite::core {
 
@@ -40,6 +41,9 @@ public:
 protected:
     shared_ptr<NodeTree> tree() const {
         return no_null(m_tree.lock());
+    }
+    Index path_to_index(NodeTreePath const& path) const {
+        return tree_path_to_index(*tree(), path);
     }
 private:
     TreePtr m_tree;
