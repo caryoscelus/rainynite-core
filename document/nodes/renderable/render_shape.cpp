@@ -36,13 +36,7 @@ class RenderShape :
     )
 
     NODE_PROPERTIES("shape", "shading")
-    static vector<AbstractReference> const& default_values() {
-        static vector<AbstractReference> instance {
-            make_value<Geom::NullShape>(),
-            make_node_with_name("ShadingStyle")
-        };
-        return instance;
-    }
+    COMPLEX_DEFAULT_VALUES(make_value<Geom::NullShape>(), make_node_with_name("ShadingStyle"))
 
 protected:
     Renderable get(shared_ptr<Context> /*ctx*/) const override {
