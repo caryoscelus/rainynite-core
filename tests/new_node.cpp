@@ -18,6 +18,7 @@
 #include <catch.hpp>
 
 #include <core/node/make.h>
+#include <core/node_info/node_info.h>
 #include "zero_context.h"
 #include "new_node.h"
 

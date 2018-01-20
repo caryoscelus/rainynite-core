@@ -22,6 +22,7 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include <core/node_info/node_info.h>
+#include <core/node_info/copy.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/node/traverse.h>

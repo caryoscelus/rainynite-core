@@ -75,13 +75,6 @@ shared_ptr<T> make_node_with_name(Args&&... args) {
     return dynamic_pointer_cast<T>(make_node_with_name_base(std::forward<Args>(args)...));
 }
 
-AbstractReference shallow_copy(AbstractValue const& source);
-
-template <class T>
-shared_ptr<T> shallow_copy_as(AbstractValue const& source) {
-    return dynamic_pointer_cast<T>(shallow_copy(source));
-}
-
 inline map<Type, set<NodeInfo const*>>& node_types() {
     static map<Type, set<NodeInfo const*>> instance;
     return instance;

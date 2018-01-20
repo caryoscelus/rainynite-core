@@ -21,7 +21,7 @@
 #include <core/std/array.h>
 #include <core/util/class_init.h>
 #include <core/util/exceptions.h>
-#include <core/node_info/node_info.h>
+#include <core/node_info/copy.h>
 #include "abstract_list.h"
 #include "abstract_value.h"
 #include "make.h"
@@ -38,7 +38,7 @@ public:
     LinkStorage() {
         size_t i = 0;
         for (auto const& v : Self::default_values()) {
-            set_link_without_checks(i, shallow_copy(*v));
+            set_link_without_checks(i, deep_copy(*v));
             ++i;
         }
     }

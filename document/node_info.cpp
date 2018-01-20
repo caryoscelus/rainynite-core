@@ -17,6 +17,7 @@
 
 #include <core/node_info/node_info.h>
 #include <core/node_info/default_node.h>
+#include <core/node_info/copy.h>
 
 namespace rainynite::core {
 
@@ -45,6 +46,16 @@ AbstractReference shallow_copy(AbstractValue const& source) {
     auto node = get_node_info(typeid(source)).clone(source);
     node->new_id();
     return node;
+}
+
+AbstractReference deep_copy(AbstractValue const& source) {
+    auto value = shallow_copy(source);
+    if (auto node = list_cast(value)) {
+        for (size_t i = 0; i < node->link_count(); ++i) {
+            node->set_link(i, deep_copy(*node->get_link(i)));
+        }
+    }
+    return value;
 }
 
 set<NodeInfo const*> all_node_infos() {

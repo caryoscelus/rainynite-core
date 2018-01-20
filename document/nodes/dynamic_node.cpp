@@ -17,6 +17,7 @@
 
 #include <core/util/nullptr.h>
 #include <core/node_info/macros.h>
+#include <core/node_info/copy.h>
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/node/proxy_node.h>
