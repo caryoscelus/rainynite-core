@@ -25,6 +25,7 @@
 #include <core/node_tree/traverse.h>
 #include <core/node_tree/actions.h>
 #include <core/node_tree/exceptions.h>
+#include <core/node_tree/path.h>
 
 namespace rainynite::core {
 

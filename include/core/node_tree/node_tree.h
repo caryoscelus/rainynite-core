@@ -33,15 +33,6 @@ namespace rainynite::core {
 
 class NodeTree;
 
-struct NodeTreePath {
-    template <typename... Ts>
-    NodeTreePath(Ts&&... args) :
-        indexes(std::forward<Ts>(args)...)
-    {
-    }
-    vector<size_t> indexes;
-};
-
 struct NodeTreeIndex : boost::totally_ordered<NodeTreeIndex> {
     NodeTreeIndex(size_t value_=0) :
         value(value_)
@@ -161,10 +152,8 @@ private:
 
     mutable map<Index, Content> content;
 
-    mutable NodeMap node_count;
+    NodeMap node_count;
 };
-
-NodeTree::Index tree_path_to_index(NodeTree const& tree, NodeTreePath const& path);
 
 } // namespace rainynite::core
 
