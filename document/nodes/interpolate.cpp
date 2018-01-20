@@ -21,6 +21,7 @@
 #include <core/node/cast.h>
 #include <core/all_types.h>
 #include <core/context.h>
+#include <core/util/nullptr.h>
 
 namespace rainynite::core::nodes {
 
@@ -103,6 +104,22 @@ public:
         interpolate->set_property("b", right->value);
         interpolate->set_property("progress", progress);
         return {interpolate_value, ctx};
+    }
+
+public:
+    bool can_set_any_at() const override {
+        auto l = list_cast(p_keyframes());
+        return l && l->is_editable_list();
+    }
+
+    void set_any_at(any const& value, shared_ptr<Context> ctx) override {
+        auto time = ctx->get_time();
+        auto l = no_null(list_cast(p_keyframes()));
+        l->push_new();
+        auto frame = l->get_link(l->link_count()-1);
+        auto frame_node = no_null(abstract_node_cast(frame));
+        frame_node->get_property("time")->set_any(time);
+        frame_node->get_property("value")->set_any(value);
     }
 };
 
