@@ -150,6 +150,13 @@ NodeTree::Content& NodeTree::get_content(Index index) const {
     throw InvalidIndexError("Cannot find content for the tree index");
 }
 
+size_t NodeTree::get_node_count(AbstractReference node) const {
+    auto iter = node_count.find(node);
+    if (iter != node_count.end())
+        return iter->second;
+    throw TreeCorruptedError("Node count not found");
+}
+
 observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
     if (!index)
         return nullptr;

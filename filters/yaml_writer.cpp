@@ -60,7 +60,7 @@ public:
         }
 
         auto node = tree.get_node(index);
-        if (tree.get_node_count().at(node) > 1) {
+        if (tree.get_node_count(node) > 1) {
             local_count.emplace(node, 0);
             if (local_count.at(node) > 0) {
                 write_link(node);

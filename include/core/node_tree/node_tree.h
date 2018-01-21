@@ -123,10 +123,7 @@ public:
         );
     }
 
-    using NodeMap = map<weak_ptr<AbstractValue>, size_t, std::owner_less<weak_ptr<AbstractValue>>>;
-    NodeMap const& get_node_count() const {
-        return node_count;
-    }
+    size_t get_node_count(AbstractReference node) const;
 
     struct Content;
     Content& get_content(Index index) const;
@@ -152,6 +149,7 @@ private:
 
     mutable map<Index, Content> content;
 
+    using NodeMap = map<weak_ptr<AbstractValue>, size_t, std::owner_less<weak_ptr<AbstractValue>>>;
     NodeMap node_count;
 };
 
