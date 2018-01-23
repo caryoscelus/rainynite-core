@@ -21,6 +21,7 @@
 #include <boost/math/special_functions/relative_difference.hpp>
 
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
 #include <core/node/property.h>
 #include <core/node/new_node.h>
@@ -39,30 +40,34 @@ using operator_eq_t = decltype(declval<C&>() == declval<C&>());
 template <class C>
 constexpr bool has_operator_eq = is_detected_v<operator_eq_t, C>;
 
-}
+} // namespace detail
 
 template <typename T>
-class Equal : public Node<bool> {
+class Equal :
+    public NewNode<
+        Equal<T>,
+        bool,
+        types::Only<T>,
+        types::Only<T>
+    >
+{
     DOC_STRING(
         "Node that compares its arguments."
     )
-public:
-    Equal() {
-        this->template init<T>(a, {});
-        this->template init<T>(b, {});
-    }
+
+    NODE_PROPERTIES("a", "b")
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_default_node<T>())
+    PROPERTY(a)
+    PROPERTY(b)
+
 protected:
     bool get(shared_ptr<Context> ctx) const override {
         if constexpr (detail::has_operator_eq<T>) {
-            return get_a()->value(ctx) == get_b()->value(ctx);
+            return a_value<T>(ctx) == b_value<T>(ctx);
         } else {
             throw std::logic_error("Comparing incomparable type");
         }
     }
-
-private:
-    NODE_PROPERTY(a, T);
-    NODE_PROPERTY(b, T);
 };
 
 NODE_INFO_TEMPLATE(Equal, Equal<T>, bool);
