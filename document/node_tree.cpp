@@ -38,6 +38,20 @@ struct NodeTree::Content {
         node(node_)
     {}
 
+    ~Content() {
+        if (connection.connected())
+            connection.disconnect();
+        // TODO: self-disconnecting connection
+    }
+
+    template <typename F>
+    void subscribe(F&& f) {
+        if (connection.connected())
+            connection.disconnect();
+        if (auto list = list_cast(get_node()))
+            connection = list->subscribe_to_link_change(f);
+    }
+
     Index index(size_t i) const {
         auto node = get_node_as<AbstractListLinked>();
         if (node == nullptr) {
@@ -88,6 +102,8 @@ struct NodeTree::Content {
 
     weak_ptr<AbstractValue> node;
     map<Type, unique_ptr<TreeElement>> elements;
+
+    boost::signals2::connection connection;
 };
 
 
@@ -170,7 +186,9 @@ observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
 }
 
 void NodeTree::set_node_at_index(Index index, AbstractReference value) {
-    get_content(index).node = value;
+    auto& element = get_content(index);
+    element.node = value;
+    subscribe(element, index);
     increase_node_count(value);
 }
 
@@ -207,8 +225,15 @@ NodeTree::Index NodeTree::new_index() {
     return ++last_index;
 }
 
+void NodeTree::subscribe(Content& content, NodeTree::Index index) {
+    content.subscribe([this, index]() {
+        reload_children(index);
+    });
+}
+
 void NodeTree::create_index(Index index, Index parent, size_t link_index, string link_key, TypeConstraint type, shared_ptr<AbstractValue> node) {
     auto [iter, added] = content.try_emplace(index, parent, link_index, link_key, type, node);
+    subscribe(iter->second, index);
     if (!added)
         throw TreeCorruptedError("Trying to create index in place of old");
     increase_node_count(node);
@@ -280,10 +305,8 @@ void replace_index(NodeTree& self, NodeTree::Index index, AbstractReference node
 
     auto parent = self.parent(index);
     auto parent_node = no_null(self.get_node_as<AbstractListLinked>(parent));
-    parent_node->set_link(self.link_index(index), node);
     self.set_node_at_index(index, node);
-
-    self.reload_children(index);
+    parent_node->set_link(self.link_index(index), node);
 }
 
 NodeTree::Index add_custom_property(NodeTree& self, NodeTree::Index parent, string const& name, AbstractReference value) {

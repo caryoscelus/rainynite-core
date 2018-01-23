@@ -142,6 +142,8 @@ private:
 
     void load_children(Index index, Content& element);
 
+    void subscribe(Content& content, NodeTree::Index index);
+
 private:
     shared_ptr<AbstractValue> const root;
 
