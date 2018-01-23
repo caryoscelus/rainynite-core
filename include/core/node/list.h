@@ -94,6 +94,7 @@ public:
     }
     void push_back(AbstractReference value) override {
         insert(link_count(), value);
+        link_change_signal();
     }
     void push_new() override {
         push_value<Nothing>(this, {});
@@ -107,6 +108,7 @@ public:
                     this->changed();
                 })
             );
+            link_change_signal();
             this->changed();
         } else {
             // TODO: throw?
@@ -115,6 +117,7 @@ public:
     void remove(size_t index) override {
         values.erase(values.begin()+index);
         signal_connections.erase(signal_connections.begin()+index);
+        link_change_signal();
         this->changed();
     }
     void pop() override {

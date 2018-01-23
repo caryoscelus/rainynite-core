@@ -44,9 +44,10 @@ public:
     }
 
     virtual ~LinkStorage() {
-        for (auto& connection : signal_connections) {
+        for (auto& connection : signal_connections)
             connection.disconnect();
-        }
+        for (auto& connection : link_signal_connections)
+            connection.disconnect();
     }
 
     size_t link_count() const override {
@@ -82,8 +83,15 @@ private:
     void set_link_without_checks(size_t i, AbstractReference value) {
         signal_connections[i].disconnect();
         storage[i] = value;
-        signal_connections[i] = value->subscribe([this](){
-            links_changed();
+        if (auto list = list_cast(value)) {
+            link_signal_connections[i] = list->subscribe_to_link_change([this]() {
+                links_changed();
+            });
+        }
+        signal_connections[i] = value->subscribe([this]() {
+            if (auto self = dynamic_cast<AbstractValue*>(this)) {
+                self->changed();
+            }
         });
     }
 
@@ -105,7 +113,7 @@ protected:
      * Called when links are changed.
      *
      * Mostly a hack to notify nodes of changes without inheriting it from here.
-     * Used solely to call changed
+     * Used to call changed & link_change_signal
      */
     virtual void links_changed() {
         link_change_signal();
@@ -127,6 +135,7 @@ protected:
 private:
     array<shared_ptr<AbstractValue>, sizeof...(Ts)> storage;
     array<boost::signals2::connection, sizeof...(Ts)> signal_connections;
+    array<boost::signals2::connection, sizeof...(Ts)> link_signal_connections;
 };
 
 template <typename... Ts>
