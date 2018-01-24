@@ -95,6 +95,13 @@ private:
         });
     }
 
+    void links_changed() {
+        if (auto self = dynamic_cast<AbstractValue*>(this)) {
+            self->changed();
+        }
+        link_change_signal();
+    }
+
 public:
     template <typename... Is>
     void init_values(Is&&... values) {
@@ -106,17 +113,6 @@ public:
                 throw NodeAccessError("Invalid type in init");
             ++i;
         }
-    }
-
-protected:
-    /**
-     * Called when links are changed.
-     *
-     * Mostly a hack to notify nodes of changes without inheriting it from here.
-     * Used to call changed & link_change_signal
-     */
-    virtual void links_changed() {
-        link_change_signal();
     }
 
 private:

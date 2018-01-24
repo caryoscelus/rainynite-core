@@ -144,11 +144,6 @@ protected:
         this->changed();
     }
 
-    void links_changed() override {
-        Storage::links_changed();
-        this->changed();
-    }
-
 private:
     template <typename T, class F, class G>
     T apply_for_normal_or_custom(size_t i, F normal, G custom) const {
