@@ -202,8 +202,14 @@ NodeTree::Index NodeTree::insert_index_at(Index parent, size_t position, string 
 }
 
 void NodeTree::reload_children(Index index) {
+    start_reload_signal(index);
     invalidate_children(index);
+    size_t count = 0;
+    if (auto l = get_node_as<AbstractListLinked>(index))
+        count = l->link_count();
+    start_adding_signal(index, count);
     load_children(index, get_content(index));
+    end_reload_signal();
 }
 
 void NodeTree::invalidate_children(Index index) {

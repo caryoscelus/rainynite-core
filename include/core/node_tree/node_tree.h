@@ -19,6 +19,7 @@
 #define CORE_NODE_TREE_H_7E24CFE0_81EC_5F4F_836F_2CC477F61BB4
 
 #include <boost/operators.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <core/std/memory.h>
 #include <core/std/map.h>
@@ -26,6 +27,7 @@
 #include <core/abstract_factory.h>
 #include <core/util/exceptions.h>
 #include <core/util/class_init.h>
+#include <core/util/destroy_detector.h>
 #include <core/node/common.h>
 #include <core/node/type_constraint.h>
 
@@ -78,7 +80,7 @@ inline unique_ptr<TreeElement> create_tree_element(Type type) {
     return class_init::type_info<AbstractFactory<TreeElement>, unique_ptr<TreeElement>>(type);
 }
 
-class NodeTree {
+class NodeTree : public DestroyDetector {
 public:
     using Index = NodeTreeIndex;
 
@@ -134,6 +136,13 @@ public:
     void reload_children(Index index);
     void invalidate_index(Index index);
     void invalidate_children(Index index);
+
+public:
+    template <typename... Args>
+    using Signal = boost::signals2::signal<Args...>;
+    Signal<void(Index)> start_reload_signal;
+    Signal<void(Index, size_t)> start_adding_signal;
+    Signal<void()> end_reload_signal;
 
 private:
     Index new_index();
