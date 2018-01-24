@@ -187,6 +187,7 @@ observer_ptr<TreeElement> NodeTree::get_element(Type type, Index index) const {
 
 void NodeTree::set_node_at_index(Index index, AbstractReference value) {
     auto& element = get_content(index);
+    decrease_node_count(element.node);
     element.node = value;
     subscribe(element, index);
     increase_node_count(value);
@@ -213,11 +214,7 @@ void NodeTree::invalidate_children(Index index) {
 
 void NodeTree::invalidate_index(Index index) {
     invalidate_children(index);
-    auto iter = node_count.find(get_content(index).node);
-    if (iter == node_count.end() || !iter->second)
-        throw TreeCorruptedError("No/zero count for removed node");
-    if (!--iter->second)
-        node_count.erase(iter);
+    decrease_node_count(get_content(index).node);
     content.erase(index);
 }
 
@@ -258,6 +255,14 @@ void NodeTree::load_children(Index parent, Content& element) {
 void NodeTree::increase_node_count(weak_ptr<AbstractValue> node) {
     auto [count_iter, _] = node_count.emplace(node, 0);
     ++count_iter->second;
+}
+
+void NodeTree::decrease_node_count(weak_ptr<AbstractValue> node) {
+    auto iter = node_count.find(node);
+    if (iter == node_count.end() || !iter->second)
+        throw TreeCorruptedError("Attempted decreasing uncounted node");
+    if (!--iter->second)
+        node_count.erase(iter);
 }
 
 
@@ -322,11 +327,10 @@ NodeTree::Index push_new_to(NodeTree& self, NodeTree::Index parent) {
     return self.insert_index_at(parent, position, "", list->get_link(position));
 }
 
-NodeTree::Index push_to(NodeTree& self, NodeTree::Index parent, AbstractReference value) {
+void push_to(NodeTree& self, NodeTree::Index parent, AbstractReference value) {
     auto list = no_null(self.get_node_as<AbstractListLinked>(parent));
     auto position = list->link_count();
     list->push_back(value);
-    return self.insert_index_at(parent, position, "", value);
 }
 
 NodeTree::Index insert_to(NodeTree& self, NodeTree::Index parent, size_t position, AbstractReference value) {

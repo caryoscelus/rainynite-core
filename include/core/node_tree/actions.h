@@ -35,7 +35,7 @@ NodeTree::Index add_custom_property(NodeTree& tree, NodeTree::Index parent, stri
 NodeTree::Index push_new_to(NodeTree& tree, NodeTree::Index parent);
 
 /// Push element to a list
-NodeTree::Index push_to(NodeTree& tree, NodeTree::Index parent, AbstractReference value);
+void push_to(NodeTree& tree, NodeTree::Index parent, AbstractReference value);
 
 /// Insert element to a list
 NodeTree::Index insert_to(NodeTree& tree, NodeTree::Index parent, size_t position, AbstractReference value);

@@ -138,6 +138,7 @@ public:
 private:
     Index new_index();
     void increase_node_count(weak_ptr<AbstractValue> node);
+    void decrease_node_count(weak_ptr<AbstractValue> node);
     void create_index(Index index, Index parent, size_t link_index, string link_key, TypeConstraint tye, shared_ptr<AbstractValue> node);
 
     void load_children(Index index, Content& element);
