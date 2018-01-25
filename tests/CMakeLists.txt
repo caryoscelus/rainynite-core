@@ -22,6 +22,9 @@ target_link_libraries(test_node nodes)
 add_catch_test(node_tree)
 target_link_libraries(test_node_tree document)
 
+add_catch_test(interpolate_node)
+target_link_libraries(test_interpolate_node nodes)
+
 add_catch_test(node_tree_modules)
 target_link_libraries(test_node_tree_modules document)
 
