@@ -30,37 +30,9 @@
 #include <core/util/destroy_detector.h>
 #include <core/node/common.h>
 #include <core/node/type_constraint.h>
+#include "index.h"
 
 namespace rainynite::core {
-
-class NodeTree;
-
-struct NodeTreeIndex : boost::totally_ordered<NodeTreeIndex> {
-    NodeTreeIndex(size_t value_=0) :
-        value(value_)
-    {}
-    bool operator==(NodeTreeIndex const& other) const {
-        return value == other.value;
-    }
-    bool operator<(NodeTreeIndex const& other) const {
-        return value < other.value;
-    }
-    NodeTreeIndex& operator++() {
-        ++value;
-        return *this;
-    }
-    NodeTreeIndex& operator--() {
-        --value;
-        return *this;
-    }
-    operator bool() const {
-        return value;
-    }
-    operator size_t() const {
-        return value;
-    }
-    size_t value;
-};
 
 class TreeElement {
 public:
