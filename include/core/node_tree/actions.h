@@ -29,16 +29,16 @@ NodeTree::Index index_of_property(NodeTree const& tree, NodeTree::Index parent, 
 void replace_index(NodeTree& tree, NodeTree::Index index, AbstractReference value);
 
 /// Add custom property to a node
-NodeTree::Index add_custom_property(NodeTree& tree, NodeTree::Index parent, string const& name, AbstractReference value);
+void add_custom_property(NodeTree& tree, NodeTree::Index parent, string const& name, AbstractReference value);
 
 /// Push new element to a list
-NodeTree::Index push_new_to(NodeTree& tree, NodeTree::Index parent);
+void push_new_to(NodeTree& tree, NodeTree::Index parent);
 
 /// Push element to a list
 void push_to(NodeTree& tree, NodeTree::Index parent, AbstractReference value);
 
 /// Insert element to a list
-NodeTree::Index insert_to(NodeTree& tree, NodeTree::Index parent, size_t position, AbstractReference value);
+void insert_to(NodeTree& tree, NodeTree::Index parent, size_t position, AbstractReference value);
 
 /// Pop from list and return the element
 AbstractReference pop_from(NodeTree& tree, NodeTree::Index parent);

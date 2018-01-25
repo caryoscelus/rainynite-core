@@ -320,30 +320,24 @@ void replace_index(NodeTree& self, NodeTree::Index index, AbstractReference node
     parent_node->set_link(self.link_index(index), node);
 }
 
-NodeTree::Index add_custom_property(NodeTree& self, NodeTree::Index parent, string const& name, AbstractReference value) {
+void add_custom_property(NodeTree& self, NodeTree::Index parent, string const& name, AbstractReference value) {
     auto node = no_null(self.get_node_as<AbstractNode>(parent));
     node->set_property(name, value);
-    return self.insert_index_at(parent, node->get_name_id(name), name, value);
 }
 
-NodeTree::Index push_new_to(NodeTree& self, NodeTree::Index parent) {
+void push_new_to(NodeTree& self, NodeTree::Index parent) {
     auto list = no_null(self.get_node_as<AbstractListLinked>(parent));
-    auto position = list->link_count();
     list->push_new();
-    return self.insert_index_at(parent, position, "", list->get_link(position));
 }
 
 void push_to(NodeTree& self, NodeTree::Index parent, AbstractReference value) {
     auto list = no_null(self.get_node_as<AbstractListLinked>(parent));
-    auto position = list->link_count();
     list->push_back(value);
 }
 
-NodeTree::Index insert_to(NodeTree& self, NodeTree::Index parent, size_t position, AbstractReference value) {
+void insert_to(NodeTree& self, NodeTree::Index parent, size_t position, AbstractReference value) {
     auto list = no_null(self.get_node_as<AbstractListLinked>(parent));
     list->insert(position, value);
-    self.reload_children(parent);
-    return self.index(parent, position);
 }
 
 AbstractReference pop_from(NodeTree& self, NodeTree::Index parent) {
