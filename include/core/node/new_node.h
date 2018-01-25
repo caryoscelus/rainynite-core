@@ -175,10 +175,12 @@ private:
         auto it = cp_names.find(name);
         if (it != cp_names.end()) {
             cp_storage[it->second] = ref;
+            this->changed();
         } else {
             cp_names.emplace(name, cp_storage.size());
             cp_name_list.push_back(name);
             cp_storage.push_back(ref);
+            this->links_changed();
         }
     }
 

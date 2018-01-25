@@ -95,6 +95,7 @@ private:
         });
     }
 
+protected:
     void links_changed() {
         if (auto self = dynamic_cast<AbstractValue*>(this)) {
             self->changed();
