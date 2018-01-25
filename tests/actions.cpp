@@ -20,6 +20,7 @@
 #include <core/node/make.h>
 #include <core/node/node.h>
 #include <core/node_info/node_info.h>
+#include <core/node_tree/traverse.h>
 #include <core/action_stack.h>
 #include <core/actions/change_value.h>
 #include <core/actions/change_link.h>
@@ -99,6 +100,19 @@ TEST_CASE("Custom property", "[action,node]") {
     CHECK_THROWS_AS(add->get_property("_something"), NodeAccessError);
 }
 
+class EmptyTraverser : public TreeTraverser {
+public:
+    EmptyTraverser(NodeTree& tree) :
+        TreeTraverser(tree)
+    {}
+protected:
+    bool object_start(NodeTree::Index /*index*/) override {
+        return true;
+    }
+    void object_end(NodeTree::Index /*index*/) override {
+    }
+};
+
 TEST_CASE("List", "[action,node]") {
     ActionStack action_stack;
     auto list = make_shared<ListValue<double>>();
@@ -109,6 +123,9 @@ TEST_CASE("List", "[action,node]") {
 
     action_stack.emplace<actions::ListPushNew>(tree, list_index);
     CHECK(list->value(zero_context()) == vector<double>{0});
+
+    EmptyTraverser traverser(*tree);
+    traverser.traverse_tree();
 
     action_stack.emplace<actions::ListInsertElement>(tree, list_index, 1, make_value<double>(1));
     CHECK(list->value(zero_context()) == (vector<double>{0, 1}));
