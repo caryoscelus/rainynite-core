@@ -23,12 +23,20 @@
 namespace rainynite::core {
 
 struct NodeTreePath {
-    template <typename... Ts>
-    NodeTreePath(Ts&&... args) :
-        indexes(std::forward<Ts>(args)...)
-    {
-    }
+    NodeTreePath(vector<size_t> const& idxs) :
+        indexes(idxs)
+    {}
+
+    NodeTreePath() = default;
+
     vector<size_t> indexes;
+
+    bool operator==(NodeTreePath const& other) const {
+        return indexes == other.indexes;
+    }
+    bool operator!=(NodeTreePath const& other) const {
+        return !(*this == other);
+    }
 };
 
 NodeTree::Index tree_path_to_index(NodeTree const& tree, NodeTreePath const& path);
