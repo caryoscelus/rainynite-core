@@ -68,6 +68,9 @@ public:
     virtual void pop() {
         throw NodeAccessError("cannot pop");
     }
+    virtual void clear_links() {
+        throw NodeAccessError("cannot clear");
+    }
 
     /// Returns true if this is "normal list", i.e. its value consists of its links
     virtual bool is_editable_list() const {

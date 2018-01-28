@@ -123,6 +123,12 @@ public:
     void pop() override {
         remove(values.size()-1);
     }
+    void clear_links() override {
+        values.clear();
+        signal_connections.clear();
+        link_change_signal();
+        this->changed();
+    }
     bool is_editable_list() const override {
         return true;
     }
