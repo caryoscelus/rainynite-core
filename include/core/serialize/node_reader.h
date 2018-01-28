@@ -79,7 +79,7 @@ public:
         await(RecordType::Nothing);
     }
     void type(string const& s) override {
-        current().object = make_node_with_name<AbstractValue>(s);
+        current().object = make_node_with_name_as<AbstractValue>(s);
         objects.emplace(current().id, current().object);
     }
     void auto_type() override {

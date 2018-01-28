@@ -69,7 +69,7 @@ TEST_CASE("Undo/redo value change", "[action,node]") {
 
 TEST_CASE("Change link", "[action,node]") {
     ActionStack action_stack;
-    auto add = make_node_with_name<BaseValue<double>>("Add/Real");
+    auto add = make_node_with_name_as<BaseValue<double>>("Add/Real");
     auto add_node = dynamic_pointer_cast<AbstractListLinked>(add);
     REQUIRE(add->value(zero_context()) == 0);
 
@@ -86,7 +86,7 @@ TEST_CASE("Change link", "[action,node]") {
 
 TEST_CASE("Custom property", "[action,node]") {
     ActionStack action_stack;
-    auto add = make_node_with_name<AbstractNode>("Add/Real");
+    auto add = make_node_with_name_as<AbstractNode>("Add/Real");
     auto other_node = make_value<double>(1);
     CHECK_THROWS_AS(add->get_property("_something"), NodeAccessError);
     auto tree = make_shared<NodeTree>(abstract_value_cast(add));

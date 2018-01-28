@@ -60,19 +60,17 @@ inline NodeInfo const& get_node_type(string const& name) {
 
 /**
  * Make node with given name, optionally using source & context to initialize it.
- *
- * TODO: rename to make_node_with_name & that to make_node_with_name_as
  */
-AbstractReference make_node_with_name_base(string const& name, AbstractReference source=nullptr, shared_ptr<Context> context=nullptr);
+AbstractReference make_node_with_name(string const& name, AbstractReference source=nullptr, shared_ptr<Context> context=nullptr);
 
 /**
- * Same as make_node_with_name_base, but optionally cast to desired type.
+ * Same as make_node_with_name, but optionally cast to desired type.
  *
- * TODO: throw instead of returning nullptr?
+ * TODO: throw instead of returning nullptr??
  */
 template <typename T=AbstractValue, typename... Args>
-shared_ptr<T> make_node_with_name(Args&&... args) {
-    return dynamic_pointer_cast<T>(make_node_with_name_base(std::forward<Args>(args)...));
+shared_ptr<T> make_node_with_name_as(Args&&... args) {
+    return dynamic_pointer_cast<T>(make_node_with_name(std::forward<Args>(args)...));
 }
 
 inline map<Type, set<NodeInfo const*>>& node_types() {

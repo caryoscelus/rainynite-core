@@ -27,11 +27,11 @@ using namespace rainynite;
 using namespace rainynite::core;
 
 TEST_CASE("Test TimeList node", "[node]") {
-    auto time_list = make_node_with_name<Node<vector<double>>>("TimeList/Real");
+    auto time_list = make_node_with_name_as<Node<vector<double>>>("TimeList/Real");
     time_list->get_property("step")->set_any(Time(1.0));
     time_list->get_property("period")->set_any(TimePeriod(Time(0.0), Time(2.0)));
     time_list->get_property("source")->set_any(0.0);
     CHECK((time_list->value(zero_context()) == vector<double>{0, 0}));
-    time_list->set_property("source", make_node_with_name<AbstractValue>("Linear"));
+    time_list->set_property("source", make_node_with_name_as<AbstractValue>("Linear"));
     CHECK((time_list->value(zero_context()) == vector<double>{0, 1}));
 }

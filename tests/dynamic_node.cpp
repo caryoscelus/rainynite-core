@@ -30,18 +30,18 @@ shared_ptr<Context> zero_context() {
 }
 
 AbstractReference make_time_list_0_1() {
-    auto time_list = make_node_with_name<Node<vector<double>>>("TimeList/Real");
+    auto time_list = make_node_with_name_as<Node<vector<double>>>("TimeList/Real");
     time_list->get_property("step")->set_any(Time(1.0));
     time_list->get_property("period")->set_any(TimePeriod(Time(0.0), Time(2.0)));
-    time_list->set_property("source", make_node_with_name<AbstractValue>("Linear"));
-    auto untyped = make_node_with_name<Node<Nothing>>("ToUntypedList");
+    time_list->set_property("source", make_node_with_name_as<AbstractValue>("Linear"));
+    auto untyped = make_node_with_name_as<Node<Nothing>>("ToUntypedList");
     untyped->set_property("source", time_list);
     return untyped;
 }
 
 TEST_CASE("Test ApplyToList node", "[node]") {
-    auto apply = make_node_with_name<Node<vector<double>>>("ApplyToList/Real");
-    auto add = make_node_with_name<AbstractNode>("Add/Real");
+    auto apply = make_node_with_name_as<Node<vector<double>>>("ApplyToList/Real");
+    auto add = make_node_with_name_as<AbstractNode>("Add/Real");
     add->get_property("a")->set_any(0.5);
     apply->set_property("source", dynamic_pointer_cast<AbstractValue>(std::move(add)));
     apply->get_property("property_name")->set_any(string("b"));
@@ -65,7 +65,7 @@ TEST_CASE("Test ApplyToList node", "[node]") {
 }
 
 TEST_CASE("Test DynamicListZip node", "[node]") {
-    auto zip = make_node_with_name<Node<vector<double>>>("DynamicListZip/Real");
+    auto zip = make_node_with_name_as<Node<vector<double>>>("DynamicListZip/Real");
     zip->get_property("node_type")->set_any(string("Add/Real"));
     auto args = zip->get_property("arguments_list");
     auto list_of_lists = dynamic_cast<UntypedListValue*>(args.get());

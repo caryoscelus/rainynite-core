@@ -40,7 +40,7 @@ protected:
 };
 
 TEST_CASE("Interpolate / node tree / add frames", "[node]") {
-    auto root = make_node_with_name<BaseValue<double>>("Interpolate/Real");
+    auto root = make_node_with_name_as<BaseValue<double>>("Interpolate/Real");
     auto root_node = abstract_node_cast(root);
     root_node->get_property("interpolate_with")->set_any(string{"WeightedAverage/Real"});
 

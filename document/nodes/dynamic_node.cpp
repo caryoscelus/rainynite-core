@@ -38,7 +38,7 @@ public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
         auto type = get_node_type()->value(ctx);
         if (cached_type != type) {
-            node = make_node_with_name<AbstractValue>(type);
+            node = make_node_with_name_as<AbstractValue>(type);
             cached_type = type;
         }
         size_t i = 0;
@@ -242,7 +242,7 @@ protected:
         vector<NodeInContext> result;
         auto type = get_node_type()->value(ctx);
         while (true) {
-            auto node = make_node_with_name<AbstractValue>(type);
+            auto node = make_node_with_name_as<AbstractValue>(type);
             auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
             if (!list_node)
                 return result;

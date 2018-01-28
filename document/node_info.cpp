@@ -29,7 +29,7 @@ string node_type_name(std::type_index type) {
     }
 }
 
-AbstractReference make_node_with_name_base(string const& name, AbstractReference source, shared_ptr<Context> context) {
+AbstractReference make_node_with_name(string const& name, AbstractReference source, shared_ptr<Context> context) {
     auto node = get_node_type(name).new_empty();
     node->new_id(); // TODO: don't do that here?
     if (source && context) {

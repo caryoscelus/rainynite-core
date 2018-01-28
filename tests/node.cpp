@@ -151,7 +151,7 @@ TEST_CASE("Shallow node copy", "[node]") {
     }
     SECTION("Complex") {
         auto one = make_value<Real>(1.0);
-        auto add = make_node_with_name<AbstractNode>("Add/Real");
+        auto add = make_node_with_name_as<AbstractNode>("Add/Real");
         add->set_property("a", one);
         add->set_property("b", one);
         auto add_again = shallow_copy_as<AbstractNode>(dynamic_cast<AbstractValue const&>(*add));
@@ -165,7 +165,7 @@ TEST_CASE("Shallow node copy", "[node]") {
 }
 
 TEST_CASE("Node children change notify", "[node]") {
-    auto add = make_node_with_name<AbstractNode>("Add/Real");
+    auto add = make_node_with_name_as<AbstractNode>("Add/Real");
     bool changed = false;
     dynamic_cast<AbstractValue*>(add.get())->subscribe([&changed](){
         changed = true;
@@ -195,7 +195,7 @@ TEST_CASE("List node children change notify", "[node]") {
 }
 
 TEST_CASE("Removing custom properties", "[node]") {
-    auto add = make_node_with_name<AbstractNode>("Add/Real");
+    auto add = make_node_with_name_as<AbstractNode>("Add/Real");
     auto add_links = dynamic_pointer_cast<AbstractListLinked>(add);
     CHECK(add_links->link_count() == 2);
     auto zero = make_value<double>(0.0);

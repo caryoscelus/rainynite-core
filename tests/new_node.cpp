@@ -49,7 +49,7 @@ TEST_CASE("New node system: test set_any_at (Linear)", "[node]") {
     auto one_context = make_shared<Context>(*zero_context());
     one_context->set_time(Time{1});
 
-    auto linear = make_node_with_name<BaseValue<double>>("Linear");
+    auto linear = make_node_with_name_as<BaseValue<double>>("Linear");
     CHECK(linear->value(zero_context()) == 0);
     CHECK(linear->value(one_context) == 1);
 

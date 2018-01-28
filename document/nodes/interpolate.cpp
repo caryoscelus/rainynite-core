@@ -94,7 +94,7 @@ public:
 
         // TODO: cache interpolate node
         auto node_name = interpolate_with_value<string>(ctx);
-        auto interpolate = make_node_with_name<AbstractNode>(node_name);
+        auto interpolate = make_node_with_name_as<AbstractNode>(node_name);
         auto interpolate_value = abstract_value_cast(interpolate);
         if (interpolate == nullptr)
             throw std::invalid_argument("Cannot make node named "+node_name);

@@ -30,7 +30,7 @@ shared_ptr<Context> zero_context() {
 }
 
 TEST_CASE("Test ToTypedList node", "[node]") {
-    auto ttlist = make_node_with_name<Node<vector<double>>>("ToTypedList/Real");
+    auto ttlist = make_node_with_name_as<Node<vector<double>>>("ToTypedList/Real");
     auto untyped = dynamic_cast<UntypedListValue*>(ttlist->get_property("source").get());
     CHECK(ttlist->value(zero_context()) == vector<double>{});
     untyped->push_back(make_value<double>(0.5));
