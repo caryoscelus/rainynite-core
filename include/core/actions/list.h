@@ -70,6 +70,40 @@ private:
     AbstractReference value;
 };
 
+
+class ListClear : public AtomicAction, public HasTree {
+    DOC_STRING("Clear list")
+
+public:
+    ListClear(TreePtr tree_, Index idx) :
+        HasTree(tree_),
+        path(tree_index_to_path(*no_null(tree_.lock()), idx))
+    {}
+
+    void redo_action() override {
+        if (auto list = tree()->get_node_as<AbstractListLinked>(path_to_index(path))) {
+            if (!list->is_editable_list())
+                return;
+            old_children = list->get_links();
+            list->clear_links();
+        }
+    }
+    void undo_action() override {
+        if (auto list = tree()->get_node_as<AbstractListLinked>(path_to_index(path))) {
+            // TODO
+            for (auto e : old_children) {
+                list->push_back(std::move(e));
+            }
+        }
+        old_children.clear();
+    }
+
+private:
+    NodeTreePath path;
+    vector<AbstractReference> old_children;
+};
+
+
 class ListInsertElement : public AtomicAction, protected HasTree {
     DOC_STRING("Insert list element")
 public:

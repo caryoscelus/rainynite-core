@@ -147,3 +147,23 @@ TEST_CASE("List", "[action,node]") {
     action_stack.redo();
     CHECK(list->value(zero_context()) == vector<double>{1});
 }
+
+TEST_CASE("List clear action", "[action,node]") {
+    ActionStack action_stack;
+    auto list = make_shared<ListValue<double>>();
+    auto tree = make_shared<NodeTree>(list);
+    auto list_index = tree->get_root_index();
+    REQUIRE(list->value(zero_context()) == vector<double>{});
+
+    action_stack.emplace<actions::ListPushNew>(tree, list_index);
+    CHECK(list->value(zero_context()) == vector<double>{0});
+
+    action_stack.emplace<actions::ListPushNew>(tree, list_index);
+    CHECK(list->value(zero_context()) == vector<double>{0, 0});
+
+    action_stack.emplace<actions::ListClear>(tree, list_index);
+    CHECK(list->value(zero_context()) == vector<double>{});
+
+    action_stack.undo();
+    CHECK(list->value(zero_context()) == vector<double>{0, 0});
+}
