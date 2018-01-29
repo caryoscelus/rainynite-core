@@ -1,6 +1,5 @@
-/*
- *  node_in_context.h - node in context
- *  Copyright (C) 2017 caryoscelus
+/*  node_in_context.h - node in context
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +20,7 @@
 
 #include <core/std/memory.h>
 #include <core/std/tuple.h>
+#include <core/std/any.h>
 
 namespace rainynite::core {
 
@@ -44,6 +44,13 @@ struct NodeInContext {
     using NicPair = pair<shared_ptr<AbstractValue>, shared_ptr<Context>>;
     operator NicPair() const {
         return { node, context };
+    }
+
+    any value() const;
+
+    template <typename T>
+    T value_as() const {
+        return any_cast<T>(value());
     }
 };
 

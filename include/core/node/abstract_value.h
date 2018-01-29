@@ -28,6 +28,7 @@
 #include "has_id.h"
 #include "abstract_list.h"
 #include "cast.h"
+#include "node_in_context.h"
 
 namespace rainynite::core {
 

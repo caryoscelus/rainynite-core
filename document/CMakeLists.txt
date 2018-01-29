@@ -22,6 +22,7 @@ target_sources(document
         node_tree.cpp
         node_tree_transform.cpp
         node/old_node.cpp
+        node/nic.cpp
 )
 
 set(ALL_NODES
