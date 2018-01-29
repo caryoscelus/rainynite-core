@@ -90,6 +90,7 @@ public:
                 this->changed();
             });
             this->changed();
+            link_change_signal();
         }
     }
     void push_back(AbstractReference value) override {
