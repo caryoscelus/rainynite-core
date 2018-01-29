@@ -14,3 +14,11 @@ _tests: !List/Boolean
     a: !Sin
       turns: 0.125
     b: 0.7071067811865475
+
+  - !Less/Real
+    a: 0.5
+    b: 22
+
+  - !Less/Real
+    a: *9d3bc775-5da7-420e-8c00-99f6ce6d7075
+    b: *ad60478a-99a8-4b53-bd89-5d27bb6c571c

@@ -27,8 +27,6 @@ namespace rainynite::core::nodes {
 
 namespace detail {
 
-using std::declval;
-
 template <typename Op, typename A>
 using has_operator_t = decltype(Op()(declval<A&>(), declval<A&>()));
 
@@ -38,11 +36,11 @@ template <typename Op, typename A>
 constexpr bool has_operator = is_detected_v<detail::has_operator_t, Op, A>;
 
 
-template <class T, template <typename> typename Op>
+template <typename R, typename T, template <typename> typename Op>
 class BinaryNode :
     public NewNode<
-        BinaryNode<T, Op>,
-        T,
+        BinaryNode<R, T, Op>,
+        R,
         types::Only<T>,
         types::Only<T>
     >
@@ -52,7 +50,7 @@ class BinaryNode :
     PROPERTY(a)
     PROPERTY(b)
 
-    T get(shared_ptr<Context> ctx) const override {
+    R get(shared_ptr<Context> ctx) const override {
         if constexpr (has_operator<Op<void>, T>) {
             return Op<void>()(a_value<T>(ctx), b_value<T>(ctx));
         } else {
@@ -62,12 +60,16 @@ class BinaryNode :
 };
 
 template <typename T>
-using Add = BinaryNode<T,std::plus>;
+using Add = BinaryNode<T,T,std::plus>;
 NODE_INFO_INSTANCES(Add, Add<T>, T)
 
 template <typename T>
-using Sub = BinaryNode<T,std::minus>;
+using Sub = BinaryNode<T,T,std::minus>;
 NODE_INFO_INSTANCES(Sub, Sub<T>, T)
+
+template <typename T>
+using Less = BinaryNode<bool,T,std::less>;
+NODE_INFO_INSTANCES(Less, Less<T>, bool)
 
 // template <typename T>
 // using Mul = BinaryNode<T,std::multiplies>;
