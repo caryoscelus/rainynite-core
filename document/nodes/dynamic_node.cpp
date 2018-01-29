@@ -21,6 +21,7 @@
 #include <core/node/node.h>
 #include <core/node/property.h>
 #include <core/node/proxy_node.h>
+#include <core/node/replace_context.h>
 #include <core/all_types.h>
 
 namespace rainynite::core::nodes {
@@ -66,52 +67,6 @@ private:
 
 NODE_INFO_TEMPLATE(DynamicNode, DynamicNode<T>, T);
 TYPE_INSTANCES(DynamicNodeNodeInfo)
-
-/**
- * Node that replaces context for its child node.
- *
- * Currently can only be used internally.
- */
-template <typename T>
-class ReplaceContextNode : public ProxyNode<T> {
-public:
-    ReplaceContextNode(NodeInContext nic_) :
-        nic(nic_)
-    {}
-
-    NodeInContext get_proxy(shared_ptr<Context> /*ctx*/) const override {
-        return nic;
-    }
-
-    AbstractReference get_property(string const& name) const override {
-        if (auto node = abstract_node_cast(nic.node))
-            return node->get_property(name);
-        throw NodeAccessError("no proxied property");
-    }
-
-private:
-    NodeInContext const nic;
-};
-
-struct ReplaceContextNodeFactory {
-    virtual shared_ptr<AbstractValue> operator()(NodeInContext nic) const = 0;
-};
-
-shared_ptr<AbstractValue> make_replace_context_node(Type type, NodeInContext nic) {
-    return class_init::type_info<ReplaceContextNodeFactory, shared_ptr<AbstractValue>>(type, nic);
-}
-
-template <typename T>
-struct ReplaceContextNodeFactoryImpl :
-    public ReplaceContextNodeFactory,
-    class_init::Registered<ReplaceContextNodeFactoryImpl<T>, T, ReplaceContextNodeFactory>
-{
-    shared_ptr<AbstractValue> operator()(NodeInContext nic) const override {
-        return make_shared<ReplaceContextNode<T>>(nic);
-    }
-};
-
-TYPE_INSTANCES(ReplaceContextNodeFactoryImpl)
 
 
 template <typename T>

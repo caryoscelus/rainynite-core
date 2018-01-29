@@ -15,12 +15,32 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node/abstract_value.h>
+#include <core/node/replace_context.h>
 
 namespace rainynite::core {
 
 any NodeInContext::value() const {
     return node->get_any(context);
+}
+
+struct ReplaceContextNodeFactory {
+    virtual shared_ptr<AbstractValue> operator()(NodeInContext nic) const = 0;
+};
+
+template <typename T>
+struct ReplaceContextNodeFactoryImpl :
+    public ReplaceContextNodeFactory,
+    class_init::Registered<ReplaceContextNodeFactoryImpl<T>, T, ReplaceContextNodeFactory>
+{
+    shared_ptr<AbstractValue> operator()(NodeInContext nic) const override {
+        return make_shared<ReplaceContextNode<T>>(nic);
+    }
+};
+
+TYPE_INSTANCES(ReplaceContextNodeFactoryImpl)
+
+shared_ptr<AbstractValue> make_replace_context_node(Type type, NodeInContext nic) {
+    return class_init::type_info<ReplaceContextNodeFactory, shared_ptr<AbstractValue>>(type, nic);
 }
 
 } // namespace rainynite::core
