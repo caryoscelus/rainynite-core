@@ -22,6 +22,17 @@ _tests: !List/Boolean
     b: 4
 
 
+  - !AllOf
+    source: !DynamicListZip/Boolean
+      node_type: Equal/Real
+      arguments_list: !UntypedListValue
+        - !ToUntypedList
+          source: *eb50ed4d-5021-45cc-b78b-0a31d1334824
+        - !ToUntypedList
+          source: !List/Real [0, 1, 2, 3, 4]
+
+
+
   - !Equal/Real
     a: !ListLinkCount
       source: &97413a12-0b5a-4963-8157-efba390d942e !NumericPeriodSequence

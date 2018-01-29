@@ -317,4 +317,34 @@ public:
 REGISTER_NODE(NumericPeriodSequence);
 
 
+class AllOf :
+    public NewNode<
+        AllOf,
+        bool,
+        types::Only<vector<bool>>
+    >
+{
+    DOC_STRING(
+        "Returns whether all of its children are true\n"
+        "\n"
+        "If any of children is not boolean or invalid node, returns false"
+    )
+
+    NODE_PROPERTIES("source")
+    COMPLEX_DEFAULT_VALUES(make_node<ListValue<bool>>())
+    PROPERTY(source)
+
+protected:
+    bool get(shared_ptr<Context> ctx) const override {
+        for (auto nic : p_source()->list_links(ctx)) {
+            if (!nic || !nic.value_as<bool>())
+                return false;
+        }
+        return true;
+    }
+};
+
+REGISTER_NODE(AllOf);
+
+
 } // namespace rainynite::core

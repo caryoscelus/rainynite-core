@@ -1,3 +1,5 @@
 --- !Document
 _tests: !List/Boolean
   - !Value/Boolean true
+  - !AllOf
+    []
