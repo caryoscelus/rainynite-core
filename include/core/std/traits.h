@@ -1,5 +1,5 @@
 /*  std/traits.h - re-import standard traits
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include <type_traits>
 #include <experimental/type_traits>
+#include <utility>
 
 namespace rainynite {
 
@@ -31,6 +32,8 @@ using std::experimental::is_base_of_v;
 
 using std::experimental::is_detected;
 using std::experimental::is_detected_v;
+
+using std::declval;
 
 } // namespace rainynite
 

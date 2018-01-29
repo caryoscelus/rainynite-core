@@ -19,29 +19,12 @@
 #include <core/node/new_node.h>
 #include <core/all_types.h>
 #include <core/context.h>
+#include <core/util/detect.h>
 
 namespace rainynite::core::nodes {
 
-namespace detail {
-
-using std::declval;
-
-template <typename A, typename B>
-using can_be_summed_t = decltype(declval<A&>() + declval<B&>());
-
-template <typename A, typename B>
-using can_be_multiplied_t = decltype(declval<A&>() * declval<B&>());
-
-}
-
-using std::experimental::is_detected_v;
-
-template <typename A, typename B>
-constexpr bool can_be_summed = is_detected_v<detail::can_be_summed_t, A, B>;
-
-template <typename A, typename B>
-constexpr bool can_be_multiplied = is_detected_v<detail::can_be_multiplied_t, A, B>;
-
+DETECT_HAS_OPERATOR_AB(can_be_summed, +);
+DETECT_HAS_OPERATOR_AB(can_be_multiplied, *);
 
 template <class T>
 class WeightedAverage :

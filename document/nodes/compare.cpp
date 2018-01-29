@@ -26,19 +26,13 @@
 #include <core/node/property.h>
 #include <core/node/new_node.h>
 #include <core/all_types.h>
+#include <core/util/detect.h>
 
 namespace rainynite::core::nodes {
 
 namespace detail {
 
-using std::declval;
-using std::experimental::is_detected_v;
-
-template <class C>
-using operator_eq_t = decltype(declval<C&>() == declval<C&>());
-
-template <class C>
-constexpr bool has_operator_eq = is_detected_v<operator_eq_t, C>;
+DETECT_HAS_OPERATOR_WITH_SELF(has_operator_eq, ==);
 
 } // namespace detail
 
