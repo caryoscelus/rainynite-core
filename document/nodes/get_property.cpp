@@ -16,6 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
 #include <core/node/cast.h>
 #include <core/all_types.h>
@@ -61,5 +62,44 @@ protected:
 };
 
 NODE_INFO_INSTANCES(GetProperty, GetProperty<T>, T)
+
+
+template <typename T>
+class PropertyBinaryOp :
+    public NewNode<
+        PropertyBinaryOp<T>,
+        T,
+        types::Any,
+        types::Any,
+        types::Only<T>,
+        types::Only<string>
+    >
+{
+    DOC_STRING(
+        "..."
+    )
+
+    NODE_PROPERTIES("a", "b", "op", "property_name")
+    COMPLEX_DEFAULT_VALUES(make_value<Nothing>(), make_value<Nothing>(), make_default_node<T>(), make_value<string>())
+    PROPERTY(a)
+    PROPERTY(b)
+    PROPERTY(op)
+    PROPERTY(property_name)
+
+protected:
+    T get(shared_ptr<Context> ctx) const override {
+        auto pname = property_name_value<string>(ctx);
+        auto a_prop = no_null(abstract_node_cast(p_a()))->get_property(pname);
+        auto b_prop = no_null(abstract_node_cast(p_b()))->get_property(pname);
+        auto op = shallow_copy(*p_op());
+        auto op_node = abstract_node_cast(op);
+        op_node->set_property("a", a_prop);
+        op_node->set_property("b", b_prop);
+        return any_cast<T>(op->get_any(ctx));
+    }
+};
+
+NODE_INFO_INSTANCES(PropertyBinaryOp, PropertyBinaryOp<T>, T)
+
 
 } // namespace rainynite::core::nodes
