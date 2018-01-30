@@ -1,0 +1,32 @@
+--- !Document
+
+_zdepth_sorted: &04747b9f-4e2b-44e1-8252-7e44ef4a5e42 !Sort/Renderable
+  source: !List/Renderable
+    - !Empty
+      _z_depth: !Value/Real 1
+    - !Empty
+      _z_depth: !Value/Real 3
+    - !Empty
+      _z_depth: !Value/Real 0.5
+  sort_by: !PropertyBinaryOp/Boolean
+    op: !Less/Real
+      {}
+    property_name: _z_depth
+
+_tests: !List/Boolean
+  - !Equal/Real
+    a: 0.5
+    b: !GetProperty/Real
+      source: !ListElement/Renderable
+        source: *04747b9f-4e2b-44e1-8252-7e44ef4a5e42
+        n: 0
+      property_name: _z_depth
+      proxied: true
+  - !Equal/Real
+    a: 3
+    b: !GetProperty/Real
+      source: !ListElement/Renderable
+        source: *04747b9f-4e2b-44e1-8252-7e44ef4a5e42
+        n: 2
+      property_name: _z_depth
+      proxied: true
