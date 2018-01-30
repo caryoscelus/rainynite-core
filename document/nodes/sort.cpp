@@ -34,6 +34,9 @@ class Sort :
         types::Only<bool>
     >
 {
+    DOC_STRING(
+        "Sort typed list with sorting node."
+    )
 
     NODE_PROPERTIES("source", "sort_by")
     COMPLEX_DEFAULT_VALUES(make_node<ListValue<T>>(), make_node_with_name("Less/"+get_primitive_type_name<T>()))
@@ -59,6 +62,11 @@ protected:
             }
         );
         return links;
+    }
+
+public:
+    size_t list_links_count(shared_ptr<Context> ctx) const noexcept override {
+        return p_source()->list_links_count(ctx);
     }
 };
 
