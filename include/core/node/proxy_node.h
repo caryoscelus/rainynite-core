@@ -30,7 +30,6 @@ namespace rainynite::core {
  *
  * Examples include various switch (e.g. Animated) and time-manipulating nodes.
  */
-template <typename T>
 class AbstractProxyNode {
 public:
     /**
@@ -40,7 +39,7 @@ public:
 };
 
 template <typename T>
-class ProxyNode : public Node<T>, public AbstractProxyNode<T> {
+class ProxyNode : public Node<T>, public AbstractProxyNode {
 protected:
     T get(shared_ptr<Context> ctx) const override {
         auto [node, nctx] = this->get_proxy(ctx);
@@ -58,7 +57,7 @@ protected:
 template <class Self, typename Result, typename... Ts>
 class NewProxyNode :
     public NewNode<Self, Result, Ts...>,
-    public AbstractProxyNode<Result>
+    public AbstractProxyNode
 {
 protected:
     Result get(shared_ptr<Context> ctx) const override {
