@@ -50,6 +50,7 @@ add_node_subset(animated
     animated.cpp
     frame_list.cpp
     interpolate.cpp
+    frame.cpp
 )
 
 add_node_subset(list
@@ -67,39 +68,47 @@ add_node_subset(string
     file_string.cpp
 )
 
-add_node_subset(misc
+add_node_subset(dynamic
     any_proxy.cpp
-    frame.cpp
-    bones.cpp
-    operators.cpp
-    time.cpp
-    time_period.cpp
     dynamic_node.cpp
+)
+
+add_node_subset(geom
     morph.cpp
-    color.cpp
-    color_mix.cpp
     follow_path.cpp
     path_xy.cpp
     extract_coord.cpp
     point_xy.cpp
     knot.cpp
     knot_list.cpp
+    rectangle.cpp
+    circle.cpp
+)
+
+add_node_subset(transform
+    affine.cpp
+    transform_composite.cpp
+    transform_path.cpp
+)
+
+add_node_subset(misc
+    bones.cpp
+    operators.cpp
+    time.cpp
+    time_period.cpp
+    color.cpp
+    color_mix.cpp
     shading.cpp
     linear.cpp
     truncate.cpp
     average.cpp
     math.cpp
     boolean.cpp
-    rectangle.cpp
-    circle.cpp
     compare.cpp
     conditional.cpp
     split_string.cpp
     random.cpp
     audio.cpp
-    affine.cpp
-    transform_composite.cpp
-    transform_path.cpp
     test/transform.cpp
     test/benchmark.cpp
 )
