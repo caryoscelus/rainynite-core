@@ -19,6 +19,7 @@
 
 #include <core/std/traits.h>
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/new_node.h>
 #include <core/all_types.h>
 #include <core/context.h>
@@ -46,7 +47,7 @@ class BinaryNode :
     >
 {
     NODE_PROPERTIES("a", "b")
-    DEFAULT_VALUES(T{}, T{})
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_default_node<T>())
     PROPERTY(a)
     PROPERTY(b)
 
