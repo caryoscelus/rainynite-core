@@ -1,0 +1,15 @@
+--- !Document
+
+_tests: !List/Boolean
+
+  - !AllOf
+    source: !DynamicListZip/Boolean
+      node_type: Equal/Real
+      arguments_list: !UntypedListValue
+        - !ToUntypedList
+          source: !Sort/Real
+            source: !List/Real [3.5, 4.0, 0.5, 2.0, 1.0]
+            sort_by: !Less/Real
+              {}
+        - !ToUntypedList
+          source: !List/Real [0.5, 1.0, 2.0, 3.5, 4.0]
