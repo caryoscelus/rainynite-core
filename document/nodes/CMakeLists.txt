@@ -55,6 +55,7 @@ add_node_subset(animated
 add_node_subset(list
     time_list.cpp
     list.cpp
+    sort.cpp
 )
 
 add_node_subset(string
