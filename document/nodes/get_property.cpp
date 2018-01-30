@@ -19,6 +19,7 @@
 #include <core/node/proxy_node.h>
 #include <core/node/cast.h>
 #include <core/all_types.h>
+#include <core/util/nullptr.h>
 
 namespace rainynite::core::nodes {
 
@@ -28,21 +29,29 @@ class GetProperty :
         GetProperty<T>,
         T,
         types::Any,
-        types::Only<string>
+        types::Only<string>,
+        types::Only<bool>
     >
 {
     DOC_STRING(
         "Extract property from its child"
     )
 
-    NODE_PROPERTIES("source", "property_name")
-    DEFAULT_VALUES(Nothing{}, string{})
+    NODE_PROPERTIES("source", "property_name", "proxied")
+    DEFAULT_VALUES(Nothing{}, string{}, false)
     PROPERTY(source)
     PROPERTY(property_name)
+    PROPERTY(proxied)
 
 protected:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
+        bool proxied = proxied_value<bool>(ctx);
         if (auto node = abstract_node_cast(p_source())) {
+            if (proxied) {
+                if (auto proxy_node = dynamic_cast<AbstractProxyNode*>(node.get()))
+                    node = no_null(abstract_node_cast(proxy_node->get_proxy(ctx).node));
+            }
+
             if (auto property_name = property_name_value<string>(ctx); !property_name.empty()) {
                 return {node->get_property(property_name), ctx};
             }

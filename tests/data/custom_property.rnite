@@ -7,3 +7,14 @@ _tests: !List/Boolean
         _hello: !Value/String "world"
       property_name: _hello
     b: !Value/String "world"
+
+  - !Equal/String
+    a: !GetProperty/String
+      source: !ListElement/Renderable
+        source: !List/Renderable
+          - !Empty
+            _hello: !Value/String "world"
+        n: 0
+      property_name: _hello
+      proxied: true
+    b: !Value/String "world"
