@@ -92,6 +92,7 @@ add_node_subset(transform
 )
 
 add_node_subset(misc
+    get_property.cpp
     bones.cpp
     operators.cpp
     time.cpp

@@ -1,0 +1,9 @@
+--- !Document
+
+_tests: !List/Boolean
+  - !Equal/String
+    a: !GetProperty/String
+      source: !Empty
+        _hello: !Value/String "world"
+      property_name: _hello
+    b: !Value/String "world"
