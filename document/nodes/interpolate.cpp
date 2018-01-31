@@ -114,10 +114,25 @@ public:
 
     void set_any_at(any const& value, shared_ptr<Context> ctx) override {
         auto time = ctx->get_time();
-        auto l = no_null(list_cast(p_keyframes()));
-        l->push_new();
-        auto frame = l->get_link(l->link_count()-1);
-        auto frame_node = no_null(abstract_node_cast(frame));
+        auto keyframes = no_null(p_keyframes());
+        auto links = keyframes->list_links(ctx);
+        auto target_frame = std::find_if(
+            links.begin(),
+            links.end(),
+            [time](auto const& nic) {
+                auto node = no_null(abstract_node_cast(nic.node))->get_property("time");
+                return time == node->template get_any_as<Time>(nic.context);
+            }
+        );
+        shared_ptr<AbstractNode> frame_node;
+        if (target_frame != links.end()) {
+            frame_node = no_null(abstract_node_cast(target_frame->node));
+        } else {
+            auto l = no_null(list_cast(keyframes));
+            l->push_new();
+            auto frame = l->get_link(l->link_count()-1);
+            frame_node = no_null(abstract_node_cast(frame));
+        }
         frame_node->get_property("time")->set_any(time);
         frame_node->get_property("value")->set_any(value);
     }
