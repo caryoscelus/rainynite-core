@@ -82,7 +82,13 @@ public:
      * single type and derive from BaseValue, they don't have to have custom
      * implementation of this function.
      */
-    virtual any get_any(shared_ptr<Context> context) const noexcept = 0;
+    virtual any get_any(shared_ptr<Context> ctx) const noexcept = 0;
+
+    /// Shortcut for any_cast<T>(get_any(..))
+    template <typename T>
+    T get_any_as(shared_ptr<Context> ctx) const {
+        return any_cast<T>(get_any(ctx));
+    }
 
     /// Set any value, if supported; throw error otherwise
     virtual void set_any(any const& /*value*/) {
