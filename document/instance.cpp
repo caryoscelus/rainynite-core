@@ -164,11 +164,10 @@ REGISTER_NODE(UntypedListValue);
 namespace serialize {
 
 template <class T>
-class AutoValueToString :
+struct AutoValueToString :
     public ValueToString,
     class_init::Registered<AutoValueToString<T>, T, ValueToString>
 {
-public:
     string operator()(any const& object) const override {
         auto value = any_cast<T>(object);
         std::ostringstream stream;
@@ -178,11 +177,10 @@ public:
 };
 
 template <class T, char const* fmt_string>
-class FormatValueToString :
+struct FormatValueToString :
     public ValueToString,
     class_init::Registered<FormatValueToString<T, fmt_string>, T, ValueToString>
 {
-public:
     string operator()(any const& object) const override {
         auto value = any_cast<T>(object);
         return fmt::format(fmt_string, value);
