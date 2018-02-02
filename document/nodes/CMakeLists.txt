@@ -16,23 +16,25 @@ set(ALL_NODE_SUBSETS)
 
 function(add_node_subset name)
     option("BUILD_${name}_NODES" "Build ${name} node subset?" ON)
-    add_library("nodes_${name}" SHARED)
-    target_link_libraries("nodes_${name}" document)
-    if (BUILD_NODES)
-        if (NODES_SCU)
-            make_single_compile_unit("nodes_${name}.cpp" "${ARGN}")
-            target_sources("nodes_${name}" PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/nodes_${name}.cpp")
-        else()
-            target_sources("nodes_${name}" PRIVATE ${ARGN})
+    if (BUILD_${name}_NODES)
+        add_library("nodes_${name}" SHARED)
+        target_link_libraries("nodes_${name}" document)
+        if (BUILD_NODES)
+            if (NODES_SCU)
+                make_single_compile_unit("nodes_${name}.cpp" "${ARGN}")
+                target_sources("nodes_${name}" PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/nodes_${name}.cpp")
+            else()
+                target_sources("nodes_${name}" PRIVATE ${ARGN})
+            endif()
         endif()
+        target_link_libraries(nodes "nodes_${name}")
+        install(
+            TARGETS "nodes_${name}"
+            EXPORT rainynite_core
+            LIBRARY DESTINATION lib/rainynite/
+            ARCHIVE DESTINATION lib/rainynite/
+        )
     endif()
-    target_link_libraries(nodes "nodes_${name}")
-    install(
-        TARGETS "nodes_${name}"
-        EXPORT rainynite_core
-        LIBRARY DESTINATION lib/rainynite/
-        ARCHIVE DESTINATION lib/rainynite/
-    )
 endfunction()
 
 set(RENDERABLE_SOURCES
