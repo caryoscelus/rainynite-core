@@ -18,26 +18,33 @@
 #include <cmath>
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 namespace rainynite::core::nodes {
 
-class Truncate : public Node<double> {
-public:
-    Truncate() {
-        init<double>(source, 0);
-    }
+class Truncate :
+    public NewNode<
+        Truncate,
+        double,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Get integer part of real (round towards 0)"
+    )
+
+    NODE_PROPERTIES("source")
+    DEFAULT_VALUES(0.0)
+
+    PROPERTY(source)
+
 protected:
     double get(shared_ptr<Context> ctx) const override {
-        auto v = get_source()->value(ctx);
+        auto v = source_value<double>(ctx);
         double r;
         std::modf(v, &r);
         return r;
     }
-
-private:
-    NODE_PROPERTY(source, double);
 };
 
 REGISTER_NODE(Truncate);
