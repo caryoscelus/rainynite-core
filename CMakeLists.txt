@@ -25,8 +25,11 @@ find_package(morphing REQUIRED)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-enable_testing()
-add_subdirectory(tests)
+option(RN_CORE_TESTS "Build RainyNite core tests" ON)
+if (RN_CORE_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 add_subdirectory(log)
 add_subdirectory(os)
