@@ -38,16 +38,15 @@ function(add_node_subset name)
     endif()
 endfunction()
 
-set(RENDERABLE_SOURCES
+add_node_subset(renderable
     renderable/composite.cpp
     renderable/image.cpp
     renderable/transform.cpp
     renderable/text.cpp
     renderable/render_shape.cpp
     renderable/svg.cpp
+    audio.cpp
 )
-
-add_node_subset(renderable ${RENDERABLE_SOURCES})
 
 add_node_subset(animated
     animated.cpp
@@ -69,6 +68,7 @@ add_node_subset(string
     to_string.cpp
     color_string.cpp
     file_string.cpp
+    split_string.cpp
 )
 
 add_node_subset(dynamic
@@ -118,9 +118,7 @@ add_node_subset(misc
     math.cpp
     compare.cpp
     conditional.cpp
-    split_string.cpp
     random.cpp
-    audio.cpp
 )
 
 install(
