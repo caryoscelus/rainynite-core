@@ -28,8 +28,7 @@ private RegisterNodeByType<Self>
 
 #define NODE_INFO_TEMPLATE(Name, Node, NodeType) \
 template <typename T> \
-class Name##NodeInfo : NODE_INFO_PARENTS(Name##NodeInfo<T>, Node) { \
-public: \
+struct Name##NodeInfo : NODE_INFO_PARENTS(Name##NodeInfo<T>, Node) { \
     string name() const override { \
         return #Name"/"+get_primitive_type_name<T>(); \
     } \
@@ -45,9 +44,7 @@ public: \
 }
 
 #define REGISTER_NODE_NAMED(Node, NodeNodeInfo, _name) \
-class NodeNodeInfo : NODE_INFO_PARENTS(NodeNodeInfo, Node) \
-{ \
-public: \
+struct NodeNodeInfo : NODE_INFO_PARENTS(NodeNodeInfo, Node) { \
     string name() const override { \
         return _name; \
     } \
