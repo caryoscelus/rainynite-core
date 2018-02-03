@@ -1,5 +1,5 @@
 /*  shading.cpp - shading-related nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,37 +16,39 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/proxy_node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/shading.h>
 
 namespace rainynite::core::nodes {
 
-class ShadingStyle : public Node<Shading> {
+class ShadingStyle :
+    public NewNode<
+        ShadingStyle,
+        Shading,
+        types::Only<colors::Color>,
+        types::Only<colors::Color>,
+        types::Only<double>
+    >
+{
     DOC_STRING(
         "Shading style."
     )
 
-public:
-    ShadingStyle() {
-        init<colors::Color>(fill_color, {});
-        init<colors::Color>(line_color, {});
-        init<double>(line_width, 1.0);
-    }
+    NODE_PROPERTIES("fill_color", "line_color", "line_width")
+    DEFAULT_VALUES(colors::Color{}, colors::Color{}, 1.0)
+    PROPERTY(fill_color)
+    PROPERTY(line_color)
+    PROPERTY(line_width)
 
+protected:
     Shading get(shared_ptr<Context> ctx) const override {
         return {
-            get_fill_color()->value(ctx),
-            get_line_color()->value(ctx),
-            get_line_width()->value(ctx),
+            fill_color_value<colors::Color>(ctx),
+            line_color_value<colors::Color>(ctx),
+            line_width_value<double>(ctx),
             ""
         };
     }
-
-private:
-    NODE_PROPERTY(fill_color, colors::Color);
-    NODE_PROPERTY(line_color, colors::Color);
-    NODE_PROPERTY(line_width, double);
 };
 
 REGISTER_NODE(ShadingStyle);

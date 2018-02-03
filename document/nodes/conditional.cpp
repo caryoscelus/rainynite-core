@@ -16,36 +16,40 @@
  */
 
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
-#include <core/node/property.h>
 #include <core/all_types.h>
 
 namespace rainynite::core::nodes {
 
 template <typename T>
-class IfElse : public ProxyNode<T> {
+class IfElse :
+    public NewProxyNode<
+        IfElse<T>,
+        T,
+        types::Only<bool>,
+        types::Only<T>,
+        types::Only<T>
+    >
+{
     DOC_STRING(
         "Node that takes value of one of its children based on condition."
     )
-public:
-    IfElse() {
-        this->template init<bool>(condition, {});
-        this->template init<T>(on_true, {});
-        this->template init<T>(on_false, {});
-    }
+
+    NODE_PROPERTIES("condition", "on_true", "on_false")
+    COMPLEX_DEFAULT_VALUES(make_value<bool>(), make_default_node<T>(), make_default_node<T>())
+    PROPERTY(condition)
+    PROPERTY(on_true)
+    PROPERTY(on_false)
+
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        if (get_condition()->value(ctx)) {
-            return { get_on_true(), ctx };
+        if (condition_value<bool>(ctx)) {
+            return { p_on_true(), ctx };
         } else {
-            return { get_on_false(), ctx };
+            return { p_on_false(), ctx };
         }
     }
-
-private:
-    NODE_PROPERTY(condition, bool);
-    NODE_PROPERTY(on_true, T);
-    NODE_PROPERTY(on_false, T);
 };
 
 NODE_INFO_TEMPLATE(IfElse, IfElse<T>, T);

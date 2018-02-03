@@ -20,29 +20,32 @@
 #include <boost/math/constants/constants.hpp>
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
 #include <core/node/new_node.h>
-#include <core/node/property.h>
 
 using boost::math::double_constants::pi;
 
 namespace rainynite::core::nodes {
 
-class Multiply : public Node<double> {
-public:
-    Multiply() {
-        init<double>(a, 0);
-        init<double>(b, 0);
-    }
+
+class Multiply :
+    public NewNode<
+        Multiply,
+        double,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    NODE_PROPERTIES("a", "b")
+    DEFAULT_VALUES(0.0, 0.0)
+    PROPERTY(a)
+    PROPERTY(b)
+
 protected:
     double get(shared_ptr<Context> ctx) const override {
-        return get_a()->value(ctx) * get_b()->value(ctx);
+        return a_value<double>(ctx) * b_value<double>(ctx);
     }
-
-private:
-    NODE_PROPERTY(a, double);
-    NODE_PROPERTY(b, double);
 };
+
 REGISTER_NODE(Multiply);
 
 
@@ -76,19 +79,26 @@ protected:
 REGISTER_NODE(Mod);
 
 
-class Sin : public Node<double> {
-public:
-    Sin() {
-        init<double>(turns, 0);
-    }
+class Sin :
+    public NewNode<
+        Sin,
+        double,
+        types::Only<double>
+    >
+{
+    DOC_STRING("Sinus (angle in turns!)")
+
+    NODE_PROPERTIES("turns")
+    DEFAULT_VALUES(0.0)
+    PROPERTY(turns)
+
 protected:
     double get(shared_ptr<Context> ctx) const override {
-        return std::sin(get_turns()->value(ctx) * pi * 2);
+        return std::sin(turns_value<double>(ctx) * pi * 2);
     }
-
-private:
-    NODE_PROPERTY(turns, double);
 };
+
 REGISTER_NODE(Sin);
+
 
 } // namespace rainynite::core::nodes

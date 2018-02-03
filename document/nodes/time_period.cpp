@@ -1,5 +1,5 @@
 /*  time_period.cpp - TimePeriod related nodes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,53 +16,62 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/time/period.h>
 
 namespace rainynite::core::nodes {
 
-class CompositeTimePeriod : public Node<TimePeriod> {
+class CompositeTimePeriod :
+    public NewNode<
+        CompositeTimePeriod,
+        TimePeriod,
+        types::Only<Time>,
+        types::Only<Time>
+    >
+{
     DOC_STRING(
         "Construct time period from starting and one-past-last point."
     )
-public:
-    CompositeTimePeriod() {
-        init<Time>(first, {});
-        init<Time>(last, {});
-    }
 
+    NODE_PROPERTIES("first", "last")
+    DEFAULT_VALUES(Time{}, Time{})
+    PROPERTY(first)
+    PROPERTY(last)
+
+protected:
     TimePeriod get(shared_ptr<Context> ctx) const override {
-        return {get_first()->value(ctx), get_last()->value(ctx)};
+        return {first_value<Time>(ctx), last_value<Time>(ctx)};
     }
-
-private:
-    NODE_PROPERTY(first, Time);
-    NODE_PROPERTY(last, Time);
 };
 
 REGISTER_NODE(CompositeTimePeriod);
 
-class SizedTimePeriod : public Node<TimePeriod> {
+
+class SizedTimePeriod :
+    public NewNode<
+        SizedTimePeriod,
+        TimePeriod,
+        types::Only<Time>,
+        types::Only<Time>
+    >
+{
     DOC_STRING(
         "Construct time period from starting point and length."
     )
-public:
-    SizedTimePeriod() {
-        init<Time>(first, {});
-        init<Time>(length, {});
-    }
 
+    NODE_PROPERTIES("first", "length")
+    DEFAULT_VALUES(Time{}, Time{})
+    PROPERTY(first)
+    PROPERTY(length)
+
+protected:
     TimePeriod get(shared_ptr<Context> ctx) const override {
-        auto first = get_first()->value(ctx);
-        return {first, first+get_length()->value(ctx)};
+        auto first = first_value<Time>(ctx);
+        return {first, first + length_value<Time>(ctx)};
     }
-
-private:
-    NODE_PROPERTY(first, Time);
-    NODE_PROPERTY(length, Time);
 };
 
 REGISTER_NODE(SizedTimePeriod);
+
 
 } // namespace rainynite::core::nodes

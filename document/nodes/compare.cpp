@@ -23,7 +23,6 @@
 #include <core/node_info/macros.h>
 #include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
-#include <core/node/property.h>
 #include <core/node/new_node.h>
 #include <core/all_types.h>
 #include <core/util/detect.h>
@@ -68,31 +67,31 @@ NODE_INFO_TEMPLATE(Equal, Equal<T>, bool);
 TYPE_INSTANCES(EqualNodeInfo)
 
 
-class FuzzyEqual : public Node<bool> {
+class FuzzyEqual :
+    public NewNode<
+        FuzzyEqual,
+        bool,
+        types::Only<double>,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
     DOC_STRING(
         "Return whether two real numbers are equal within error margin"
     )
 
-private:
-    static constexpr const double DEFAULT_EPS = std::numeric_limits<double>::epsilon()*16;
+    NODE_PROPERTIES("a", "b", "relative_eps")
+    DEFAULT_VALUES(0.0, 0.0, std::numeric_limits<double>::epsilon()*16)
+    PROPERTY(a)
+    PROPERTY(b)
+    PROPERTY(relative_eps)
 
-public:
-    FuzzyEqual() {
-        init<double>(a, 0);
-        init<double>(b, 0);
-        init<double>(relative_eps, DEFAULT_EPS);
-    }
-
+protected:
     bool get(shared_ptr<Context> ctx) const override {
         using boost::math::relative_difference;
-        auto diff = relative_difference(get_a()->value(ctx), get_b()->value(ctx));
-        return diff < get_relative_eps()->value(ctx);
+        auto diff = relative_difference(a_value<double>(ctx), b_value<double>(ctx));
+        return diff < relative_eps_value<double>(ctx);
     }
-
-private:
-    NODE_PROPERTY(a, double);
-    NODE_PROPERTY(b, double);
-    NODE_PROPERTY(relative_eps, double);
 };
 
 REGISTER_NODE(FuzzyEqual);
