@@ -21,6 +21,8 @@
 #include <istream>
 
 #include <core/std/memory.h>
+#include <core/util/class_init.h>
+#include <core/abstract_factory.h>
 
 namespace rainynite::core {
 
@@ -33,7 +35,35 @@ class DocumentReader {
 public:
     virtual ~DocumentReader() = default;
     virtual shared_ptr<AbstractDocument> read_document(std::istream& input) = 0;
+
+    shared_ptr<AbstractDocument> try_load(std::istream& input) {
+        try {
+            return read_document(input);
+        } catch (std::exception const& ex) {
+            // TODO
+        } catch (...) {
+            // TODO
+        }
+        return nullptr;
+    }
 };
+
+#define FILTER_READ(Self) \
+    public DocumentReader, \
+    private class_init::StringRegistered< \
+        Self, \
+        DocumentReader \
+    >
+
+#define FILTER_NAME(_name) \
+public: \
+    static string name() { \
+        return _name; \
+    }
+
+inline map<string, DocumentReader*> const& all_read_filters() {
+    return class_init::string_registry<DocumentReader>();
+}
 
 } // namespace rainynite::core
 
