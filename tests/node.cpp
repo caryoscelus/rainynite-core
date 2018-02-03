@@ -23,9 +23,8 @@
 
 #include <core/node_info/node_info.h>
 #include <core/node_info/copy.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
 #include <core/node/traverse.h>
+#include <core/node/list.h>
 #include <core/context.h>
 
 #include "new_node.h"
@@ -35,69 +34,6 @@ using namespace rainynite;
 using namespace rainynite::core;
 
 using Real = double;
-template <typename T>
-using List = vector<T>;
-
-class Sum : public Node<Real> {
-public:
-    Sum() {
-        init<List<Real>>(list, {});
-    }
-protected:
-    Real get(shared_ptr<Context> context) const override {
-        auto list = get_list()->value(context);
-        Real result = 0;
-        for (auto const& x : list)
-            result += x;
-        return result;
-    }
-
-    NODE_PROPERTY(list, List<Real>);
-};
-
-TEST_CASE("Sum Node", "[node]") {
-    auto list = make_value<List<Real>>();
-    auto sum = make_shared<Sum>();
-    CHECK(sum->value(zero_context()) == 0.0);
-    sum->set_property("list", list);
-    CHECK(sum->value(zero_context()) == 0.0);
-    list->mod().push_back(1.0);
-    CHECK(sum->value(zero_context()) == 1.0);
-    list->mod().push_back(4.0);
-    CHECK(sum->value(zero_context()) == 5.0);
-}
-
-class SumNode : public Node<Real> {
-public:
-    SumNode() {
-        init<List<shared_ptr<BaseValue<Real>>>>(list, {});
-    }
-protected:
-    Real get(shared_ptr<Context> context) const override {
-        auto list = get_list()->value(context);
-        Real result = 0;
-        for (auto x : list)
-            result += x->value(context);
-        return result;
-    }
-
-    NODE_PROPERTY(list, List<shared_ptr<BaseValue<Real>>>);
-};
-
-TEST_CASE("Real node sum", "[node]") {
-    auto list = make_value<List<shared_ptr<BaseValue<Real>>>>();
-    auto sum = make_shared<SumNode>();
-    CHECK(sum->value(zero_context()) == 0.0);
-    sum->set_property("list", list);
-    CHECK(sum->value(zero_context()) == 0.0);
-    auto one = make_value<Real>(1.0);
-    list->mod().push_back(one);
-    CHECK(sum->value(zero_context()) == 1.0);
-    list->mod().push_back(one);
-    CHECK(sum->value(zero_context()) == 2.0);
-    one->set(3.0);
-    CHECK(sum->value(zero_context()) == 6.0);
-}
 
 string value_to_string(AbstractReference node) {
     if (node->get_type() == typeid(Real)) {
