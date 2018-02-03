@@ -18,8 +18,11 @@
 #ifndef CORE_WRITER_H_1930A317_8931_59EA_BFA9_58717ED304F7
 #define CORE_WRITER_H_1930A317_8931_59EA_BFA9_58717ED304F7
 
-#include <core/std/memory.h>
 #include <ostream>
+
+#include <core/std/memory.h>
+#include <core/util/class_init.h>
+#include <core/abstract_factory.h>
 
 namespace rainynite::core {
 
@@ -32,6 +35,23 @@ class DocumentWriter {
 public:
     virtual void write_document(std::ostream& output, shared_ptr<AbstractDocument> document) = 0;
 };
+
+#define FILTER_WRITE(Self) \
+    public DocumentWriter, \
+    private class_init::StringRegistered< \
+        Self, \
+        DocumentWriter \
+    >
+
+#define FILTER_NAME(_name) \
+public: \
+    static string name() { \
+        return _name; \
+    }
+
+inline map<string, DocumentWriter*> const& all_write_filters() {
+    return class_init::string_registry<DocumentWriter>();
+}
 
 } // namespace rainynite::core
 
