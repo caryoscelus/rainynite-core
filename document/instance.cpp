@@ -191,7 +191,7 @@ TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(AutoValueToString)
 
 #define FORMAT_VALUE_SERIALIZE(Type, fmt_string) \
 static char const Type##_format_string[] = fmt_string; \
-template class FormatValueToString<Type, Type##_format_string>;
+template struct FormatValueToString<Type, Type##_format_string>;
 
 FORMAT_VALUE_SERIALIZE(bool, "{}")
 
