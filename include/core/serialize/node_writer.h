@@ -1,5 +1,5 @@
 /*  serialize/node_writer.h - node writer implementation
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -77,10 +77,6 @@ public:
         if (!object)
             throw SerializationError("Received null pointer.");
         return object;
-    }
-
-    static string id_to_string(AbstractReference id) {
-        return to_string(id->get_id());
     }
 
     static string get_type(AbstractReference object) {

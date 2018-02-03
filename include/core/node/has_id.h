@@ -1,5 +1,5 @@
 /*  has_id.h - template for entities with Id
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,11 @@ private:
 
 template <typename Id, typename G>
 string id_to_string(HasId<Id, G> const& has_id) {
-    return to_string(has_id.get_id());
+    if constexpr (is_same_v<Id, string>) {
+        return has_id.get_id();
+    } else {
+        return to_string(has_id.get_id());
+    }
 }
 
 } // namespace rainynite::core
