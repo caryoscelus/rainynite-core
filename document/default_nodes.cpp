@@ -19,7 +19,7 @@
 #include <core/node/value.h>
 #include <core/all_types.h>
 #include <core/audio.h>
-#include <core/renderable.h>
+#include <core/renderable_node.h>
 
 namespace rainynite::core {
 

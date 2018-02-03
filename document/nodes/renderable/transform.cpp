@@ -1,5 +1,5 @@
 /*  transform.cpp - apply affine transformation to renderable
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,27 +15,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
+#include <core/renderable_node.h>
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 
 #include <2geom/affine.h>
 
 namespace rainynite::core::nodes {
 
-class Transform : public RenderableNode {
+class Transform :
+    public RenderableNode<
+        Transform,
+        types::Only<Renderable>,
+        types::Only<Geom::Affine>
+    >
+{
     DOC_STRING(
         "Apply affine transformation to renderable node."
     )
 
-public:
-    Transform() {
-        init<Renderable>(source, {});
-        init<Geom::Affine>(transform, {});
-    }
-
-private:
-    NODE_PROPERTY(source, Renderable);
-    NODE_PROPERTY(transform, Geom::Affine);
+    NODE_PROPERTIES("source", "transform")
+    COMPLEX_DEFAULT_VALUES(make_default_node<Renderable>(), make_value<Geom::Affine>());
+    PROPERTY(source)
+    PROPERTY(transform)
 };
 
 REGISTER_NODE(Transform);

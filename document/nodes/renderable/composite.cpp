@@ -1,5 +1,5 @@
 /*  composite.cpp - Simple composite render node
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,12 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
+#include <core/renderable_node.h>
+#include <core/node/list.h>
 #include <core/node_info/macros.h>
 
 namespace rainynite::core::nodes {
 
-class Composite : public RenderableNode {
+class Composite :
+    public RenderableNode<
+        Composite,
+        types::Only<vector<Renderable>>
+    >
+{
     DOC_STRING(
         "Composite list of renderables on top of each other.\n"
         "\n"
@@ -28,20 +34,17 @@ class Composite : public RenderableNode {
         "approach where each \"Layer\" uses its own composite mode."
     )
 
-public:
-    Composite() {
-        init_list<Renderable>(layers);
-    }
+    NODE_PROPERTIES("layers")
+    COMPLEX_DEFAULT_VALUES(make_node<ListValue<Renderable>>())
+    PROPERTY(layers)
 
+public:
     bool can_set_source(shared_ptr<AbstractValue> src) const override {
         return src->get_type() == this->get_type();
     }
     void set_source(shared_ptr<AbstractValue> src) override {
-        dynamic_cast<AbstractListLinked*>(get_layers().get())->push_back(src);
+        dynamic_cast<AbstractListLinked*>(p_layers().get())->push_back(src);
     }
-
-private:
-    NODE_LIST_PROPERTY(layers, Renderable);
 };
 
 REGISTER_NODE(Composite);

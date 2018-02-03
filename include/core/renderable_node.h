@@ -1,4 +1,4 @@
-/*  renderable.h - renderable type
+/*  renderable_node.h - renderable node & Empty
  *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,42 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_RENDERABLE_H_0A68F741_3D2C_5985_89F7_AEABEADCA11B
-#define CORE_RENDERABLE_H_0A68F741_3D2C_5985_89F7_AEABEADCA11B
+#ifndef CORE_RENDERABLE_NODE_H_1EC6DC54_CD77_51B1_B90F_EAE99727BE6D
+#define CORE_RENDERABLE_NODE_H_1EC6DC54_CD77_51B1_B90F_EAE99727BE6D
+
+#include <core/node/new_node.h>
+#include "renderable.h"
 
 namespace rainynite::core {
 
 /**
- * "Tag" type which is used to identify renderable nodes.
+ * Base class for all renderable nodes.
  *
- * The idea is that there are renderable nodes, but instead of returning
- * some real render result object they simply hold info that can be used
- * by renderer.
+ * Since Renderable is only tag class, the point of this base class
+ * is to provide empty get() override.
  */
-struct Renderable final {};
+template <class Self, typename... Ts>
+class RenderableNode :
+    public NewNode<
+        Self,
+        Renderable,
+        Ts...
+    >
+{
+protected:
+    Renderable get(shared_ptr<Context> /*ctx*/) const override {
+        return {};
+    }
+};
+
+class Empty : public RenderableNode<Empty> {
+    DOC_STRING(
+        "Empty renderable"
+    )
+
+    NODE_PROPERTIES()
+    DEFAULT_VALUES()
+};
 
 } // namespace rainynite::core
 

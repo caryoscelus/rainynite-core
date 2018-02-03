@@ -15,23 +15,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
+#include <core/renderable_node.h>
 #include <core/node_info/macros.h>
 
 #include <2geom/point.h>
 
 namespace rainynite::core::nodes {
 
-class Image : public RenderableNode {
-public:
-    Image() {
-        init<string>(file_path, "");
-        init<Geom::Point>(size, {0, 0});
-    }
+class Image :
+    public RenderableNode<
+        Image,
+        types::Only<string>,
+        types::Only<Geom::Point>
+    >
+{
+    DOC_STRING(
+        ""
+    )
 
-private:
-    NODE_PROPERTY(file_path, string);
-    NODE_PROPERTY(size, Geom::Point);
+    NODE_PROPERTIES("file_path", "size")
+    DEFAULT_VALUES(string{}, Geom::Point{})
+    PROPERTY(file_path)
+    PROPERTY(size)
 };
 
 REGISTER_NODE(Image);

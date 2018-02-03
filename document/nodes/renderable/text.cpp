@@ -15,24 +15,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/renderable.h>
+#include <core/renderable_node.h>
 #include <core/node_info/macros.h>
 #include <core/color/color.h>
 
 namespace rainynite::core::nodes {
 
-class Text : public RenderableNode {
-public:
-    Text() {
-        init<string>(text, "");
-        init<colors::Color>(color, {});
-        init<double>(size, 0);
-    }
+class Text :
+    public RenderableNode<
+        Text,
+        types::Only<string>,
+        types::Only<colors::Color>,
+        types::Only<double>
+    >
+{
+    DOC_STRING("Render text")
 
-private:
-    NODE_PROPERTY(text, string);
-    NODE_PROPERTY(color, colors::Color);
-    NODE_PROPERTY(size, double);
+    NODE_PROPERTIES("text", "color", "size")
+    DEFAULT_VALUES(string{}, colors::Color{}, 1.0)
+
+    PROPERTY(text)
+    PROPERTY(color)
+    PROPERTY(size)
 };
 
 REGISTER_NODE(Text);

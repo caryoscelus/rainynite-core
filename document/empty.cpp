@@ -16,7 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/renderable.h>
+#include <core/renderable_node.h>
 #include <core/audio.h>
 
 namespace rainynite::core::nodes {
