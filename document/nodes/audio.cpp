@@ -16,25 +16,20 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
-#include <core/audio.h>
+#include <core/audio_node.h>
 
 namespace rainynite::core::nodes {
 
-class AudioFromFile : public AudioNode {
+class AudioFromFile : public AudioNode<AudioFromFile, types::Only<string>> {
     DOC_STRING(
         "Play audio from file.\n"
         "\n"
         "File format support depends on rendering engine."
     )
-public:
-    AudioFromFile() {
-        init<string>(file_path, "");
-    }
 
-private:
-    NODE_PROPERTY(file_path, string);
+    NODE_PROPERTIES("file_path")
+    DEFAULT_VALUES(string{})
+    PROPERTY(file_path)
 };
 
 REGISTER_NODE(AudioFromFile);

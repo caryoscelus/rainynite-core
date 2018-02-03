@@ -18,30 +18,12 @@
 #ifndef CORE_AUDIO_H_6CA600AC_1164_59FE_970D_71C6FFA80A22
 #define CORE_AUDIO_H_6CA600AC_1164_59FE_970D_71C6FFA80A22
 
-#include <core/node/node.h>
-
 namespace rainynite::core {
 
 /**
  * Abstract audio tag type.
  */
 struct Audio final {};
-
-class AudioNode : public Node<Audio> {
-protected:
-    Audio get(shared_ptr<Context> /*ctx*/) const override {
-        return {};
-    }
-};
-
-class EmptyAudio : public AudioNode {
-    DOC_STRING(
-        "Empty audio node"
-    )
-public:
-    EmptyAudio() {
-    }
-};
 
 } // namespace rainynite::core
 

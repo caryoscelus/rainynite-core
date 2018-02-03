@@ -1,5 +1,5 @@
-/*  default_nodes.cpp - default nodes list
- *  Copyright (C) 2018 caryoscelus
+/*  audio_node.h - abstract audio node & EmptyAudio
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,21 +15,37 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/node_info/default_node.h>
-#include <core/node/value.h>
-#include <core/all_types.h>
-#include <core/audio_node.h>
-#include <core/renderable_node.h>
+#ifndef CORE_AUDIO_NODE_H_81DB1E03_889B_54B4_9103_4097AAD6DBD1
+#define CORE_AUDIO_NODE_H_81DB1E03_889B_54B4_9103_4097AAD6DBD1
+
+#include <core/node/new_node.h>
+#include "audio.h"
 
 namespace rainynite::core {
 
-template <typename T>
-struct DefaultNodeInfoValue : public DefaultNodeInfoImpl<T, Value<T>> {
+template <class Self, typename... Args>
+class AudioNode :
+    public NewNode<
+        Self,
+        Audio,
+        Args...
+    >
+{
+protected:
+    Audio get(shared_ptr<Context> /*ctx*/) const override {
+        return {};
+    }
 };
 
-TYPE_INSTANCES_WO_RENDERABLE(DefaultNodeInfoValue)
+class EmptyAudio : public AudioNode<EmptyAudio> {
+    DOC_STRING(
+        "Empty audio node"
+    )
 
-template struct DefaultNodeInfoImpl<Renderable, Empty>;
-template struct DefaultNodeInfoImpl<Audio, EmptyAudio>;
+    NODE_PROPERTIES()
+    DEFAULT_VALUES()
+};
 
 } // namespace rainynite::core
+
+#endif
