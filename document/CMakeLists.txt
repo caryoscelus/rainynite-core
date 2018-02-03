@@ -4,6 +4,7 @@ target_sources(document
     PRIVATE
         context.cpp
         document.cpp
+        document_loader.cpp
         instance.cpp
         default_nodes.cpp
         empty.cpp
@@ -18,7 +19,7 @@ target_sources(document
         node/nic.cpp
 )
 
-target_link_libraries(document log morphing fmt time)
+target_link_libraries(document log morphing fmt time stdc++fs)
 
 add_subdirectory(nodes)
 
