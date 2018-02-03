@@ -118,6 +118,9 @@ add_node_subset(misc
     math.cpp
     compare.cpp
     conditional.cpp
+)
+
+add_node_subset(random
     random.cpp
 )
 
