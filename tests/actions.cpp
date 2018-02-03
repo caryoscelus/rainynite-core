@@ -18,8 +18,9 @@
 #include <catch.hpp>
 
 #include <core/node/make.h>
-#include <core/node/node.h>
+#include <core/node/list.h>
 #include <core/node_info/node_info.h>
+#include <core/node_info/macros.h>
 #include <core/node_tree/traverse.h>
 #include <core/action_stack.h>
 #include <core/actions/change_value.h>
@@ -27,6 +28,9 @@
 #include <core/actions/custom_property.h>
 #include <core/actions/list.h>
 #include "zero_context.h"
+#include "new_node.h"
+
+REGISTER_NODE(Add);
 
 using namespace rainynite;
 using namespace rainynite::core;
@@ -69,7 +73,7 @@ TEST_CASE("Undo/redo value change", "[action,node]") {
 
 TEST_CASE("Change link", "[action,node]") {
     ActionStack action_stack;
-    auto add = make_node_with_name_as<BaseValue<double>>("Add/Real");
+    auto add = make_node_with_name_as<BaseValue<double>>("Add");
     auto add_node = dynamic_pointer_cast<AbstractListLinked>(add);
     REQUIRE(add->value(zero_context()) == 0);
 
@@ -86,7 +90,7 @@ TEST_CASE("Change link", "[action,node]") {
 
 TEST_CASE("Custom property", "[action,node]") {
     ActionStack action_stack;
-    auto add = make_node_with_name_as<AbstractNode>("Add/Real");
+    auto add = make_node_with_name_as<AbstractNode>("Add");
     auto other_node = make_value<double>(1);
     CHECK_THROWS_AS(add->get_property("_something"), NodeAccessError);
     auto tree = make_shared<NodeTree>(abstract_value_cast(add));

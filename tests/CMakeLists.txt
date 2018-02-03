@@ -35,7 +35,7 @@ add_catch_test(parse)
 target_link_libraries(test_parse time)
 
 add_catch_test(actions)
-target_link_libraries(test_actions nodes)
+target_link_libraries(test_actions document)
 
 add_catch_test(notify)
 target_link_libraries(test_notify document)
