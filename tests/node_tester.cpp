@@ -24,18 +24,18 @@
 #include <fmt/format.h>
 
 #include <core/std/string.h>
-#include <core/filters/yaml_reader.h>
-#include <core/filters/yaml_writer.h>
 #include <core/document.h>
+#include <core/fs/document_loader.h>
 #include <core/node/abstract_node.h>
 #include <core/node_info/node_info.h>
+#include <core/util/nullptr.h>
 #include "zero_context.h"
 
 using namespace fmt::literals;
 
 namespace rainynite::core {
 
-bool load_and_test_stream(shared_ptr<AbstractDocument> document) {
+bool test_document(shared_ptr<AbstractDocument> document) {
     bool failed = false;
     if (auto test_list = abstract_node_cast(document)->get_property("_tests")) {
         int i = 0;
@@ -60,23 +60,24 @@ bool load_and_test_stream(shared_ptr<AbstractDocument> document) {
 }
 
 bool load_and_test_file(string const& fname) {
-    std::stringstream content;
-    {
-        std::ifstream in(fname);
-        content << in.rdbuf();
-    }
+    auto loader = DocumentLoader::instance();
+    auto path = fs::Path(fname);
 
-    auto document = filters::YamlReader().read_document(content);
+    auto document = loader->get_document(path);
     if (document == nullptr)
         throw std::runtime_error("Unknown parse failure");
 
-    if (!load_and_test_stream(document))
+    if (!test_document(document))
         return false;
 
     std::cerr << "All tests ok, ";
 
     std::stringstream saved_content;
-    filters::YamlWriter().write_document(saved_content, document);
+    loader->write_document_to(path, saved_content);
+
+    // TODO: avoid extra file read?..
+    std::stringstream content;
+    content << std::ifstream(fname).rdbuf();
 
     if (content.str() == saved_content.str()) {
         std::cerr << "saved content identical to source.\n";
@@ -93,9 +94,10 @@ bool load_and_test_file(string const& fname) {
 
     std::cerr << "Will try to check if saved version is semantically identical...\n";
 
-    auto saved_document = filters::YamlReader().read_document(saved_content);
+    loader->unload_document(path);
+    auto saved_document = no_null(loader->get_document_from(path, saved_content));
 
-    return load_and_test_stream(saved_document);
+    return test_document(saved_document);
 }
 
 } // namespace rainynite::core
