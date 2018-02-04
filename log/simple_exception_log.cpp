@@ -1,6 +1,5 @@
-/*
- *  simple_exception_log.cpp - simple exception log implementation
- *  Copyright (C) 2017 caryoscelus
+/*  simple_exception_log.cpp - simple exception log implementation
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,13 +26,13 @@ using namespace fmt::literals;
 
 namespace rainynite::core {
 
-void SimpleExceptionLogger::log_exception(weak_ptr<ExceptionSource const> source, std::exception const& ex) const noexcept {
+void SimpleExceptionLogger::log_exception(ExceptionSource const* source, std::exception const& ex) const noexcept {
     while (log.size() >= size)
         log.pop();
     log.emplace(source, ex);
     // TODO: notify
     // TODO: flexible output
-    std::cerr << "Exception in {}:\n{}\n"_format(source.lock(), ex.what());
+    std::cerr << "Exception in {}:\n{}\n"_format((void*)source, ex.what());
 }
 
 } // namespace rainynite::core

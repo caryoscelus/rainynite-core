@@ -1,5 +1,5 @@
 /*  log/global.h - proxy to a signleton instance of real log
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ public:
         return _instance;
     }
 
-    void log_exception(weak_ptr<ExceptionSource const> source, std::exception const& ex) const noexcept override {
+    void log_exception(ExceptionSource const* source, std::exception const& ex) const noexcept override {
         instance().log_exception(source, ex);
     }
 };

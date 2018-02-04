@@ -59,9 +59,15 @@ private:
 class AbstractValue :
     public AbstractNotify,
     public HasId<NodeId, NodeIdGenerator>,
-    public Enabled
+    public HasExceptionLogger,
+    public Enabled,
+    public enable_shared_from_this<AbstractValue>
 {
 public:
+    AbstractValue() :
+        HasExceptionLogger(make_shared<GlobalLog<SimpleExceptionLogger>>())
+    {}
+
     /// Returns whether this node accepts values to be set with set_any/set/etc
     virtual bool can_set() const {
         return false;
@@ -195,15 +201,8 @@ constexpr bool is_vector<vector<U>> = true;
  * get_type() & any-based operations instead.
  */
 template <typename T>
-class BaseValue :
-    public AbstractValue,
-    public HasExceptionLogger
-{
+class BaseValue : public AbstractValue {
 public:
-    BaseValue() :
-        HasExceptionLogger(make_shared<GlobalLog<SimpleExceptionLogger>>())
-    {}
-
     /**
      * Get value of this node in given context
      *

@@ -1,5 +1,5 @@
 /*  simple_exception_log.h - simple exception log implementation
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@ public:
         size(size_)
     {}
 
-    void log_exception(weak_ptr<ExceptionSource const> source, std::exception const& ex) const noexcept override;
+    void log_exception(ExceptionSource const* source, std::exception const& ex) const noexcept override;
 
 private:
-    mutable queue<pair<weak_ptr<ExceptionSource const>, std::exception>> log;
+    mutable queue<pair<ExceptionSource const*, std::exception>> log;
     size_t size;
 };
 

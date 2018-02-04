@@ -1,5 +1,5 @@
 /*  exception_log.h - exception logging classes
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ class ExceptionLogger {
 public:
     virtual ~ExceptionLogger() = default;
     /// Write exception ex (caused by source) to log
-    virtual void log_exception(weak_ptr<ExceptionSource const> source, std::exception const& ex) const noexcept = 0;
+    virtual void log_exception(ExceptionSource const* source, std::exception const& ex) const noexcept = 0;
 };
 
 /**
@@ -47,8 +47,7 @@ public:
  */
 class HasExceptionLogger :
     public ExceptionLogger,
-    public ExceptionSource,
-    public enable_shared_from_this<HasExceptionLogger>
+    public ExceptionSource
 {
 public:
     explicit HasExceptionLogger(shared_ptr<ExceptionLogger> logger_ = nullptr) :
@@ -60,10 +59,10 @@ public:
     }
 
     void log_exception_from_this(std::exception const& ex) const {
-        log_exception(dynamic_pointer_cast<ExceptionSource const>(shared_from_this()), ex);
+        log_exception(this, ex);
     }
 
-    void log_exception(weak_ptr<ExceptionSource const> source, std::exception const& ex) const noexcept override {
+    void log_exception(ExceptionSource const* source, std::exception const& ex) const noexcept override {
         if (logger)
             logger->log_exception(source, ex);
     }
