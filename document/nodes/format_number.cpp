@@ -18,28 +18,34 @@
 #include <fmt/format.h>
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 namespace rainynite::core::nodes {
 
 template <typename N>
-class FormatNumber : public Node<string> {
-public:
-    FormatNumber() {
-        init<string>(format, {});
-        init<double>(number, 0);
-    }
+class FormatNumber :
+    public NewNode<
+        FormatNumber<N>,
+        string,
+        types::Only<string>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Format number to string."
+    )
+
+    NODE_PROPERTIES("format", "number")
+    DEFAULT_VALUES(string{}, 0.0)
+    PROPERTY(format)
+    PROPERTY(number)
+
 protected:
     string get(shared_ptr<Context> ctx) const override {
-        auto str = get_format()->value(ctx);
-        auto num = static_cast<N>(get_number()->value(ctx));
+        auto str = format_value<string>(ctx);
+        auto num = static_cast<N>(number_value<double>(ctx));
         return fmt::format(str, num);
     }
-
-private:
-    NODE_PROPERTY(format, string);
-    NODE_PROPERTY(number, double);
 };
 
 using FormatInteger = FormatNumber<long long>;

@@ -19,31 +19,33 @@
 #include <sstream>
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 namespace rainynite::core::nodes {
 
-class FileString : public Node<string> {
-public:
-    FileString() {
-        init<string>(file_name, "");
-    }
+class FileString :
+    public NewNode<
+        FileString,
+        string,
+        types::Only<string>
+    >
+{
+    DOC_STRING(
+        "Load file into string"
+    )
+
+    NODE_PROPERTIES("file_name")
+    DEFAULT_VALUES(string{})
+    PROPERTY(file_name)
+
 protected:
     string get(shared_ptr<Context> ctx) const override {
-        try {
-            auto fname = get_file_name()->value(ctx);
-            std::ifstream stream(fname);
-            std::stringstream buffer;
-            buffer << stream.rdbuf();
-            return buffer.str();
-        } catch (...) {
-            return {};
-        }
+        auto fname = file_name_value<string>(ctx);
+        std::ifstream stream(fname);
+        std::stringstream buffer;
+        buffer << stream.rdbuf();
+        return buffer.str();
     }
-
-private:
-    NODE_PROPERTY(file_name, string);
 };
 
 REGISTER_NODE(FileString);
