@@ -17,34 +17,38 @@
 
 #include <core/node_info/macros.h>
 #include <core/node_info/default_node.h>
-#include <core/node/proxy_node.h>
+#include <core/node/new_node.h>
+#include <core/node/list.h>
 #include <core/all_types.h>
 #include <core/context.h>
 
 namespace rainynite::core::nodes {
 
 template <typename T>
-class Frame : public Node<TimePoint<T>> {
+class Frame :
+    public NewNode<
+        Frame<T>,
+        TimePoint<T>,
+        types::Only<Time>,
+        types::Only<T>
+    >
+{
     DOC_STRING(
         "A (Time, Value) pair"
     )
 
-public:
-    Frame() {
-        this->template init<Time>(time, {});
-        this->template init<T>(value, {});
-    }
+    NODE_PROPERTIES("time", "value")
+    COMPLEX_DEFAULT_VALUES(make_value<Time>(), make_default_node<T>())
+    PROPERTY(time)
+    PROPERTY(value)
 
+protected:
     TimePoint<T> get(shared_ptr<Context> ctx) const override {
         return {
-            get_time()->value(ctx),
-            get_value()
+            time_value<Time>(ctx),
+            base_value_cast<T>(p_value())
         };
     }
-
-private:
-    NODE_PROPERTY(time, Time);
-    NODE_PROPERTY(value, T);
 };
 
 // TODO: use generic registering mechanism
@@ -58,8 +62,7 @@ public:
 };
 
 template <typename T>
-class TimePointListNodeInfo : NODE_INFO_PARENTS(TimePointListNodeInfo<T>, TPList<T>) {
-public:
+struct TimePointListNodeInfo : NODE_INFO_PARENTS(TimePointListNodeInfo<T>, TPList<T>) {
     string name() const override {
         return "List/Frame/"+get_primitive_type_name<T>();
     }

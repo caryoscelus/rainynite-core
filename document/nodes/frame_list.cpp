@@ -16,6 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
 #include <core/all_types.h>
 #include <core/context.h>
@@ -24,24 +25,26 @@ namespace rainynite::core::nodes {
 
 // TODO: rewrite to new node system
 template <class T>
-class FrameList : public ProxyNode<T> {
+class FrameList :
+    public NewProxyNode<
+        FrameList<T>,
+        T,
+        types::Only<T>,
+        types::Only<vector<TimePoint<T>>>
+    >
+{
     DOC_STRING(
         "Value based on list of time-value mappings"
     )
 
+    NODE_PROPERTIES("default_value", "frame_list")
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_default_node<vector<TimePoint<T>>>())
+    PROPERTY(default_value)
+    PROPERTY(frame_list)
+
 public:
-    FrameList() {
-        this->template init<T>(default_value, {});
-
-        auto flist = make_node_with_name("List/Frame/"+get_primitive_type_name<T>());
-        this->init_property("frame_list", Type(typeid(vector<TimePoint<T>>)), std::move(flist));
-    }
-
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto flist = dynamic_pointer_cast<BaseValue<vector<TimePoint<T>>>>(list_frame_list());
-        if (flist == nullptr)
-            throw NodeAccessError("FrameList: invalid frame_list");
-        auto frames = flist->value(ctx);
+        auto frames = frame_list_value<vector<TimePoint<T>>>(ctx);
         std::sort(
             std::begin(frames),
             std::end(frames),
@@ -62,11 +65,8 @@ public:
         }
         if (last)
             return {last->value, ctx};
-        return {get_default_value(), ctx};
+        return {p_default_value(), ctx};
     }
-private:
-    NODE_LIST_PROPERTY(frame_list, TimePoint<T>);
-    NODE_PROPERTY(default_value, T);
 };
 
 NODE_INFO_TEMPLATE(FrameList, FrameList<T>, T);
