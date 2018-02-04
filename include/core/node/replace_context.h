@@ -29,7 +29,15 @@ namespace rainynite::core {
  * Currently can only be used internally.
  */
 template <typename T>
-class ReplaceContextNode : public ProxyNode<T> {
+class ReplaceContextNode :
+    public NewProxyNode<
+        ReplaceContextNode<T>,
+        T
+    >
+{
+    NODE_PROPERTIES()
+    DEFAULT_VALUES()
+
 public:
     ReplaceContextNode(NodeInContext nic_) :
         nic(nic_)
