@@ -80,6 +80,7 @@ public:
     }
     void type(string const& s) override {
         current().object = make_node_with_name_as<AbstractValue>(s);
+        current().object->set_id(current().id);
         objects.emplace(current().id, current().object);
     }
     void auto_type() override {
