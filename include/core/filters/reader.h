@@ -23,6 +23,8 @@
 #include <core/std/memory.h>
 #include <core/util/class_init.h>
 #include <core/abstract_factory.h>
+#include <core/log/simple_exception_log.h>
+#include <core/log/global.h>
 
 namespace rainynite::core {
 
@@ -31,18 +33,22 @@ class AbstractDocument;
 /**
  * Minimalist document reader interface
  */
-class DocumentReader {
+class DocumentReader : public HasExceptionLogger {
 public:
-    virtual ~DocumentReader() = default;
-    virtual shared_ptr<AbstractDocument> read_document(std::istream& input) = 0;
+    DocumentReader() :
+        HasExceptionLogger(make_shared<GlobalLog<SimpleExceptionLogger>>())
+    {}
 
-    shared_ptr<AbstractDocument> try_load(std::istream& input) {
+    virtual ~DocumentReader() = default;
+    virtual shared_ptr<AbstractDocument> read_document(std::istream& input) const = 0;
+
+    shared_ptr<AbstractDocument> try_load(std::istream& input) const {
         try {
             return read_document(input);
         } catch (std::exception const& ex) {
-            // TODO
+            log_exception_from_this(ex);
         } catch (...) {
-            // TODO
+            log_exception_from_this(std::runtime_error("Uncaught throw"));
         }
         return nullptr;
     }

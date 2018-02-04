@@ -28,7 +28,7 @@
 #include <core/document.h>
 #include <core/node_info/node_info.h>
 #include <core/util/state_machine.h>
-#include <core/filters/yaml_reader.h>
+#include <core/filters/reader.h>
 #include <core/serialize/node_reader.h>
 
 using namespace fmt::literals;
@@ -161,11 +161,16 @@ namespace rainynite::core::filters {
 
 struct DummyReader {};
 
-shared_ptr<AbstractDocument> YamlReader::read_document(std::istream& input) {
-    serialize::YamlCppWrapper<serialize::NodeDeserializer<DummyReader>> node_reader;
-    YAML::Parser parser(input);
-    parser.HandleNextDocument(node_reader);
-    return dynamic_pointer_cast<AbstractDocument>(node_reader.get_node_reader().get_root());
-}
+class YamlReader : FILTER_READ(YamlReader) {
+    FILTER_NAME("yaml")
+
+public:
+    shared_ptr<AbstractDocument> read_document(std::istream& input) const override {
+        serialize::YamlCppWrapper<serialize::NodeDeserializer<DummyReader>> node_reader;
+        YAML::Parser parser(input);
+        parser.HandleNextDocument(node_reader);
+        return dynamic_pointer_cast<AbstractDocument>(node_reader.get_node_reader().get_root());
+    }
+};
 
 } // namespace rainynite::core::filters
