@@ -33,7 +33,7 @@ class AbstractDocument;
  */
 class DocumentWriter {
 public:
-    virtual void write_document(std::ostream& output, shared_ptr<AbstractDocument> document) = 0;
+    virtual void write_document(std::ostream& output, shared_ptr<AbstractDocument> document) const = 0;
 };
 
 #define FILTER_WRITE(Self) \

@@ -24,7 +24,7 @@
 #include <core/serialize/node_writer.h>
 #include <core/node_info/node_info.h>
 #include <core/node_tree/traverse.h>
-#include <core/filters/yaml_writer.h>
+#include <core/filters/writer.h>
 
 using namespace fmt::literals;
 
@@ -135,10 +135,16 @@ private:
 };
 
 
-void YamlWriter::write_document(std::ostream& output, shared_ptr<AbstractDocument> document) {
-    auto writer = YamlCppWriter(output, document);
-    writer.serialize();
-    writer.flush();
-}
+class YamlWriter : FILTER_WRITE(YamlWriter) {
+    FILTER_NAME("yaml")
+
+public:
+    void write_document(std::ostream& output, shared_ptr<AbstractDocument> document) const override {
+        auto writer = YamlCppWriter(output, document);
+        writer.serialize();
+        writer.flush();
+    }
+};
+
 
 } // namespace rainynite::core::filters
