@@ -34,6 +34,7 @@ class FormatString :
     public NewNode<
         FormatString,
         string,
+        types::Only<string>,
         types::Only<vector<string>>
     >
 {
