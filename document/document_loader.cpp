@@ -45,6 +45,11 @@ shared_ptr<AbstractDocument> DocumentLoader::get_document_from(fs::Path const& f
     return nullptr;
 }
 
+void DocumentLoader::register_document(fs::Path const& fpath, shared_ptr<AbstractDocument> document, string const& format) {
+    auto proper_path = fpath.to_absolute();
+    registry.try_emplace(proper_path, document, format);
+}
+
 void DocumentLoader::write_document(fs::Path const& fpath) {
     auto proper_path = fpath.to_absolute();
     std::ofstream of(proper_path);
@@ -54,8 +59,9 @@ void DocumentLoader::write_document(fs::Path const& fpath) {
 void DocumentLoader::write_document_to(fs::Path const& fpath, std::ostream& out) {
     auto proper_path = fpath.to_absolute();
     auto iter = registry.find(proper_path);
-    if (iter == registry.end())
+    if (iter == registry.end()) {
         throw std::runtime_error("Cannot find document to write");
+    }
     auto [document, filter_name] = iter->second;
     using class_init::name_info;
     auto& filter = name_info<DocumentWriter>(filter_name);

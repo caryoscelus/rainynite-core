@@ -38,6 +38,8 @@ public:
     shared_ptr<AbstractDocument> get_document(fs::Path const& fpath);
     shared_ptr<AbstractDocument> get_document_from(fs::Path const& fpath, std::istream& in);
 
+    void register_document(fs::Path const& fpath, shared_ptr<AbstractDocument> document, string const& format);
+
     void write_document(fs::Path const& fpath);
     void write_document_to(fs::Path const& fpath, std::ostream& out);
 
