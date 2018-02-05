@@ -15,7 +15,6 @@ target_sources(document
         node_info.cpp
         node_tree.cpp
         node_tree_transform.cpp
-        node/old_node.cpp
         node/nic.cpp
 )
 

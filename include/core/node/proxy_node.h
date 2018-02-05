@@ -20,7 +20,6 @@
 
 #include <functional>
 
-#include "node.h"
 #include "new_node.h"
 
 namespace rainynite::core {
@@ -36,17 +35,6 @@ public:
      * Get proxied NodeInContext
      */
     virtual NodeInContext get_proxy(shared_ptr<Context> ctx) const = 0;
-};
-
-template <typename T>
-class ProxyNode : public Node<T>, public AbstractProxyNode {
-protected:
-    T get(shared_ptr<Context> ctx) const override {
-        auto [node, nctx] = this->get_proxy(ctx);
-        if (auto vnode = dynamic_cast<BaseValue<T>*>(node.get()))
-            return vnode->value(nctx);
-        throw NodeAccessError("Proxied node is of different type");
-    }
 };
 
 /**

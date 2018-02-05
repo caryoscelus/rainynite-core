@@ -17,7 +17,6 @@
 
 #include <core/node_info/macros.h>
 #include <core/node/new_node.h>
-#include <core/node/property.h>
 
 #include <geom_helpers/rectangle.h>
 

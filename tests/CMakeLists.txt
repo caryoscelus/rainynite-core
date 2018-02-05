@@ -40,15 +40,6 @@ target_link_libraries(test_actions document)
 add_catch_test(notify)
 target_link_libraries(test_notify document)
 
-add_catch_test(list_nodes)
-target_link_libraries(test_list_nodes nodes)
-
-add_catch_test(time_nodes)
-target_link_libraries(test_time_nodes nodes)
-
-add_catch_test(dynamic_node)
-target_link_libraries(test_dynamic_node nodes)
-
 add_catch_test(type_constraint)
 
 add_catch_test(link_storage)
