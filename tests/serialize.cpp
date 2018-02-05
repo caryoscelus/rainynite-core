@@ -20,8 +20,6 @@
 #include <iostream>
 
 #include <core/util/type_info.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
 #include <core/node_info/macros.h>
 #include <core/serialize/node_reader.h>
 
@@ -40,19 +38,18 @@ TEST_CASE("Read double", "[serialize]") {
 class DummyReader {};
 
 TEST_CASE("Deserialize", "[serialize,node]") {
-    auto uuid_gen = boost::uuids::random_generator();
     serialize::NodeDeserializer<DummyReader> s;
-    s.object_start(uuid_gen());
-    s.type("Add/Real");
+    s.object_start("a");
+    s.type("Add");
     s.key("a");
-    s.object_start(uuid_gen());
+    s.object_start("xx");
     s.type("Value/Real");
     s.object_value_start();
     s.value_string("1");
     s.object_value_end();
     s.object_end();
     s.key("b");
-    s.object_start(uuid_gen());
+    s.object_start("yyy");
     s.type("Value/Real");
     s.object_value_start();
     s.value_string("2");

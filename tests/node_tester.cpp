@@ -45,7 +45,7 @@ bool test_document(shared_ptr<AbstractDocument> document) {
                     failed = true;
                     std::cerr << "Test #{} failed:\n  id = {}\n  type = {}\n"_format(
                         i,
-                        to_string(node->get_id()),
+                        node->get_id(),
                         node_name(*node)
                     );
                 }

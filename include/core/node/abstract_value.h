@@ -20,6 +20,7 @@
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include <core/std/any.h>
 #include <core/log/simple_exception_log.h>
@@ -32,8 +33,15 @@
 
 namespace rainynite::core {
 
-using NodeId = boost::uuids::uuid;
-using NodeIdGenerator = boost::uuids::random_generator;
+template <typename UuidGen>
+struct UuidStringGen {
+    string operator()() const {
+        return to_string(UuidGen()());
+    }
+};
+
+using NodeId = string;
+using NodeIdGenerator = UuidStringGen<boost::uuids::random_generator>;
 
 class Enabled {
 public:

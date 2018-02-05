@@ -35,8 +35,11 @@ using namespace fmt::literals;
 
 namespace rainynite::core::serialize {
 
-static boost::uuids::string_generator s_to_id;
-static boost::uuids::random_generator random_id;
+using s_to_id = string;
+inline string random_id() {
+    boost::uuids::random_generator gen;
+    return to_string(gen());
+}
 
 enum class YamlCppWrapperState {
     Map,
