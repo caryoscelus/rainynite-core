@@ -1,0 +1,14 @@
+--- !Document
+
+_tests: !List/Boolean
+  - !Equal/String
+    a: 0.5
+    b: !FormatReal
+      format: "{:.1}"
+      number: 0.50334
+
+  - !Equal/String
+    a: hello, world
+    b: !FormatString
+      format: "{}, {}"
+      arguments: !List/String [ "hello", "world" ]
