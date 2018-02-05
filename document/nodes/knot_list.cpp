@@ -16,52 +16,64 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
+#include <core/node/list.h>
 
 #include <geom_helpers/knots.h>
 
 namespace rainynite::core::nodes {
 
-class KnotList : public Node<vector<Geom::Knot>> {
-public:
-    KnotList() {
-        init<Geom::BezierKnots>(path, {});
-    }
-public:
-    vector<Geom::Knot> get(shared_ptr<Context> ctx) const override {
-        try {
-            auto path = get_path()->value(ctx);
-            return path.knots;
-        } catch (...) {
-            return {};
-        }
-    }
+class KnotList :
+    public NewNode<
+        KnotList,
+        vector<Geom::Knot>,
+        types::Only<Geom::BezierKnots>
+    >
+{
+    DOC_STRING(
+        "?????"
+    )
 
-private:
-    NODE_PROPERTY(path, Geom::BezierKnots);
+    NODE_PROPERTIES("path")
+    DEFAULT_VALUES(Geom::BezierKnots{})
+    PROPERTY(path)
+
+protected:
+    vector<Geom::Knot> get(shared_ptr<Context> ctx) const override {
+        auto path = path_value<Geom::BezierKnots>(ctx);
+        return path.knots;
+    }
 };
 
 REGISTER_NODE(KnotList);
 
-class KnotsPath : public Node<Geom::BezierKnots> {
-public:
-    KnotsPath() {
-        init_list<Geom::Knot>(knots);
-        init<bool>(closed, false);
-    }
+
+class KnotsPath :
+    public NewNode<
+        KnotsPath,
+        Geom::BezierKnots,
+        types::Only<vector<Geom::Knot>>,
+        types::Only<bool>
+    >
+{
+    DOC_STRING(
+        "???"
+    )
+
+    NODE_PROPERTIES("knots", "closed")
+    COMPLEX_DEFAULT_VALUES(make_node<ListValue<Geom::Knot>>(), make_value<bool>(false))
+    PROPERTY(knots)
+    PROPERTY(closed)
+
 protected:
     Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
-        auto knots = get_knots()->value(ctx);
-        auto closed = get_closed()->value(ctx);
+        auto knots = knots_value<vector<Geom::Knot>>(ctx);
+        auto closed = closed_value<bool>(ctx);
         return Geom::BezierKnots(knots, closed);
     }
-
-private:
-    NODE_LIST_PROPERTY(knots, Geom::Knot);
-    NODE_PROPERTY(closed, bool);
 };
 
 REGISTER_NODE(KnotsPath);
+
 
 } // namespace rainynite::core::nodes

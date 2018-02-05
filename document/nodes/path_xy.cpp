@@ -21,8 +21,7 @@
 #include <fmt/ostream.h>
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/time/format.h>
 #include <core/context.h>
 
@@ -30,22 +29,33 @@
 
 namespace rainynite::core::nodes {
 
-class PathXY : public Node<double> {
-public:
-    PathXY() {
-        init<Geom::BezierKnots>(path, {});
-        init<double>(x, 0);
-    }
+class PathXY :
+    public NewNode<
+        PathXY,
+        double,
+        types::Only<Geom::BezierKnots>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Get path's y at given x"
+    )
+
+    NODE_PROPERTIES("path", "x")
+    DEFAULT_VALUES(Geom::BezierKnots{}, 0.0)
+    PROPERTY(path)
+    PROPERTY(x)
+
 protected:
     double get(shared_ptr<Context> ctx) const override {
         using namespace fmt::literals;
 
-        auto path = Geom::knots_to_path(get_path()->value(ctx));
+        auto path = Geom::knots_to_path(path_value<Geom::BezierKnots>(ctx));
         auto x = std::max(
             path.initialPoint().x(),
             std::min(
                 path.finalPoint().x(),
-                get_x()->value(ctx)
+                x_value<double>(ctx)
             )
         );
         auto path_roots = path.roots(x, Geom::X);
@@ -61,10 +71,6 @@ protected:
         auto path_t = path_roots[0];
         return path.valueAt(path_t, Geom::Y);
     }
-
-private:
-    NODE_PROPERTY(path, Geom::BezierKnots);
-    NODE_PROPERTY(x, double);
 };
 
 REGISTER_NODE(PathXY);

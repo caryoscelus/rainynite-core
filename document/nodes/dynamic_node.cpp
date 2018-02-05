@@ -18,26 +18,33 @@
 #include <core/util/nullptr.h>
 #include <core/node_info/macros.h>
 #include <core/node_info/copy.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
+#include <core/node/list.h>
 #include <core/node/replace_context.h>
 #include <core/all_types.h>
 
 namespace rainynite::core::nodes {
 
 template <typename T>
-class DynamicNode : public ProxyNode<T> {
-public:
-    DynamicNode() {
-        this->template init<string>(node_type, {});
-        auto args = make_shared<UntypedListValue>();
-        args->new_id();
-        this->template init_property(arguments, Type(typeid(Nothing)), std::move(args));
-    }
+class DynamicNode :
+    public NewProxyNode<
+        DynamicNode<T>,
+        T,
+        types::Only<string>,
+        types::Only<Nothing> // TODO: better list typing
+    >
+{
+    DOC_STRING("Create node from name and arguments")
+
+    NODE_PROPERTIES("node_type", "arguments")
+    COMPLEX_DEFAULT_VALUES(make_value<string>(), make_node<UntypedListValue>())
+    PROPERTY(node_type)
+    PROPERTY(arguments)
+
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto type = get_node_type()->value(ctx);
+        auto type = node_type_value<string>(ctx);
         if (cached_type != type) {
             node = make_node_with_name_as<AbstractValue>(type);
             cached_type = type;
@@ -59,10 +66,6 @@ public:
 private:
     mutable AbstractReference node;
     mutable string cached_type;
-
-private:
-    NODE_PROPERTY(node_type, string);
-    NODE_LIST_PROPERTY(arguments, Nothing);
 };
 
 NODE_INFO_TEMPLATE(DynamicNode, DynamicNode<T>, T);
@@ -70,28 +73,33 @@ TYPE_INSTANCES(DynamicNodeNodeInfo)
 
 
 template <typename T>
-class ApplyToList : public Node<vector<T>> {
+class ApplyToList :
+    public NewNode<
+        ApplyToList<T>,
+        vector<T>,
+        types::Only<T>,
+        types::Only<string>,
+        types::Only<Nothing>, // TODO
+        types::Only<bool>
+    >
+{
     DOC_STRING(
         "Convert list by applying node to each element.\n"
         "\n"
-        "Returns list, each element of which is node with a few common properties"
+        "Returns list, each element of which is node with a few common properties\n"
         "and one from input list."
     )
-public:
-    ApplyToList() {
-        this->template init<T>(source, {});
-        this->template init<string>(property_name, {});
-        // TODO: make a function
-        {
-            auto args = make_shared<UntypedListValue>();
-            args->new_id();
-            this->template init_property(dynamic_arguments, Type(typeid(Nothing)), std::move(args));
-        }
-        this->template init<bool>(use_dynamic_context, true);
-    }
 
+    NODE_PROPERTIES("source", "property_name", "dynamic_arguments", "use_dynamic_context")
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_value<string>(), make_node<UntypedListValue>(), make_value<bool>(true))
+    PROPERTY(source)
+    PROPERTY(property_name)
+    PROPERTY(dynamic_arguments)
+    PROPERTY(use_dynamic_context)
+
+public:
     size_t list_links_count(shared_ptr<Context> ctx) const override {
-        if (auto list = this->get_property(dynamic_arguments))
+        if (auto list = p_dynamic_arguments())
             return list->list_links_count(ctx);
         return 0;
     }
@@ -99,10 +107,10 @@ public:
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         vector<NodeInContext> result;
-        auto property = get_property_name()->value(ctx);
-        auto base_node = get_source();
-        auto dy_args = this->get_property(dynamic_arguments)->list_links(ctx);
-        bool using_dynamic_context = get_use_dynamic_context()->value(ctx);
+        auto property = property_name_value<string>(ctx);
+        auto base_node = p_source();
+        auto dy_args = p_dynamic_arguments()->list_links(ctx);
+        bool using_dynamic_context = use_dynamic_context_value<bool>(ctx);
         std::transform(
             std::begin(dy_args),
             std::end(dy_args),
@@ -117,32 +125,34 @@ protected:
         );
         return result;
     }
-private:
-    NODE_PROPERTY(source, T);
-    NODE_PROPERTY(property_name, string);
-    NODE_LIST_PROPERTY(dynamic_arguments, Nothing);
-    NODE_PROPERTY(use_dynamic_context, bool);
 };
 
 NODE_INFO_TEMPLATE(ApplyToList, ApplyToList<T>, vector<T>);
 TYPE_INSTANCES(ApplyToListNodeInfo)
 
+
 template <typename T>
-class DynamicListZip : public Node<vector<T>> {
+class DynamicListZip :
+    public NewNode<
+        DynamicListZip<T>,
+        vector<T>,
+        types::Only<string>,
+        types::Only<Nothing>
+    >
+{
     DOC_STRING(
         "Zip lists of lists into a list of nodes with args.\n"
         "\n"
-        "Takes few homogeneous lists and uses their elements as node properties"
+        "Takes few homogeneous lists and uses their elements as node properties\n"
         "(each list representing one property) in new node list."
     )
-public:
-    DynamicListZip() {
-        this->template init<string>(node_type, {});
-        auto args = make_shared<UntypedListValue>();
-        args->new_id();
-        this->template init_property(arguments_list, Type(typeid(Nothing)), std::move(args));
-    }
 
+    NODE_PROPERTIES("node_type", "arguments_list")
+    COMPLEX_DEFAULT_VALUES(make_value<string>(), make_node<UntypedListValue>())
+    PROPERTY(node_type)
+    PROPERTY(arguments_list)
+
+public:
     size_t list_links_count(shared_ptr<Context> ctx) const override {
         auto args = no_null(this->get_property("arguments_list"));
         auto list_of_lists = args->list_links(ctx);
@@ -195,7 +205,7 @@ protected:
             }
         );
         vector<NodeInContext> result;
-        auto type = get_node_type()->value(ctx);
+        auto type = node_type_value<string>(ctx);
         while (true) {
             auto node = make_node_with_name_as<AbstractValue>(type);
             auto list_node = dynamic_cast<AbstractListLinked*>(node.get());
@@ -212,12 +222,10 @@ protected:
             result.emplace_back(node, ctx);
         }
     }
-private:
-    NODE_PROPERTY(node_type, string);
-    NODE_LIST_PROPERTY(arguments_list, Nothing);
 };
 
 NODE_INFO_TEMPLATE(DynamicListZip, DynamicListZip<T>, vector<T>);
 TYPE_INSTANCES(DynamicListZipNodeInfo)
+
 
 } // namespace rainynite::core::nodes

@@ -16,48 +16,62 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
+#include <core/node/new_node.h>
 #include <core/node/property.h>
 
 #include <geom_helpers/rectangle.h>
 
 namespace rainynite::core::nodes {
 
-class RectangleWH : public Node<Geom::Rectangle> {
-public:
-    RectangleWH() {
-        init<Geom::Point>(position, {});
-        init<Geom::Point>(size, {});
-    }
+class RectangleWH :
+    public NewNode<
+        RectangleWH,
+        Geom::Rectangle,
+        types::Only<Geom::Point>,
+        types::Only<Geom::Point>
+    >
+{
+    DOC_STRING("Make rectangle from position & size")
+
+    NODE_PROPERTIES("position", "size")
+    DEFAULT_VALUES(Geom::Point{}, Geom::Point{})
+    PROPERTY(position)
+    PROPERTY(size)
+
 protected:
     Geom::Rectangle get(shared_ptr<Context> ctx) const override {
-        return {get_position()->value(ctx), get_size()->value(ctx)};
+        using Geom::Point;
+        return {position_value<Point>(ctx), size_value<Point>(ctx)};
     }
-
-private:
-    NODE_PROPERTY(position, Geom::Point);
-    NODE_PROPERTY(size, Geom::Point);
 };
 
 REGISTER_NODE(RectangleWH);
 
 
-class RectangleAB : public Node<Geom::Rectangle> {
-public:
-    RectangleAB() {
-        init<Geom::Point>(a, {});
-        init<Geom::Point>(b, {});
-    }
+class RectangleAB :
+    public NewNode<RectangleAB,
+        Geom::Rectangle,
+        types::Only<Geom::Point>,
+        types::Only<Geom::Point>
+    >
+{
+
+    NODE_PROPERTIES("a", "b")
+    DEFAULT_VALUES(Geom::Point{}, Geom::Point{})
+    PROPERTY(a)
+    PROPERTY(b)
+
 protected:
     Geom::Rectangle get(shared_ptr<Context> ctx) const override {
-        return Geom::Rectangle::fromTwoPoints(get_a()->value(ctx), get_b()->value(ctx));
+        using Geom::Point, Geom::Rectangle;
+        return Rectangle::fromTwoPoints(
+            a_value<Point>(ctx),
+            b_value<Point>(ctx)
+        );
     }
-
-private:
-    NODE_PROPERTY(a, Geom::Point);
-    NODE_PROPERTY(b, Geom::Point);
 };
 
 REGISTER_NODE(RectangleAB);
+
 
 } // namespace rainynite::core::nodes

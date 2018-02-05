@@ -16,8 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 #include <2geom/point.h>
 
@@ -27,26 +26,25 @@ using Geom::X;
 using Geom::Y;
 
 template<Geom::Dim2 dimension>
-class ExtractCoord : public Node<double> {
+class ExtractCoord :
+    public NewNode<
+        ExtractCoord<dimension>,
+        double,
+        types::Only<Geom::Point>
+    >
+{
     DOC_STRING(
         "Extract X or Y coordinate component from Point."
     )
-public:
-    ExtractCoord() {
-        init<Geom::Point>(point, {});
-    }
+
+    NODE_PROPERTIES("point")
+    DEFAULT_VALUES(Geom::Point{})
+    PROPERTY(point)
 
     double get(shared_ptr<Context> ctx) const override {
-        try {
-            auto p = get_point()->value(ctx);
-            return p[dimension];
-        } catch (...) {
-            return {};
-        }
+        auto p = point_value<Geom::Point>(ctx);
+        return p[dimension];
     }
-
-private:
-    NODE_PROPERTY(point, Geom::Point);
 };
 
 REGISTER_NODE_NAMED(ExtractCoord<X>, ExtractCoordXNodeInfo, "ExtractCoord/X");

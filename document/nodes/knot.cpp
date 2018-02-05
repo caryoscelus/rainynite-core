@@ -16,33 +16,39 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 #include <geom_helpers/knots.h>
 
 namespace rainynite::core::nodes {
 
-class Knot : public Node<Geom::Knot> {
-public:
-    Knot() {
-        init<Geom::Point>(pos, {});
-        init<Geom::Point>(tg1, {});
-        init<Geom::Point>(tg2, {});
-    }
+class Knot :
+    public NewNode<
+        Knot,
+        Geom::Knot,
+        types::Only<Geom::Point>,
+        types::Only<Geom::Point>,
+        types::Only<Geom::Point>
+    >
+{
+    DOC_STRING(
+        "Construct Bezier \"knot\""
+    )
+
+    NODE_PROPERTIES("pos", "tg1", "tg2")
+    DEFAULT_VALUES(Geom::Point{}, Geom::Point{}, Geom::Point{})
+    PROPERTY(pos)
+    PROPERTY(tg1)
+    PROPERTY(tg2)
+
 protected:
     Geom::Knot get(shared_ptr<Context> ctx) const override {
         return Geom::Knot {
-            get_pos()->value(ctx),
-            get_tg1()->value(ctx),
-            get_tg2()->value(ctx)
+            pos_value<Geom::Point>(ctx),
+            tg1_value<Geom::Point>(ctx),
+            tg2_value<Geom::Point>(ctx)
         };
     }
-
-private:
-    NODE_PROPERTY(pos, Geom::Point);
-    NODE_PROPERTY(tg1, Geom::Point);
-    NODE_PROPERTY(tg2, Geom::Point);
 };
 
 REGISTER_NODE(Knot);

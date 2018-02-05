@@ -19,6 +19,7 @@
 #include <core/node_info/macros.h>
 #include <core/node/property.h>
 #include <core/node/new_node.h>
+#include <core/node/list.h>
 #include <core/node/replace_context.h>
 #include <core/all_types.h>
 #include <core/util/nullptr.h>

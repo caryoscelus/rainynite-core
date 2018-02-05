@@ -16,8 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 
 #include <geom_helpers/knots.h>
 
@@ -25,23 +24,35 @@
 
 namespace rainynite::core::nodes {
 
-class BezierMorph : public Node<Geom::BezierKnots> {
-public:
-    BezierMorph() {
-        init<Geom::BezierKnots>(a, {});
-        init<Geom::BezierKnots>(b, {});
-        init<double>(progress, 0);
-    }
+class BezierMorph :
+    public NewNode<
+        BezierMorph,
+        Geom::BezierKnots,
+        types::Only<Geom::BezierKnots>,
+        types::Only<Geom::BezierKnots>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        ""
+    )
+
+    NODE_PROPERTIES("a", "b", "progress")
+    DEFAULT_VALUES(Geom::BezierKnots{}, Geom::BezierKnots{}, 0.0)
+    PROPERTY(a)
+    PROPERTY(b)
+    PROPERTY(progress)
+
 protected:
     Geom::BezierKnots get(shared_ptr<Context> ctx) const override {
-        auto a = get_a()->value(ctx);
-        auto b = get_b()->value(ctx);
+        auto a = a_value<Geom::BezierKnots>(ctx);
+        auto b = b_value<Geom::BezierKnots>(ctx);
         if (a != cached_a || b != cached_b) {
             morphing::prepare_average(a, b, avg_a, avg_b);
             cached_a = a;
             cached_b = b;
         }
-        auto t = get_progress()->value(ctx);
+        auto t = progress_value<double>(ctx);
         return morphing::simple_average(avg_a, avg_b, t);
     }
 
@@ -50,10 +61,6 @@ private:
     mutable Geom::BezierKnots cached_b;
     mutable Geom::BezierKnots avg_a;
     mutable Geom::BezierKnots avg_b;
-
-    NODE_PROPERTY(a, Geom::BezierKnots);
-    NODE_PROPERTY(b, Geom::BezierKnots);
-    NODE_PROPERTY(progress, double);
 };
 
 REGISTER_NODE(BezierMorph);

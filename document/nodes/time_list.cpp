@@ -16,33 +16,39 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node_info/default_node.h>
 #include <core/node/proxy_node.h>
 #include <core/all_types.h>
 #include <core/context.h>
 
 namespace rainynite::core::nodes {
 
-/**
- * Node that makes a list of its source at different times.
- *
- * TODO: use List<Time> instead of TimePeriod and Time parameters
- */
+// TODO: use List<Time> instead of TimePeriod and Time parameters?
 template <typename T>
-class TimeList : public Node<vector<T>> {
-public:
-    TimeList() {
-        this->template init<T>(source, {});
-        this->template init<TimePeriod>(period, {});
-        this->template init<Time>(step, {});
-    }
+class TimeList :
+    public NewNode<
+        TimeList<T>,
+        vector<T>,
+        types::Only<T>,
+        types::Only<TimePeriod>,
+        types::Only<Time>
+    >
+{
+    DOC_STRING(
+        "Node that makes a list of its source at different times."
+    )
+
+    NODE_PROPERTIES("source", "period", "step")
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_value<TimePeriod>(), make_value<Time>())
+    PROPERTY(source)
+    PROPERTY(period)
+    PROPERTY(step)
 
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
-        auto source = get_source();
-        auto period = get_period()->value(ctx);
-        auto step = get_step()->value(ctx);
+        auto source = p_source();
+        auto period = period_value<TimePeriod>(ctx);
+        auto step = step_value<Time>(ctx);
         vector<NodeInContext> result;
         for (auto t = period.get_first(); t < period.get_last(); t += step) {
             auto nctx = make_shared<Context>(*ctx);
@@ -51,11 +57,6 @@ protected:
         }
         return result;
     }
-
-private:
-    NODE_PROPERTY(source, T);
-    NODE_PROPERTY(period, TimePeriod);
-    NODE_PROPERTY(step, Time);
 };
 
 NODE_INFO_TEMPLATE(TimeList, TimeList<T>, vector<T>);

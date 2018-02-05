@@ -19,32 +19,40 @@
 #include <core/util/crtp.h>
 #include <core/node_info/macros.h>
 #include <core/node/proxy_node.h>
-#include <core/node/property.h>
-#include <core/node/new_node.h>
+#include <core/node/list.h>
 #include <core/all_types.h>
+#include <core/util/nullptr.h>
 
 namespace rainynite::core {
 
-class ToUntypedList : public Node<Nothing> {
+
+class ToUntypedList :
+    public NewNode<
+        ToUntypedList,
+        Nothing,
+        types::Any
+    >
+{
+    DOC_STRING(
+        "Convert any list to untyped list"
+    )
+
+    NODE_PROPERTIES("source")
+    DEFAULT_VALUES(Nothing{})
+    PROPERTY(source)
+
+
 public:
-    ToUntypedList() {
-        init_property("source", {}, make_value<Nothing>());
-    }
-
-    Nothing get(shared_ptr<Context> /*ctx*/) const override {
-        return {};
-    }
-
     size_t list_links_count(shared_ptr<Context> ctx) const override {
-        if (auto list = this->get_property("source"))
-            return list->list_links_count(ctx);
-        return 0;
+        return no_null(p_source())->list_links_count(ctx);
     }
 
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
-        if (auto list = get_property("source"))
-            return list->list_links(ctx);
+        return no_null(p_source())->list_links(ctx);
+    }
+
+    Nothing get(shared_ptr<Context> /*ctx*/) const override {
         return {};
     }
 };
@@ -52,31 +60,32 @@ protected:
 REGISTER_NODE(ToUntypedList);
 
 
-/**
- * Convert UntypedListValue to typed list.
- *
- * NOTE: currently doesn't do any type-checking!
- */
 template <typename T>
-class ToTypedList : public Node<vector<T>> {
-public:
-    ToTypedList() {
-        auto src = make_shared<UntypedListValue>();
-        src->new_id();
-        this->template init_property("source", Type(typeid(Nothing)), std::move(src));
-    }
+class ToTypedList :
+    public NewNode<
+        ToTypedList<T>,
+        vector<T>,
+        types::Only<Nothing>
+    >
+{
+    DOC_STRING(
+        "Convert UntypedListValue to typed list.\n"
+        "\n"
+        "NOTE: currently doesn't do any type-checking!"
+    )
 
+    NODE_PROPERTIES("source")
+    DEFAULT_VALUES(Nothing{})
+    PROPERTY(source)
+
+public:
     size_t list_links_count(shared_ptr<Context> ctx) const override {
-        if (auto list = this->get_property("source"))
-            return list->list_links_count(ctx);
-        return 0;
+        return no_null(p_source())->list_links_count(ctx);
     }
 
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
-        if (auto list = this->get_property("source"))
-            return list->list_links(ctx);
-        return {};
+        return no_null(p_source())->list_links(ctx);
     }
 };
 
@@ -85,22 +94,30 @@ TYPE_INSTANCES(ToTypedListNodeInfo)
 
 
 template <typename T>
-class ListElement : public ProxyNode<T> {
-public:
-    ListElement() {
-        this->init_property("source", {}, make_value<Nothing>());
-        this->template init<double>(n, 0);
-    }
+class ListElement :
+    public NewProxyNode<
+        ListElement<T>,
+        T,
+        types::Any,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Get list element"
+    )
+
+    NODE_PROPERTIES("source", "n")
+    DEFAULT_VALUES(Nothing{}, 0.0)
+    PROPERTY(source)
+    PROPERTY(n)
+
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
-        auto list = this->get_property("source");
-        auto l = list->list_links(ctx);
+        auto l = p_source()->list_links(ctx);
         if (l.size() == 0)
             throw NodeAccessError("Requested element of empty list");
-        size_t n = clamp(get_n()->value(ctx), 0.0, l.size()-1.0);
+        size_t n = clamp(n_value<double>(ctx), 0.0, l.size()-1.0);
         return l[n];
     }
-private:
-    NODE_PROPERTY(n, double);
 };
 
 NODE_INFO_TEMPLATE(ListElement, ListElement<T>, T);

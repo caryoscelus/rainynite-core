@@ -16,30 +16,36 @@
  */
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/context.h>
 
 #include <geom_helpers/knots.h>
 
 namespace rainynite::core::nodes {
 
-class FollowPath : public Node<Geom::Point> {
-public:
-    FollowPath() {
-        init<Geom::BezierKnots>(path, {});
-        init<double>(position, 0);
-    }
+class FollowPath :
+    public NewNode<
+        FollowPath,
+        Geom::Point,
+        types::Only<Geom::BezierKnots>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Return a point on path at position"
+    )
+
+    NODE_PROPERTIES("path", "position")
+    DEFAULT_VALUES(Geom::BezierKnots{}, 0.0)
+    PROPERTY(path)
+    PROPERTY(position)
+
 protected:
     Geom::Point get(shared_ptr<Context> ctx) const override {
-        auto path = get_path()->value(ctx);
-        auto position = get_position()->value(ctx);
+        auto path = path_value<Geom::BezierKnots>(ctx);
+        auto position = position_value<double>(ctx);
         return Geom::knots_to_path(path).pointAt(position);
     }
-
-private:
-    NODE_PROPERTY(path, Geom::BezierKnots);
-    NODE_PROPERTY(position, double);
 };
 
 REGISTER_NODE(FollowPath);
