@@ -48,10 +48,8 @@ protected:
     }
 };
 
-using FormatInteger = FormatNumber<long long>;
 using FormatReal = FormatNumber<double>;
 
-REGISTER_NODE(FormatInteger);
 REGISTER_NODE(FormatReal);
 
 } // namespace rainynite::core::nodes
