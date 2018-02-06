@@ -27,11 +27,10 @@
 
 namespace rainynite::core::serialize {
 
-template <class V>
-class NodeDeserializer : public Writer<V, NodeId> {
+class NodeDeserializer : public Writer<NodeId> {
 public:
     NodeDeserializer() :
-        Writer<V, NodeId>()
+        Writer<NodeId>()
     {}
 public:
     AbstractReference get_root() const {

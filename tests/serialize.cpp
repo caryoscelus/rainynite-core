@@ -35,10 +35,8 @@ TEST_CASE("Read double", "[serialize]") {
     CHECK(x == 3.5);
 }
 
-class DummyReader {};
-
 TEST_CASE("Deserialize", "[serialize,node]") {
-    serialize::NodeDeserializer<DummyReader> s;
+    serialize::NodeDeserializer s;
     s.object_start("a");
     s.type("Add");
     s.key("a");

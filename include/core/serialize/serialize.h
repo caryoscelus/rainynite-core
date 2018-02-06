@@ -1,5 +1,5 @@
 /*  serialize.h - node tree (de)serializer
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -56,41 +56,11 @@ public:
     static RecordType classify(T const& object);
 };
 
-template <class V, typename U>
+template <typename U>
 class Writer {
 public:
-    using ValueReader = V;
     using ReferenceType = U;
 public:
-    template <class T>
-    void object(T const& object) {
-        auto ref = V::get_reference(object);
-        if (is_stored(ref)) {
-            reference(ref);
-        } else {
-            store_object(ref);
-            object_start(ref);
-            type(V::get_type(object));
-            switch (V::classify(object)) {
-                case RecordType::Value:
-                    object_value_start();
-                    V::put_value(*this, object);
-                    object_value_end();
-                    break;
-                case RecordType::List:
-                    object_value_start();
-                    V::put_list(*this, object);
-                    object_value_end();
-                    break;
-                case RecordType::Map:
-                    V::put_map(*this, object);
-                    break;
-                default:
-                    throw SerializationError("Unexpected object type");
-            }
-            object_end();
-        }
-    }
     virtual void object_start(U id) = 0;
     virtual void object_end() = 0;
     virtual void object_value_start() = 0;

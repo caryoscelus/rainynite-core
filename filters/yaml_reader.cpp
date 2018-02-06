@@ -162,14 +162,12 @@ private:
 
 namespace rainynite::core::filters {
 
-struct DummyReader {};
-
 class YamlReader : FILTER_READ(YamlReader) {
     FILTER_NAME("yaml")
 
 public:
     shared_ptr<AbstractDocument> read_document(std::istream& input) const override {
-        serialize::YamlCppWrapper<serialize::NodeDeserializer<DummyReader>> node_reader;
+        serialize::YamlCppWrapper<serialize::NodeDeserializer> node_reader;
         YAML::Parser parser(input);
         parser.HandleNextDocument(node_reader);
         return dynamic_pointer_cast<AbstractDocument>(node_reader.get_node_reader().get_root());
