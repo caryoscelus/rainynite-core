@@ -44,7 +44,8 @@ inline string random_id() {
 enum class YamlCppWrapperState {
     Map,
     Value,
-    List
+    List,
+    CustomKey
 };
 
 template <class W>
@@ -72,13 +73,26 @@ public:
     void OnScalar(Mark const&, string const& tag, anchor_t, string const& value) override {
         std::cerr << "Got tag {} with value {}\n"_format(tag, value);
         switch (state()) {
+            case State::CustomKey: {
+                if (custom_key == "__name") {
+                    writer.set_name(value);
+                } else if (custom_key == "__enabled") {
+                    writer.set_enabled(parse_primitive_type_to<bool>(std::type_index(typeid(bool)), value));
+                }
+                set_state(State::Map);
+            } break;
             case State::Map: {
                 if (tag != "?")
                     throw DeserializationError("Got key {} with a tag {}"_format(value, tag));
                 if (!anchor.empty())
                     throw DeserializationError("Got key {} with an anchor {}"_format(value, anchor));
-                writer.key(value);
-                set_state(State::Value);
+                if (value.substr(0, 2) == "__") {
+                    set_state(State::CustomKey);
+                    custom_key = value;
+                } else {
+                    writer.key(value);
+                    set_state(State::Value);
+                }
             } break;
             case State::Value:
                 set_state(State::Map);
@@ -155,6 +169,7 @@ protected:
 private:
     W writer;
     string anchor;
+    string custom_key;
     vector<string> anchors;
 };
 

@@ -22,6 +22,7 @@
 #include <core/node/abstract_node.h>
 #include <core/node_info/node_info.h>
 #include <core/util/type_info.h>
+#include <core/util/nullptr.h>
 
 #include "serialize.h"
 
@@ -139,6 +140,12 @@ public:
             default:
                 throw DeserializationError("Unexpected reference");
         }
+    }
+    void set_name(string const& name) override {
+        no_null(abstract_node_cast(context.back().object))->set_name(name);
+    }
+    void set_enabled(bool enabled) override {
+        no_null(context.back().object)->set_enabled(enabled);
     }
 private:
     struct NodeContext {

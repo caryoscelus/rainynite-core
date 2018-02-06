@@ -81,6 +81,10 @@ public:
     virtual void key(string const& s) = 0;
     virtual void number(double x) = 0;
     virtual void reference(U id) = 0;
+
+    virtual void set_name(string const& name) = 0;
+    virtual void set_enabled(bool enabled) = 0;
+
 private:
     set<U> storage;
     bool is_stored(U id) {

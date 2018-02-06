@@ -25,6 +25,7 @@
 #include <core/node_info/node_info.h>
 #include <core/node_tree/traverse.h>
 #include <core/filters/writer.h>
+#include <core/util/nullptr.h>
 
 using namespace fmt::literals;
 
@@ -83,6 +84,10 @@ public:
             case serialize::RecordType::Map: {
                 push_state(State::Map);
                 emitter << YAML::BeginMap;
+                if (auto node_node = abstract_node_cast(node)) {
+                    emitter << YAML::Key << "__name" << YAML::Value << node_node->name();
+                    emitter << YAML::Key << "__enabled" << YAML::Value << node->enabled();
+                }
                 return true;
             }
             case serialize::RecordType::List: {
