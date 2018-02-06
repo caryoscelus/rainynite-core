@@ -27,7 +27,19 @@ namespace rainynite::core {
 
 class Context;
 
-class AbstractNode {
+class HasName {
+public:
+    string name() const {
+        return name_value;
+    }
+    void set_name(string const& new_name) {
+        name_value = new_name;
+    }
+private:
+    string name_value;
+};
+
+class AbstractNode : public HasName {
 public:
     virtual AbstractReference get_property(string const& name) const = 0;
     virtual void set_property(string const& name, AbstractReference ref) = 0;
