@@ -85,8 +85,10 @@ public:
                 push_state(State::Map);
                 emitter << YAML::BeginMap;
                 if (auto node_node = abstract_node_cast(node)) {
-                    emitter << YAML::Key << "__name" << YAML::Value << node_node->name();
-                    emitter << YAML::Key << "__enabled" << YAML::Value << node->enabled();
+                    if (auto name = node_node->name(); !name.empty())
+                        emitter << YAML::Key << "__name" << YAML::Value << name;
+                    if (auto enabled = node->enabled(); !enabled)
+                        emitter << YAML::Key << "__enabled" << YAML::Value << enabled;
                 }
                 return true;
             }
