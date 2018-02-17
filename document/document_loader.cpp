@@ -17,6 +17,7 @@
 
 #include <fstream>
 
+#include <core/document.h>
 #include <core/fs/document_loader.h>
 
 namespace rainynite::core {
@@ -37,6 +38,7 @@ shared_ptr<AbstractDocument> DocumentLoader::get_document_from(fs::Path const& f
         auto const& name = filter_pair.first;
         auto filter = filter_pair.second;
         if (auto document = filter->try_load(in)) {
+            document->set_path(proper_path);
             registry.try_emplace(proper_path, document, name);
             return document;
         }

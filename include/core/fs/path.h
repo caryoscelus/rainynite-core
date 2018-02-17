@@ -52,7 +52,7 @@ public:
     path_t to_absolute() const {
         switch (type) {
             case ProjectLocal:
-                return owner / value;
+                return owner.parent_path() / value;
             case Absolute:
                 return value;
             default:

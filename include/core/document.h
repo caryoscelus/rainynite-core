@@ -19,6 +19,7 @@
 #define CORE_DOCUMENT_H_87F22B17_CBE2_5508_B5CD_09A0EBABED26
 
 #include <core/std/memory.h>
+#include <core/std/string.h>
 
 namespace rainynite::core {
 
@@ -36,6 +37,12 @@ public:
     virtual shared_ptr<Context> get_default_context() = 0;
     virtual shared_ptr<ActionStack> get_action_stack() = 0;
     virtual shared_ptr<NodeTree> get_tree() = 0;
+
+    string get_path() const;
+    void set_path(string const& path_);
+
+private:
+    string path;
 };
 
 template <class From>

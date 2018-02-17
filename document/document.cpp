@@ -101,4 +101,14 @@ shared_ptr<AbstractDocument> make_document() {
     return make_shared<Document>();
 }
 
+
+string AbstractDocument::get_path() const {
+    return path;
+}
+
+void AbstractDocument::set_path(string const& path_) {
+    path = path_;
+}
+
+
 } // namespace rainynite::core
