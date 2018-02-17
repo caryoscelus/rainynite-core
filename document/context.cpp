@@ -43,6 +43,21 @@ Context::Context(Context const& context_) :
 {
 }
 
+void Context::set_time(Time time_) {
+    time = time_;
+    changed_time(time);
+}
+
+void Context::set_frames(double frames) {
+    time.set_frames(frames);
+    changed_time(time);
+}
+
+void Context::set_seconds(double seconds) {
+    time.set_seconds(seconds);
+    changed_time(time);
+}
+
 void Context::set_period(TimePeriod const& period) {
     time_period = make_value<TimePeriod>(period);
 }

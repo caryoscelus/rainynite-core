@@ -50,39 +50,34 @@ public:
         return document.lock();
     }
     shared_ptr<AbstractNode> get_document_node() const;
+
     Time get_time() const {
         return time;
     }
-    void set_time(Time time_) {
-        time = time_;
-        changed_time(time);
-    }
-    void set_frames(double frames) {
-        time.set_frames(frames);
-        changed_time(time);
-    }
-    void set_seconds(double seconds) {
-        time.set_seconds(seconds);
-        changed_time(time);
-    }
+    void set_time(Time time_);
+    void set_frames(double frames);
+    void set_seconds(double seconds);
     void to_start() {
         set_time(get_period().get_first());
     }
     void to_end() {
         set_time(get_period().get_last());
     }
+
     void set_period(TimePeriod const& period);
     TimePeriod get_period() const;
-    any get_render_settings() const {
-        return render_settings;
-    }
-    any& mod_render_settings() {
-        return render_settings;
-    }
+
     Time::fps_type get_fps() {
         return fps;
     }
     void set_fps(Time::fps_type fps_);
+
+    any get_render_settings() const {
+        return render_settings;
+    }
+    void set_render_settings(any settings) {
+        render_settings = std::move(settings);
+    }
 
 public:
     boost::signals2::signal<void(Time)> changed_time;
