@@ -82,7 +82,6 @@ Document::Document(shared_ptr<BaseValue<Renderable>> root_) :
 {
     if (root_)
         set_property("root", root_);
-    new_id();
 }
 
 shared_ptr<NodeTree> Document::get_tree() {
