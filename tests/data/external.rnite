@@ -1,0 +1,8 @@
+--- !Document
+
+_tests: !List/Boolean
+
+  - !Equal/String
+    a: Hello, World!
+    b: !FileString
+      file_name: "./helloworld.txt"
