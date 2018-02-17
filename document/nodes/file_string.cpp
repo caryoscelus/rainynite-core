@@ -20,6 +20,8 @@
 
 #include <core/node_info/macros.h>
 #include <core/node/new_node.h>
+#include <core/fs/document_loader.h>
+#include <core/fs/from_context.h>
 
 namespace rainynite::core::nodes {
 
@@ -41,10 +43,8 @@ class FileString :
 protected:
     string get(shared_ptr<Context> ctx) const override {
         auto fname = file_name_value<string>(ctx);
-        std::ifstream stream(fname);
-        std::stringstream buffer;
-        buffer << stream.rdbuf();
-        return buffer.str();
+        auto fpath = fs::context_path(*ctx, fname);
+        return DocumentLoader::instance()->get_text(fpath);
     }
 };
 
