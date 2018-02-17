@@ -24,8 +24,8 @@ namespace rainynite::core {
 
 shared_ptr<AbstractDocument> DocumentLoader::get_document(fs::Path const& fpath) {
     auto proper_path = fpath.to_absolute();
-    auto iter = registry.find(proper_path);
-    if (iter != registry.end())
+    auto iter = document_registry.find(proper_path);
+    if (iter != document_registry.end())
         return iter->second.document;
     std::ifstream in_file(proper_path);
     return get_document_from(fpath, in_file);
@@ -39,7 +39,7 @@ shared_ptr<AbstractDocument> DocumentLoader::get_document_from(fs::Path const& f
         auto filter = filter_pair.second;
         if (auto document = filter->try_load(in)) {
             document->set_path(proper_path);
-            registry.try_emplace(proper_path, document, name);
+            document_registry.try_emplace(proper_path, document, name);
             return document;
         }
     }
@@ -47,9 +47,23 @@ shared_ptr<AbstractDocument> DocumentLoader::get_document_from(fs::Path const& f
     return nullptr;
 }
 
+string const& DocumentLoader::get_text(fs::Path const& fpath, bool reload) {
+    auto proper_path = fpath.to_absolute();
+    if (!reload) {
+        auto iter = text_registry.find(proper_path);
+        if (iter != text_registry.end())
+            return iter->second;
+    }
+    std::ifstream in_file(proper_path);
+    std::stringstream buffer;
+    buffer << in_file.rdbuf();
+    auto [iter, _] = text_registry.try_emplace(proper_path, buffer.str());
+    return iter->second;
+}
+
 void DocumentLoader::register_document(fs::Path const& fpath, shared_ptr<AbstractDocument> document, string const& format) {
     auto proper_path = fpath.to_absolute();
-    registry.try_emplace(proper_path, document, format);
+    document_registry.try_emplace(proper_path, document, format);
 }
 
 void DocumentLoader::write_document(fs::Path const& fpath) {
@@ -60,8 +74,8 @@ void DocumentLoader::write_document(fs::Path const& fpath) {
 
 void DocumentLoader::write_document_to(fs::Path const& fpath, std::ostream& out) {
     auto proper_path = fpath.to_absolute();
-    auto iter = registry.find(proper_path);
-    if (iter == registry.end()) {
+    auto iter = document_registry.find(proper_path);
+    if (iter == document_registry.end()) {
         throw std::runtime_error("Cannot find document to write");
     }
     auto [document, filter_name] = iter->second;
@@ -76,7 +90,7 @@ void DocumentLoader::write_recursively(fs::Path const& fpath) {
 }
 
 void DocumentLoader::unload_document(fs::Path const& fpath) {
-    registry.erase(fpath.to_absolute());
+    document_registry.erase(fpath.to_absolute());
 }
 
 } // namespace rainynite::core

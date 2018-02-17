@@ -28,6 +28,9 @@ namespace rainynite::core {
 
 class AbstractDocument;
 
+/**
+ * Document & generally file registry.
+ */
 class DocumentLoader {
 public:
     static observer_ptr<DocumentLoader> instance() {
@@ -35,8 +38,16 @@ public:
         return observer_ptr<DocumentLoader>{_instance.get()};
     }
 
+    /// Get (possibly loaded) document from path
     shared_ptr<AbstractDocument> get_document(fs::Path const& fpath);
     shared_ptr<AbstractDocument> get_document_from(fs::Path const& fpath, std::istream& in);
+
+    /**
+     * Get (possibly cached) file contents.
+     *
+     * TODO: enable proper caching.
+     */
+    string const& get_text(fs::Path const& fpath, bool reload=true);
 
     void register_document(fs::Path const& fpath, shared_ptr<AbstractDocument> document, string const& format);
 
@@ -58,7 +69,8 @@ private:
         {}
     };
 
-    map<fs::Path::path_t, Document> registry;
+    map<fs::Path::path_t, Document> document_registry;
+    map<fs::Path::path_t, string> text_registry;
 };
 
 } // namespace rainynite::core
