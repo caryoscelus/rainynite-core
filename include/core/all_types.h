@@ -25,6 +25,7 @@
 #include <geom_helpers/knots.h>
 #include <geom_helpers/bones.h>
 #include <2geom/affine.h>
+#include <core/fs/path.h>
 #include <core/shading.h>
 #include <core/renderable.h>
 #include <core/audio.h>
@@ -50,7 +51,8 @@
     TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \
     template struct Template<bool>; \
     template struct Template<double>; \
-    template struct Template<Geom::Affine>;
+    template struct Template<Geom::Affine>; \
+    template struct Template<core::fs::Path::path_t>;
 
 #define TYPE_INSTANCES(Template) \
     TYPE_INSTANCES_WO_RENDERABLE(Template) \

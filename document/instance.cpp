@@ -26,6 +26,7 @@
 #include <core/time/format.h>
 #include <core/renderable.h>
 #include <core/document.h>
+#include <core/fs/path.h>
 #include <core/color/color.h>
 #include <core/util/nothing_io.h>
 
@@ -87,6 +88,10 @@ TYPE_INFO(string, "String", [](auto&& s) {
 } // namespace std
 
 namespace rainynite::core {
+
+TYPE_INFO_NAMED(FsPathTypeInfo, fs::Path::path_t, "FilePath", [](auto&& s) {
+    return fs::Path::path_t{s};
+});
 
 namespace colors {
 TYPE_INFO(Color, "Color", [](auto&& s) {
@@ -223,6 +228,20 @@ struct AffineValueToString :
         return "matrix({}, {}, {}, {}, {}, {})"_format(
             v[0], v[1], v[2], v[3], v[4], v[5]
         );
+    }
+};
+
+struct PathValueToString :
+    public ValueToString,
+    private class_init::Registered<
+        PathValueToString,
+        fs::Path::path_t,
+        ValueToString
+    >
+{
+    string operator()(any const& object) const override {
+        auto v = any_cast<fs::Path::path_t>(object);
+        return v.string();
     }
 };
 
