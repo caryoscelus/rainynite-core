@@ -82,13 +82,13 @@ TYPE_INSTANCES(FrameNodeInfo)
 TYPE_INSTANCES(TimePointListNodeInfo)
 
 template <typename T>
-class DefaultNodeInfoTimePoint : public DefaultNodeInfoImpl<TimePoint<T>, Frame<T>> {
+struct DefaultNodeInfoTimePoint : public DefaultNodeInfoImpl<TimePoint<T>, Frame<T>> {
 };
 
 TYPE_INSTANCES(DefaultNodeInfoTimePoint)
 
 template <typename T>
-class DefaultNodeInfoTimePointList : public DefaultNodeInfoImpl<vector<TimePoint<T>>, TPList<T>> {
+struct DefaultNodeInfoTimePointList : public DefaultNodeInfoImpl<vector<TimePoint<T>>, TPList<T>> {
 };
 
 TYPE_INSTANCES(DefaultNodeInfoTimePointList)
