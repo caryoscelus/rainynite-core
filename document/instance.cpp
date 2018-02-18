@@ -19,7 +19,7 @@
 
 #include <core/node_info/macros.h>
 #include <core/node/list.h>
-#include <core/util/type_info.h>
+#include <core/util/type_info_macros.h>
 #include <core/all_types.h>
 #include <core/serialize/node_writer.h>
 #include <core/time/parse.h>

@@ -28,21 +28,6 @@ public:
     virtual any parse_string(string const& s) const = 0;
 };
 
-#define TYPE_INFO(Type, name, parse) \
-class Type##TypeInfo : \
-    public rainynite::core::TypeInfo, \
-    class_init::Registered<Type##TypeInfo, Type, rainynite::core::TypeInfo>, \
-    class_init::ReverseRegistered<Type##TypeInfo, Type, rainynite::string> \
-{ \
-public: \
-    rainynite::string operator()() const override { \
-        return name; \
-    } \
-    rainynite::any parse_string(rainynite::string const& s) const override { \
-        return parse(s); \
-    } \
-}
-
 inline TypeInfo const& get_primitive_type(std::type_index type) {
     return class_init::type_meta<TypeInfo>(type);
 }
