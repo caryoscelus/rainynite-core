@@ -15,9 +15,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <fstream>
-#include <sstream>
-
 #include <core/node_info/macros.h>
 #include <core/node/new_node.h>
 #include <core/fs/document_loader.h>
@@ -29,7 +26,7 @@ class FileString :
     public NewNode<
         FileString,
         string,
-        types::Only<string>
+        types::Only<fs::Path::path_t>
     >
 {
     DOC_STRING(
@@ -37,12 +34,12 @@ class FileString :
     )
 
     NODE_PROPERTIES("file_name")
-    DEFAULT_VALUES(string{})
+    DEFAULT_VALUES(fs::Path::path_t{})
     PROPERTY(file_name)
 
 protected:
     string get(shared_ptr<Context> ctx) const override {
-        auto fname = file_name_value<string>(ctx);
+        auto fname = file_name_value<fs::Path::path_t>(ctx);
         auto fpath = fs::context_path(*ctx, fname);
         return DocumentLoader::instance()->get_text(fpath);
     }
