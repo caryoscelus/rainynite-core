@@ -16,6 +16,7 @@
  */
 
 #include <core/node_info/macros.h>
+#include <core/node_info/default_node.h>
 #include <core/node/new_node.h>
 #include <core/node/list.h>
 #include <core/node_tree/transform.h>
@@ -30,7 +31,7 @@ class TestTransform :
     public NewNode<
         TestTransform,
         Geom::Affine,
-        types::Only<vector<double>>
+        types::Only<NodeTreePath>
     >
 {
     DOC_STRING(
@@ -40,13 +41,7 @@ class TestTransform :
     )
 
     NODE_PROPERTIES("index")
-    static vector<AbstractReference> const& default_values() {
-        static vector<AbstractReference> instance {
-            make_node<ListValue<double>>()
-        };
-        return instance;
-    }
-
+    COMPLEX_DEFAULT_VALUES(make_default_node<NodeTreePath>())
     PROPERTY(index)
 
 protected:
@@ -56,13 +51,8 @@ protected:
             throw NullPointerException("No document");
         auto tree = document->get_tree();
 
-        NodeTreePath path;
-        for (auto i : index_value<vector<double>>(ctx)) {
-            path.indexes.push_back((size_t)std::fmax(i, 0));
-        }
-
+        auto path = index_value<NodeTreePath>(ctx);
         auto idx = tree_path_to_index(*tree, path);
-
         return tree->get_element<TreeCalculateTransform>(idx)->get_transform(ctx);
     }
 
