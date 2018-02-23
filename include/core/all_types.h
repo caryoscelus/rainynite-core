@@ -26,6 +26,7 @@
 #include <geom_helpers/bones.h>
 #include <2geom/affine.h>
 #include <core/fs/path.h>
+#include <core/node_tree/path.h>
 #include <core/shading.h>
 #include <core/renderable.h>
 #include <core/audio.h>
@@ -45,7 +46,8 @@
     template struct Template<Geom::Circle>; \
     template struct Template<Geom::Knot>; \
     template struct Template<core::colors::Color>; \
-    template struct Template<core::Shading>;
+    template struct Template<core::Shading>; \
+    template struct Template<core::NodeTreePath>;
 
 #define TYPE_INSTANCES_WO_RENDERABLE(Template) \
     TYPE_INSTANCES_WO_RENDERABLE_AND_CUSTOM_IO(Template) \

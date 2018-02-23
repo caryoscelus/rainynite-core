@@ -19,6 +19,7 @@
 
 #include <core/node_info/macros.h>
 #include <core/node/list.h>
+#include <core/node_tree/io.h>
 #include <core/util/type_info_macros.h>
 #include <core/all_types.h>
 #include <core/serialize/node_writer.h>
@@ -91,6 +92,10 @@ namespace rainynite::core {
 
 TYPE_INFO_NAMED(FsPathTypeInfo, fs::Path::path_t, "FilePath", [](auto&& s) {
     return fs::Path::path_t{s};
+});
+
+TYPE_INFO(NodeTreePath, "NodePath", [](auto&& s) {
+    return NodeTreePath{};
 });
 
 namespace colors {

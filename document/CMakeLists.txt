@@ -16,6 +16,7 @@ target_sources(document
         node_tree.cpp
         node_tree_transform.cpp
         node/nic.cpp
+        io.cpp
 )
 
 target_link_libraries(document log morphing fmt time stdc++fs)
