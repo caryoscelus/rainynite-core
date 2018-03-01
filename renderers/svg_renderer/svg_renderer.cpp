@@ -48,6 +48,7 @@ R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
      xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
      version="1.1"
      width="{target_width}px"
      height="{target_height}px"
@@ -211,15 +212,15 @@ string SvgRenderer::Impl::frame_to_svg(shared_ptr<Context> context) const {
     return node_to_svg({document->get_property("root"), context});
 }
 
-string get_extra_style(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings) {
+string get_extra_svg(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings, string const& name) {
     if (settings.extra_style)
-        return node.get_property_value<string>("_svg_style", ctx).value_or("");
+        return node.get_property_value<string>("_svg_"+name, ctx).value_or("");
     return "";
 }
 
-string get_extra_style(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context> ctx, SvgRendererSettings const& settings) {
+string get_extra_svg(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context> ctx, SvgRendererSettings const& settings, string const& name) {
     if (auto node = dynamic_cast<AbstractNode*>(value.get())) {
-        return get_extra_style(*node, ctx, settings);
+        return get_extra_svg(*node, ctx, settings, name);
     }
     return "";
 }

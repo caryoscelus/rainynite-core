@@ -27,7 +27,7 @@ using namespace fmt::literals;
 
 namespace rainynite::core::renderers {
 
-const string styled_svg_element = R"(<{shape} style="fill:{fill_color};fill-opacity:{fill_opacity};stroke:{line_color};stroke-opacity:{line_opacity};stroke-width:{line_width};{svg_style}" />)";
+const string styled_svg_element = R"(<{shape} style="fill:{fill_color};fill-opacity:{fill_opacity};stroke:{line_color};stroke-opacity:{line_opacity};stroke-width:{line_width};{svg_style}" {svg_defs} />)";
 
 class ShapeSvgRenderer : SVG_RENDERER_MODULE_CLASS(ShapeSvgRenderer) {
     SVG_RENDERER_MODULE_NAME("RenderShape");
@@ -36,7 +36,8 @@ public:
         auto shape = node.get_property("shape")->get_any(ctx);
         auto shading_node = node.get_property_as<Shading>("shading");
         auto shading = shading_node->value(ctx);
-        auto extra_style = get_extra_style(shading_node, ctx, settings);
+        auto extra_style = get_extra_svg(shading_node, ctx, settings, "style");
+        auto extra_defs = get_extra_svg(shading_node, ctx, settings, "defs");
         return fmt::format(
             styled_svg_element,
             "shape"_a=render_svg_shape(shape),
@@ -45,7 +46,8 @@ public:
             "line_color"_a=colors::to_hex24(shading.line_color),
             "line_opacity"_a=shading.line_color.alpha(),
             "line_width"_a=shading.line_width,
-            "svg_style"_a=extra_style
+            "svg_style"_a=extra_style,
+            "svg_defs"_a=extra_defs
         );
     }
 };

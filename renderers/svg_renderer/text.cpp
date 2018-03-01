@@ -31,7 +31,7 @@ public:
         auto text = node.get_property_as<string>("text")->value(ctx);
         auto size = node.get_property_as<double>("size")->value(ctx);
         auto color = node.get_property_as<colors::Color>("color")->value(ctx);
-        auto extra_style = get_extra_style(node, ctx, settings);
+        auto extra_style = get_extra_svg(node, ctx, settings, "style");
         return fmt::format(
             R"(<text x="0" y="0" font-size="{size}px" fill="{fill}" style="{svg_style}">{text}</text>)",
             "size"_a=size,

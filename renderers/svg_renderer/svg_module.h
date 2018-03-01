@@ -39,9 +39,9 @@ struct SvgRendererSettings;
  * Returns value of _svg_style property or empty string if extra_style is
  * disabled in settings.
  */
-string get_extra_style(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings);
+string get_extra_svg(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings, string const& name);
 
-string get_extra_style(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context> ctx, SvgRendererSettings const& settings);
+string get_extra_svg(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context> ctx, SvgRendererSettings const& settings, string const& name);
 
 /**
  * Convert node to svg string.
