@@ -18,7 +18,11 @@
 #ifndef UTIL_CRTP_H_B528AAD5_987E_556C_A9AC_F525F36380DE
 #define UTIL_CRTP_H_B528AAD5_987E_556C_A9AC_F525F36380DE
 
+#include <core/std/traits.h>
+
 namespace crtp {
+
+using rainynite::is_base_of_v;
 
 template <class Base, class Self>
 class Crtp {
@@ -34,8 +38,8 @@ protected:
     }
 
     void assert_crtp() const {
-        static_assert(std::is_base_of_v<Crtp<Base, Self>, Base>);
-        static_assert(std::is_base_of_v<Base, Self>);
+        static_assert(is_base_of_v<Crtp<Base, Self>, Base>);
+        static_assert(is_base_of_v<Base, Self>);
     }
 };
 
