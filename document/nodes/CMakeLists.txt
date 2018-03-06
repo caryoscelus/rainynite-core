@@ -69,6 +69,7 @@ add_node_subset(string
     color_string.cpp
     file_string.cpp
     split_string.cpp
+    join.cpp
 )
 
 add_node_subset(dynamic

@@ -1,0 +1,10 @@
+--- !Document
+_tests: !List/Boolean
+  - !Equal/String
+    a: "A, B, C"
+    b: !JoinStringList
+      separator: ", "
+      strings: !List/String
+        - A
+        - B
+        - C
