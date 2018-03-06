@@ -20,7 +20,7 @@
 namespace rainynite::core {
 
 std::ostream& operator<<(std::ostream& out, NodeTreePath const& path) {
-    out << "FAIL";
+    return out << "FAIL";
 }
 
 } // namespace rainynite::core
