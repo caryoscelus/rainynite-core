@@ -1,5 +1,5 @@
 /*  render_shape.cpp - SvgRenderer shape renderer
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,18 +38,22 @@ public:
         auto shading = shading_node->value(ctx);
         auto extra_style = get_extra_svg(shading_node, ctx, settings, "style");
         auto extra_defs = get_extra_svg(shading_node, ctx, settings, "defs");
-        return fmt::format(
-            styled_svg_element,
-            "shape"_a=render_svg_shape(shape),
-            "fill_color"_a=colors::to_hex24(shading.fill_color),
-            "fill_opacity"_a=shading.fill_color.alpha(),
-            "line_color"_a=colors::to_hex24(shading.line_color),
-            "line_opacity"_a=shading.line_color.alpha(),
-            "line_width"_a=shading.line_width,
-            "svg_style"_a=extra_style,
-            "svg_defs"_a=extra_defs
-        );
+        return render_svg_shape(shape, shading, extra_style, extra_defs);
     }
 };
+
+string DefaultSvgShapeRenderer::operator()(any const& shape, Shading const& shading, string extra_style, string extra_defs) const {
+    return fmt::format(
+        styled_svg_element,
+        "shape"_a=get_main_shape(shape),
+        "fill_color"_a=colors::to_hex24(shading.fill_color),
+        "fill_opacity"_a=shading.fill_color.alpha(),
+        "line_color"_a=colors::to_hex24(shading.line_color),
+        "line_opacity"_a=shading.line_color.alpha(),
+        "line_width"_a=shading.line_width,
+        "svg_style"_a=extra_style,
+        "svg_defs"_a=extra_defs
+    );
+}
 
 } // namespace rainynite::core::renderers

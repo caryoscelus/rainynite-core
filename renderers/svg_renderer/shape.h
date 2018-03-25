@@ -1,5 +1,5 @@
 /*  svg_renderer/shape.h - Svg renderer shape module definitions
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,16 +26,19 @@ namespace rainynite::core::renderers {
  * Use SVG_SHAPE_RENDERER when declaring render module to automatically
  * register it.
  */
-class SvgShapeRenderer {
-public:
-    /**
-     * Render shape to svg.
-     *
-     * Style is provided by generic renderer, so this function should provide
-     * string with places to replace: "{fill_color}", "{svg_style}" and possibly
-     * more in the future.
-     */
-    virtual string operator()(any const& shape) const = 0;
+struct SvgShapeRenderer {
+    /// Render shape/shading/extra_style to svg xml string
+    virtual string operator()(any const& shape, Shading const& shading, string extra_style, string extra_defs) const = 0;
+};
+
+/**
+ * Simple shape renderer, suitable for most cases
+ */
+struct DefaultSvgShapeRenderer : public SvgShapeRenderer {
+    string operator()(any const& shape, Shading const& shading, string extra_style, string extra_defs) const override;
+
+    /// Return main svg shape tag & params part
+    virtual string get_main_shape(any const& shape) const = 0;
 };
 
 /**
@@ -43,13 +46,17 @@ public:
  *
  * Accepts shape of any type that has a registered SvgShapeRenderer for it
  */
-inline string render_svg_shape(any const& shape) {
-    return class_init::any_info<SvgShapeRenderer, string>(shape);
+template <typename... Args>
+string render_svg_shape(any const& shape, Args&&... args) {
+    return class_init::type_info<SvgShapeRenderer, string>(shape.type(), shape, std::forward<Args>(args)...);
 }
 
-#define SVG_SHAPE_RENDERER(Self, Shape) \
-public SvgShapeRenderer, \
+#define REGISTER_SVG_SHAPE_RENDERER(Self, Shape) \
 private class_init::Registered<Self, Shape, SvgShapeRenderer>
+
+#define SVG_SHAPE_RENDERER(Self, Shape) \
+public DefaultSvgShapeRenderer, \
+REGISTER_SVG_SHAPE_RENDERER(Self, Shape)
 
 } // namespace rainynite::core::renderers
 
