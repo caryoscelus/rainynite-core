@@ -87,6 +87,7 @@ add_node_subset(geom
     knot_list.cpp
     rectangle.cpp
     circle.cpp
+    variable_width_outline.cpp
 )
 
 add_node_subset(transform

@@ -98,6 +98,10 @@ TYPE_INFO(NodeTreePath, "NodePath", [](auto&& s) {
     return NodeTreePath{};
 });
 
+TYPE_INFO(BezierOutlinePath, "VariableWidthOutline", [](auto&& s) {
+    return BezierOutlinePath{};
+});
+
 namespace colors {
 TYPE_INFO(Color, "Color", [](auto&& s) {
     return parse_hex(s);

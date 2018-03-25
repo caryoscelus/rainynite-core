@@ -16,10 +16,15 @@
  */
 
 #include <core/node_tree/io.h>
+#include <core/bezier_outline.h>
 
 namespace rainynite::core {
 
 std::ostream& operator<<(std::ostream& out, NodeTreePath const& path) {
+    return out << "FAIL";
+}
+
+std::ostream& operator<<(std::ostream& out, BezierOutlinePath const& outline) {
     return out << "FAIL";
 }
 

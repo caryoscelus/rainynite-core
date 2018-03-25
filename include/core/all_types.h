@@ -28,6 +28,7 @@
 #include <core/fs/path.h>
 #include <core/node_tree/path.h>
 #include <core/shading.h>
+#include <core/bezier_outline.h>
 #include <core/renderable.h>
 #include <core/audio.h>
 #include <core/time_point.h>
@@ -41,9 +42,10 @@
     template struct Template<Geom::Point>; \
     template struct Template<Geom::bones::Bone>; \
     template struct Template<Geom::NullShape>; \
-    template struct Template<Geom::BezierKnots>; \
     template struct Template<Geom::Rectangle>; \
     template struct Template<Geom::Circle>; \
+    template struct Template<core::BezierOutlinePath>; \
+    template struct Template<Geom::BezierKnots>; \
     template struct Template<Geom::Knot>; \
     template struct Template<core::colors::Color>; \
     template struct Template<core::Shading>; \

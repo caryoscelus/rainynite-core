@@ -1,4 +1,4 @@
-/*  shapes.h - Shape type constraint
+/*  bezier_outline.h - temporary (?) shape type for variable width outlines
  *  Copyright (C) 2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,25 +15,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORES_SHAPES_H_8C303A77_6D0B_5537_9F83_E0393C42C6E3
-#define CORES_SHAPES_H_8C303A77_6D0B_5537_9F83_E0393C42C6E3
+#ifndef CORE_BEZIER_OUTLINE_H_C6C18303_28DC_5941_BDB3_8D4D800BF64A
+#define CORE_BEZIER_OUTLINE_H_C6C18303_28DC_5941_BDB3_8D4D800BF64A
 
-#include <geom_helpers/null_shape.h>
-#include <geom_helpers/rectangle.h>
-#include <geom_helpers/circle.h>
+#include <iostream>
+
+#include <core/std/vector.h>
+#include <core/std/tuple.h>
+
 #include <geom_helpers/knots.h>
-#include <core/bezier_outline.h>
 
-namespace rainynite::core::types {
+namespace rainynite::core {
 
-using Shape = AnyOf<
-    Geom::NullShape,
-    Geom::Rectangle,
-    Geom::Circle,
-    Geom::BezierKnots,
-    BezierOutlinePath
->;
+struct BezierOutlinePath {
+    Geom::BezierKnots source;
+    vector<pair<double,double>> widths;
+};
 
-} // namespace rainynite::core::types
+std::ostream& operator<<(std::ostream& out, BezierOutlinePath const& outline);
+
+} // namespace rainynite::core
 
 #endif
