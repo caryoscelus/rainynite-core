@@ -49,7 +49,6 @@ add_node_subset(renderable
 )
 
 add_node_subset(animated
-#     animated.cpp
     frame_list.cpp
     interpolate.cpp
     frame.cpp
