@@ -55,20 +55,27 @@ public:
         );
         auto time = ctx->get_time();
         TimePoint<T> const* last = nullptr;
+
+        auto reset_time = reset_time_value<bool>(ctx);
+        if (reset_time) {
+            ctx = make_shared<Context>(*ctx);
+        }
+
         for (auto const& frame : frames) {
             if (!frame.value)
                 continue;
-            if (frame.time == time)
+            if (frame.time == time) {
+                if (reset_time)
+                    ctx->set_time({});
                 return {frame.value, ctx};
+            }
             if (frame.time > time)
                 break;
             last = &frame;
         }
         if (last) {
-            if (reset_time_value<bool>(ctx)) {
-                ctx = make_shared<Context>(*ctx);
-                ctx->set_time(time-last->time);
-            }
+            if (reset_time)
+                ctx->set_time(time - last->time);
             return {last->value, ctx};
         }
         return {p_default_value(), ctx};

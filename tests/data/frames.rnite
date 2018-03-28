@@ -68,3 +68,9 @@ _tests: !List/Boolean
       source: *frame_list_reset_time
       time: 7f@2
     b: 0.5
+
+  - !Equal/Real
+    a: !AtTime/Real
+      source: *frame_list_reset_time
+      time: 3f@1
+    b: 0
