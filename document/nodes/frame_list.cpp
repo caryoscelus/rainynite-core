@@ -23,24 +23,25 @@
 
 namespace rainynite::core::nodes {
 
-// TODO: rewrite to new node system
 template <class T>
 class FrameList :
     public NewProxyNode<
         FrameList<T>,
         T,
         types::Only<T>,
-        types::Only<vector<TimePoint<T>>>
+        types::Only<vector<TimePoint<T>>>,
+        types::Only<bool>
     >
 {
     DOC_STRING(
         "Value based on list of time-value mappings"
     )
 
-    NODE_PROPERTIES("default_value", "frame_list")
-    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_default_node<vector<TimePoint<T>>>())
+    NODE_PROPERTIES("default_value", "frame_list", "reset_time")
+    COMPLEX_DEFAULT_VALUES(make_default_node<T>(), make_default_node<vector<TimePoint<T>>>(), make_value<bool>(false))
     PROPERTY(default_value)
     PROPERTY(frame_list)
+    PROPERTY(reset_time)
 
 public:
     NodeInContext get_proxy(shared_ptr<Context> ctx) const override {
@@ -63,8 +64,13 @@ public:
                 break;
             last = &frame;
         }
-        if (last)
+        if (last) {
+            if (reset_time_value<bool>(ctx)) {
+                ctx = make_shared<Context>(*ctx);
+                ctx->set_time(time-last->time);
+            }
             return {last->value, ctx};
+        }
         return {p_default_value(), ctx};
     }
 };
