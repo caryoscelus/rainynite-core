@@ -18,8 +18,7 @@
 #include <random>
 
 #include <core/node_info/macros.h>
-#include <core/node/node.h>
-#include <core/node/property.h>
+#include <core/node/new_node.h>
 #include <core/context.h>
 
 namespace rainynite::core::nodes {
@@ -33,20 +32,29 @@ double get_random_in_range(R& engine, double max) {
     return random;
 }
 
-/**
- * Node that generates list of static random numbers.
- *
- * Currently it returns doubles in [0; 1) range because that's more
- * useful than returning random 32bit ints and strict precision isn't
- * that important yet.
- */
-class RandomList : public Node<vector<double>> {
-public:
-    RandomList() {
-        init<double>(length, 0);
-        init<double>(seed, 0);
-        init<double>(max, 1);
-    }
+class RandomList :
+    public NewNode<
+        RandomList,
+        vector<double>,
+        types::Only<double>,
+        types::Only<double>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        "Node that generates list of static random numbers.\n"
+        "\n"
+        "Currently it returns doubles in [0; 1) range because that's more"
+        "useful than returning random 32bit ints and strict precision isn't"
+        "that important yet."
+    )
+
+    NODE_PROPERTIES("length", "seed", "max")
+    DEFAULT_VALUES(0.0, 0.0, 1.0)
+    PROPERTY(length)
+    PROPERTY(seed)
+    PROPERTY(max)
+
 protected:
     vector<NodeInContext> get_list_links(shared_ptr<Context> ctx) const override {
         vector<NodeInContext> result;
@@ -55,7 +63,12 @@ protected:
         });
         return result;
     }
+
 public:
+    size_t list_links_count(shared_ptr<Context> ctx) const override {
+        return std::max(length_value<double>(ctx), 0.0);
+    }
+
     vector<double> get(shared_ptr<Context> ctx) const override {
         vector<double> result;
         random_sequence(ctx, [&result](auto r) {
@@ -63,65 +76,64 @@ public:
         });
         return result;
     }
+
 private:
     template <typename F>
     void random_sequence(shared_ptr<Context> ctx, F f) const {
-        try {
-            int length = get_length()->value(ctx);
-            if (length < 1)
-                return;
-            auto seed = get_seed()->value(ctx);
-            auto max = get_max()->value(ctx);
-            random_engine.seed(seed);
-            // TODO: cache
-            while (length--) {
-                auto random = get_random_in_range(random_engine, max);
-                f(random);
-            }
-        } catch (...) {
+        int length = length_value<double>(ctx);
+        if (length < 1)
+            return;
+        auto seed = seed_value<double>(ctx);
+        auto max = max_value<double>(ctx);
+        random_engine.seed(seed);
+        // TODO: cache
+        while (length--) {
+            auto random = get_random_in_range(random_engine, max);
+            f(random);
         }
     }
 private:
     mutable std::mt19937 random_engine;
-private:
-    NODE_PROPERTY(length, double);
-    NODE_PROPERTY(seed, double);
-    NODE_PROPERTY(max, double);
 };
 
 REGISTER_NODE(RandomList);
 
-class MovingRandom : public Node<double> {
-public:
-    MovingRandom() {
-        init<double>(max, 1);
-        init<double>(period, 1);
-        init<double>(seed, 0);
-    }
-protected:
-    double get(shared_ptr<Context> ctx) const {
-        try {
-            auto max = get_max()->value(ctx);
-            auto period = get_period()->value(ctx);
-            auto seed = get_seed()->value(ctx);
 
-            random_engine.seed(seed);
-            double p = ctx->get_time().get_seconds() / period;
-            random_engine.discard((int)std::floor(p));
-            auto a = get_random_in_range(random_engine, max);
-            auto b = get_random_in_range(random_engine, max);
-            auto offset = p - std::floor(p);
-            return a*(1-offset)+b*offset;
-        } catch (...) {
-            return 0;
-        }
+class MovingRandom :
+    public NewNode<
+        MovingRandom,
+        double,
+        types::Only<double>,
+        types::Only<Time>,
+        types::Only<double>
+    >
+{
+    DOC_STRING(
+        ""
+    )
+
+    NODE_PROPERTIES("max", "period", "seed")
+    DEFAULT_VALUES(1.0, Time{1}, 0.0)
+    PROPERTY(max)
+    PROPERTY(period)
+    PROPERTY(seed)
+
+protected:
+    double get(shared_ptr<Context> ctx) const override {
+        auto max = max_value<double>(ctx);
+        auto period = period_value<Time>(ctx);
+        auto seed = seed_value<double>(ctx);
+
+        random_engine.seed(seed);
+        double p = ctx->get_time().get_seconds() / period.get_seconds();
+        random_engine.discard((int)std::floor(p));
+        auto a = get_random_in_range(random_engine, max);
+        auto b = get_random_in_range(random_engine, max);
+        auto offset = p - std::floor(p);
+        return a*(1-offset)+b*offset;
     }
 private:
     mutable std::mt19937 random_engine;
-private:
-    NODE_PROPERTY(max, double);
-    NODE_PROPERTY(period, double);
-    NODE_PROPERTY(seed, double);
 };
 
 REGISTER_NODE(MovingRandom);

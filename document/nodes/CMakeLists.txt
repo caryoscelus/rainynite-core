@@ -123,9 +123,9 @@ add_node_subset(misc
     node_tree.cpp
 )
 
-# add_node_subset(random
-#     random.cpp
-# )
+add_node_subset(random
+    random.cpp
+)
 
 install(
     TARGETS nodes
