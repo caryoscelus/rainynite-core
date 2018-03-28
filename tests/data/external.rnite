@@ -6,3 +6,12 @@ _tests: !List/Boolean
     a: Hello, World!
     b: !FileString
       file_name: "./helloworld.txt"
+
+  - !Equal/String
+    a: "Hello from other file!"
+    b: !ExternalNode/String
+      file_name: external_source.rnite
+      node_path: !NodeTreePathFromList
+        source: !List/Real
+          - 0
+          - 0

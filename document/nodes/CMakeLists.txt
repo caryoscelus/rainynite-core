@@ -74,6 +74,7 @@ add_node_subset(string
 add_node_subset(dynamic
     any_proxy.cpp
     dynamic_node.cpp
+    external_node.cpp
 )
 
 add_node_subset(geom
