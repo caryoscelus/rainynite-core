@@ -1,0 +1,4 @@
+--- !Document
+
+root: !Text
+  text: "Hello from other file!"
