@@ -1,0 +1,29 @@
+--- !Document
+
+_random_list: &random_list !RandomList
+  length: 3
+  max: 2
+
+_tests: !List/Boolean
+
+  - !Equal/Real
+    a: !ListLinkCount
+      source: *random_list
+    b: 3
+
+  - !Less/Real
+    a: !ListElement/Real
+      source: *random_list
+      n: 0
+    b: 2
+
+  - !Less/Real
+    a: 0
+    b: !ListElement/Real
+      source: *random_list
+      n: 1
+
+  - !Less/Real
+    a: !MovingRandom
+      max: 3
+    b: 3
