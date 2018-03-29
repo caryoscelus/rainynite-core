@@ -92,12 +92,18 @@ bool load_and_test_file(string const& fname) {
         return false;
     }
 
-    std::cerr << "Will try to check if saved version is semantically identical...\n";
+    std::cerr << "Will try to check if saved version is semantically identical... ";
 
     loader->unload_document(path);
     auto saved_document = no_null(loader->get_document_from(path, saved_content));
 
-    return test_document(saved_document);
+    if (test_document(saved_document)) {
+        std::cerr << "All fine!\n";
+        return true;
+    } else {
+        std::cerr << "Fail!\n";
+        return false;
+    }
 }
 
 } // namespace rainynite::core
