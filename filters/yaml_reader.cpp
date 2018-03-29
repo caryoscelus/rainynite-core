@@ -61,17 +61,14 @@ public:
     }
 
     void OnNull(Mark const&, anchor_t) override {
-        std::cerr << "Got null\n";
         throw DeserializationError("null is not supported (yet)");
     }
     void OnAlias(Mark const&, anchor_t anchor_id) override {
-        std::cerr << "Got alias\n";
         auto id = s_to_id(anchors[anchor_id - 1]);
         writer.reference(id);
         update_map_state();
     }
     void OnScalar(Mark const&, string const& tag, anchor_t, string const& value) override {
-        std::cerr << "Got tag {} with value {}\n"_format(tag, value);
         switch (state()) {
             case State::CustomKey: {
                 if (custom_key == "__name") {
@@ -108,7 +105,6 @@ public:
     }
 
     void OnSequenceStart(Mark const&, string const& tag, anchor_t, EmitterStyle::value /*style*/) override {
-        std::cerr << "Got tag {} with a sequence\n"_format(tag);
         new_object(tag);
         writer.object_value_start();
         writer.list_start();
@@ -123,7 +119,6 @@ public:
     }
 
     void OnMapStart(Mark const&, string const& tag, anchor_t, EmitterStyle::value /*style*/) override {
-        std::cerr << "Got tag {} with a map\n"_format(tag);
         new_object(tag);
         push_state(State::Map);
     }
@@ -134,7 +129,6 @@ public:
     }
 
     void OnAnchor(Mark const&, string const& anchor_name) override {
-        std::cerr << "Got anchor {}\n"_format(anchor_name);
         anchor = anchor_name;
         anchors.push_back(anchor);
     }
