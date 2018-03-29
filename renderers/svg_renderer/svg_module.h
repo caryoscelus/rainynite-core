@@ -1,5 +1,5 @@
 /*  svg_renderer/svg_module.h - SvgRenderer module class
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <core/util/class_init.h>
 #include <core/node/abstract_node.h>
 #include <core/node/abstract_value.h>
+#include <core/renderers/svg_renderer.h>
 #include <core/time/time.h>
 
 #include <2geom/point.h>
@@ -42,13 +43,6 @@ struct SvgRendererSettings;
 string get_extra_svg(AbstractNode const& node, shared_ptr<Context> ctx, SvgRendererSettings const& settings, string const& name);
 
 string get_extra_svg(shared_ptr<BaseValue<Shading>> value, shared_ptr<Context> ctx, SvgRendererSettings const& settings, string const& name);
-
-/**
- * Convert node to svg string.
- *
- * TODO: use some xml generator instead of purely string based generation.
- */
-string node_to_svg(NodeInContext nic, SvgRendererSettings const&);
 
 /**
  * Abstract class for svg renderer modules.

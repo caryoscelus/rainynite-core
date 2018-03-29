@@ -1,5 +1,5 @@
 /*  svg_renderer.h - SVG "renderer""
- *  Copyright (C) 2017 caryoscelus
+ *  Copyright (C) 2017-2018 caryoscelus
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,8 +19,9 @@
 #define CORE_RENDERERS_SVG_RENDERER_H_F428317B_656B_5ADE_885E_628657C57C69
 
 #include <core/std/memory.h>
-#include "../context.h"
-#include "../renderer.h"
+#include <core/node/node_in_context.h>
+#include <core/context.h>
+#include <core/renderer.h>
 
 namespace rainynite::core::renderers {
 
@@ -52,6 +53,13 @@ private:
     struct Impl;
     unique_ptr<Impl> impl;
 };
+
+/**
+ * Convert node to svg string.
+ *
+ * TODO: use some xml generator instead of purely string based generation.
+ */
+string node_to_svg(NodeInContext nic, SvgRendererSettings const& settings);
 
 } // namespace rainynite::core::renderers
 
