@@ -105,7 +105,10 @@ add_node_subset(basic
 add_node_subset(testing
     test/transform.cpp
     test/benchmark.cpp
+    test/render.cpp
 )
+
+target_link_libraries(nodes_testing svg_renderer)
 
 add_node_subset(misc
     get_property.cpp
