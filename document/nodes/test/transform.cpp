@@ -53,7 +53,7 @@ protected:
 
         auto path = index_value<NodeTreePath>(ctx);
         auto idx = tree_path_to_index(*tree, path);
-        return tree->get_element<TreeCalculateTransform>(idx)->get_transform(ctx);
+        return get_transform(ctx, *tree, idx);
     }
 
 };
