@@ -27,24 +27,6 @@ namespace rainynite::core {
 
 class Context;
 
-class TreeCalculateTransform : TREE_ELEMENT(TreeCalculateTransform) {
-public:
-    void added(NodeTree const& tree, NodeTree::Index index) override;
-
-    Geom::Affine get_transform(shared_ptr<Context> ctx) const;
-
-    Geom::Affine get_child_transform(shared_ptr<Context> ctx) const;
-
-    Geom::Affine get_transform_change(shared_ptr<Context> ctx) const;
-
-private:
-    NodeTree::Index find_previous(NodeTree const& tree, NodeTree::Index index) const;
-
-private:
-    observer_ptr<TreeCalculateTransform> parent_element;
-    shared_ptr<BaseValue<Geom::Affine>> transform_node;
-};
-
 Geom::Affine get_transform(shared_ptr<Context> ctx, NodeTree const& tree, NodeTree::Index index);
 
 } // namespace rainynite::core
